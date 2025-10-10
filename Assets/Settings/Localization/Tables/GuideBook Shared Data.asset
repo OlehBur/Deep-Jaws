@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: GuideBook Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: GuideBook
+  m_TableCollectionNameGuidString: 42e58118bc42aab4984a3ff4ed822ca5
+  m_Entries:
+  - m_Id: 6565687296
+    m_Key: l0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 432891523072
+    m_Key: r0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 503548768256
+    m_Key: l1_food
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372194422784
+    m_Key: l1_crab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4444495835136
+    m_Key: l1_bass
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5031555788800
+    m_Key: l1_mackerel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5129975132160
+    m_Key: l1_moray
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5926238580736
+    m_Key: l1_lionfish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6334889619456
+    m_Key: r1_chain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6417886507008
+    m_Key: r1_white_shark
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6543585603584
+    m_Key: r1_tiger_shark
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6639551279104
+    m_Key: r1_hammerhead_shark
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6901120659456
+    m_Key: r1_tuna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6972407050240
+    m_Key: r1_barracuda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46112922169344
+    m_Key: l2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46567152709632
+    m_Key: l2_exclus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 47032749813760
+    m_Key: l3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 48092990173184
+    m_Key: r3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52080728895488
+    m_Key: l4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52108457439232
+    m_Key: l4_hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52339894939648
+    m_Key: r4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55301539131392
+    m_Key: l5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56455538962432
+    m_Key: r5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9502929981042688
+    m_Key: r2.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9509788720852992
+    m_Key: r5.1
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7720062667623497854
+  references:
+    version: 2
+    RefIds:
+    - rid: 7720062667623497854
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1754316280052

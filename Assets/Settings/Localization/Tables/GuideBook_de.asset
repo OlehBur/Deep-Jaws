@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: GuideBook_de
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: de
+  m_SharedData: {fileID: 11400000, guid: 42e58118bc42aab4984a3ff4ed822ca5, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 6565687296
+    m_Localized: "\tWillkommen, Meeresreisender. Heute steht dir eine schwierige
+      Aufgabe bevor \u2013 im wilden Ozean zu \xFCberleben. Du hast nur zwei Hauptziele:
+      alle deine Feinde zu fressen und nicht von ihnen gefressen zu werden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 432891523072
+    m_Localized: "\tDer Meeresboden hat klar definierte Regeln der Nahrungskette,
+      bei denen alles mit den Krabben beginnt, und jedes n\xE4chste Glied kann das
+      vorherige Wesen oder ein \xE4hnliches seiner Art fressen. \r\n\t<u>Fische der
+      eigenen Art d\xFCrfen nur gefressen werden, wenn sie kleiner sind; mit jedem
+      Level deines Wachstums erscheinen schw\xE4chere Fische nicht mehr.</u>\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 503548768256
+    m_Localized: Nahrungs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372194422784
+    m_Localized: Krabbe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4444495835136
+    m_Localized: Seebarsch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5031555788800
+    m_Localized: Makrele
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5129975132160
+    m_Localized: "Mur\xE4ne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5926238580736
+    m_Localized: Feuerfisch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6334889619456
+    m_Localized: "\u2013kette"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6417886507008
+    m_Localized: "Wei\xDFer Hai"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6543585603584
+    m_Localized: Tigerhai
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6639551279104
+    m_Localized: Hammerhai
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6901120659456
+    m_Localized: Thunfisch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6972407050240
+    m_Localized: Barrakuda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46112922169344
+    m_Localized: "\tBeim Erkunden des Meeresbodens kannst du auf verschiedene Orte
+      und Objekte sto\xDFen, die deinem Fisch bestimmte Effekte verleihen. Nutze
+      sie, um deine \xDCberlebenschancen zu erh\xF6hen.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46567152709632
+    m_Localized: "\t<u>Beachte jedoch, dass die Effekte auch f\xFCr Gegner verf\xFCgbar
+      sind.</u>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 47032749813760
+    m_Localized: "\tEntsprechend deiner jeweiligen Stufe generiert die Karte Gegner
+      mit einem niedrigeren Level, einem h\xF6heren Level sowie Gegner auf deinem
+      aktuellen Level.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 48092990173184
+    m_Localized: "\tSei vorsichtig bei der Verwandlung in einen Hai, denn alle Haie
+      greifen auch Artgenossen mit gleichem Level an. Wenn du zu lange mit deiner
+      Mahlzeit z\xF6gerst, lauert irgendwo in den Tiefen des Meeres ein <u><color=red>Monster</color=red></u>,
+      das all seine Freunde gefressen hat und nun auf dich wartet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52080728895488
+    m_Localized: "\tWenn du dir unsicher bist, ob du einen Gegner auf deinem Level
+      fressen kannst, achte auf die Hinweise des \u201EGegner-Detektors\u201C in
+      Form eines roten Pfeils \xFCber dir. Wenn du ihn siehst, schnapp dir deine
+      Flossen und schwimm in die entgegengesetzte Richtung!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52108457439232
+    m_Localized: Gegner-Detektor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52339894939648
+    m_Localized: "\tZur Steuerung verwende den Joystick und die Boost-Taste, die
+      du mit deinen H\xE4nden oder anderen k\xF6rPerlicHeN AnPAssUnGen dr\xFCcken
+      kannst).\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55301539131392
+    m_Localized: "\tF\xFCr eine bessere Orientierung im Raum und zur Erkennung von
+      Gegnern w\xE4hrend des Str\xF6mungsschwimmens solltest du dich in einer wellenf\xF6rmigen
+      Richtung bewegen.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56455538962432
+    m_Localized: "\tWenn du vergessen hast, wie man spielt \u2013 geh so nah wie
+      m\xF6glich an die Krabben heran f\xFCr einen konstruktiven Dialog.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9502929981042688
+    m_Localized: "\tEinige Objekte k\xF6nnen deine Werte aktualisieren oder verbessern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9509788720852992
+    m_Localized: "\tBevor du dich in die Meeresabenteuer st\xFCrzt, warne ich dich:
+      H\xFCte dich vor dem rebellischen Kugelfisch und der Sepie aus der Tiefe!"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
