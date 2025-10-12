@@ -48,7 +48,7 @@ public class StopTimeEffect : Effect {
         fishAnimator.updateMode = AnimatorUpdateMode.Fixed;
     }
 
-    public new void UpdateTimer() {
+    public override void UpdateTimer() {
         base.UpdateTimer();
         currentTime += Time.unscaledDeltaTime;
         FishAnimManager.SetGetMaterialWithPropBlock(fishRenderer, ref fishMatProp, "_UnscaledTime", false, /*isStartDeactivate ? STOP_VALUE_FOR_SHADER :*/ currentTime);

@@ -1,15 +1,15 @@
 using System;
 using UnityEngine;
 
-public enum FishEffectType {
-    Shield,
-    CurrentSpeed,
-    Stun,
-    StunInitiator,
-    SprintSpeed,
-    FreezeTime,
-    Poison,
-    Blindness
+public enum FishEffectType {//pos or neg (+/-)
+    Shield,             //+
+    CurrentSpeed,       //+
+    Stun,               //-
+    StunInitiator,      //+
+    SprintSpeed,        //+
+    FreezeTime,         //+
+    Poison,             //-
+    Blindness           //-
 }
 
 /// <summary>
@@ -50,7 +50,7 @@ public abstract class Effect /*: MonoBehaviour*/ {
         OnApply();
     }
 
-    public void UpdateTimer() {
+    public virtual void UpdateTimer() {
         if (Time.timeScale == 0f)//in pause menu effect must be freezed
             return;
 
@@ -58,10 +58,13 @@ public abstract class Effect /*: MonoBehaviour*/ {
 
         if (LeftTime <= 0f)
             Enabled = false;
-            //DeactivateEffect();
+        //DeactivateEffect();
     }
 
     public void Refresh(float duration) {
+        //if (LeftTime < 0f)
+        //    OnApply();
+
         Duration = duration;
         LeftTime = /*Duration*/duration;
     }

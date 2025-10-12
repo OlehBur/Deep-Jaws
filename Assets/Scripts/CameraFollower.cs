@@ -62,6 +62,9 @@ public class CameraFollower : MonoBehaviour {
 
         currentVelocity = Vector3.zero;
 
+        target = spawnManager.PlayerFish.transform;
+        playerFish = spawnManager.PlayerFish;
+
         //cameraObj.transform.position = Vector3.SmoothDamp(
         //    transform.position,
         //    initialPosition,

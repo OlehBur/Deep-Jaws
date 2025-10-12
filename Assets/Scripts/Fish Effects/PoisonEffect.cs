@@ -14,7 +14,7 @@ public class PoisonEffect : Effect {
         target.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
     }
 
-    public new void UpdateTimer() {
+    public override void UpdateTimer() {
         base.UpdateTimer();
         currentTime += Time.unscaledDeltaTime;
 

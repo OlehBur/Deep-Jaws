@@ -60,7 +60,7 @@ public class FishAnimManager : MonoBehaviour {
 
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);//fishMat?.GetFloat("_MaxRotationValue") ?? 0;
-        biteAudioSource.enabled = CompareTag("Player"); // enable audio source only for player fish
+        biteAudioSource.enabled = fish.IsPlayer; // enable audio source only for player fish
     }
 
     private void InitPropBlock() {

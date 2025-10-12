@@ -73,6 +73,9 @@ public class FishControl : MonoBehaviour, IFish {
     //}
 
     private void OnEnable() {
+        if (fish == null)
+            return;
+
         IFish = this;
         rb = (rb == null) ?
             GetComponent<Rigidbody>() : rb;
@@ -81,9 +84,14 @@ public class FishControl : MonoBehaviour, IFish {
 
         //Invoke(nameof(SetDefaultState), ³dleTime); //afrer respawn or on start
         //                                           //SetTargetMovement();
-        if (fish != null) {
-            CancelInvoke();
-            SetDefaultState();
+        //if (fish != null) {
+        CancelInvoke();
+        SetDefaultState();
+        //}
+
+        if (fish.IsPlayer) {
+            fish.IsActive = true;//player always active and visible, because always viwed on screen
+            fish.IsVisible = true;
         }
 
         SleepPhysics();
@@ -418,8 +426,8 @@ public class FishControl : MonoBehaviour, IFish {
         GameObject collisObj = collider.gameObject;
 
         //if other fish
-        if (!collider.isTrigger && transform.root != collider.transform.root &&//not self collision
-            parent != null && GameStaticInfo.TryGetFish(parent.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
+        if (!collider.isTrigger && parent != null && transform != parent//not self collision
+             && GameStaticInfo.TryGetFish(parent.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
         && (fish.IsPlayer || other == IFish.CurrentTarget) //collision obj is our victim
             && fish.IsLegitimateTarget(other)//victim is weaker
             ) {
@@ -442,7 +450,7 @@ public class FishControl : MonoBehaviour, IFish {
                 if (fish.IsPlayer)
                     CheckEatAchievements(other.Level);
 
-                if (!fish.Eat(other) && collisObj != null) {//on enter
+                if (!fish.Eat(other)/* && collisObj != null*/) {//on enter
                     SetDefaultState();
                     //spawnManager.DeactivatePrefab(collision.collider.transform.parent.gameObject);//fish is eaten, deactivate and respawn
                 }
@@ -465,11 +473,13 @@ public class FishControl : MonoBehaviour, IFish {
                                                  //   (other.gameObject.layer == LayerMask.NameToLayer("Obstacle")//fish is stuck on obstacle
                                                  //    || other.gameObject.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders")))
                                                  //    BypassObstacle(other.ClosestPoint(transform.position));
-        TryContactWithBehaviour(other, false);
+        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL)
+            TryContactWithBehaviour(other, false);
     }
 
     private void OnTriggerStay(Collider other) {
-        TryContactWithBehaviour(other, true);
+        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL)
+            TryContactWithBehaviour(other, true);
     }
     bool CheckEatAchievements(FishLevel victimLvl) {
         if (victimLvl == GameStaticInfo.PEACEFUL_FISH_LVL)//if eat crab

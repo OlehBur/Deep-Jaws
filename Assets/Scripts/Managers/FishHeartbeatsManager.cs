@@ -53,7 +53,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
         ParticleSystem.MainModule particleMainModule;
 
         int index = 0;
-        Debug.LogWarning("HeartBeatDisabled");
+        //Debug.LogWarning("HeartBeatDisabled");
         foreach (Fish fish in SpawnManager.visPool_FishComp/*pool_FishComp*/)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 

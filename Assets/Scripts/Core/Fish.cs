@@ -83,16 +83,17 @@ public class Fish : MonoBehaviour {
         //OnInfoStatsChanged?.Invoke();
     }
 
-    private void Start() {
+    //private void Start() {
         //Health = Health / 4;
         //Progress = .9f;
         //UpdateGrowSize();
         //Debug.LogWarning("max progress");
 
-        OnInfoStatsChanged?.Invoke();
-    }
+        //OnInfoStatsChanged?.Invoke();
+    //}
 
     private void OnEnable() {
+        OnInfoStatsChanged?.Invoke();
         UpdateGrowSize();
     }
 
@@ -151,6 +152,8 @@ public class Fish : MonoBehaviour {
         float entityCeiling = (float)GameStaticInfo.MAX_FISH_LEVEL - Mathf.Abs((float)victim.Level);
         float levelSpeedProgressing = (float)level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
+        float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
+        progressDivider *= enemyProgressMultiplier;
 
         Progress += 1f / progressDivider;
 
@@ -205,9 +208,11 @@ public class Fish : MonoBehaviour {
         health = MaxHealth;
         Progress = 0f;
         IsPlayer = false;
+        IsActive = false;
+        IsVisible = false;
+        gameObject.SetActive(false);
 
         OnFishDie?.Invoke(gameObject, Level);
-        gameObject.SetActive(false);
     }
 
     public void UpdateGrowSize() {

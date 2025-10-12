@@ -112,7 +112,7 @@ public class PlayerUIController : MonoBehaviour {
     public void Init(SpawnManager sp) {
         spawnManager = sp;
         //Debug.LogWarning(spawnManager);
-        PlayerReConnect();
+        PlayerReConnect(spawnManager.PlayerFish);
 
         effectsSlotsMatch[FishEffectType.Shield] = shieldIcon.transform.parent.GetComponent<RectTransform>();
         effectsSlotsMatch[FishEffectType.Stun] = stunIcon.transform.parent.GetComponent<RectTransform>();
@@ -122,7 +122,7 @@ public class PlayerUIController : MonoBehaviour {
         effectsSlotsMatch[FishEffectType.Poison] = poisonIcon.transform.parent.GetComponent<RectTransform>();
         effectsSlotsMatch[FishEffectType.Blindness] = blindnessIcon.transform.parent.GetComponent<RectTransform>();
 
-        spawnManager.OnPlayerRespawn += PlayerEventsResub;
+        spawnManager.OnPlayerRespawn += PlayerReConnect;
 
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
         stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
@@ -147,6 +147,10 @@ public class PlayerUIController : MonoBehaviour {
     void DisactivateDefaultIcons() {
         GameObject child = playerEffectManager.transform.Find(DEFAULT_FISH_ICONS_PARENT_NAME).gameObject;
         child.SetActive(false);
+
+        if (shieldIcon == null)//or eny other (only for editor debug)
+            return;
+
         shieldIcon.transform.parent.gameObject.SetActive(false);
         stunIcon.transform.parent.gameObject.SetActive(false);
         sprintIcon.transform.parent.gameObject.SetActive(false);
@@ -165,23 +169,29 @@ public class PlayerUIController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (playerEffectManager == null) {
-            PlayerReConnect();
+            PlayerReConnect(spawnManager.PlayerFish);
             return;
         }
 
         //activate and draw progress for all effects icons that have player
         EffectsProgressReset(); // reset all icons progress
                                 //foreach (FishEffectType effectType in playerEffectManager.activeEffects.Keys)
-        foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
-            if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value)) {
-                if (value == null) {
-                    EffectsBehaviour(effectType, false);
-                    //playerEffectManager.RemoveEffect(effectType);
-                    //Debug.LogWarning(effectType + " " + value + " " + value.LeftTime);
-                }
-                SetEffectProgress(effectType, value);
-                value = null;
-            }
+
+        //foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
+        //    if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value)) {
+        //        if (value == null) {
+        //            EffectsBehaviour(effectType, false);
+        //            //playerEffectManager.RemoveEffect(effectType);
+        //            //Debug.LogWarning(effectType + " " + value + " " + value.LeftTime);
+        //        }
+        //        SetEffectProgress(effectType, value);
+        //        value = null;
+        //    }
+        foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.activeEffects)
+            if (eff.Value == null || !eff.Value.Enabled)
+                EffectsBehaviour(eff.Key, false);
+            else  //!null & enabled
+                SetEffectProgress(eff.Key, eff.Value);
 
         SprintButtonBehaviour();
     }
@@ -341,7 +351,13 @@ public class PlayerUIController : MonoBehaviour {
     //    damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, damageOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
     //}
 
-    void PlayerReConnect() {
+    void PlayerReConnect(Fish fish) {
+        if (fish != null && playerEffectManager != null) {
+            fish.OnInfoStatsChanged -= UpdatePlayerInfo;
+            fish.OnFishDamage -= ActivateDamageOverlay;
+            playerEffectManager.OnEffectChanges -= EffectsBehaviour;
+        }
+
         if (spawnManager == null || spawnManager.PlayerFish == null)//for debug
             return;
 
@@ -398,19 +414,16 @@ public class PlayerUIController : MonoBehaviour {
 
         const float MAX_EFFECTS_CNT = 5; // max effects count that can be displayed in the UI
                                          //repos
-        int effectsCnt = playerEffectManager./*ActiveEffectsCnt*/GetActiveEffectCnt()/*activeEffects.Count*/;
-        if (playerEffectManager.activeEffects.ContainsKey(FishEffectType.StunInitiator)
-            && playerEffectManager.activeEffects[FishEffectType.StunInitiator] != null)
-            --effectsCnt; // do not count the stun initiator effect, since it is not displayed in the UI
+        int effectsCnt = playerEffectManager./*ActiveEffectsCnt*/GetActiveEffectCnt(TypeEffects.VisibleUI)/*activeEffects.Count*/;
 
         if (!isAdded)//if effect expires - hide icon
             effectsSlotsMatch[type].gameObject.SetActive(false);
 
-        if (effectsCnt > 0) {
-            //int subtractCnt = isAdded ? 1 : (effectsCnt > 1) ? 2 : 1;
+        if (effectsCnt > 0) {//reposing
             int effectIconInd = 0;
-            foreach (FishEffectType effect in playerEffectManager.activeEffects.Keys) {
-                if (effect == FishEffectType.StunInitiator || playerEffectManager.activeEffects[effect] == null)
+            foreach (FishEffectType currType in playerEffectManager.activeEffects.Keys) {
+                if (!EffectManager.IsVisibleEffect(currType, true)
+                    || playerEffectManager.activeEffects[currType] == null || !playerEffectManager.activeEffects[currType].Enabled)
                     continue;
 
                 //Debug.Log(effectsCnt - 1 + " " + effectIconInd);
@@ -418,9 +431,9 @@ public class PlayerUIController : MonoBehaviour {
                     iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].x * iconsParent.rect.width,
                     iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].y * iconsParent.rect.height);
                 //Debug.LogWarning(iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].x + " "
-                    //+ iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].y);
+                //+ iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].y);
 
-                effectsSlotsMatch[effect].anchoredPosition = newPos;
+                effectsSlotsMatch[currType].anchoredPosition = newPos;
 
                 effectIconInd = (effectIconInd + 1 < MAX_EFFECTS_CNT) ? ++effectIconInd : /*--*/effectIconInd;
             }
@@ -466,16 +479,6 @@ public class PlayerUIController : MonoBehaviour {
     //}
 
     public void OnDestroy() {
-        PlayerEventsResub(playerFish);
-    }
-
-    void PlayerEventsResub(Fish player) {
-        if (player != null && playerEffectManager != null) {
-            player.OnInfoStatsChanged -= UpdatePlayerInfo;
-            player.OnFishDamage -= ActivateDamageOverlay;
-            playerEffectManager.OnEffectChanges -= EffectsBehaviour;
-        }
-
-        PlayerReConnect();
+        PlayerReConnect(playerFish);
     }
 }
