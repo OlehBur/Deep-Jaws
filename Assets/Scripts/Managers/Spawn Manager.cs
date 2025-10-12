@@ -8,7 +8,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour //with ObjectPool
 {
     //pool
-    [Header("Prefabs of fishes in order of levels")]
+    [Header("Prefabs of Fishes in order of Levels")]
     [SerializeField] Transform fishPoolParent;
     [SerializeField] GameObject[] prefabs;
     //[SerializeField] GameObject prefab; //for multi prefab test
@@ -40,6 +40,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     public static GameObject[] cuttlefishPool { get; } = new GameObject[CUTTLEFISH_SPAWN_COUNT];
     public static Fish[] cuttlefishPool_FishComp { get; } = new Fish[CUTTLEFISH_SPAWN_COUNT];
 
+    [Header("Prefabs Spawnpoints")]
     //spawn
     //[SerializeField] Transform spawnPlane;
     [SerializeField] Transform weakFishSpawnPointsParent;
@@ -64,6 +65,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private static readonly float[] SPAWN_WEIGHTS = { .5f, .35f, .15f };
     private static readonly float[] SPAWN_WEIGHTS_EASY = { .65f, .33f, .02f };
 
+    [Header("Effects Prefabs")]
     //player
     [SerializeField] GameObject playerSpawnParticles;
     [SerializeField] GameObject enemySkeletonParticle;
@@ -76,6 +78,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //}
     private SaveData saveData;
 
+    [Header("Other Dependencies")]
+    [SerializeField] AudioManager audioManager;
 
     /// <summary>
     /// тільки для новооновлених гравців які можливо перебувають в недозволеній зоні відповідно до рівня
@@ -109,13 +113,20 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     }
 
     void InitPool() {
+        GameObject prefab;
+        Fish component;
         for (int i = 0; i <= (int)GameStaticInfo.MAX_FISH_LEVEL; i++)
             for (int j = 0; j < POOL_SIZE; j++) {
-                globalPool[i, j] = Instantiate(prefabs[i], fishPoolParent);
-                globalPool[i, j].SetActive(false);
-                globalPool_Comp[i, j] = globalPool[i, j].GetComponent<Fish>();
-                globalPool_Comp[i, j].OnFishDie += FishDieAct;
-                globalPool_Comp[i, j].OnFishLvlUp += PlayerLvlUpAct;
+                prefab = Instantiate(prefabs[i], fishPoolParent);
+                globalPool[i, j] = prefab;
+                prefab.SetActive(false);
+                if (prefab.TryGetComponent(out FishAnimManager fishAnim))
+                    fishAnim.Init(audioManager);
+
+                component = prefab.GetComponent<Fish>();
+                globalPool_Comp[i, j] = component;
+                component.OnFishDie += FishDieAct;
+                component.OnFishLvlUp += PlayerLvlUpAct;
             }
         //Debug.LogWarning("mega pool enable and spawn disable");
     }
@@ -249,8 +260,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         enemyDetector.transform.localPosition = Vector3.zero;
         enemyDetector.Init(new_PlayerVar/*playerPrefab.GetComponent<Fish>()*/);
 
+        EffectManager playerEffectManager = playerPrefab?.GetComponent<EffectManager>();
+        playerEffectManager.Init(audioManager.playerRevolumeAudioSource);
         if (isDie) {//apply shield effect after every player death
-            playerPrefab?.GetComponent<EffectManager>().ApplyEffect(FishEffectType.Shield, PLAYER_INIT_SHIELD_DURATION);
+            playerEffectManager.ApplyEffect(FishEffectType.Shield, PLAYER_INIT_SHIELD_DURATION);
             GPG_Manager.OnTriggerAchievement(AchievementKey.HereWeGo);
             RespawnEntitiesMap();
         }
@@ -281,7 +294,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// respawn all +2 lvl fishes depending on player lvl after hes death
     /// </summary>
     void RespawnEntitiesMap() {
-        Debug.LogWarning("Disabled Reinit Entities map");
+        //Debug.LogWarning("Disabled Reinit Entities map");
         for (int i = 1; i < POOL_SIZE; i++)
             if (visibleFishPool[i].activeInHierarchy && visPool_FishComp[i].Level > PlayerFish.Level + 1) {
                 //if (/*pool[i].TryGetComponent(out Fish fish)*/visPool_FishComp[i] != null
@@ -460,6 +473,11 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 GameObject prefabInst = pool[currentInd] = Instantiate(prefab, spPoints.GetChild(spawnPointIndex).position /*+ RandomXZOffset()*/, Quaternion.identity, fishPoolParent);
                 Fish fish = prefabInst.GetComponent<Fish>();
                 FishControl enemyControl = prefabInst.GetComponent<FishControl>();
+
+                if (prefabInst.TryGetComponent(out PufferfishController pufferController))
+                    pufferController.Init(audioManager);
+                else if (prefabInst.TryGetComponent(out СuttlefishController cuttleController))
+                    cuttleController.Init(audioManager);
 
                 enemyControl.Init(this, fish);
                 fish.SetRandomProgress();

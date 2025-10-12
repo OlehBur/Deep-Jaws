@@ -22,8 +22,9 @@ public class JellyfishController : MonoBehaviour {
 
     private Collider[] jellyColliders;
     private bool isJellyColliderActive;
-    [SerializeField] AudioSource jellyAudioSource;
-    [SerializeField] AudioClip jellyBiteClip;
+    [SerializeField] AudioManager audioManager;
+    //[SerializeField] AudioSource jellyAudioSource;
+    //[SerializeField] AudioClip jellyBiteClip;
     [SerializeField] float coldownTime;
     private float currentColdown;
 
@@ -43,7 +44,7 @@ public class JellyfishController : MonoBehaviour {
         ////    jellyCollider.enabled = false;
 
         InitMovementArrays();
- }
+    }
 
     //call from game manager
     /*public*/
@@ -151,11 +152,12 @@ public class JellyfishController : MonoBehaviour {
 
     //cooldown and sound only for player fish
     private void OnTriggerStay(Collider other) {
-        if (other.CompareTag("Player") && isJellyColliderActive) {
+        if (!other.isTrigger && other.CompareTag("Player") && isJellyColliderActive) {
             //jellyCollider.enabled = false;
             isJellyColliderActive = false;
             SetActivateColliders(isJellyColliderActive);
-            jellyAudioSource.PlayOneShot(jellyBiteClip);
+            audioManager.PlayVFX(VFX_clip.Hydra);
+            //jellyAudioSource.PlayOneShot(jellyBiteClip);
         }
     }
 

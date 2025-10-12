@@ -3,14 +3,19 @@ using UnityEngine;
 public class PufferfishController : MonoBehaviour {
     /*[SerializeField]*/
     //[SerializeField] AudioSource audioSource;
+    private AudioManager audioManager;
     [SerializeField] Animator animator;
     private const string PUFFERFISH_BLOW_ANIMATION = "PufferfishBlow";
     private const string PUFFERFISH_REVERSE_BLOW_ANIMATION = "PufferfishBlow_reverse";
     private float currentTimeCollision = 0f;
     private const float BITE_INTERVAL = 1f;
     private const int DAMAGE_CNT = 5;
+    private bool startedAnimation = false;
 
 
+    public void Init(AudioManager audioManager) {
+        this.audioManager = audioManager;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //void Start() {
     //    Fish fish = GetComponent<Fish>();
@@ -28,9 +33,11 @@ public class PufferfishController : MonoBehaviour {
 
         //Debug.Log(spawnManager);
         if (parent != null && GameStaticInfo.TryGetFish(parent.gameObject, out Fish fish)//other.transform.parent.TryGetComponent(out Fish fish)
-            && fish.IsVisible && fish.Level != FishLevel.Pufferfish /*&& !audioSource.isPlaying*/) {
+            && fish.IsVisible && fish.Level != FishLevel.Pufferfish && !startedAnimation /*&& !audioSource.isPlaying*/) {
 
             animator.Play(PUFFERFISH_BLOW_ANIMATION);
+            audioManager?.PlayVFX(VFX_clip.Pufferfish);
+            startedAnimation = true;
             //audioSource.PlayOneShot(audioSource.clip);
         }
     }
@@ -39,8 +46,10 @@ public class PufferfishController : MonoBehaviour {
         Transform parent = other.transform.parent;
 
         if (parent != null && GameStaticInfo.TryGetFish(parent.gameObject, out Fish fish)//parent.TryGetComponent<Fish>(out Fish fish)
-            && fish.IsVisible && fish.Level != FishLevel.Pufferfish)
+            && fish.IsVisible && fish.Level != FishLevel.Pufferfish && startedAnimation) {
+            startedAnimation = false;
             animator.Play(PUFFERFISH_REVERSE_BLOW_ANIMATION);
+        }
     }
 
     private void OnCollisionEnter(Collision collision) {

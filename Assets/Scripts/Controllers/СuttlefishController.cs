@@ -11,6 +11,7 @@ public class СuttlefishController : MonoBehaviour {
     [SerializeField] Fish fish;
     [SerializeField] MeshRenderer mesh;
     //[SerializeField] AudioSource audioSource;
+    private AudioManager audioManager;
     private Material shaderMat;
     private const float SHADER_UPDATE_INTERVAL = .1f;
     private const float OVERLAP_RADIUS = 20f;
@@ -42,6 +43,10 @@ public class СuttlefishController : MonoBehaviour {
 };
 
 
+    public void Init(AudioManager audioManager) {
+        this.audioManager = audioManager;
+    }
+
     private void Awake() {
         shaderMat = mesh.material;
         shaderMat.SetFloat("_Progress", 0);
@@ -70,6 +75,7 @@ public class СuttlefishController : MonoBehaviour {
 
         if (curentPoisonCooldown == 0 && fish.IsVisible && parentFish != null && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish enemyFish)/*other.transform.parent.TryGetComponent<Fish>(out Fish enemyFish)*/
     && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL/*enemyFish.IsLegitimateTarget(fish)*/) {
+            audioManager.PlayVFX(VFX_clip.Cuttlefish);
             //audioSource.PlayOneShot(audioSource.clip);
             curentPoisonCooldown = POISON_COOLDOWN;
             Instantiate(poisonInkPrefab, transform.position, transform.rotation);

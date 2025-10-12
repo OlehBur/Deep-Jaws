@@ -4,8 +4,9 @@ using UnityEngine;
 
 //only for scale animation during a poison attack
 public class HydraController : MonoBehaviour {
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip hydraBiteClip;
+    //[SerializeField] AudioSource audioSource;
+    [SerializeField] AudioManager audioManager;
+    //[SerializeField] AudioClip hydraBiteClip;
     [SerializeField] Animator animator;
     private const string ANIMATION_NAME = "HydraBite";
     //private bool isAllowTrigger = true;
@@ -26,8 +27,9 @@ public class HydraController : MonoBehaviour {
             //isAllowTrigger = false;
             animator.Play(ANIMATION_NAME);
 
-            if (other.transform.parent.CompareTag("Player"))
-                audioSource.PlayOneShot(hydraBiteClip);
+            if (fish.IsPlayer)
+                audioManager.PlayVFX(VFX_clip.Hydra);
+            //audioSource.PlayOneShot(hydraBiteClip);
         }
     }
 

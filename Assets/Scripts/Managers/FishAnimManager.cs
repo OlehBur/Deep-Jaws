@@ -9,7 +9,8 @@ public class FishAnimManager : MonoBehaviour {
     public Animator FishAnimator { get { return animator; } private set { animator = value; } }
     const string BITE_TRIGGER_NAME = "bite"; // name of the trigger for bite animation
     [SerializeField] GameObject biteParticleSystem = null; // particle system for bite animation (crab has no particle system)
-    [SerializeField] AudioSource biteAudioSource; // audio source for bite sound effect
+    private AudioManager audioManager;
+    //[SerializeField] AudioSource biteAudioSource; // audio source for bite sound effect
     [SerializeField] bool isUseRotatingShader = false;
 
     [SerializeField] SkinnedMeshRenderer fishSkinnedMesh; //To get Mesh material
@@ -29,9 +30,10 @@ public class FishAnimManager : MonoBehaviour {
 
 
 
-    //public void Init(Animator animator) {
-    //    this.animator = animator;
-    //}
+    public void Init(AudioManager audioManager/*Animator animator*/) {
+        this.audioManager = audioManager;
+        //this.animator = animator;
+    }
 
     void OnEnable() {
         //if (fishMesh != null)
@@ -60,7 +62,7 @@ public class FishAnimManager : MonoBehaviour {
 
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);//fishMat?.GetFloat("_MaxRotationValue") ?? 0;
-        biteAudioSource.enabled = fish.IsPlayer; // enable audio source only for player fish
+        //biteAudioSource.enabled = fish.IsPlayer; // enable audio source only for player fish
     }
 
     private void InitPropBlock() {
@@ -96,7 +98,7 @@ public class FishAnimManager : MonoBehaviour {
         //fishMat.SetFloat("_Frequency", matDefSprintSpeed);
     }
 
-    public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime, float enemyAnimDeltaMultiplier = 25f) {
+    public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime, float enemyAnimDeltaMultiplier = .1f) {
         if (!isUseRotatingShader)
             return;
 
@@ -113,7 +115,9 @@ public class FishAnimManager : MonoBehaviour {
         //Debug.Log("ang: " + angle);
         float angleProgress = Mathf.LerpUnclamped(0, maxShapeRotationVal, angle / ANGLE_DETECTION); // progress from -1 to 1 (LerpUnclamped allows to go beyond the range)
         angleProgress = Mathf.Clamp(angleProgress, -maxShapeRotationVal, maxShapeRotationVal); // clamp the value to avoid exceeding the max rotation value
-        angleProgress = Mathf.SmoothDamp(SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/, angleProgress, ref rotAnimVelocity, /*fish.RotationSpeed **/ deltaTime * enemyAnimDeltaMultiplier);
+        angleProgress = Mathf.SmoothDamp(SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
+            angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
+        
         SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
         //fishMat.SetFloat("_RotationRad", /*currentRotationVal*/angleProgress);
 
@@ -139,9 +143,10 @@ public class FishAnimManager : MonoBehaviour {
         FishAnimator?.SetTrigger(BITE_TRIGGER_NAME); // play bite animation
         //biteParticleSystem.SetActive(true); //play particle on awake
 
-        if (isNeedParticles && Vector3.Distance(transform.position, Camera.main.transform.position) <= biteAudioSource.maxDistance) {//for optimization
-            if (biteAudioSource.enabled)
-                biteAudioSource.PlayOneShot(biteAudioSource.clip); // play bite sound effect
+        if (isNeedParticles && fish.IsPlayer /*Vector3.Distance(transform.position, Camera.main.transform.position) <= biteAudioSource.maxDistance*/) {//for optimization
+            //if (biteAudioSource.enabled)
+            //    biteAudioSource.PlayOneShot(biteAudioSource.clip); // play bite sound effect
+            audioManager.PlayVFX(VFX_clip.Bite);
             Instantiate(biteParticleSystem, biteParticleSystem.transform.position, biteParticleSystem.transform.rotation).SetActive(true); // instantiate bite particle system at fish position
         }
     }

@@ -190,11 +190,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1432576040030573395}
   - component: {fileID: 2705480347905968493}
+  - component: {fileID: 4250895824847646302}
   - component: {fileID: 6053105405841848851}
   - component: {fileID: 4909867401857565867}
   - component: {fileID: 4518439686828584595}
   - component: {fileID: 6908207522873932233}
-  - component: {fileID: 4250895824847646302}
   m_Layer: 6
   m_Name: Pufferfish
   m_TagString: Entity
@@ -246,6 +246,28 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 84
   m_CollisionDetection: 2
+--- !u!95 &4250895824847646302
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4408029418071078942}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e874084845b52f544aaeb585fe6cf009, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 1
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6053105405841848851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,7 +319,6 @@ MonoBehaviour:
   shieldObj: {fileID: 7700729755505854986}
   rb: {fileID: 2705480347905968493}
   fishSkinnedRenderer: {fileID: 4452673087440383594}
-  speedEffectSource: {fileID: 0}
   currentBubblesWhirl: {fileID: 1770503474029501035}
   waterTrail: {fileID: 1770503474029501035}
   fish: {fileID: 6053105405841848851}
@@ -314,30 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b75418e0e6da4d741b093bee917f0aaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
   animator: {fileID: 4250895824847646302}
---- !u!95 &4250895824847646302
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4408029418071078942}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e874084845b52f544aaeb585fe6cf009, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5106888172533863184
 GameObject:
   m_ObjectHideFlags: 0

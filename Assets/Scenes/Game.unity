@@ -360,6 +360,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -1846,6 +1850,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 966554323}
     m_Modifications:
+    - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
       propertyPath: pearlSoundClip
       value: 
@@ -9798,6 +9806,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
     - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
       propertyPath: heartbeatsManager
       value: 
       objectReference: {fileID: 1167468963}
@@ -10333,6 +10345,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -11415,6 +11431,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -11901,6 +11921,10 @@ PrefabInstance:
       propertyPath: echoquaClip
       value: 
       objectReference: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
+    - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
       propertyPath: heartbeatsManager
       value: 
@@ -12465,6 +12489,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -13531,6 +13559,10 @@ PrefabInstance:
       propertyPath: echoquaClip
       value: 
       objectReference: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
+    - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
       propertyPath: heartbeatsManager
       value: 
@@ -15951,7 +15983,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -16036,7 +16068,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1261971885}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &137729550
@@ -18051,6 +18084,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
     - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
       propertyPath: heartbeatsManager
       value: 
       objectReference: {fileID: 1167468963}
@@ -18806,6 +18843,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -32732,6 +32773,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -35448,6 +35493,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -36926,6 +36975,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -37033,6 +37086,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -37057,6 +37114,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.9
@@ -37117,6 +37178,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -40581,6 +40646,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -40605,6 +40674,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 199.75
@@ -40665,6 +40738,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -41418,6 +41495,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 966554323}
     m_Modifications:
+    - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
       propertyPath: pearlSoundClip
       value: 
@@ -42397,6 +42478,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -48062,6 +48147,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -54043,6 +54132,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -54067,6 +54160,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -223.52025
@@ -54127,6 +54224,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -58261,6 +58362,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -58285,6 +58390,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -157.7
@@ -58345,6 +58454,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -60630,6 +60743,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -63887,6 +64004,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -65726,8 +65847,7 @@ MonoBehaviour:
   waypoints: {fileID: 1268642478}
   speed: 0.65
   maxRandYOffsetMultiplier: 2
-  jellyAudioSource: {fileID: 136486431}
-  jellyBiteClip: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
+  audioManager: {fileID: 1167468960}
   coldownTime: 10
 --- !u!114 &563928595
 MonoBehaviour:
@@ -68343,6 +68463,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -69723,6 +69847,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -69747,6 +69875,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 164.60942
@@ -69807,6 +69939,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -70304,6 +70440,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -70328,6 +70468,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 329.53
@@ -70388,6 +70532,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -70947,8 +71095,7 @@ MonoBehaviour:
   waypoints: {fileID: 1752348669}
   speed: 1.2
   maxRandYOffsetMultiplier: 1
-  jellyAudioSource: {fileID: 136486431}
-  jellyBiteClip: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
+  audioManager: {fileID: 1167468960}
   coldownTime: 4
 --- !u!114 &611701240
 MonoBehaviour:
@@ -80119,6 +80266,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -91144,6 +91295,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -97637,6 +97792,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -98543,12 +98702,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 837471810}
+  - component: {fileID: 837471813}
+  - component: {fileID: 837471811}
   m_Layer: 7
   m_Name: Hydra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &837471810
 Transform:
@@ -98614,6 +98775,47 @@ Transform:
   - {fileID: 829898804}
   m_Father: {fileID: 1276435048}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &837471811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837471809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4dbdadf62b2dbb4f89c580837a4ac0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectArea
+  effectType: 6
+  duration: 2.5
+--- !u!54 &837471813
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837471809}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &838389751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -116915,6 +117117,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -116939,6 +117145,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -229.99
@@ -116999,6 +117209,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -118402,6 +118616,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -122045,6 +122263,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -125978,6 +126200,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -126748,6 +126974,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -128027,8 +128257,7 @@ MonoBehaviour:
   waypoints: {fileID: 1596635929}
   speed: 1.5
   maxRandYOffsetMultiplier: 2.31
-  jellyAudioSource: {fileID: 136486431}
-  jellyBiteClip: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
+  audioManager: {fileID: 1167468960}
   coldownTime: 0
 --- !u!1 &1116078530
 GameObject:
@@ -133070,7 +133299,7 @@ MonoBehaviour:
   blindnessOverlay: {fileID: 2056905655}
   zoneOverlay: {fileID: 350788567}
   zoneOverlayMsg: {fileID: 757225618}
-  damageAudio: {fileID: 8300000, guid: fc0374f0df374654c8868732593003e6, type: 3}
+  audioManager: {fileID: 1167468960}
   healthProgresCurr_txt: {fileID: 1806031232}
   healthProgresMax_txt: {fileID: 1582076506}
   lvlProgres_txt: {fileID: 1473890700}
@@ -133442,6 +133671,7 @@ MonoBehaviour:
   enemySkeletonParticle: {fileID: 7320630401195504716, guid: a396b796a566dea4a9f4f9aa91488793, type: 3}
   enemyDieParticles: {fileID: 5900229714580445078, guid: 4bc5644134071a6418939fb199880778, type: 3}
   enemyDetector: {fileID: 735708656}
+  audioManager: {fileID: 1167468960}
 --- !u!114 &1167468959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133482,6 +133712,17 @@ MonoBehaviour:
   masterSlider: {fileID: 587174205}
   musicSlider: {fileID: 1699545688}
   sfxSlider: {fileID: 1051668774}
+  vfxGameAudioSource: {fileID: 136486431}
+  playerRevolumeAudioSource: {fileID: 1261971886}
+  pearlSoundClip: {fileID: 8300000, guid: a22a9e0bbda62744ebc3fcd763295c31, type: 3}
+  fishBiteClip: {fileID: 8300000, guid: 84293f2fa057eca48be5019c419fb6e6, type: 3}
+  hydraBiteClip: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
+  shipHornClip: {fileID: 8300000, guid: 3b1f2b1936efd894d89bfcc4ae71a6eb, type: 3}
+  cuttlefishClip: {fileID: 8300000, guid: 19a6cec2d0f5a254c91b95e151ce2b43, type: 3}
+  pufferfishClip: {fileID: 8300000, guid: 9efacd9984677144da24e82b3fcde9fe, type: 3}
+  damage: {fileID: 8300000, guid: fc0374f0df374654c8868732593003e6, type: 3}
+  heal: {fileID: 8300000, guid: b825a4b083a0dfa43ace4e324b4ba67b, type: 3}
+  echoAqua: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
 --- !u!114 &1167468961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138198,6 +138439,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -139169,6 +139414,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -139193,6 +139442,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -40.6
@@ -139253,6 +139506,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -141411,6 +141668,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -141968,6 +142229,135 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1983566453981325056, guid: 4ccf905a658e94a4c98b631f0e9b9266, type: 3}
   m_PrefabInstance: {fileID: 1261950341}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1261971884
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1261971885}
+  - component: {fileID: 1261971886}
+  m_Layer: 0
+  m_Name: PlayerCurrentAudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &1261971885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261971884}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 136486432}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1261971886
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261971884}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 531342383864937755, guid: d0b9685dba020b44cb7c71d0afc5f162, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: ea82b88716e5d024b8fbd7901725ce63, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &1263211217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -147705,6 +148095,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -147998,6 +148392,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -148571,6 +148969,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -149351,6 +149753,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 966554323}
     m_Modifications:
+    - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
       propertyPath: pearlSoundClip
       value: 
@@ -152563,6 +152969,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -157793,8 +158203,7 @@ MonoBehaviour:
   waypoints: {fileID: 1536581510}
   speed: 1.76
   maxRandYOffsetMultiplier: 0.83
-  jellyAudioSource: {fileID: 136486431}
-  jellyBiteClip: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
+  audioManager: {fileID: 1167468960}
   coldownTime: 6
 --- !u!114 &1391142425
 MonoBehaviour:
@@ -165114,6 +165523,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -167828,6 +168241,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -170073,6 +170490,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -180288,6 +180709,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -181126,6 +181551,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -181581,6 +182010,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -184501,6 +184934,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -186638,6 +187075,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -186662,6 +187103,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 228.99
@@ -186722,6 +187167,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -192683,6 +193132,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
     - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
       propertyPath: heartbeatsManager
       value: 
       objectReference: {fileID: 1167468963}
@@ -195557,6 +196010,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -206010,6 +206467,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -211266,6 +211727,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -213948,6 +214413,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -217402,6 +217871,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -217972,6 +218445,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -218330,6 +218807,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -221249,6 +221730,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -222238,6 +222723,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -225285,6 +225774,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 136486431}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
       objectReference: {fileID: 8300000, guid: b7dd319b740ba8845bc3814341fff894, type: 3}
@@ -226987,6 +227480,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -229007,6 +229504,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -234420,6 +234921,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 
@@ -243410,6 +243915,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -243434,6 +243943,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -349.5343
@@ -243494,6 +244007,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -245776,10 +246293,15 @@ PrefabInstance:
       value: 9.18355e-40
       objectReference: {fileID: 0}
     - target: {fileID: 5442383551464790760, guid: a12fa385a0a69ab479b9e68a52b7acbc, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 5442383551464790760, guid: a12fa385a0a69ab479b9e68a52b7acbc, type: 3}
       propertyPath: spawnManager
       value: 
       objectReference: {fileID: 1167468958}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1334522761406021819, guid: a12fa385a0a69ab479b9e68a52b7acbc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -246417,6 +246939,10 @@ PrefabInstance:
       value: 126
       objectReference: {fileID: 0}
     - target: {fileID: 5641846219704918312, guid: 4405a9523d26d904b8259ed08a0cb6eb, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 5641846219704918312, guid: 4405a9523d26d904b8259ed08a0cb6eb, type: 3}
       propertyPath: spawnManager
       value: 
       objectReference: {fileID: 1167468958}
@@ -246508,7 +247034,8 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 122
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1678095942720371579, guid: 4405a9523d26d904b8259ed08a0cb6eb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -247245,6 +247772,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4775273132683811927, guid: 611938991794b974ea2ea5cf9bf2b126, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 6534328881192344078, guid: 611938991794b974ea2ea5cf9bf2b126, type: 3}
       propertyPath: healClip
       value: 
@@ -247253,6 +247784,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 6534328881192344078, guid: 611938991794b974ea2ea5cf9bf2b126, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8482424315262341588, guid: 611938991794b974ea2ea5cf9bf2b126, type: 3}
       propertyPath: healClip
       value: 
@@ -247261,6 +247796,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8482424315262341588, guid: 611938991794b974ea2ea5cf9bf2b126, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -247301,6 +247840,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 966554323}
     m_Modifications:
+    - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 848766395090005304, guid: 98d9b22bf892c8a4a87599f4a7719b96, type: 3}
       propertyPath: pearlSoundClip
       value: 
@@ -247692,6 +248235,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 5b47bfcb42cbab64a9230c5e880c0ff9, type: 3}
     - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
+    - target: {fileID: 7156501776143336510, guid: 1f73414b3c8338b428230e2dba4f0c14, type: 3}
       propertyPath: heartbeatsManager
       value: 
       objectReference: {fileID: 1167468963}
@@ -247876,6 +248423,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 248368306275915958, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 2738595320511878124, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -247900,6 +248451,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4602916305979242402, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4604793097377212713, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.8
@@ -247960,6 +248515,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 8089328892136162276, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 8170301695283731443, guid: 994adc628331e474b82d1e16fdb92d60, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2
@@ -248887,6 +249446,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 136486431}
+    - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1167468960}
     - target: {fileID: 4782688215192351290, guid: d9c939f97caad0a4abe65c69b5a32d48, type: 3}
       propertyPath: hydraBiteClip
       value: 

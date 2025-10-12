@@ -91,7 +91,8 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] Image blindnessOverlay;
     [SerializeField] Image zoneOverlay;
     [SerializeField] TextMeshProUGUI zoneOverlayMsg;
-    [SerializeField] AudioClip damageAudio;
+    //[SerializeField] AudioClip damageAudio;
+    [SerializeField] AudioManager audioManager;
     private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
     private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
     private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
@@ -169,7 +170,7 @@ public class PlayerUIController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (playerEffectManager == null) {
+        if (playerEffectManager == null || spawnManager.PlayerFish == null) {
             PlayerReConnect(spawnManager.PlayerFish);
             return;
         }
@@ -289,10 +290,11 @@ public class PlayerUIController : MonoBehaviour {
 
     void ActivateDamageOverlay() {
         damageOverlay.gameObject.SetActive(true);
-        if (playerFish.gameObject.TryGetComponent<AudioSource>(out AudioSource audioSource)) {
-            audioSource.PlayOneShot(damageAudio);
-            //Debug.LogWarning(damageAudio);
-        }
+        //if (playerFish.gameObject.TryGetComponent<AudioSource>(out AudioSource audioSource)) {
+        //audioSource.PlayOneShot(damageAudio);
+        //Debug.LogWarning(damageAudio);
+        //}
+        audioManager.PlayVFX(VFX_clip.Damage);
 
         //InvokeRepeating(nameof(DamageOverlayAnim), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
         StartCoroutine(OverlayFader(damageOverlay));

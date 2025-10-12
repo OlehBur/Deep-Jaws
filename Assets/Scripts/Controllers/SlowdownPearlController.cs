@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class SlowdownPearlController : MonoBehaviour {
     [SerializeField] Animator floawerAnimator;
-    [SerializeField] AudioSource pearlAudioSource;
-    [SerializeField] AudioClip pearlSoundClip;
+    [SerializeField] AudioManager audioManager;
     [SerializeField] Collider pearlCollider;
     [SerializeField] MeshRenderer pearlMeshRenderer;
     [SerializeField] Light pearlLight;
     [SerializeField] GameObject freezeTimeParticles;
     const string FLOWER_ANIM_NAME = "Nymphae_Flower";
     const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
-    private const float MAX_RESPAWN_TIME = 90f; //1.5 minutes
+    private const float MAX_RESPAWN_TIME = /*90*/1f; //1.5 minutes
     const float MAX_AXIS_ANGLE_DIR = 45f;
     private Vector3 randomRotateDir;
 
     void Start() {
+        Debug.LogWarning("Changed flower time");
         pearlCollider.enabled = false;
         Invoke(nameof(ActivatePearl), MAX_RESPAWN_TIME);
         //gameObject.SetActive(false);
@@ -33,7 +33,8 @@ public class SlowdownPearlController : MonoBehaviour {
 
         if (parentFish.CompareTag("Player") && other.isTrigger && parentFish.TryGetComponent(out FishAnimManager fam)) {
             fam.ActivateBiteAnimation(false);
-            pearlAudioSource.PlayOneShot(pearlSoundClip);
+            audioManager.PlayVFX(VFX_clip.FreezeTime);
+            //pearlAudioSource.PlayOneShot(pearlSoundClip);
             pearlCollider.enabled = false;
             //gameObject.SetActive(false);
             pearlMeshRenderer.enabled = false;

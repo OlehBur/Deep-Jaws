@@ -39,6 +39,7 @@ public class FishControl : MonoBehaviour, IFish {
     private Vector2 moveInput;
     private Vector3 moveDir = Vector3.zero;
     private bool isMoved = false;
+    private const float ROTATION_TIME_MULTIPLIER = .005f;
 
     //reaction to other fish
     private Collider[] overlapResults = new Collider[5];
@@ -177,12 +178,14 @@ public class FishControl : MonoBehaviour, IFish {
             rb.linearVelocity = targetPos;
 
         // rotation in dir of movement
-        Vector3 newRot = Vector3./*Lerp*/SmoothDamp(transform.forward, moveDir.normalized,/*player.RotationSpeed*/ ref rotateVelocity, Time.unscaledDeltaTime);
+        Vector3 newRot = Vector3./*Lerp*/SmoothDamp(
+            transform.forward, moveDir.normalized,/*player.RotationSpeed*/ ref rotateVelocity, 
+            fish.RotationSpeed * ROTATION_TIME_MULTIPLIER, Mathf.Infinity, Time.unscaledDeltaTime);
 
         if (newRot != Vector3.zero) {
             Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(newRot, Vector3.up), fish.RotationSpeed * Time.unscaledDeltaTime);
 
-            fishAnim.RotateAnimation(transform.forward, newRot, Time.unscaledDeltaTime, 10f /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
+            fishAnim.RotateAnimation(transform.forward, newRot, Time.unscaledDeltaTime, .040f /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
             transform.rotation = newSmoothRot;
         }
     }

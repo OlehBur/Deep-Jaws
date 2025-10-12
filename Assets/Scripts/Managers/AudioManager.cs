@@ -1,8 +1,21 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+
+public enum VFX_clip {
+    FreezeTime,
+    Bite,
+    //Current,
+    Hydra,
+    Jellyfish,
+    Ship,
+    Cuttlefish,
+    Pufferfish,
+    Damage,
+    Heal,
+    Echo
+}
 
 /// <summary>
 /// read and write audio settings, save and load them, update audio mixer parameters
@@ -18,10 +31,43 @@ public class AudioManager : MonoBehaviour {
     private const float MIN_DB = -80f;
 
 
+    [SerializeField] AudioSource vfxGameAudioSource;
+    public AudioSource playerRevolumeAudioSource;
+    [SerializeField] AudioClip pearlSoundClip;
+    [SerializeField] AudioClip fishBiteClip;
+    //[SerializeField] AudioClip fishCurrentClip;
+    [SerializeField] AudioClip hydraBiteClip;
+    [SerializeField] AudioClip shipHornClip;
+    [SerializeField] AudioClip cuttlefishClip;
+    [SerializeField] AudioClip pufferfishClip;
+    [SerializeField] AudioClip damage;
+    [SerializeField] AudioClip heal;
+    [SerializeField] AudioClip echoAqua;
+
+
     //save audio data
     private const string MASTER_KEY = "audio_master";
     private const string MUSIC_KEY = "audio_music";
     private const string SFX_KEY = "audio_sfx";
+
+    public void PlayVFX(VFX_clip clipType) {
+        AudioClip audioClip = clipType switch {
+            VFX_clip.FreezeTime => pearlSoundClip,
+            VFX_clip.Bite => fishBiteClip,
+            //VFX_clip.Current => fishCurrentClip,
+            VFX_clip.Hydra => hydraBiteClip,
+            VFX_clip.Jellyfish => hydraBiteClip,
+            VFX_clip.Ship => shipHornClip,
+            VFX_clip.Cuttlefish => cuttlefishClip,
+            VFX_clip.Pufferfish => pufferfishClip,
+            VFX_clip.Damage => damage,
+            VFX_clip.Heal => heal,
+            VFX_clip.Echo => echoAqua,
+            _ => damage
+        };
+
+        vfxGameAudioSource.PlayOneShot(audioClip);
+    }
 
 
     public float MasterVolume {

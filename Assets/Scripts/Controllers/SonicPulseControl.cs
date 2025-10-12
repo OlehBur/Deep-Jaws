@@ -4,7 +4,8 @@ public class SonicPulseControl : MonoBehaviour {
     [SerializeField] Light lightIndicator;
     [SerializeField] Material blinkIndicatorMat;
     [SerializeField] Transform pulseTransform;
-    [SerializeField] AudioSource pulseAudioSource;
+    //[SerializeField] AudioSource pulseAudioSource;
+    [SerializeField] AudioManager audioManager;
     [SerializeField] Collider triggerCollider;
     [SerializeField] SpawnManager spawnManager;
     private const float MAX_SCALE = 200;
@@ -55,8 +56,9 @@ public class SonicPulseControl : MonoBehaviour {
             curentRechargeTime = PULSE_RECHARGE_TIME; // reset recharge time
             triggerCollider.enabled = false;
             //Debug.Log("Bingo");
-            if (!pulseAudioSource.isPlaying)
-                pulseAudioSource.PlayOneShot(pulseAudioSource.clip); // play the pulse sound effect witout pause or interrupt
+            //if (!pulseAudioSource.isPlaying)
+            audioManager.PlayVFX(VFX_clip.Ship);
+            //pulseAudioSource.PlayOneShot(pulseAudioSource.clip); // play the pulse sound effect witout pause or interrupt
         }
     }
 }

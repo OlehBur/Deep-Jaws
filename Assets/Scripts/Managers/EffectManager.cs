@@ -27,7 +27,8 @@ public class EffectManager : MonoBehaviour {
     private Vector3 prevPos;
     [SerializeField] SkinnedMeshRenderer fishSkinnedRenderer;
 
-    [SerializeField] AudioSource speedEffectSource;
+    /*[SerializeField]*/
+    private AudioSource speedEffectSource;
     [SerializeField] GameObject currentBubblesWhirl;
     [SerializeField] GameObject waterTrail;
     [SerializeField] Fish fish;
@@ -48,9 +49,18 @@ public class EffectManager : MonoBehaviour {
     private const float MIN_VOLUME = 0.01f;
     private const float VOLUME_FADE_SPEED = 4f;
 
-    private void Start() {
+    /// <summary>
+    /// set player current effect audiosource to control volume by effect
+    /// </summary>
+    /// <param name="speedEffectSource">only for player</param>
+    public void Init(AudioSource speedEffectSource) {
+        this.speedEffectSource = speedEffectSource;
         //isPlayerFish = CompareTag("Player");
         //CacheExistingComponents(); //cache existing components on start
+    }
+    private void OnEnable() {
+        if (fishSkinnedRenderer != null)//if respawn afret freezetime effect activation
+            fishSkinnedRenderer.sharedMaterial.SetFloat("_UnscaledTime", 0f);
     }
 
     // effects update timers

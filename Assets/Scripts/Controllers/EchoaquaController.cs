@@ -17,8 +17,9 @@ public class EchoaquaController : MonoBehaviour {
     private const float SCAN_PREVIEW_TIME = 3f;
     private bool isReverseProgress = false;
 
-    [SerializeField] AudioSource echoaquaAudioSource;
-    [SerializeField] AudioClip echoquaClip;
+    [SerializeField] AudioManager audioManager;
+    //[SerializeField] AudioSource echoaquaAudioSource;
+    //[SerializeField] AudioClip echoquaClip;
     [SerializeField] Animator echoaquaAnimator;
     private const string VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes";
     private const string REVERSE_VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes_Reverse";
@@ -51,7 +52,8 @@ public class EchoaquaController : MonoBehaviour {
             echoaquaShader.SetFloat("_Progress", 0f);//reset previous 
             vibrissaeColliders.SetActive(false);
             lightsVibrissaeParent.SetActive(false);
-            echoaquaAudioSource.PlayOneShot(echoquaClip);
+            audioManager.PlayVFX(VFX_clip.Echo);
+            //echoaquaAudioSource.PlayOneShot(echoquaClip);
             echoaquaAnimator.Play(MEMBRANE_ANIMATION_NAME, 0);
             echoaquaAnimator.Play(VIBRASES_ANIMATION_NAME, 1);
             playerUIController.SetPlayableAreaActive(false);

@@ -156,7 +156,7 @@ public class Fish : MonoBehaviour {
         float entityCeiling = (float)GameStaticInfo.MAX_FISH_LEVEL - Mathf.Abs((float)victim.Level);
         float levelSpeedProgressing = (float)level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
-        float enemyProgressMultiplier = IsPlayer ? .0001f : 3f;//progress tripl longer in enemies
+        float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
         progressDivider *= enemyProgressMultiplier;
 
         Progress += 1f / progressDivider;

@@ -4,8 +4,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class HealerFruitController : MonoBehaviour {
     [SerializeField] Collider fruitCollider;
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip healClip;
+    [SerializeField] AudioManager audioManager;
+    //[SerializeField] AudioSource audioSource;
+    //[SerializeField] AudioClip healClip;
     [SerializeField] Light fruitLight;
     [SerializeField] MeshRenderer fruitRender;
     [SerializeField] GameObject healParticle;
@@ -65,7 +66,8 @@ public class HealerFruitController : MonoBehaviour {
             if (fish.Health <= fish.MaxHealth * MIN_HEALTH_MULTIPLIER)
                 GPG_Manager.OnTriggerAchievement(AchievementKey.MarineMedicine);
 
-            audioSource.PlayOneShot(healClip);
+            audioManager.PlayVFX(VFX_clip.Heal);
+            //audioSource.PlayOneShot(healClip);
             fish.Heal(fish.MaxHealth / HEAL_DIVIDER);
             ReGrowth();
             animManager.ActivateBiteAnimation(false); // activate bite animation on fish
