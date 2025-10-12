@@ -55,7 +55,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// <summary>
     /// used to notify when player respawns after death (for camera follow, etc.)
     /// </summary>
-    public event Action OnPlayerDie;
+    //public event Action OnPlayerDie;
     public event Action<Fish> OnPlayerRespawn;
     //public event Action OnFinishPoolCreation;
     //const float SPAWN_HEIGHT = 2.5f; //height offset
@@ -95,6 +95,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
         else
             playerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false);
+        OnPlayerRespawn?.Invoke(playerFish);
 
         InitSpawnPrefabs();
 
@@ -119,14 +120,21 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //Debug.LogWarning("mega pool enable and spawn disable");
     }
 
-    GameObject GetFishFromPool(int level, out int index) {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="alreadyDeadObj">null if init spawn</param>
+    /// <param name="level"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    GameObject GetFishFromPool(GameObject alreadyDeadObj, int level, out int index) {
         index = -1;
 
         //foreach (GameObject obj in poolAll[2]) {
         for (int i = 0; i < POOL_SIZE; i++) {
             GameObject obj = globalPool[level, i];
 
-            if (!obj.activeInHierarchy) {
+            if (!obj.activeInHierarchy && obj != alreadyDeadObj) {
                 //obj.SetActive(true);
                 index = i;
 
@@ -203,7 +211,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //prev_PlayerVar.OnFishLvlUp -= PlayerLvlUpAct;
         //}
 
-        GameObject playerPrefab = GetFishFromPool(playerLvl, out int globalIndex);/* Instantiate(prefabs[(int)playerLvl], coords, rotation)*/;
+        GameObject playerPrefab = GetFishFromPool(visibleFishPool[PLAYER_INDEX], playerLvl, out int globalIndex);/* Instantiate(prefabs[(int)playerLvl], coords, rotation)*/;
         visibleFishPool[PLAYER_INDEX] = playerPrefab;
         playerPrefab.transform.position = coords;
         playerPrefab.transform.rotation = rotation;
@@ -246,7 +254,6 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                                              //playerSpawnParticles.Play();
                                              //StartCoroutine(DelayRevive(visibleFishPool[PLAYER_INDEX]));
 
-        OnPlayerRespawn?.Invoke(new_PlayerVar);
         //if (!isDie && visibleFishPool[poolVisIndex] != null)
         //    OnPlayerRespawn?.Invoke(visPool_FishComp[poolVisIndex]/*pool[PLAYER_INDEX].GetComponent<Fish>()*/);
 
@@ -315,7 +322,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //    enemyPrefab = Instantiate(prefabs[lvl - 1], GetRandSpawnPosition(lvl, isRandomPos), Quaternion.identity);
         //else
 
-        enemyPrefab = GetFishFromPool(lvl, out int globalIndex);//Instantiate(prefabs[lvl], GetRandSpawnPosition(lvl, isRandomPos), Quaternion.identity);
+        enemyPrefab = GetFishFromPool(visibleFishPool[visPoolIndex], lvl, out int globalIndex);//Instantiate(prefabs[lvl], GetRandSpawnPosition(lvl, isRandomPos), Quaternion.identity);
         enemyPrefab.transform.position = GetRandSpawnPosition(lvl, isRandomPos);
 
         Fish enemyFish = globalPool_Comp[lvl, globalIndex];//enemyPrefab.GetComponent<Fish>();
@@ -455,9 +462,9 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                                                                                     //int prefabIndex = Array.IndexOf(pool, prefab);
         Fish currentFish = visPool_FishComp[visIndex];//pool[prefabIndex].GetComponent<Fish>();
 
-        if (visIndex == PLAYER_INDEX) {// if player respawn, he died (lvl down)
+        if (currentFish.IsPlayer/*visIndex == PLAYER_INDEX*/) {// if player respawn, he died (lvl down)
             int playerLevel = (int)currentFish.Level;
-            Quaternion playerRot = visibleFishPool[visIndex].transform.rotation;
+            Quaternion playerRot = visibleFishPool[PLAYER_INDEX].transform.rotation;
 
             //visibleFishPool[prefabIndex].SetActive(false);
             //Destroy(visibleFishPool[prefabIndex]);
@@ -469,7 +476,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 playerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false, playerLevel, isDie);
                 //currentFish.OnFishDie -= FishDieAct;
                 //currentFish.OnFishLvlUp -= PlayerLvlUpAct;
-                OnPlayerDie?.Invoke();
+                //OnPlayerDie?.Invoke();
             }
             else { //lvl up
                 //visPool_FishComp[PLAYER_INDEX] = null;
@@ -477,6 +484,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 //visibleFishPool[PLAYER_INDEX] = null;
                 playerFish = SpawnPlayerFish(prefab.transform.position, playerRot, false, playerLevel + 1);
             }
+
+            OnPlayerRespawn?.Invoke(playerFish);
         }
         else {// if enemy fish respawn
               //spawn die particles
@@ -485,7 +494,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 Instantiate(enemyDieParticles, currentFish.transform.position, Quaternion.identity);
             }
             int currnentRandLvl = GetRandSpawnLevel();
-            currentFish.OnFishDie -= FishDieAct;
+            //currentFish.OnFishDie -= FishDieAct;
 
             ////visibleFishPool[visIndex].SetActive(false);
             ////Destroy(visibleFishPool[prefabIndex]); //

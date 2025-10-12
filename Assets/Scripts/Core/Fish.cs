@@ -205,11 +205,8 @@ public class Fish : MonoBehaviour {
 
     public void Die() {
         //Debug.Log($"{this.GetType().Name} has died.");
-        health = MaxHealth;
+        Health = MaxHealth;
         Progress = 0f;
-        IsPlayer = false;
-        IsActive = false;
-        IsVisible = false;
         gameObject.SetActive(false);
 
         OnFishDie?.Invoke(gameObject, Level);

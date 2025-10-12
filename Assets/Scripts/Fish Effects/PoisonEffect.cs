@@ -8,6 +8,8 @@ public class PoisonEffect : Effect {
 
     protected override void OnApply() {
         target.ChangeSpeedMultiplier(PLAYER_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
+        //if (target.IsPlayer)
+        //    Debug.LogWarning("Player has poison effect");
     }
 
     protected override void OnExpire() {

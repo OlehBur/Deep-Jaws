@@ -352,9 +352,10 @@ public class PlayerUIController : MonoBehaviour {
     //}
 
     void PlayerReConnect(Fish fish) {
-        if (fish != null && playerEffectManager != null) {
-            fish.OnInfoStatsChanged -= UpdatePlayerInfo;
-            fish.OnFishDamage -= ActivateDamageOverlay;
+        //Debug.LogWarning("PlayerRespawn");
+        if (playerFish != null && playerEffectManager != null) {
+            playerFish.OnInfoStatsChanged -= UpdatePlayerInfo;
+            playerFish.OnFishDamage -= ActivateDamageOverlay;
             playerEffectManager.OnEffectChanges -= EffectsBehaviour;
         }
 
@@ -364,8 +365,8 @@ public class PlayerUIController : MonoBehaviour {
         ////unsubscribe from events of the previous player fish if it exists
         //PlayerEventsResub(playerFish);
 
-        playerFish = spawnManager.PlayerFish/*pool[SpawnManager.PLAYER_INDEX].GetComponent<Fish>()*/; //get player fish component
-        playerEffectManager = spawnManager.PlayerFish.GetComponent<EffectManager>(); //get player transform
+        playerFish = fish/*spawnManager.PlayerFish*//*pool[SpawnManager.PLAYER_INDEX].GetComponent<Fish>()*/; //get player fish component
+        playerEffectManager = /*spawnManager.PlayerFish*/fish.GetComponent<EffectManager>(); //get player transform
 
         //syubscribe to events of the new player fish
         playerFish.OnInfoStatsChanged += UpdatePlayerInfo; // subscribe to player fish stats change event
@@ -379,17 +380,29 @@ public class PlayerUIController : MonoBehaviour {
         DisactivateDefaultIcons();
         //EffectsProgressReset();
 
-        poisonOverlay.gameObject.SetActive(false);
-        stunOverlay.gameObject.SetActive(false);
-        damageOverlay.gameObject.SetActive(false);
-        stopTimeOverlay.gameObject.SetActive(false);
-
+        ResetOverlays();
+        
         //upd icons pos of spawn effects
         foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
             if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value) && value != null)
                 EffectsBehaviour(effectType, true);
 
         UpdatePlayerInfo();
+    }
+
+    private void ResetOverlays() {
+        poisonOverlay.gameObject.SetActive(false);
+        poisonOverlay.color = new Color(poisonOverlay.color.r, poisonOverlay.color.g, poisonOverlay.color.b, 1f);
+        stunOverlay.gameObject.SetActive(false);
+        stunOverlay.color = new Color(stunOverlay.color.r, stunOverlay.color.g, stunOverlay.color.b, 1f);
+        damageOverlay.gameObject.SetActive(false);
+        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
+        stopTimeOverlay.gameObject.SetActive(false);
+        stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
+        blindnessOverlay.gameObject.SetActive(false);
+        blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
+
+        StopAllCoroutines();
     }
 
     public void ActivateZoneOverlay(string msg) {
@@ -463,7 +476,7 @@ public class PlayerUIController : MonoBehaviour {
 
             if (isAdded)
                 currentOverlay.gameObject.SetActive(true);
-            else
+            else if(currentOverlay.gameObject.activeInHierarchy)
                 StartCoroutine(OverlayFader(currentOverlay));
             //InvokeRepeating(nameof(StopTimeOverlayAnimFading), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
         }

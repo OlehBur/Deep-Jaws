@@ -40,7 +40,7 @@ public class CameraFollower : MonoBehaviour {
     public void Init(SpawnManager spawnManager) {
         this.spawnManager = spawnManager;
         spawnManager.OnPlayerRespawn += ResetPlayerTarget;
-        spawnManager.OnPlayerDie += ReInitCameraFollowing;
+        //spawnManager.OnPlayerDie += ReInitCameraFollowing;
 
         target = spawnManager.PlayerFish.transform/*pool[SpawnManager.PLAYER_INDEX].transform*/; //get player transform
         playerFish = spawnManager.PlayerFish;//target.GetComponent<Fish>(); //get player fish component
@@ -54,24 +54,29 @@ public class CameraFollower : MonoBehaviour {
     void ResetPlayerTarget(Fish player) {
         target = /*spawnManager.pool[SpawnManager.PLAYER_INDEX]*/player.transform; //get player transform
         playerFish = player;//target.GetComponent<Fish>();
-    }
 
-    void ReInitCameraFollowing() {
         isActivateAvoidence = false;// while camera is not close enough to player position, do not activate obstacle avoidance
         currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
 
         currentVelocity = Vector3.zero;
-
-        target = spawnManager.PlayerFish.transform;
-        playerFish = spawnManager.PlayerFish;
-
-        //cameraObj.transform.position = Vector3.SmoothDamp(
-        //    transform.position,
-        //    initialPosition,
-        //    ref currentVelocity,
-        //    DEFAULT_FOLLOW_SMOOTH_TIME,
-        //    Mathf.Infinity, Time.unscaledDeltaTime); // reset camera position   
     }
+
+    //void ReInitCameraFollowing() {
+    //    isActivateAvoidence = false;// while camera is not close enough to player position, do not activate obstacle avoidance
+    //    currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
+
+    //    currentVelocity = Vector3.zero;
+
+    //    target = spawnManager.PlayerFish.transform;
+    //    playerFish = spawnManager.PlayerFish;
+
+    //    //cameraObj.transform.position = Vector3.SmoothDamp(
+    //    //    transform.position,
+    //    //    initialPosition,
+    //    //    ref currentVelocity,
+    //    //    DEFAULT_FOLLOW_SMOOTH_TIME,
+    //    //    Mathf.Infinity, Time.unscaledDeltaTime); // reset camera position   
+    //}
 
     // fixed update for camera follow becaurse target is moving with physics
     void LateUpdate() {
@@ -146,7 +151,7 @@ public class CameraFollower : MonoBehaviour {
             return;
 
         spawnManager.OnPlayerRespawn -= ResetPlayerTarget;
-        spawnManager.OnPlayerDie -= ReInitCameraFollowing;
+        //spawnManager.OnPlayerDie -= ReInitCameraFollowing;
     }
 
     private void OnTriggerEnter(Collider collision) {
