@@ -43,17 +43,18 @@ public class JellyfishController : MonoBehaviour {
         ////    jellyCollider.enabled = false;
 
         InitMovementArrays();
-    }
+ }
 
     //call from game manager
-    /*public*/ void InitMovementArrays() {
+    /*public*/
+    void InitMovementArrays() {
         int jellyfishCnt = transform.childCount;
         currentPointId = new int[jellyfishCnt];
         initYSinOffset = new float[jellyfishCnt];
         maxRandYOffsetMultipliers = new float[jellyfishCnt];
 
         if (IsJellifishHasBehaviour()) {//jelly fish has coldown and has effects etc.
-            currentColdown = -coldownTime;
+            currentColdown = -coldownTime;//in case if player spawn in jellyfish
             jellyColliders = new Collider[jellyfishCnt];
         }
 
@@ -62,8 +63,10 @@ public class JellyfishController : MonoBehaviour {
             initYSinOffset[i] = Random.value * Mathf.PI;
             maxRandYOffsetMultipliers[i] = Random.value * maxRandYOffsetMultiplier;
 
-            if (IsJellifishHasBehaviour())
+            if (IsJellifishHasBehaviour()) {
                 jellyColliders[i] = transform.GetChild(i).GetComponent<Collider>();
+                jellyColliders[i].enabled = false;
+            }
         }
     }
 

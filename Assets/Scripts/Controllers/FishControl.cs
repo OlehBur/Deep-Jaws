@@ -92,6 +92,7 @@ public class FishControl : MonoBehaviour, IFish {
         if (fish.IsPlayer) {
             fish.IsActive = true;//player always active and visible, because always viwed on screen
             fish.IsVisible = true;
+            JoyAxis.Axis = Vector2.zero;
         }
 
         SleepPhysics();

@@ -59,7 +59,7 @@ public class HealerFruitController : MonoBehaviour {
         const float MIN_HEALTH_MULTIPLIER = 0.3f;//_TO_TRIGGER_MarineMedicine
         Transform parentFish = other.transform.parent;
 
-        if (parentFish.CompareTag("Player") && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
+        if (other.isTrigger && parentFish.CompareTag("Player") && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
             && parentFish.TryGetComponent(out FishAnimManager animManager)) {
 
             if (fish.Health <= fish.MaxHealth * MIN_HEALTH_MULTIPLIER)

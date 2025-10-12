@@ -56,16 +56,18 @@ public class СuttlefishController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        TriggerInkBehaviour(other);
+        if (!other.isTrigger)
+            TriggerInkBehaviour(other);
     }
 
     private void OnTriggerStay(Collider other) {
-        TriggerInkBehaviour(other);
+        if (!other.isTrigger)
+            TriggerInkBehaviour(other);
     }
 
     void TriggerInkBehaviour(Collider other) {
         Transform parentFish = other.transform.parent;
-        
+
         if (curentPoisonCooldown == 0 && fish.IsVisible && parentFish != null && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish enemyFish)/*other.transform.parent.TryGetComponent<Fish>(out Fish enemyFish)*/
     && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL/*enemyFish.IsLegitimateTarget(fish)*/) {
             //audioSource.PlayOneShot(audioSource.clip);

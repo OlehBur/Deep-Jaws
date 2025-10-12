@@ -127,7 +127,7 @@ public static class GameStaticInfo {
     | RigidbodyConstraints.FreezePositionY;
 
     public const float PLAYER_MAX_DISTANCE_VIEW = 25f; //to avoid spawn too close to player OR unseen animations etc. 
-    public const float PLAYER_MAX_DISTANCE_ACTIVITY = 150f; //only fishes in that radius - active
+    public const float PLAYER_MAX_DISTANCE_ACTIVITY = 100f; //only fishes in that radius - active
 
     public static bool IS_ENEMY_DETECTOR_ENABLED { get; set; } = false;
 

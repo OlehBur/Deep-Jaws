@@ -52,6 +52,10 @@ public class Fish : MonoBehaviour {
     public bool IsActive { get; set; } = false;
     public bool IsVisible { get; set; } = false;
     public bool IsPlayer { get; set; } = false;
+    /// <summary>
+    /// for game pool on delegates (async method)
+    /// </summary>
+    public bool IsAlreadySelected { get; set; } = false;
 
     [SerializeField] Transform prefabVisualTransform; //for grow animation
     //public Vector3 CurrentScale { get; private set; }
@@ -152,7 +156,7 @@ public class Fish : MonoBehaviour {
         float entityCeiling = (float)GameStaticInfo.MAX_FISH_LEVEL - Mathf.Abs((float)victim.Level);
         float levelSpeedProgressing = (float)level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
-        float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
+        float enemyProgressMultiplier = IsPlayer ? .0001f : 3f;//progress tripl longer in enemies
         progressDivider *= enemyProgressMultiplier;
 
         Progress += 1f / progressDivider;
@@ -208,6 +212,7 @@ public class Fish : MonoBehaviour {
         Health = MaxHealth;
         Progress = 0f;
         gameObject.SetActive(false);
+        IsAlreadySelected = false;
 
         OnFishDie?.Invoke(gameObject, Level);
     }

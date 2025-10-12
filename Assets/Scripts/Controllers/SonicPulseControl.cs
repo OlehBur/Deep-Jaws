@@ -49,7 +49,7 @@ public class SonicPulseControl : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (triggerCollider.enabled && GameManager.IsSceneReady && Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
+        if (triggerCollider.enabled && other.isTrigger && GameManager.IsSceneReady && Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
             && other.transform.parent.TryGetComponent(out EffectManager fem) && !playAnim && curentRechargeTime <= 0f) {
             playAnim = true;
             curentRechargeTime = PULSE_RECHARGE_TIME; // reset recharge time

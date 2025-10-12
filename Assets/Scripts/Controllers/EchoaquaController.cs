@@ -47,7 +47,7 @@ public class EchoaquaController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         //Debug.Log(other.transform.parent);
-        if (other.transform.parent != null && other.transform.parent.CompareTag("Player")) {
+        if (!other.isTrigger && other.transform.parent != null && other.transform.parent.CompareTag("Player")) {
             echoaquaShader.SetFloat("_Progress", 0f);//reset previous 
             vibrissaeColliders.SetActive(false);
             lightsVibrissaeParent.SetActive(false);

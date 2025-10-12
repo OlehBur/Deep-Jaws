@@ -69,11 +69,11 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     [SerializeField] GameObject enemySkeletonParticle;
     [SerializeField] GameObject enemyDieParticles;
     [SerializeField] EnemyDetector enemyDetector;
-    private Fish playerFish;
-    public Fish PlayerFish {
-        get { return playerFish; }
-        private set { playerFish = value; }
-    }
+    public Fish PlayerFish { get; private set; }
+    //public Fish PlayerFish {
+    //    get { return PlayerFish; }
+    //    private set { PlayerFish = value; }
+    //}
     private SaveData saveData;
 
 
@@ -91,11 +91,11 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         InitPool();//init global fishes pool
 
         if (saveData != null && saveData.IsDataValid) {
-            playerFish = SpawnPlayerFish(saveData.playerPosition, saveData.playerRotation, true, saveData.playerLevel);
+            PlayerFish = SpawnPlayerFish(saveData.playerPosition, saveData.playerRotation, true, saveData.playerLevel);
         }
         else
-            playerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false);
-        OnPlayerRespawn?.Invoke(playerFish);
+            PlayerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false);
+        OnPlayerRespawn?.Invoke(PlayerFish);
 
         InitSpawnPrefabs();
 
@@ -103,7 +103,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         PlayerPrefs.SetInt(nameof(isInAllowTPfromZone), 0);//deny next time
 
         if (isInAllowTPfromZone)
-            playerFish.transform.position = Vector3.up * playerFish.transform.position.y;
+            PlayerFish.transform.position = Vector3.up * PlayerFish.transform.position.y;
 
         //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
     }
@@ -134,13 +134,20 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         for (int i = 0; i < POOL_SIZE; i++) {
             GameObject obj = globalPool[level, i];
 
-            if (!obj.activeInHierarchy && obj != alreadyDeadObj) {
+            if (!obj.activeInHierarchy && obj != alreadyDeadObj && !globalPool_Comp[level, i].IsAlreadySelected) {
                 //obj.SetActive(true);
                 index = i;
+                globalPool_Comp[level, i].IsAlreadySelected = true;
 
                 return obj;
             }
         }
+
+        //index = 0;
+        //obj = globalPool[level, index];
+        //obj.SetActive(false);
+        //return obj;
+
         return null; // або розширити пул
     }
 
@@ -152,8 +159,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private void OnApplicationQuit() {
         SavePlayerData();
 
-        playerFish.OnFishDie -= FishDieAct;
-        playerFish.OnFishLvlUp -= PlayerLvlUpAct;
+        PlayerFish.OnFishDie -= FishDieAct;
+        PlayerFish.OnFishLvlUp -= PlayerLvlUpAct;
 
         UnSubscribeFishesDieAct(pufferfishPool_FishComp, PUFFERFISH_SPAWN_COUNT/*pufferfishPool*/);
         UnSubscribeFishesDieAct(cuttlefishPool_FishComp, CUTTLEFISH_SPAWN_COUNT/*cuttlefishPool*/);
@@ -172,11 +179,11 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     void SavePlayerData() {
         saveData = new SaveData {
-            playerPosition = /*pool[PLAYER_INDEX]*/playerFish.transform.position,
-            playerRotation = /*pool[PLAYER_INDEX]*/playerFish.transform.rotation,
-            playerHealth = playerFish.Health,
-            playerLevel = (int)playerFish.Level,
-            playerProgress = playerFish.Progress
+            playerPosition = /*pool[PLAYER_INDEX]*/PlayerFish.transform.position,
+            playerRotation = /*pool[PLAYER_INDEX]*/PlayerFish.transform.rotation,
+            playerHealth = PlayerFish.Health,
+            playerLevel = (int)PlayerFish.Level,
+            playerProgress = PlayerFish.Progress
         };
         ProgressSaver.Save(saveData);
     }
@@ -203,7 +210,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, bool isDie = false) {
         //playerLvl = FishLevel.WhiteShark;
         //Debug.LogWarning(playerLvl);
-        const float PLAYER_INIT_SHIELD_DURATION = 18f; //initial shield duration after player respawn
+        const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
         Fish new_PlayerVar;
 
         //if (prev_PlayerVar != null) {//first spawn
@@ -211,7 +218,13 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //prev_PlayerVar.OnFishLvlUp -= PlayerLvlUpAct;
         //}
 
-        GameObject playerPrefab = GetFishFromPool(visibleFishPool[PLAYER_INDEX], playerLvl, out int globalIndex);/* Instantiate(prefabs[(int)playerLvl], coords, rotation)*/;
+        // ФІКС: передаємо null якщо рівень змінився, інакше передаємо поточний об'єкт
+        GameObject alreadyDeadObj = (visibleFishPool[PLAYER_INDEX] != null &&
+                                      visPool_FishComp[PLAYER_INDEX] != null &&
+                                      (int)visPool_FishComp[PLAYER_INDEX].Level == playerLvl)
+                                      ? visibleFishPool[PLAYER_INDEX] : null;
+        GameObject playerPrefab = GetFishFromPool(alreadyDeadObj, playerLvl, out int globalIndex);
+        //GameObject playerPrefab = GetFishFromPool(visibleFishPool[PLAYER_INDEX], playerLvl, out int globalIndex);/* Instantiate(prefabs[(int)playerLvl], coords, rotation)*/;
         visibleFishPool[PLAYER_INDEX] = playerPrefab;
         playerPrefab.transform.position = coords;
         playerPrefab.transform.rotation = rotation;
@@ -233,6 +246,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
         /* GameObject enemyDetector =*///Instantiate(enemyDetectorPrefab, playerPrefab.transform);
         enemyDetector.transform.SetParent(playerPrefab.transform);
+        enemyDetector.transform.localPosition = Vector3.zero;
         enemyDetector.Init(new_PlayerVar/*playerPrefab.GetComponent<Fish>()*/);
 
         if (isDie) {//apply shield effect after every player death
@@ -267,10 +281,16 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// respawn all +2 lvl fishes depending on player lvl after hes death
     /// </summary>
     void RespawnEntitiesMap() {
+        Debug.LogWarning("Disabled Reinit Entities map");
         for (int i = 1; i < POOL_SIZE; i++)
-            if (/*pool[i].TryGetComponent(out Fish fish)*/visPool_FishComp[i] != null
-                && /*fish*/visPool_FishComp[i].Level > playerFish.Level + 1)
-                RespawnPrefab(visibleFishPool[i], i);
+            if (visibleFishPool[i].activeInHierarchy && visPool_FishComp[i].Level > PlayerFish.Level + 1) {
+                //if (/*pool[i].TryGetComponent(out Fish fish)*/visPool_FishComp[i] != null
+                //    && /*fish*/visPool_FishComp[i].Level > PlayerFish.Level + 1)
+
+                visPool_FishComp[i].Die();
+                //visibleFishPool[i].SetActive(false);
+                //RespawnPrefab(visibleFishPool[i], i, true);
+            }
     }
 
     void FishDieAct(GameObject gameObject, FishLevel level) {
@@ -279,7 +299,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     }
 
     void PlayerLvlUpAct(GameObject gameObject) {
-        DeactivatePrefab(gameObject, playerFish.Level, false);
+        DeactivatePrefab(gameObject, PlayerFish.Level, false);
         //Debug.LogWarning("player lvl up");
     }
 
@@ -397,13 +417,13 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private int GetRandSpawnLevel() {
         const int ALLOWED_LVLS_CNT = 3;
         int[] allowedLevels = new int[ALLOWED_LVLS_CNT] {
-            Math.Max((int) playerFish.Level - 1, 0),
-            (int) playerFish.Level,
-            Math.Min((int)playerFish.Level + 1, (int)GameStaticInfo.MAX_FISH_LEVEL)
+            Math.Max((int) PlayerFish.Level - 1, 0),
+            (int) PlayerFish.Level,
+            Math.Min((int)PlayerFish.Level + 1, (int)GameStaticInfo.MAX_FISH_LEVEL)
         };
         float random = UnityEngine.Random.value;//0 to 1
         float currentWeight = 0f;
-        float[] spawnWeight = (playerFish.Level == FishLevel.SeaBass) ?
+        float[] spawnWeight = (PlayerFish.Level == FishLevel.SeaBass) ?
             SPAWN_WEIGHTS_EASY : SPAWN_WEIGHTS;//easy enemies for beginner players
 
         for (int i = 0; i < ALLOWED_LVLS_CNT; i++) {
@@ -436,7 +456,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         int spawnPointIndex = (int)(UnityEngine.Random.value * pointsMaxInd);
 
         while (currentInd < maxCnt) {
-            if (Vector3.Distance(playerFish.transform.position, spPoints.GetChild(spawnPointIndex).position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {
+            if (Vector3.Distance(PlayerFish.transform.position, spPoints.GetChild(spawnPointIndex).position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {
                 GameObject prefabInst = pool[currentInd] = Instantiate(prefab, spPoints.GetChild(spawnPointIndex).position /*+ RandomXZOffset()*/, Quaternion.identity, fishPoolParent);
                 Fish fish = prefabInst.GetComponent<Fish>();
                 FishControl enemyControl = prefabInst.GetComponent<FishControl>();
@@ -471,21 +491,21 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
             if (isDie) {//player and die
                 playerLevel = Math.Max((int)GameStaticInfo.PLAYER_INIT_LVL, playerLevel - 1);
-                //visPool_FishComp[PLAYER_INDEX] = null;  //only for debug test
-                //visibleFishPool[PLAYER_INDEX] = null;
-                playerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false, playerLevel, isDie);
+                visPool_FishComp[PLAYER_INDEX] = null;  //only for debug test
+                visibleFishPool[PLAYER_INDEX] = null;
+                PlayerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false, playerLevel, isDie);
                 //currentFish.OnFishDie -= FishDieAct;
                 //currentFish.OnFishLvlUp -= PlayerLvlUpAct;
                 //OnPlayerDie?.Invoke();
             }
             else { //lvl up
-                //visPool_FishComp[PLAYER_INDEX] = null;
+                visPool_FishComp[PLAYER_INDEX] = null;
                 visibleFishPool[PLAYER_INDEX].SetActive(false);
-                //visibleFishPool[PLAYER_INDEX] = null;
-                playerFish = SpawnPlayerFish(prefab.transform.position, playerRot, false, playerLevel + 1);
+                visibleFishPool[PLAYER_INDEX] = null;
+                PlayerFish = SpawnPlayerFish(prefab.transform.position, playerRot, false, playerLevel + 1);
             }
 
-            OnPlayerRespawn?.Invoke(playerFish);
+            OnPlayerRespawn?.Invoke(PlayerFish);
         }
         else {// if enemy fish respawn
               //spawn die particles
@@ -498,8 +518,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
             ////visibleFishPool[visIndex].SetActive(false);
             ////Destroy(visibleFishPool[prefabIndex]); //
-            //visPool_FishComp[visIndex] = null;
-            //visibleFishPool[visIndex] = null;
+            visPool_FishComp[visIndex] = null;
+            visibleFishPool[visIndex] = null;
             SpawnEnemyFish(visIndex, currnentRandLvl, false);
         }
         //already active
@@ -523,7 +543,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         prefabInst.SetActive(true);
 
         for (int attempt = 0; attempt <= pool.Length; attempt++) {
-            if (Vector3.Distance(playerFish.transform.position, spPoints.GetChild(spawnPointIndex).position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {
+            if (Vector3.Distance(PlayerFish.transform.position, spPoints.GetChild(spawnPointIndex).position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {
                 pool[index].transform.position = spPoints.GetChild(spawnPointIndex).position;
 
                 return;
@@ -572,7 +592,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //else {//rand spawn position farthest from player by distance
         for (int i = 0; i <= pointsMaxInd; i++) {//max attempts to find suitable spawn point
             index = (int)(UnityEngine.Random.value * pointsMaxInd);
-            distanceToPlayer = Vector3.Distance(/*pool[PLAYER_INDEX]*/playerFish.transform.position, spawnPoints.GetChild(index).position);
+            distanceToPlayer = Vector3.Distance(/*pool[PLAYER_INDEX]*/PlayerFish.transform.position, spawnPoints.GetChild(index).position);
 
             if (distanceToPlayer < GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW/* && distanceToPlayer < MAX_DISTANCE_FROM_PLAYER*/)
                 continue;

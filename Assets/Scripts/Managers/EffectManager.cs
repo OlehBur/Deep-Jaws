@@ -227,8 +227,8 @@ public class EffectManager : MonoBehaviour {
 
     //optimization for FixedUpdate
     private void UpdateSpeedEffectsFlag() {
-        hasSpeedEffects = activeEffects.ContainsKey(FishEffectType.SprintSpeed) ||
-                         activeEffects.ContainsKey(FishEffectType.CurrentSpeed);
+        hasSpeedEffects = IsEffectActive(FishEffectType.SprintSpeed) ||
+                         IsEffectActive(FishEffectType.CurrentSpeed);
     }
 
     private void CheckAchievements() {

@@ -31,7 +31,7 @@ public class SlowdownPearlController : MonoBehaviour {
     private void OnTriggerStay(Collider other) {
         Transform parentFish = other.transform.parent;
 
-        if (parentFish.CompareTag("Player") && parentFish.TryGetComponent(out FishAnimManager fam)) {
+        if (parentFish.CompareTag("Player") && other.isTrigger && parentFish.TryGetComponent(out FishAnimManager fam)) {
             fam.ActivateBiteAnimation(false);
             pearlAudioSource.PlayOneShot(pearlSoundClip);
             pearlCollider.enabled = false;

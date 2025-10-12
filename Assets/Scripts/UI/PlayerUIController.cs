@@ -93,6 +93,7 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI zoneOverlayMsg;
     [SerializeField] AudioClip damageAudio;
     private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
+    private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
     private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
 
     [Header("Player Info")]
@@ -298,23 +299,23 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     IEnumerator BlindnessOverlayAnimation(Effect effect) {
-        while (effect != null || effect.LeftTime > 0) {
+        while (effect != null || effect.Enabled) {
 
             while (blindnessOverlay.color.a < 1f) {//blink
                 blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a + OVERLAYS_UPDATE_INTERVAL);
 
-                if (effect == null)
+                if (effect == null || !effect.Enabled)
                     break;
 
                 yield return HALF_OVERLAY_UPD_WAIT;
             }
 
-            if (effect == null)
+            if (effect == null || !effect.Enabled)
                 break;
             yield return BLINDNESS_DARK_WAIT;
 
             while (blindnessOverlay.color.a > 0f) {
-                if (effect == null)
+                if (effect == null || !effect.Enabled)
                     break;
 
                 blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
@@ -327,8 +328,8 @@ public class PlayerUIController : MonoBehaviour {
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
     }
 
-    IEnumerator OverlayFader(Image overlay, float updateInterval = OVERLAYS_UPDATE_INTERVAL, TextMeshProUGUI textElement = null) {
-        while (overlay.color.a > 0) {
+    IEnumerator OverlayFader(Image overlay, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null) {
+        while (overlay.color.a > 0 && overlay.gameObject.activeInHierarchy) {
             overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, overlay.color.a - updateInterval);
 
             if (textElement != null)
@@ -381,7 +382,7 @@ public class PlayerUIController : MonoBehaviour {
         //EffectsProgressReset();
 
         ResetOverlays();
-        
+
         //upd icons pos of spawn effects
         foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
             if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value) && value != null)
@@ -401,6 +402,8 @@ public class PlayerUIController : MonoBehaviour {
         stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
         blindnessOverlay.gameObject.SetActive(false);
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
+        zoneOverlay.gameObject.SetActive(false);
+        zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
 
         StopAllCoroutines();
     }
@@ -476,8 +479,10 @@ public class PlayerUIController : MonoBehaviour {
 
             if (isAdded)
                 currentOverlay.gameObject.SetActive(true);
-            else if(currentOverlay.gameObject.activeInHierarchy)
+            else {
+                StopCoroutine(OverlayFader(currentOverlay));
                 StartCoroutine(OverlayFader(currentOverlay));
+            }
             //InvokeRepeating(nameof(StopTimeOverlayAnimFading), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
         }
     }
