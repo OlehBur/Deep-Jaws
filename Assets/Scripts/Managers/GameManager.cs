@@ -91,8 +91,8 @@ public class GameManager : MonoBehaviour {
 }
 
 public enum FishLevel {
-    Pufferfish = -2,
-    Cuttlefish = -1,
+    Pufferfish = -5,
+    Cuttlefish = -4,
     Crab = 0,
     SeaBass,
     Mackarel,

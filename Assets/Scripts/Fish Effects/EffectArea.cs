@@ -5,7 +5,9 @@ public class EffectArea : MonoBehaviour {
     public float duration;
 
     private void OnTriggerEnter(Collider other) {
-        if (other.transform.parent.TryGetComponent(out EffectManager fem)) { //if component on fish exists - apply effect
+        Transform parent = other.transform.parent;
+
+        if (!other.isTrigger && parent != null && parent.TryGetComponent(out EffectManager fem)) { //if component on fish exists - apply effect
             fem.ApplyEffect(effectType, duration);//transform.parent. because collider is child of fish prefab
 
             if (other.transform.parent.CompareTag("Player")) //if player fish, check for achievements
@@ -14,7 +16,9 @@ public class EffectArea : MonoBehaviour {
     }
 
     private void OnTriggerStay(Collider other) {
-        if (other.transform.parent.TryGetComponent(out EffectManager fem)) {
+        Transform parent = other.transform.parent;
+
+        if (!other.isTrigger && parent != null && parent.TryGetComponent(out EffectManager fem)) {
             fem.ApplyEffect(effectType, duration);
         }
     }

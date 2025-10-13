@@ -98,11 +98,11 @@ public class FishAnimManager : MonoBehaviour {
         //fishMat.SetFloat("_Frequency", matDefSprintSpeed);
     }
 
-    public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime, float enemyAnimDeltaMultiplier = .1f) {
+    public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime, float enemyAnimDeltaMultiplier = .08f) {
         if (!isUseRotatingShader)
             return;
 
-        const float ANGLE_DETECTION = 30f;
+        const float ANGLE_DETECTION = 45f;
         Quaternion currentRotation = rb.rotation;
 
         // ang betw

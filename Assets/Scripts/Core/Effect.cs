@@ -27,16 +27,17 @@ public abstract class Effect /*: MonoBehaviour*/ {
     protected Fish target;
     public event Action<FishEffectType> OnEffeñtExpire;
     protected const float NORMAL_SPEED_MULTIPLIER = 1f;
-    private bool enabled = true;
-    public bool Enabled {
-        get { return enabled; }
-        set {
-            enabled = value;
+    //private bool enabled = true;
+    public bool Enabled { get; set; } = true;
+    //public bool Enabled {
+    //    get { return enabled; }
+    //    set {
+    //        enabled = value;
 
-            if (!value)
-                DeactivateEffect();
-        }
-    }
+    //        if (!value)
+    //            DeactivateEffect();
+    //    }
+    //}
 
 
     public void Init(Fish target, float duration) {
@@ -56,9 +57,10 @@ public abstract class Effect /*: MonoBehaviour*/ {
 
         LeftTime -= Time.unscaledDeltaTime/*deltaTime*/;
 
-        if (LeftTime <= 0f)
+        if (LeftTime <= 0f || Enabled == false) {
             Enabled = false;
-        //DeactivateEffect();
+            DeactivateEffect();
+        }
     }
 
     public void Refresh(float duration) {
