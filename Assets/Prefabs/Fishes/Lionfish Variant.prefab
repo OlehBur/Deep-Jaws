@@ -48,6 +48,18 @@ PrefabInstance:
       propertyPath: fishSkinnedMesh
       value: 
       objectReference: {fileID: 4530530531037267490}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.y
+      value: -0.134
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.z
+      value: 1.182
+      objectReference: {fileID: 0}
+    - target: {fileID: 1645455762981966139, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1999017465357431205, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -56,6 +68,26 @@ PrefabInstance:
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 4530530531037267490}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: whirlLocalPos.z
+      value: -0.4170001
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalPos.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalScale.x
+      value: 1.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalScale.y
+      value: 1.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalScale.z
+      value: 3.26
+      objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishSkinnedRenderer
       value: 
@@ -120,6 +152,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.915
       objectReference: {fileID: 0}
+    - target: {fileID: 6139732591693606316, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6523918303924561895, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Name
       value: Lionfish Variant
@@ -146,11 +182,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7375219886958239492, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2.806803
+      value: 3.26
       objectReference: {fileID: 0}
     - target: {fileID: 7375219886958239492, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7831987417261332925, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Height

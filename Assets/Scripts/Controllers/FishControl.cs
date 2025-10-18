@@ -179,7 +179,7 @@ public class FishControl : MonoBehaviour, IFish {
 
         // rotation in dir of movement
         Vector3 newRot = Vector3./*Lerp*/SmoothDamp(
-            transform.forward, moveDir.normalized,/*player.RotationSpeed*/ ref rotateVelocity, 
+            transform.forward, moveDir.normalized,/*player.RotationSpeed*/ ref rotateVelocity,
             fish.RotationSpeed * ROTATION_TIME_MULTIPLIER, Mathf.Infinity, Time.unscaledDeltaTime);
 
         if (newRot != Vector3.zero) {
@@ -430,7 +430,7 @@ public class FishControl : MonoBehaviour, IFish {
         GameObject collisObj = collider.gameObject;
 
         //if other fish
-        if (!collider.isTrigger && parent != null && transform != parent//not self collision
+        if (parent != null && transform != parent//not self collision
              && GameStaticInfo.TryGetFish(parent.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
         && (fish.IsPlayer || other == IFish.CurrentTarget) //collision obj is our victim
             && fish.IsLegitimateTarget(other)//victim is weaker
@@ -477,12 +477,12 @@ public class FishControl : MonoBehaviour, IFish {
                                                  //   (other.gameObject.layer == LayerMask.NameToLayer("Obstacle")//fish is stuck on obstacle
                                                  //    || other.gameObject.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders")))
                                                  //    BypassObstacle(other.ClosestPoint(transform.position));
-        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL)
+        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
             TryContactWithBehaviour(other, false);
     }
 
     private void OnTriggerStay(Collider other) {
-        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL)
+        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
             TryContactWithBehaviour(other, true);
     }
     bool CheckEatAchievements(FishLevel victimLvl) {

@@ -3,16 +3,23 @@ using UnityEngine;
 public class SprintEffect : Effect {
     GameObject trailObj;
     FishAnimManager fishAnim;
+    FishAdditionalCompManager fishAddComp;
+    Vector3 trailLocalPos;
+    Transform trailParent;
     const float SPRINT_SPEED_MULTIPLIER = 1.5f;
 
-    public SprintEffect(GameObject trailObj, FishAnimManager fishAnim) {
-        this.trailObj = trailObj;
+    public SprintEffect(FishAdditionalCompManager fishAddComp, FishAnimManager fishAnim, Transform trailParent, Vector3 trailLocalPos) {
+        //this.trailObj = trailObj;
+        this.fishAddComp = fishAddComp;
+        this.trailLocalPos = trailLocalPos;
         this.fishAnim = fishAnim;
+        this.trailParent = trailParent;
         type = FishEffectType.SprintSpeed;
     }
 
-    protected override void OnApply() {        
-        trailObj.SetActive(true);
+    protected override void OnApply() {
+        //trailObj.SetActive(true);
+        trailObj = fishAddComp.ActivateObjectFromPool(FishComponentType.PlayerSprintLine, trailParent, trailLocalPos, Vector3.one, Quaternion.identity);
         target.ChangeSpeedMultiplier(SPRINT_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
         //Debug.Log($"{target.name} has applied Speed Effect for {duration} s.");
         fishAnim?.SprintAnimation(); // enable sprint animation boost

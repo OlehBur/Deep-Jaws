@@ -22,15 +22,22 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] GameObject currentIcon;
     [SerializeField] GameObject poisonIcon;
 
-    [SerializeField] GameObject shieldObj = null;
     [SerializeField] Rigidbody rb;
     private Vector3 prevPos;
     [SerializeField] SkinnedMeshRenderer fishSkinnedRenderer;
+    [SerializeField] Transform editableTransform;
 
     /*[SerializeField]*/
+    public GameObject ShieldObj { get; set; } = null;
     private AudioSource speedEffectSource;
-    [SerializeField] GameObject currentBubblesWhirl;
-    [SerializeField] GameObject waterTrail;
+    private AudioManager audioManager;
+    private FishAdditionalCompManager fishAdditionalComponentManager;
+    [SerializeField] Vector3 shieldLocalPos;
+    [SerializeField] Vector3 shieldLocalScale;
+    [SerializeField] Vector3 whirlLocalPos;
+    //[SerializeField] GameObject currentBubblesWhirl;
+    //[SerializeField] GameObject waterTrail;
+    //[SerializeField] GameObject shieldObj = null;
     [SerializeField] Fish fish;
     [SerializeField] FishAnimManager fishAnim;
 
@@ -53,8 +60,15 @@ public class EffectManager : MonoBehaviour {
     /// set player current effect audiosource to control volume by effect
     /// </summary>
     /// <param name="speedEffectSource">only for player</param>
-    public void Init(AudioSource speedEffectSource) {
-        this.speedEffectSource = speedEffectSource;
+    public void Init(AudioManager audioManager/*, AudioSource speedEffectSource*/, FishAdditionalCompManager fishAdditionalComponentManager) {
+        this.fishAdditionalComponentManager = fishAdditionalComponentManager;
+
+        if (audioManager == null)
+            return;
+
+        this.audioManager = audioManager;
+        /*this.*/
+        speedEffectSource = audioManager.playerRevolumeAudioSource/*speedEffectSource*/;
         //isPlayerFish = CompareTag("Player");
         //CacheExistingComponents(); //cache existing components on start
     }
@@ -354,13 +368,17 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateShieldEffect() {
-        if (shieldObj == null) return null;
+        //if (shieldObj == null) return null;
 
         //ShieldEffect shieldEffect = gameObject.AddComponent<ShieldEffect>();
         //shieldEffect.Init(shieldObj);
         //existingComponents[FishEffectType.Shield] = shieldEffect; // upd cache
 
-        ShieldEffect shieldEffect = new(shieldObj);
+        ShieldEffect shieldEffect = new(audioManager,
+            fishAdditionalComponentManager,
+            editableTransform,
+            shieldLocalPos,
+            shieldLocalScale);
 
         return shieldEffect;
     }
@@ -373,10 +391,11 @@ public class EffectManager : MonoBehaviour {
         //    speedEffectSource.enabled = isPlayerFish;
         //existingComponents[FishEffectType.CurrentSpeed] = speedEffect; //upd cache
 
-        CurrentEffect speedEffect = new(currentBubblesWhirl);
+        CurrentEffect speedEffect = new(fishAdditionalComponentManager, transform, whirlLocalPos);
 
-        if (speedEffectSource != null)
-            speedEffectSource.enabled = fish.IsPlayer;
+        if (speedEffectSource != null)//not null only for player
+            speedEffectSource.enabled = true;
+        //    speedEffectSource.enabled = fish.IsPlayer;
 
         return speedEffect;
     }
@@ -389,10 +408,11 @@ public class EffectManager : MonoBehaviour {
         //    speedEffectSource.enabled = isPlayerFish;
         //existingComponents[FishEffectType.SprintSpeed] = sprintEffect; // upd cache
 
-        SprintEffect sprintEffect = new(waterTrail, fishAnim);
+        SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, editableTransform, whirlLocalPos);
 
         if (speedEffectSource != null)
-            speedEffectSource.enabled = fish.IsPlayer;
+            speedEffectSource.enabled = true;
+        //    speedEffectSource.enabled = fish.IsPlayer;
 
         return sprintEffect;
     }
@@ -423,9 +443,9 @@ public class EffectManager : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if (!fish.IsActive || speedEffectSource == null
+        if (!fish.IsPlayer || speedEffectSource == null
             || (!hasSpeedEffects && speedEffectSource.volume == 0f)
-            || !speedEffectSource.enabled)
+            /*|| !speedEffectSource.enabled*/)
             return;
 
         float velocity = (prevPos - rb.position).magnitude / Time.fixedDeltaTime;

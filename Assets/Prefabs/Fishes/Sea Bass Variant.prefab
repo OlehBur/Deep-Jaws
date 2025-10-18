@@ -53,6 +53,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -74,6 +76,7 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -223,6 +226,18 @@ PrefabInstance:
       propertyPath: bubbleMaxXoffset
       value: 0.738
       objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.y
+      value: -0.004
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.z
+      value: 1.721
+      objectReference: {fileID: 0}
+    - target: {fileID: 1645455762981966139, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1999017465357431205, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -231,6 +246,22 @@ PrefabInstance:
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 3282429133495747956}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: whirlLocalPos.z
+      value: -1.809
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalScale.x
+      value: 2.685887
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalScale.y
+      value: 2.564722
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: shieldLocalScale.z
+      value: 4.78
+      objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishSkinnedRenderer
       value: 
@@ -247,13 +278,17 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.417
       objectReference: {fileID: 0}
+    - target: {fileID: 3766895010739556756, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3870166449409053846, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 0e8024e770b744744a80360c9d128428, type: 2}
     - target: {fileID: 4732154137714168524, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.065
+      value: -0.004
       objectReference: {fileID: 0}
     - target: {fileID: 4732154137714168524, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -270,6 +305,10 @@ PrefabInstance:
     - target: {fileID: 5710314930746697683, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1.809
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139732591693606316, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6523918303924561895, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Name

@@ -79,6 +79,13 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private SaveData saveData;
 
     [Header("Other Dependencies")]
+    [SerializeField] FishAdditionalCompManager fishAdditionalComponentManager;
+    private const int SHIELDS_POOL_CNT = 30; // POOL_SIZE/4
+    private const int WHIRLE_POOL_CNT = 15;
+    private const int BITE_PARTICLES_POOL_CNT = 12;
+    private const int SKELETON_PARTICLE_POOL_CNT = 8;
+    private const int DEAD_BUBBLES_POOL_CNT = 8;
+    private const int INK_PARTICLES_POOL_CNT = 5;//CUTTLEFISH_SPAWN_COUNT / 6
     [SerializeField] AudioManager audioManager;
 
     /// <summary>
@@ -89,6 +96,13 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
 
     public void Init() {
+        fishAdditionalComponentManager.Init(SHIELDS_POOL_CNT,
+            DEAD_BUBBLES_POOL_CNT,
+            BITE_PARTICLES_POOL_CNT,
+            SKELETON_PARTICLE_POOL_CNT,
+            WHIRLE_POOL_CNT,
+            INK_PARTICLES_POOL_CNT);
+
         saveData = ProgressSaver.Load();//load save data if exists
         playerSpawnPos = Vector3.up * (weakFishSpawnPointsParent.position.y /*+ SPAWN_HEIGHT*/);//in center map
 
@@ -120,8 +134,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 prefab = Instantiate(prefabs[i], fishPoolParent);
                 globalPool[i, j] = prefab;
                 prefab.SetActive(false);
-                if (prefab.TryGetComponent(out FishAnimManager fishAnim))
-                    fishAnim.Init(audioManager);
+                if (prefab.TryGetComponent(out FishAnimManager fishAnim) && prefab.TryGetComponent(out EffectManager effectManager)) {
+                    fishAnim.Init(audioManager, effectManager, fishAdditionalComponentManager);
+                    effectManager.Init(null, fishAdditionalComponentManager);
+                }
 
                 component = prefab.GetComponent<Fish>();
                 globalPool_Comp[i, j] = component;
@@ -261,7 +277,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         enemyDetector.Init(new_PlayerVar/*playerPrefab.GetComponent<Fish>()*/);
 
         EffectManager playerEffectManager = playerPrefab?.GetComponent<EffectManager>();
-        playerEffectManager.Init(audioManager.playerRevolumeAudioSource);
+        playerEffectManager.Init(audioManager, fishAdditionalComponentManager);
         if (isDie) {//apply shield effect after every player death
             playerEffectManager.ApplyEffect(FishEffectType.Shield, PLAYER_INIT_SHIELD_DURATION);
             GPG_Manager.OnTriggerAchievement(AchievementKey.HereWeGo);
@@ -528,8 +544,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         else {// if enemy fish respawn
               //spawn die particles
             if (currentFish.IsVisible) {
-                Instantiate(enemySkeletonParticle, currentFish.transform.position, Quaternion.identity);
-                Instantiate(enemyDieParticles, currentFish.transform.position, Quaternion.identity);
+                fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, currentFish.transform.position, Vector3.one, Quaternion.identity);
+                fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, currentFish.transform.position, Vector3.one, Quaternion.identity);
+                //Instantiate(enemySkeletonParticle, currentFish.transform.position, Quaternion.identity);
+                //Instantiate(enemyDieParticles, currentFish.transform.position, Quaternion.identity);
             }
             int currnentRandLvl = GetRandSpawnLevel();
             //currentFish.OnFishDie -= FishDieAct;
@@ -552,8 +570,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
         //spawn dead particles
         if (fish.IsVisible) {
-            Instantiate(enemySkeletonParticle, fish.transform.position, Quaternion.identity);
-            Instantiate(enemyDieParticles, fish.transform.position, Quaternion.identity);
+            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, fish.transform.position, Vector3.one, Quaternion.identity);
+            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, fish.transform.position, Vector3.one, Quaternion.identity);
+            //Instantiate(enemySkeletonParticle, fish.transform.position, Quaternion.identity);
+            //Instantiate(enemyDieParticles, fish.transform.position, Quaternion.identity);
         }
 
         fish.Heal(fish.MaxHealth);//restore init parameters 

@@ -170,10 +170,10 @@ public class PlayerUIController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (playerEffectManager == null || spawnManager.PlayerFish == null) {
-            PlayerReConnect(spawnManager.PlayerFish);
-            return;
-        }
+        //if ((playerEffectManager == null || playerFish == null) && spawnManager.PlayerFish != null) {
+        //    PlayerReConnect(spawnManager.PlayerFish);
+        //    return;
+        //}
 
         //activate and draw progress for all effects icons that have player
         EffectsProgressReset(); // reset all icons progress

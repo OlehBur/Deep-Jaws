@@ -68,6 +68,14 @@ PrefabInstance:
       propertyPath: biteParticleSystem
       value: 
       objectReference: {fileID: 2608086187023083063}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.y
+      value: -0.254
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.z
+      value: 4.17
+      objectReference: {fileID: 0}
     - target: {fileID: 1645455762981966139, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -80,6 +88,14 @@ PrefabInstance:
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 1503625095468643840}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: whirlLocalPos.y
+      value: -0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: whirlLocalPos.z
+      value: -4.89
+      objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: currentBubblesWhirl
       value: 
@@ -122,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4732154137714168524, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.39
+      value: -0.254
       objectReference: {fileID: 0}
     - target: {fileID: 4732154137714168524, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z

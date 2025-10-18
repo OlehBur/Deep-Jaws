@@ -5,11 +5,12 @@ using UnityEngine;
 public class HealerFruitController : MonoBehaviour {
     [SerializeField] Collider fruitCollider;
     [SerializeField] AudioManager audioManager;
+    [SerializeField] FishAdditionalCompManager dishAddCompMangr;
     //[SerializeField] AudioSource audioSource;
     //[SerializeField] AudioClip healClip;
     [SerializeField] Light fruitLight;
     [SerializeField] MeshRenderer fruitRender;
-    [SerializeField] GameObject healParticle;
+    //[SerializeField] GameObject healParticle;
     private Material fruitMaterial; // reference to the material for emission color
     private const float MATERIAL_EMISSION_SCALE = 10f; // scale for emission color
     private const float PROGGRESS_THRESHOLD = 0.95f; // threshold for progress calculation
@@ -75,7 +76,12 @@ public class HealerFruitController : MonoBehaviour {
             //healParticle.transform.localScale = other.transform.localScale;
             //healParticle.transform.position = other.transform.position;
             //healParticle.SetActive(true);//spawn particles
-            Instantiate(healParticle, other.transform).transform.localScale = MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale);
+            dishAddCompMangr.ActivateObjectFromPool(FishComponentType.PlayerHealParticle,
+                other.transform, 
+                Vector3.zero, 
+                MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale),
+                Quaternion.identity);
+            //Instantiate(healParticle, other.transform).transform.localScale = MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale);
         }
     }
 

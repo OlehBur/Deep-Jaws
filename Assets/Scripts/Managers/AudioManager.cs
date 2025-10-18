@@ -14,7 +14,8 @@ public enum VFX_clip {
     Pufferfish,
     Damage,
     Heal,
-    Echo
+    Echo,
+    BubblePop
 }
 
 /// <summary>
@@ -43,6 +44,7 @@ public class AudioManager : MonoBehaviour {
     [SerializeField] AudioClip damage;
     [SerializeField] AudioClip heal;
     [SerializeField] AudioClip echoAqua;
+    [SerializeField] AudioClip bubblePop;
 
 
     //save audio data
@@ -63,6 +65,7 @@ public class AudioManager : MonoBehaviour {
             VFX_clip.Damage => damage,
             VFX_clip.Heal => heal,
             VFX_clip.Echo => echoAqua,
+            VFX_clip.BubblePop => bubblePop,
             _ => damage
         };
 

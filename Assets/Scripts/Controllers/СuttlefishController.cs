@@ -24,7 +24,8 @@ public class СuttlefishController : MonoBehaviour {
     //private bool isReverseProgress = false;
     private bool isNeedReverseProgress = false;
 
-    [SerializeField] GameObject poisonInkPrefab;
+    //[SerializeField] GameObject poisonInkPrefab;
+    private FishAdditionalCompManager fishAddComp;
     private const float POISON_COOLDOWN = 10f;
     private float curentPoisonCooldown = 0f;
     private static readonly WaitForSeconds SHADER_UPD_WAIT = new WaitForSeconds(SHADER_UPDATE_INTERVAL);
@@ -78,7 +79,9 @@ public class СuttlefishController : MonoBehaviour {
             audioManager.PlayVFX(VFX_clip.Cuttlefish);
             //audioSource.PlayOneShot(audioSource.clip);
             curentPoisonCooldown = POISON_COOLDOWN;
-            Instantiate(poisonInkPrefab, transform.position, transform.rotation);
+
+            fishAddComp.ActivateObjectFromPool(FishComponentType.InkParticles, transform.parent, transform.localPosition, Vector3.one, transform.rotation);
+            //Instantiate(poisonInkPrefab, transform.position, transform.rotation);
         }
     }
 

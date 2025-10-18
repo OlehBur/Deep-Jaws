@@ -2,15 +2,22 @@ using UnityEngine;
 
 public class CurrentEffect : Effect {
     GameObject bubblesWhirlObj;
+    FishAdditionalCompManager fishAddComp;
+    Vector3 whirlLocPos;
+    Transform whirlParent;
     const float BOOSTED_SPEED_MULTIPLIER = 1.8f;
 
-    public CurrentEffect(GameObject bubblesWhirlObj) {
-        this.bubblesWhirlObj = bubblesWhirlObj;
+    public CurrentEffect(FishAdditionalCompManager fishAddComp, Transform whirlParent, Vector3 whirlLocPos) {
+        this.fishAddComp = fishAddComp;
+        this.whirlLocPos = whirlLocPos;
+        this.whirlParent = whirlParent;
+        //this.bubblesWhirlObj = bubblesWhirlObj;
         type = FishEffectType.CurrentSpeed;
     }
 
     protected override void OnApply() {
-        bubblesWhirlObj.SetActive(true);
+        //bubblesWhirlObj.SetActive(true);
+        bubblesWhirlObj = fishAddComp.ActivateObjectFromPool(FishComponentType.WhirlLine, whirlParent, whirlLocPos, Vector3.one, Quaternion.identity);
         target.ChangeSpeedMultiplier(BOOSTED_SPEED_MULTIPLIER, FishSpeedModifierType.Current);
         //Debug.Log($"{target.name} has applied Speed Effect for {duration} s.");
     }

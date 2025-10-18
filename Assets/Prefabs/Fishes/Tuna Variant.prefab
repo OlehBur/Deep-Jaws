@@ -143,6 +143,14 @@ PrefabInstance:
       propertyPath: fishSkinnedMesh
       value: 
       objectReference: {fileID: 8457935960184307492}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.y
+      value: -0.053
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: biteParticleLocPos.z
+      value: 2.187
+      objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: shieldObj
       value: 
@@ -151,6 +159,10 @@ PrefabInstance:
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 8457935960184307492}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: whirlLocalPos.z
+      value: -1.828
+      objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishSkinnedRenderer
       value: 
@@ -162,6 +174,10 @@ PrefabInstance:
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: timeToIdle
       value: 15.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 3766895010739556756, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3870166449409053846, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Controller
@@ -201,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 7d7b478184d99ca4ea84c00dc5abe4c1, type: 2}
     - target: {fileID: 5710314930746697683, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.998
+      value: -1.828
       objectReference: {fileID: 0}
     - target: {fileID: 6139732591693606316, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
