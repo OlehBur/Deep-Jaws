@@ -493,7 +493,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 if (prefabInst.TryGetComponent(out PufferfishController pufferController))
                     pufferController.Init(audioManager);
                 else if (prefabInst.TryGetComponent(out ÑuttlefishController cuttleController))
-                    cuttleController.Init(audioManager);
+                    cuttleController.Init(audioManager, fishAdditionalComponentManager);
 
                 enemyControl.Init(this, fish);
                 fish.SetRandomProgress();
@@ -544,8 +544,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         else {// if enemy fish respawn
               //spawn die particles
             if (currentFish.IsVisible) {
-                fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, currentFish.transform.position, Vector3.one, Quaternion.identity);
-                fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, currentFish.transform.position, Vector3.one, Quaternion.identity);
+                fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
+                fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
                 //Instantiate(enemySkeletonParticle, currentFish.transform.position, Quaternion.identity);
                 //Instantiate(enemyDieParticles, currentFish.transform.position, Quaternion.identity);
             }
@@ -570,8 +570,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
         //spawn dead particles
         if (fish.IsVisible) {
-            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, fish.transform.position, Vector3.one, Quaternion.identity);
-            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, fish.transform.position, Vector3.one, Quaternion.identity);
+            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, fish.transform.localPosition, Vector3.one, Quaternion.identity);
+            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, fish.transform.localPosition, Vector3.one, Quaternion.identity);
             //Instantiate(enemySkeletonParticle, fish.transform.position, Quaternion.identity);
             //Instantiate(enemyDieParticles, fish.transform.position, Quaternion.identity);
         }

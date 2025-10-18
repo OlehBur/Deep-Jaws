@@ -17,13 +17,15 @@ public class CurrentEffect : Effect {
 
     protected override void OnApply() {
         //bubblesWhirlObj.SetActive(true);
-        bubblesWhirlObj = fishAddComp.ActivateObjectFromPool(FishComponentType.WhirlLine, whirlParent, whirlLocPos, Vector3.one, Quaternion.identity);
+        if (fishAddComp != null)
+            bubblesWhirlObj = fishAddComp.ActivateObjectFromPool(FishComponentType.WhirlLine, whirlParent, whirlLocPos, Vector3.one, Quaternion.identity);
         target.ChangeSpeedMultiplier(BOOSTED_SPEED_MULTIPLIER, FishSpeedModifierType.Current);
         //Debug.Log($"{target.name} has applied Speed Effect for {duration} s.");
     }
 
     protected override void OnExpire() {
-        bubblesWhirlObj.SetActive(false);
+        if (bubblesWhirlObj != null)
+            bubblesWhirlObj.SetActive(false);
         target.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Current);
         //Debug.Log($"{target.name} has expired Speed Effect after {duration} s.");
     }

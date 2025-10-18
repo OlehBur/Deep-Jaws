@@ -9,12 +9,12 @@ public class SlowdownPearlController : MonoBehaviour {
     [SerializeField] GameObject freezeTimeParticles;
     const string FLOWER_ANIM_NAME = "Nymphae_Flower";
     const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
-    private const float MAX_RESPAWN_TIME = 90; //1.5 minutes
+    private const float MAX_RESPAWN_TIME = 120; //2 minutes
     const float MAX_AXIS_ANGLE_DIR = 45f;
     private Vector3 randomRotateDir;
 
     void Start() {
-        //Debug.LogWarning("Changed flower time");
+        Debug.LogWarning("Changed flower time");
         pearlCollider.enabled = false;
         Invoke(nameof(ActivatePearl), MAX_RESPAWN_TIME);
         //gameObject.SetActive(false);

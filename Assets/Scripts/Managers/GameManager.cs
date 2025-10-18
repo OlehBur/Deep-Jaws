@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour {
 
     //game init
     void Awake() {
+        //AudioListener.volume = 0f;
         gameCanvas.SetActive(false);
         GameSetPause(true);//wait until the spawn manager finishes creating pools
         spawnManager.Init();
@@ -38,9 +39,10 @@ public class GameManager : MonoBehaviour {
         //spawnManager.OnFinishPoolCreation += PreSceneActivate;
 
         SetFPSSettings();
-        IsSceneReady = true;
         GameSetPause(false);
         Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
+        IsSceneReady = true;
+        //AudioListener.volume = 1f; // enable vol
     }
 
     void DelayCanvasActivate() {

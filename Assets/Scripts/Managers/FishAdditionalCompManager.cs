@@ -79,6 +79,9 @@ public class FishAdditionalCompManager : MonoBehaviour {
             case FishComponentType.WhirlLine:
                 GetInactiveObjectFromPool(whirlLinePool, out objToActivate);
                 break;
+            case FishComponentType.InkParticles:
+                GetInactiveObjectFromPool(inkParticlesPool, out objToActivate);
+                break;
         }
 
         objToActivate.transform.SetParent(parent);

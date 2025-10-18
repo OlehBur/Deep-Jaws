@@ -82,6 +82,7 @@ public class FishControl : MonoBehaviour, IFish {
             GetComponent<Rigidbody>() : rb;
         rb.linearVelocity = Vector3.zero; // Reset angular velocity to prevent unwanted rotation
         IFish.CurrentTarget = null; // Reset current target when enabled
+        rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;//in case it was stunned before
 
         //Invoke(nameof(SetDefaultState), ³dleTime); //afrer respawn or on start
         //                                           //SetTargetMovement();

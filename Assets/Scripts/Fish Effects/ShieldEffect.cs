@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class ShieldEffect : Effect {
-    private GameObject shieldObj;
+    public GameObject ShieldObj {get; private set; }
     private FishAdditionalCompManager fishAddComp;
     private AudioManager audioManager;
     private Vector3 shieldLocalPos;
@@ -20,14 +20,16 @@ public class ShieldEffect : Effect {
 
     protected override void OnApply() {
         //shieldObj?.SetActive(true);
-        shieldObj = fishAddComp.ActivateObjectFromPool(FishComponentType.ShieldBubble, shieldParent, shieldLocalPos, shieldLocalScale, Quaternion.identity);
-        audioManager.PlayVFX(VFX_clip.BubblePop); 
+        if (fishAddComp != null)
+            ShieldObj = fishAddComp.ActivateObjectFromPool(FishComponentType.ShieldBubble, shieldParent, shieldLocalPos, shieldLocalScale, Quaternion.identity);
+        audioManager?.PlayVFX(VFX_clip.BubblePop);
         //Debug.Log($"{target.name} has applied Shield Effect for {duration} s.");
     }
 
     protected override void OnExpire() {
         //Debug.Log($"{target.name} has expired Shield Effect after {duration} s.");
-        audioManager.PlayVFX(VFX_clip.BubblePop);
-        shieldObj?.SetActive(false);
+        audioManager?.PlayVFX(VFX_clip.BubblePop);
+        if (ShieldObj != null)
+            ShieldObj?.SetActive(false);
     }
 }

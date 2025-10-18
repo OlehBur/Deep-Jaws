@@ -71,6 +71,8 @@ public class FaderScene : MonoBehaviour {
     //}
 
     IEnumerator Load() {
+        AudioListener.volume = 0f; // disable all sounds
+
         //save type of the scene to load if it is not a null intermediate scene
         if (loadScene == SceneType.Null)
             loadScene = SceneFlagHolder.nextScene;
@@ -86,7 +88,6 @@ public class FaderScene : MonoBehaviour {
             _ => MainmenuManager.MAINMENU_SCENE_NAME
         };
 
-        AudioListener.volume = 0f; // disable all sounds
         AsyncOperation asyncLoad = (loadScene == SceneType.Game) ?
             SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive) :
             SceneManager.LoadSceneAsync(sceneName);
@@ -102,11 +103,11 @@ public class FaderScene : MonoBehaviour {
             yield return null;
         }
 
-        AudioListener.volume = 1f; // enable
         if (loadScene == SceneType.Game) {
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
             SceneManager.UnloadSceneAsync(MainmenuManager.LOADING_SCENE_NAME);
         }
+        AudioListener.volume = 1f; // enable
     }
 
 }

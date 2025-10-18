@@ -107,7 +107,7 @@ public class PlayerUIController : MonoBehaviour {
     private Fish playerFish; // reference to the player fish component
     private static readonly WaitForSeconds OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL);
     private static readonly WaitForSeconds HALF_OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL * .5f);
-    private static readonly WaitForSeconds BLINDNESS_DARK_WAIT = new WaitForSeconds(3f);
+    private static readonly WaitForSeconds BLINDNESS_DARK_WAIT = new WaitForSeconds(1.8f);
 
     [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
 

@@ -54,8 +54,8 @@ public class FishAnimManager : MonoBehaviour {
             matDefSprintSpeed = 1f;
         }
         else {
-            InitPropBlock();
-            matDefSprintSpeed = SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_Frequency", true); // get the default sprint speed from the material
+            InitPropBlock(ref matPropBlock, ref fishSkinnedMesh);
+            matDefSprintSpeed = SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_Frequency", true); // get the default sprint speed from the material
         }
 
         if (!isUseRotatingShader)
@@ -68,19 +68,19 @@ public class FishAnimManager : MonoBehaviour {
 
 
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
-            0f : SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);//fishMat?.GetFloat("_MaxRotationValue") ?? 0;
+            0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);//fishMat?.GetFloat("_MaxRotationValue") ?? 0;
         //biteAudioSource.enabled = fish.IsPlayer; // enable audio source only for player fish
     }
 
-    private void InitPropBlock() {
+    private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {
         matPropBlock = new MaterialPropertyBlock();
-        SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_Frequency", false, fishSkinnedMesh.sharedMaterial.GetFloat("_Frequency"));
-        SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", false, fishSkinnedMesh.sharedMaterial.GetFloat("_MaxRotationValue"));
-        SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, fishSkinnedMesh.sharedMaterial.GetFloat("_RotationRad"));
+        SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_Frequency", false, skinnedMesh.sharedMaterial.GetFloat("_Frequency"));
+        SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_MaxRotationValue", false, skinnedMesh.sharedMaterial.GetFloat("_MaxRotationValue"));
+        SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_RotationRad", false, skinnedMesh.sharedMaterial.GetFloat("_RotationRad"));
         //fishSkinnedMesh.material.SetFloat("_RotationRad", 0f);// test
     }
 
-    public static float SetGetMaterialWithPropBlock(SkinnedMeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, bool isGet, float value = 0) {
+    public static float SetGetMaterialWithPropBlock(ref SkinnedMeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, bool isGet, float value = 0) {
         //Debug.LogWarning(renderer + " " + mapBlock);
         renderer.GetPropertyBlock(mapBlock);
 
@@ -98,10 +98,10 @@ public class FishAnimManager : MonoBehaviour {
     /// </summary>
     public void SprintAnimation(bool isSprinting = true) {
         if (isSprinting)
-            SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed * SPRINT_SPEED_MULTIPLIER);
+            SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed * SPRINT_SPEED_MULTIPLIER);
         //fishMat.SetFloat("_Frequency", matDefSprintSpeed * SPRINT_SPEED_MULTIPLIER/* + sprintAudioSource.volume * matDefSprintSpeed*/); //double (max) the speed of the fish material effect
         else
-            SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed);
+            SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed);
         //fishMat.SetFloat("_Frequency", matDefSprintSpeed);
     }
 
@@ -122,10 +122,10 @@ public class FishAnimManager : MonoBehaviour {
         //Debug.Log("ang: " + angle);
         float angleProgress = Mathf.LerpUnclamped(0, maxShapeRotationVal, angle / ANGLE_DETECTION); // progress from -1 to 1 (LerpUnclamped allows to go beyond the range)
         angleProgress = Mathf.Clamp(angleProgress, -maxShapeRotationVal, maxShapeRotationVal); // clamp the value to avoid exceeding the max rotation value
-        angleProgress = Mathf.SmoothDamp(SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
+        angleProgress = Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
             angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
 
-        SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
+        SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
         //fishMat.SetFloat("_RotationRad", /*currentRotationVal*/angleProgress);
 
         //prevRotation = currentRotation;
@@ -153,10 +153,12 @@ public class FishAnimManager : MonoBehaviour {
         if (isNeedParticles && fish.IsVisible/*IsPlayer*/ /*Vector3.Distance(transform.position, Camera.main.transform.position) <= biteAudioSource.maxDistance*/) {//for optimization
             //if (biteAudioSource.enabled)
             //    biteAudioSource.PlayOneShot(biteAudioSource.clip); // play bite sound effect
-            audioManager.PlayVFX(VFX_clip.Bite);
+            if (fish.IsPlayer)//only player
+                audioManager.PlayVFX(VFX_clip.Bite);
+
             fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
-                editableTransform,
-                biteParticleLocPos, 
+                editableTransform/*transform.parent*/,
+                biteParticleLocPos,
                 Vector3.one,
                 Quaternion.identity);
             //Instantiate(biteParticleSystem, biteParticleSystem.transform.position, biteParticleSystem.transform.rotation).SetActive(true); // instantiate bite particle system at fish position
@@ -167,7 +169,7 @@ public class FishAnimManager : MonoBehaviour {
         if (!isUseRotatingShader)
             return;
 
-        SetGetMaterialWithPropBlock(fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, 0);
+        SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, 0);
         //fishMat.SetFloat("_RotationRad", 0);
         fish.OnFishEat -= FishEatAnim;
     }

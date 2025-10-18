@@ -217,15 +217,20 @@ public class EffectManager : MonoBehaviour {
         //else
 
         Effect newEffect = InitNewEffect(type);
-        activeEffects[type] = newEffect; //        newEffect = AddEffectComponent(type);
 
         if (newEffect != null) {
+            activeEffects[type] = newEffect; //        newEffect = AddEffectComponent(type);
             newEffect.Init(fish, duration);
 
-            if (type != FishEffectType.StunInitiator)
-                activeEffects[type] = newEffect; // use [] instead TryAdd
+            if (type == FishEffectType.Shield) {//import after Init (shield obj added in apply meth in init)
+                ShieldEffect shieldEffect = newEffect as ShieldEffect;
+                ShieldObj = shieldEffect.ShieldObj;
+            }
 
-            UpdateIconVisualization();
+            if (type != FishEffectType.StunInitiator)
+                activeEffects[type] = newEffect; // use [] instead TryAdd 
+
+                UpdateIconVisualization();
 
             newEffect.OnEffeñtExpire -= RemoveEffect;
             newEffect.OnEffeñtExpire += RemoveEffect;
