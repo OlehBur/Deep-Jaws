@@ -81,7 +81,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     [Header("Other Dependencies")]
     [SerializeField] FishAdditionalCompManager fishAdditionalComponentManager;
     private const int SHIELDS_POOL_CNT = 30; // POOL_SIZE/4
-    private const int WHIRLE_POOL_CNT = 15;
+    private const int WHIRLE_POOL_CNT = 16;
     private const int BITE_PARTICLES_POOL_CNT = 12;
     private const int SKELETON_PARTICLE_POOL_CNT = 8;
     private const int DEAD_BUBBLES_POOL_CNT = 8;
@@ -235,7 +235,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //}
 
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, bool isDie = false) {
-        //playerLvl = FishLevel.WhiteShark;
+        //playerLvl = (int)FishLevel.TigerShark;
         //Debug.LogWarning(playerLvl);
         const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
         Fish new_PlayerVar;

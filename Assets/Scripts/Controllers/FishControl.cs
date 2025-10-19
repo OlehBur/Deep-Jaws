@@ -52,15 +52,25 @@ public class FishControl : MonoBehaviour, IFish {
         this.spawnManager = spawnManager;
         IFish = this;
         this.fish = fish;
+        IFish.CurrentTarget = null; // Reset current target when enabled
 
         rb = (rb == null) ?
             GetComponent<Rigidbody>() : rb;
+        rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;//in case it was stunned before
+        rb.linearVelocity = Vector3.zero; // Reset angular velocity to prevent unwanted rotation
         fishAnim = GetComponent<FishAnimManager>();
+
+        CancelInvoke();
+        SetDefaultState();
 
         if (fish.IsPlayer) {
             fish.IsActive = true;//player always active and visible, because always viwed on screen
             fish.IsVisible = true;
+            JoyAxis.Axis = Vector2.zero;
         }
+
+        SleepPhysics();
+        JoyAxis.OnAxisChanged += OnMove;
     }
 
     //void Awake() {
@@ -73,33 +83,15 @@ public class FishControl : MonoBehaviour, IFish {
     //    SetDefaultState(); // Set initial state after full initialization
     //}
 
-    private void OnEnable() {
-        if (fish == null)
-            return;
+    //private void OnEnable() {
 
-        IFish = this;
-        rb = (rb == null) ?
-            GetComponent<Rigidbody>() : rb;
-        rb.linearVelocity = Vector3.zero; // Reset angular velocity to prevent unwanted rotation
-        IFish.CurrentTarget = null; // Reset current target when enabled
-        rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;//in case it was stunned before
+    //    //Invoke(nameof(SetDefaultState), ³dleTime); //afrer respawn or on start
+    //    //                                           //SetTargetMovement();
+    //    //if (fish != null) {
 
-        //Invoke(nameof(SetDefaultState), ³dleTime); //afrer respawn or on start
-        //                                           //SetTargetMovement();
-        //if (fish != null) {
-        CancelInvoke();
-        SetDefaultState();
-        //}
+    //    //}
+    //}
 
-        if (fish.IsPlayer) {
-            fish.IsActive = true;//player always active and visible, because always viwed on screen
-            fish.IsVisible = true;
-            JoyAxis.Axis = Vector2.zero;
-        }
-
-        SleepPhysics();
-        JoyAxis.OnAxisChanged += OnMove;
-    }
     private void OnDisable() {
         // Cancel all delayed calls when disabled
         CancelInvoke();

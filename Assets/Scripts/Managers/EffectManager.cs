@@ -84,6 +84,11 @@ public class EffectManager : MonoBehaviour {
                 activeEffects[type].UpdateTimer();
     }
 
+    /// <summary>
+    /// is effect exist and enabled
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     bool IsEffectActive(FishEffectType type) {
         return activeEffects.ContainsKey(type) && activeEffects[type] != null && activeEffects[type].Enabled;
     }
@@ -230,7 +235,7 @@ public class EffectManager : MonoBehaviour {
             if (type != FishEffectType.StunInitiator)
                 activeEffects[type] = newEffect; // use [] instead TryAdd 
 
-                UpdateIconVisualization();
+            UpdateIconVisualization();
 
             newEffect.OnEffeñtExpire -= RemoveEffect;
             newEffect.OnEffeñtExpire += RemoveEffect;
@@ -261,10 +266,10 @@ public class EffectManager : MonoBehaviour {
     }
 
     private void CheckAchievements() {
-        if (activeEffects.ContainsKey(FishEffectType.SprintSpeed) && activeEffects.ContainsKey(FishEffectType.CurrentSpeed))
+        if (IsEffectActive(FishEffectType.SprintSpeed) && IsEffectActive(FishEffectType.CurrentSpeed)/*activeEffects.ContainsKey(FishEffectType.SprintSpeed) && activeEffects.ContainsKey(FishEffectType.CurrentSpeed)*/)
             GPG_Manager.OnTriggerAchievement(AchievementKey.FlashSpeed);
 
-        if (activeEffects.Count >= 4)
+        if (/*activeEffects.Count*/GetActiveEffectCnt(TypeEffects.VisibleUI) >= 4)
             GPG_Manager.OnTriggerAchievement(AchievementKey.Impossible);
     }
 
