@@ -107,7 +107,10 @@ public class FaderScene : MonoBehaviour {
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
             SceneManager.UnloadSceneAsync(MainmenuManager.LOADING_SCENE_NAME);
         }
-        AudioListener.volume = 1f; // enable
+        else {
+            AudioListener.volume = 1f; // 
+        }
+        //AudioListener.volume = 1f; // enable
     }
 
 }

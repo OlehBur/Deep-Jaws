@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
     public static float currentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
     public static bool IsSceneReady { get; private set; } = false;
     private const float CANVAS_ACTIVATE_DELAY = .5f;
+    private const float SCENE_ACTIVATE_DELAY = .1f;
 
     //game init
     void Awake() {
@@ -41,8 +42,12 @@ public class GameManager : MonoBehaviour {
         SetFPSSettings();
         GameSetPause(false);
         Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
+        Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);
+    }
+
+    void DelaySceneActivate() {
         IsSceneReady = true;
-        //AudioListener.volume = 1f; // enable vol
+        AudioListener.volume = 1f; // enable vol
     }
 
     void DelayCanvasActivate() {

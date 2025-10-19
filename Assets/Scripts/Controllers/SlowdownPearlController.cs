@@ -14,7 +14,7 @@ public class SlowdownPearlController : MonoBehaviour {
     private Vector3 randomRotateDir;
 
     void Start() {
-        Debug.LogWarning("Changed flower time");
+        //Debug.LogWarning("Changed flower time");
         pearlCollider.enabled = false;
         Invoke(nameof(ActivatePearl), MAX_RESPAWN_TIME);
         //gameObject.SetActive(false);

@@ -88,15 +88,20 @@ public class Fish : MonoBehaviour {
     }
 
     //private void Start() {
-        //Health = Health / 4;
-        //Progress = .9f;
-        //UpdateGrowSize();
-        //Debug.LogWarning("max progress");
+    //Health = Health / 4;
+    //Progress = .9f;
+    //UpdateGrowSize();
+    //Debug.LogWarning("max progress");
 
-        //OnInfoStatsChanged?.Invoke();
+    //OnInfoStatsChanged?.Invoke();
     //}
 
     private void OnEnable() {
+        SpeedMultiplier = 1f;
+        SpeedMultiplierSecond = 1f;
+        SpeedMultiplierThird = 1f;
+        SpeedMultiplierFourth = 1f;
+
         OnInfoStatsChanged?.Invoke();
         UpdateGrowSize();
     }
