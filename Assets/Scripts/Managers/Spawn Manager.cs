@@ -235,7 +235,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //}
 
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, bool isDie = false) {
-        //playerLvl = (int)FishLevel.TigerShark;
+        //playerLvl = (int)FishLevel.Barracuda;
         //Debug.LogWarning(playerLvl);
         const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
         Fish new_PlayerVar;

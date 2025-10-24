@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 public enum FishEffectType {//pos or neg (+/-)
+    None = -1,
     Shield,             //+
     CurrentSpeed,       //+
     Stun,               //-

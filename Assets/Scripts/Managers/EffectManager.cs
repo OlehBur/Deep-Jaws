@@ -89,7 +89,7 @@ public class EffectManager : MonoBehaviour {
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    bool IsEffectActive(FishEffectType type) {
+    public bool IsEffectActive(FishEffectType type) {
         return activeEffects.ContainsKey(type) && activeEffects[type] != null && activeEffects[type].Enabled;
     }
 

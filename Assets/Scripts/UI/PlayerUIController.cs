@@ -96,6 +96,7 @@ public class PlayerUIController : MonoBehaviour {
     private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
     private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
     private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
+    //private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
 
     [Header("Player Info")]
     [SerializeField] TextMeshProUGUI healthProgresCurr_txt;
@@ -297,11 +298,11 @@ public class PlayerUIController : MonoBehaviour {
         audioManager.PlayVFX(VFX_clip.Damage);
 
         //InvokeRepeating(nameof(DamageOverlayAnim), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
-        StartCoroutine(OverlayFader(damageOverlay));
+        StartCoroutine(OverlayFader(damageOverlay, FishEffectType.None));
     }
 
     IEnumerator BlindnessOverlayAnimation(Effect effect) {
-        while (effect != null || effect.Enabled) {
+        while (effect != null && effect.Enabled) {
 
             while (blindnessOverlay.color.a < 1f) {//blink
                 blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a + OVERLAYS_UPDATE_INTERVAL);
@@ -312,9 +313,8 @@ public class PlayerUIController : MonoBehaviour {
                 yield return HALF_OVERLAY_UPD_WAIT;
             }
 
-            if (effect == null || !effect.Enabled)
-                break;
-            yield return BLINDNESS_DARK_WAIT;
+            if (effect != null && effect.Enabled)
+                yield return BLINDNESS_DARK_WAIT;
 
             while (blindnessOverlay.color.a > 0f) {
                 if (effect == null || !effect.Enabled)
@@ -326,20 +326,34 @@ public class PlayerUIController : MonoBehaviour {
             //yield return null;
         }
 
+        while (blindnessOverlay.color.a > 0f) {//final fade out
+            blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
+            yield return HALF_OVERLAY_UPD_WAIT;
+        }
+
+        //if (!playerEffectManager.IsEffectActive(FishEffectType.Blindness))
         blindnessOverlay.gameObject.SetActive(false);
+
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
+
     }
 
-    IEnumerator OverlayFader(Image overlay, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null) {
+    IEnumerator OverlayFader(Image overlay, FishEffectType type, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null) {
         while (overlay.color.a > 0 && overlay.gameObject.activeInHierarchy) {
             overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, overlay.color.a - updateInterval);
 
             if (textElement != null)
                 textElement.color = new Color(textElement.color.r, textElement.color.g, textElement.color.b, textElement.color.a - updateInterval);
 
+            //if (!playerEffectManager.IsEffectActive(type))
+            //    break;
+
             yield return OVERLAY_UPD_WAIT/*new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL)*/;
         }
+
+        //if (type == FishEffectType.None || !playerEffectManager.IsEffectActive(type))
         overlay.gameObject.SetActive(false);
+
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
     }
 
@@ -418,7 +432,7 @@ public class PlayerUIController : MonoBehaviour {
         //Debug.LogWarning("ActivateZone");
         zoneOverlay.gameObject.SetActive(true);
         zoneOverlayMsg.text = msg;
-        StartCoroutine(OverlayFader(zoneOverlay, OVERLAY_ZONE_UPDATE_INTERVAL, zoneOverlayMsg));
+        StartCoroutine(OverlayFader(zoneOverlay, FishEffectType.None, OVERLAY_ZONE_UPDATE_INTERVAL, zoneOverlayMsg));
     }
 
     /// <summary>
@@ -467,25 +481,33 @@ public class PlayerUIController : MonoBehaviour {
         };
 
         if (currentOverlay != null) {
+            //if (overlayCoroutines.TryGetValue(type, out Coroutine corutine) && corutine != null)
+            //StopCoroutine(corutine);
+
             if (type == FishEffectType.Blindness) {
                 if (isAdded) {
                     Effect effect = playerEffectManager.activeEffects[FishEffectType.Blindness];
                     blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
-
-                    StopCoroutine(BlindnessOverlayAnimation(effect));
+                    blindnessOverlay.gameObject.SetActive(true);
+                    //overlayCoroutines[type] =
                     StartCoroutine(BlindnessOverlayAnimation(effect));
                 }
                 else
                     return;
             }
-
-            if (isAdded)
-                currentOverlay.gameObject.SetActive(true);
             else {
-                StopCoroutine(OverlayFader(currentOverlay));
-                StartCoroutine(OverlayFader(currentOverlay));
+
+                if (isAdded) {
+                    //StopCoroutine(OverlayFader(currentOverlay, type));
+                    currentOverlay.color = new Color(currentOverlay.color.r, currentOverlay.color.g, currentOverlay.color.b, 1);
+                    currentOverlay.gameObject.SetActive(true);
+                }
+                else
+                    //StopCoroutine(OverlayFader(currentOverlay, type));
+                    //overlayCoroutines[type] =
+                    StartCoroutine(OverlayFader(currentOverlay, type));
+                //InvokeRepeating(nameof(StopTimeOverlayAnimFading), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
             }
-            //InvokeRepeating(nameof(StopTimeOverlayAnimFading), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
         }
     }
 
