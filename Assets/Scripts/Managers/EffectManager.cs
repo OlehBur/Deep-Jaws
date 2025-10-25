@@ -75,6 +75,8 @@ public class EffectManager : MonoBehaviour {
     private void OnEnable() {
         if (fishSkinnedRenderer != null)//if respawn afret freezetime effect activation
             fishSkinnedRenderer.sharedMaterial.SetFloat("_UnscaledTime", 0f);
+
+        activeEffects.Clear();
     }
 
     // effects update timers

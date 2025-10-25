@@ -161,6 +161,8 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     void PlayerMovement() {
+        const float STOP_MOVING_ANGLE = 50f;
+
         if (!isMoved) //parasyte movement detection
             SleepPhysics();
 
@@ -178,7 +180,7 @@ public class FishControl : MonoBehaviour, IFish {
         }
 
         //movement
-        float movingScalerByRotation = Mathf.Clamp01(1.15f - Mathf.Clamp01(Quaternion.Angle(transform.rotation, newLook) / 50f)); //.1f to 1f  
+        float movingScalerByRotation = Mathf.Clamp01(1.1f - Mathf.Clamp01(Quaternion.Angle(transform.rotation, newLook) / STOP_MOVING_ANGLE)); //.1f to 1f  
         //Debug.Log(movingScalerByRotation);
         moveDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
         Vector3 targetPos = moveDir * fish.Speed * Time./*fixedDeltaTime*/unscaledDeltaTime * movingScalerByRotation;

@@ -105,6 +105,8 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI lvl_txt;
     [SerializeField] Image healthBar; // image to display player health bar
     [SerializeField] Image lvlBar; // image to display player level bar
+    [SerializeField] Transform playerProgressIconsParent;
+    private int currentPlayerProgressIconInd = 0;
     private Fish playerFish; // reference to the player fish component
     private static readonly WaitForSeconds OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL);
     private static readonly WaitForSeconds HALF_OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL * .5f);
@@ -395,7 +397,7 @@ public class PlayerUIController : MonoBehaviour {
         currentSprintCooldownTime = 0f;
 
         DisactivateDefaultIcons();
-        //EffectsProgressReset();
+        EffectsProgressReset();
 
         ResetOverlays();
 
@@ -405,6 +407,17 @@ public class PlayerUIController : MonoBehaviour {
                 EffectsBehaviour(effectType, true);
 
         UpdatePlayerInfo();
+        UpdateProgressIcon();
+    }
+
+    void UpdateProgressIcon() {
+        int maxIndex = playerProgressIconsParent.childCount - 1;
+        if (currentPlayerProgressIconInd <= maxIndex)
+            playerProgressIconsParent.GetChild(currentPlayerProgressIconInd).gameObject.SetActive(false);
+
+        currentPlayerProgressIconInd = (int)playerFish.Level - 1;
+        if (currentPlayerProgressIconInd <= maxIndex)
+            playerProgressIconsParent.GetChild(currentPlayerProgressIconInd).gameObject.SetActive(true);
     }
 
     private void ResetOverlays() {
