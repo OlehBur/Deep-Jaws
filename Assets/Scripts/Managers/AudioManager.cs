@@ -117,7 +117,7 @@ public class AudioManager : MonoBehaviour {
         PlayerPrefs.SetFloat(SFX_KEY, sfxSlider.value);
     }
 
-    public void LoadAudoData() {
+    void LoadAudoData() {
         masterSlider.value = PlayerPrefs.GetFloat(MASTER_KEY, 1f);
         musicSlider.value = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
         sfxSlider.value = PlayerPrefs.GetFloat(SFX_KEY, 1f);

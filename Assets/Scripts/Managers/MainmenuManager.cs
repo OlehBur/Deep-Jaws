@@ -14,6 +14,7 @@ public class MainmenuManager : MonoBehaviour {
     public static readonly string LOADING_SCENE_NAME = "LoadScene";
     private const string LOCALE_PREF_KEY = "LocaleIndex";
     [SerializeField] AudioManager audioManager;
+    [SerializeField] GraphicManager graphicManager;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] GameObject faderScene;
     [SerializeField] GameObject areUSureWnd;
@@ -101,6 +102,7 @@ public class MainmenuManager : MonoBehaviour {
         PlayerPrefs.DeleteAll();//delete all player prefs data 
         PlayerPrefs.SetInt(LOCALE_PREF_KEY, LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)); //except settings data 
         audioManager.SaveAudioData(); // Save current audio settings
+        graphicManager.SaveGraphicsData(); // Save current graphic settings
         ProgressSaver.Delete();
     }
 
