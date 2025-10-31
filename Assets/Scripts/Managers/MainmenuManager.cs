@@ -27,7 +27,7 @@ public class MainmenuManager : MonoBehaviour {
     private readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
     private GPG_Manager gpg_manager;
 
-    private void Awake() {
+    private void Start() {
         // Ensure the fader scene is not destroyed on load
         if (faderScene != null)
             faderScene?.SetActive(true);
@@ -38,8 +38,10 @@ public class MainmenuManager : MonoBehaviour {
 
         //init locale
         previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
-        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex]; // Set default locale
-        languageDropdown.value = previousLocaleIndex;
+        if (LocalizationSettings.AvailableLocales != null && LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex]; // Set default locale
+        if (languageDropdown != null)
+            languageDropdown.value = previousLocaleIndex;
         languageDropdown?.onValueChanged.AddListener(OnLanguageChanged);
     }
 

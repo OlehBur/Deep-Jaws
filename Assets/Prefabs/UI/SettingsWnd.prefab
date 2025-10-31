@@ -922,13 +922,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2586672295229575272}
-  - {fileID: 4410232000854445857}
   m_Father: {fileID: 1672939734597315948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 290, y: 20}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -25, y: -50}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3545431997390679414
 MonoBehaviour:
@@ -976,19 +975,7 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 1
 --- !u!1 &868686489114142345
 GameObject:
@@ -1039,7 +1026,7 @@ GameObject:
   - component: {fileID: 6543050809527040686}
   - component: {fileID: 4647178023015230823}
   m_Layer: 5
-  m_Name: Label
+  m_Name: LabelShad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1057,12 +1044,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1084581253300045219}
+  m_Father: {fileID: 1672939734597315948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -9, y: -0.5}
-  m_SizeDelta: {x: -28, y: -3}
+  m_SizeDelta: {x: -58, y: -183}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8528019610252517836
 CanvasRenderer:
@@ -2792,8 +2779,11 @@ RectTransform:
   - {fileID: 2483739650644300591}
   - {fileID: 426196121202706596}
   - {fileID: 4675301910136536080}
+  - {fileID: 4410232000854445857}
   - {fileID: 6228927156124599714}
+  - {fileID: 4968722478001985037}
   - {fileID: 1084581253300045219}
+  - {fileID: 8634353729718331712}
   - {fileID: 2390995865890855655}
   - {fileID: 5700603292591047750}
   - {fileID: 2663722391397273690}
@@ -3237,7 +3227,7 @@ GameObject:
   - component: {fileID: 2590789738571940103}
   - component: {fileID: 1715145882772377089}
   m_Layer: 5
-  m_Name: Label
+  m_Name: LabelVign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3255,12 +3245,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6228927156124599714}
+  m_Father: {fileID: 1672939734597315948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -9, y: -0.5}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchoredPosition: {x: -9, y: 24.5}
+  m_SizeDelta: {x: -58, y: -183}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7215481473593343362
 CanvasRenderer:
@@ -3540,7 +3530,7 @@ GameObject:
   - component: {fileID: 349243118288965945}
   - component: {fileID: 3090232968203664756}
   m_Layer: 5
-  m_Name: Label
+  m_Name: LabelBloom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3558,12 +3548,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4675301910136536080}
+  m_Father: {fileID: 1672939734597315948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -9, y: -0.5}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchoredPosition: {x: -9, y: 49.5}
+  m_SizeDelta: {x: -58, y: -183}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7181419749428355649
 CanvasRenderer:
@@ -5184,7 +5174,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 5, y: 0.0000076293945}
-  m_SizeDelta: {x: 200, y: 21}
+  m_SizeDelta: {x: 163.1, y: 21}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &934614790051456581
 CanvasRenderer:
@@ -7513,13 +7503,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1461803759751375867}
-  - {fileID: 8634353729718331712}
   m_Father: {fileID: 1672939734597315948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 290, y: 20}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -25, y: -100}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &371361798114578966
 MonoBehaviour:
@@ -7567,19 +7556,7 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 1
 --- !u!1 &7585671634095028746
 GameObject:
@@ -7941,13 +7918,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1607235244841636427}
-  - {fileID: 4968722478001985037}
   m_Father: {fileID: 1672939734597315948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -75}
-  m_SizeDelta: {x: 290, y: 20}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -25, y: -75}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3803354116747582056
 MonoBehaviour:
@@ -7995,19 +7971,7 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 1
 --- !u!1 &8192711689687061498
 GameObject:

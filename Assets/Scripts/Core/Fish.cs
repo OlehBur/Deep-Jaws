@@ -173,7 +173,8 @@ public class Fish : MonoBehaviour {
         //    Debug.LogWarning("Activated fast progress!!!");
         //    Debug.LogWarning(progressDivider);
 
-        int damage = (int)level * 3;
+        int playerDamageMultiplier = victim.IsPlayer ? 1 : 3; // player gets 1/3 damage
+        int damage = (int)level * playerDamageMultiplier;
         OnFishEat?.Invoke(damage);
         //Debug.Log($"{gameObject.name} ({Progress}) eats {victim.name} ({victim.Progress}).");
 

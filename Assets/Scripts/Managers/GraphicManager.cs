@@ -9,12 +9,12 @@ public class GraphicManager : MonoBehaviour {
     [SerializeField] Light mainLight;
     [SerializeField] Volume mainVolume;
     [SerializeField] UniversalRenderPipelineAsset urpAsset;
-    //[SerializeField] LightShadows shadowType = LightShadows.Hard;
+    [SerializeField] LightShadows shadowType = LightShadows.Hard;
     //[SerializeField] UnityEngine.Rendering.Universal.ShadowResolution shadowResolution = UnityEngine.Rendering.Universal.ShadowResolution._2048;
-    //[SerializeField][Range(0f, 100f)] float ShadowDistance = 50f;
-    //[SerializeField][Range(0f, 1f)] float RenderScale = .8f;
-    //[SerializeField] bool BloomActive = true;
-    //[SerializeField] bool VignetteActive = true;
+    [SerializeField][Range(0f, 100f)] float ShadowDistance = 50f;
+    [SerializeField][Range(0f, 1f)] float RenderScale = .8f;
+    [SerializeField] bool BloomActive = true;
+    [SerializeField] bool VignetteActive = true;
 
     [Header("UI elements")]
     [SerializeField] Toggle bloomTog;
@@ -75,8 +75,11 @@ public class GraphicManager : MonoBehaviour {
 
     void LoadGraphicsData() {
         bloomTog.isOn = (PlayerPrefs.GetInt(BLOOM_KEY, 1) == 1) ? true : false;
+        bloomTog.onValueChanged.Invoke(bloomTog.isOn);
         vignetteTog.isOn = (PlayerPrefs.GetInt(VIGNETTE_KEY, 1) == 1) ? true : false;
+        vignetteTog.onValueChanged.Invoke(vignetteTog.isOn);
         shadowCastTog.isOn = (PlayerPrefs.GetInt(SHADOWCAST_KEY, 1) == 1) ? true : false;
+        shadowCastTog.onValueChanged.Invoke(shadowCastTog.isOn);
         shadowDistSl.value = PlayerPrefs.GetFloat(SHADOWDIST_KEY, DEFAULT_SHADOW_DIST);
         gameResolutSl.value = PlayerPrefs.GetFloat(GAMERESOLUTION_KEY, DEFAYLT_GAME_RESOLUTION);
         shadowResolution.value = PlayerPrefs.GetInt(SHADOWRESOLUTION_KEY, DEFAULT_GAME_RESOLUTION_INDEX);
