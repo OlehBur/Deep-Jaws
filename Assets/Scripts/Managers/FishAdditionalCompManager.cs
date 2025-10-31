@@ -14,6 +14,7 @@ public enum FishComponentType {
 
 
 public class FishAdditionalCompManager : MonoBehaviour {
+    [SerializeField] Transform fishAddCompPoolParent;
     [SerializeField] GameObject shieldBubblePrefab;
     [SerializeField] GameObject spintLinePrefab;
     [SerializeField] GameObject whirlLinePrefab;
@@ -49,7 +50,7 @@ public class FishAdditionalCompManager : MonoBehaviour {
         pool = new GameObject[count];
 
         for (int i = 0; i < count; i++) {
-            pool[i] = Instantiate(prefab);
+            pool[i] = Instantiate(prefab, fishAddCompPoolParent);
             pool[i].SetActive(false);
         }
     }

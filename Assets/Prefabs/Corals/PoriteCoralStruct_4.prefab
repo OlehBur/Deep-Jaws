@@ -814,6 +814,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Acropora1_red Variant (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 5468621922340650720, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5969782427538938137, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.79795843
@@ -864,6 +868,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5969782427538938137, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622195473256801078, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -942,7 +950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7859834849823847408, guid: 75949187311daac41a81225a7b5e437c, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1496,6 +1504,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Acropora1_red Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5468621922340650720, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5969782427538938137, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.79281235
@@ -1546,6 +1558,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5969782427538938137, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622195473256801078, guid: 44b50b909798e2747ae2d259e9d5c95d, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1816,6 +1832,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4600794550067045855}
     m_Modifications:
+    - target: {fileID: 2034102410098606657, guid: 85fef9f600fdf2d42b23a9413c9b2dcf, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3432500981945803219, guid: 85fef9f600fdf2d42b23a9413c9b2dcf, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5974498950283920031, guid: 85fef9f600fdf2d42b23a9413c9b2dcf, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8158378
