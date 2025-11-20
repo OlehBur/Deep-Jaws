@@ -32,6 +32,7 @@ public class EffectManager : MonoBehaviour {
     private AudioSource speedEffectSource;
     private AudioManager audioManager;
     private FishAdditionalCompManager fishAdditionalComponentManager;
+    [SerializeField] public bool IsHaveShield = true;
     [SerializeField] Vector3 shieldLocalPos;
     [SerializeField] Vector3 shieldLocalScale;
     [SerializeField] Vector3 whirlLocalPos;
@@ -380,6 +381,8 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateShieldEffect() {
+        if (!IsHaveShield)
+            return null;
         //if (shieldObj == null) return null;
 
         //ShieldEffect shieldEffect = gameObject.AddComponent<ShieldEffect>();

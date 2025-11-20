@@ -171,7 +171,7 @@ public class Fish : MonoBehaviour {
 
         //if (CompareTag("Player"))
         //    Debug.LogWarning("Activated fast progress!!!");
-        //    Debug.LogWarning(progressDivider);
+        //Debug.LogWarning(progressDivider);
 
         int playerDamageMultiplier = victim.IsPlayer ? 1 : 3; // player gets 1/3 damage
         int damage = (int)level * playerDamageMultiplier;

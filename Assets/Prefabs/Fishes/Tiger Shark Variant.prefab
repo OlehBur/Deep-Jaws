@@ -192,6 +192,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: IsHaveShield
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 4667258590292322611}
@@ -273,7 +277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6
+      value: 0.66
       objectReference: {fileID: 0}
     - target: {fileID: 7831987417261332925, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Height
@@ -361,7 +365,7 @@ PrefabInstance:
     - {fileID: 1999017465357431205, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-      insertIndex: 0
+      insertIndex: -1
       addedObject: {fileID: 955368179470063306}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}

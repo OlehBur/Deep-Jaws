@@ -23,7 +23,7 @@ public class FishAnimManager : MonoBehaviour {
     private float matDefSprintSpeed; // default sprint speed in the material
     //private Material fishMat;
     private float maxShapeRotationVal;
-    private float rotAnimVelocity = 0f;
+    //private float rotAnimVelocity = 0f;
 
     //[SerializeField] GameObject bubbleShield = null;
     private EffectManager effectManager;
@@ -109,7 +109,8 @@ public class FishAnimManager : MonoBehaviour {
         if (!isUseRotatingShader)
             return;
 
-        const float ANGLE_DETECTION = 45f;
+        const float ANGLE_MIN_MULTIPLIER = 2.5f;
+        float ANGLE_DETECTION = 45f - (float)fish.Level * ANGLE_MIN_MULTIPLIER; // decrease the detection angle with increasing fish level
         Quaternion currentRotation = rb.rotation;
 
         // ang betw
@@ -122,8 +123,8 @@ public class FishAnimManager : MonoBehaviour {
         //Debug.Log("ang: " + angle);
         float angleProgress = Mathf.LerpUnclamped(0, maxShapeRotationVal, angle / ANGLE_DETECTION); // progress from -1 to 1 (LerpUnclamped allows to go beyond the range)
         angleProgress = Mathf.Clamp(angleProgress, -maxShapeRotationVal, maxShapeRotationVal); // clamp the value to avoid exceeding the max rotation value
-        angleProgress = Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
-            angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
+        angleProgress = Mathf.Lerp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true), angleProgress, deltaTime*10); //Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
+                                                                                                                                                        //angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
 
         SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
         //fishMat.SetFloat("_RotationRad", /*currentRotationVal*/angleProgress);

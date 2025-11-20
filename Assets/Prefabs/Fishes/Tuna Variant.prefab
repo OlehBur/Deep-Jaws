@@ -156,6 +156,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: IsHaveShield
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 8457935960184307492}
@@ -325,7 +329,7 @@ PrefabInstance:
     - {fileID: 1999017465357431205, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-      insertIndex: 0
+      insertIndex: -1
       addedObject: {fileID: 4100482690477474013}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}

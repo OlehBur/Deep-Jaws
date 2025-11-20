@@ -65,10 +65,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1503625095468643840}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-      propertyPath: biteParticleSystem
-      value: 
-      objectReference: {fileID: 2608086187023083063}
-    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: biteParticleLocPos.y
       value: -0.254
       objectReference: {fileID: 0}
@@ -85,6 +81,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: IsHaveShield
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishRenderer
       value: 
       objectReference: {fileID: 1503625095468643840}
@@ -96,10 +96,6 @@ PrefabInstance:
       propertyPath: whirlLocalPos.z
       value: -4.89
       objectReference: {fileID: 0}
-    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-      propertyPath: currentBubblesWhirl
-      value: 
-      objectReference: {fileID: 478136719542544024}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishSkinnedRenderer
       value: 
@@ -286,20 +282,10 @@ PrefabInstance:
     - {fileID: 1999017465357431205, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-      insertIndex: 0
+      insertIndex: -1
       addedObject: {fileID: 6438665013015120377}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
---- !u!1 &478136719542544024 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1645455762981966139, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-  m_PrefabInstance: {fileID: 1186552938060822435}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2608086187023083063 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3766895010739556756, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-  m_PrefabInstance: {fileID: 1186552938060822435}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8262847714489177491 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
