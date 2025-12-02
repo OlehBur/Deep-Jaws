@@ -425,12 +425,13 @@ public class FishControl : MonoBehaviour, IFish {
 
 
     void TryContactWithBehaviour(Collider collider, bool isStayContact) {
-        Transform parent = collider.transform.parent;
+        //Transform parent = collider.transform.parent;
+        Rigidbody victimRb = collider.attachedRigidbody;
         GameObject collisObj = collider.gameObject;
 
         //if other fish
-        if (parent != null && transform != parent//not self collision
-             && GameStaticInfo.TryGetFish(parent.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
+        if (victimRb != null && transform != victimRb//not self collision
+             && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
         && (fish.IsPlayer || other == IFish.CurrentTarget) //collision obj is our victim
             && fish.IsLegitimateTarget(other)//victim is weaker
             ) {

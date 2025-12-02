@@ -92,9 +92,10 @@ public class ZoneController : MonoBehaviour {
     }
 
     private void OnCollisionStay/*Enter*/(Collision collision) {
-        Transform parent = collision.collider.transform.parent;
+        //Transform parent = collision.collider.transform.parent;
+        Rigidbody victimRb = collision.collider.attachedRigidbody;
 
-        if (parent != null && parent.CompareTag("Player")) {
+        if (victimRb != null && victimRb.CompareTag("Player")) {
             playerUIController.ActivateZoneOverlay(fishLvlRequirMsg);
             if (!isBarrierAnimationActive) {
                 //StopCoroutine(BarrierTouchAnimation());

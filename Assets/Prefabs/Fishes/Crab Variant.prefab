@@ -312,7 +312,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 3e1933bb0c049a745a09f2b3e03dfabc, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -425,6 +425,7 @@ MonoBehaviour:
   rb: {fileID: 448909511287582052}
   fishSkinnedRenderer: {fileID: 0}
   editableTransform: {fileID: 4084185988788917315}
+  IsHaveShield: 1
   shieldLocalPos: {x: 0, y: 0, z: 0}
   shieldLocalScale: {x: 3.116048, y: 1.832324, z: 4.056315}
   whirlLocalPos: {x: 0, y: 0, z: -0.23}

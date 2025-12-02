@@ -42,7 +42,7 @@ public class FishAdditionalCompManager : MonoBehaviour {
         InitPool(ref biteParticlePool, biteParticlePrefab, biteParticlesCnt);
         InitPool(ref skeletParticlePool, skeletParticlePrefab, skeletonParticlesCnt);
         InitPool(ref inkParticlesPool, inkParticlesPrefab, inkParticlesCnt);
-        InitPool(ref sprintLinePool, spintLinePrefab, 1);//for player only
+        InitPool(ref sprintLinePool, spintLinePrefab, 2);//for player only and in case respwn
         InitPool(ref healParticlePool, healParticlePrefab, HEAL_FRUIT_MAX_CNT);//for player only
     }
 

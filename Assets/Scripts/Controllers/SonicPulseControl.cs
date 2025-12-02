@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SonicPulseControl : MonoBehaviour {
@@ -8,8 +9,8 @@ public class SonicPulseControl : MonoBehaviour {
     [SerializeField] AudioManager audioManager;
     [SerializeField] Collider triggerCollider;
     [SerializeField] SpawnManager spawnManager;
-    private const float MAX_SCALE = 200;
-    private const float PULSE_SCALE_SPEED = 185f;
+    //private const float MAX_SCALE = 200;
+    private const float PULSE_SCALE_MULTIPLIER = 2f;
     private float curentRechargeTime = 0f; // current recharge time for pulse
     private const float PULSE_RECHARGE_TIME = 30f; // time to recharge the pulse
     private bool playAnim = false;
@@ -29,9 +30,9 @@ public class SonicPulseControl : MonoBehaviour {
     }
 
     void PulseScalingAnim() {
-        pulseTransform.localScale = pulseTransform.localScale + Vector3.one * Time.deltaTime * PULSE_SCALE_SPEED;
+        pulseTransform.localScale = pulseTransform.localScale + Vector3.one * Time.deltaTime * GameStaticInfo.STUN_SONAR_RADIUS;
 
-        if (pulseTransform.localScale.x >= MAX_SCALE) {
+        if (pulseTransform.localScale.x >= GameStaticInfo.STUN_SONAR_RADIUS * PULSE_SCALE_MULTIPLIER/*MAX_SCALE*/) {
             playAnim = false;
             pulseTransform.localScale = Vector3.zero;
         }
@@ -49,8 +50,8 @@ public class SonicPulseControl : MonoBehaviour {
         blinkIndicatorMat.SetColor("_EmissionColor", Color.red * progress * EMISSION_SCALE * isBlinking);
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if (triggerCollider.enabled && other.isTrigger && GameManager.IsSceneReady && Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
+    private void OnTriggerStay(Collider other) {
+        if (triggerCollider.enabled && !other.isTrigger /*&& GameManager.IsSceneReady*/ && Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
             && other.transform.parent.TryGetComponent(out EffectManager fem) && !playAnim && curentRechargeTime <= 0f) {
             playAnim = true;
             curentRechargeTime = PULSE_RECHARGE_TIME; // reset recharge time
@@ -61,4 +62,8 @@ public class SonicPulseControl : MonoBehaviour {
             //pulseAudioSource.PlayOneShot(pulseAudioSource.clip); // play the pulse sound effect witout pause or interrupt
         }
     }
+
+    //private void OnDrawGizmos() {
+    //    Gizmos.DrawWireSphere(transform.position, GameStaticInfo.STUN_SONAR_RADIUS);
+    //}
 }

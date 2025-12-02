@@ -43,14 +43,14 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] FishAnimManager fishAnim;
 
     // cache all effect types for iteration
-    private static readonly FishEffectType[] AllEffectTypes = (FishEffectType[])Enum.GetValues(typeof(FishEffectType));
+    public static readonly FishEffectType[] AllEffectTypes = (FishEffectType[])Enum.GetValues(typeof(FishEffectType));
     //private readonly Dictionary<FishEffectType, Component> existingComponents = new();
 
     //fixed update optimization
     private bool hasSpeedEffects = false;
     //private bool isPlayerFish;
 
-    private const float Y_OFFSET = 2f;
+    //private const float Y_OFFSET = 2f;
     private const float X_OFFSET_DOUBLE = .6f;
     private const float X_OFFSET_TRIPLE = 1.2f;
     private const float X_OFFSET_FOURTH = 1.8f;
@@ -235,8 +235,10 @@ public class EffectManager : MonoBehaviour {
                 ShieldObj = shieldEffect.ShieldObj;
             }
 
-            if (type != FishEffectType.StunInitiator)
-                activeEffects[type] = newEffect; // use [] instead TryAdd 
+            //if (type == FishEffectType.StunInitiator)
+            //    Debug.Log("Stun Initiator effect applied");
+
+            activeEffects[type] = newEffect; // use [] instead TryAdd 
 
             UpdateIconVisualization();
 
@@ -345,7 +347,7 @@ public class EffectManager : MonoBehaviour {
         if (icon != null) {
             icon.SetActive(active);
             if (active)
-                icon.transform.localPosition = new Vector3(xOffset, Y_OFFSET, 0f);
+                icon.transform.localPosition = new Vector3(xOffset, /*Y_OFFSET*/0f, 0f);
         }
     }
 
@@ -370,7 +372,7 @@ public class EffectManager : MonoBehaviour {
         return type switch {
             FishEffectType.Shield => CreateShieldEffect(),
             FishEffectType.CurrentSpeed => CreateCurrentEffect(),
-            FishEffectType.Stun => new StunEffect(GetComponent<Rigidbody>()),
+            FishEffectType.Stun => new StunEffect(rb),
             FishEffectType.StunInitiator => new StunInitiatorEffet(),
             FishEffectType.SprintSpeed => CreateSprintEffect(),
             FishEffectType.FreezeTime => CreateFreezeTimeEffect(),

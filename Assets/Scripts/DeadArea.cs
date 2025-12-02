@@ -6,10 +6,12 @@ public class DeadArea : MonoBehaviour {
     //[SerializeField] SpawnManager spawnManager;
 
     private void OnTriggerExit(Collider other) {
-        Transform parent = other.transform.parent;
-        if (parent.gameObject.layer == LayerMask.NameToLayer("Entity")) {
+        //Transform parent = other.transform.parent;
+        Rigidbody victimRb = other.attachedRigidbody;
+
+        if (victimRb.gameObject.layer == LayerMask.NameToLayer("Entity")) {
             Fish fish; /*=other.transform.parent.GetComponent<Fish>();*/
-            GameStaticInfo.TryGetFish(parent.gameObject, out fish);
+            GameStaticInfo.TryGetFish(victimRb.gameObject, out fish);
 
             fish.Die();// fish die if it enters the dead area
             //spawnManager.DeactivatePrefab(other.transform.parent.gameObject); // respawn the fish

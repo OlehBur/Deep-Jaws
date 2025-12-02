@@ -26,7 +26,7 @@ public class AudioManager : MonoBehaviour {
     [SerializeField] Slider masterSlider;// Slider for master volume control
     [SerializeField] Slider musicSlider;// Slider for music volume control
     [SerializeField] Slider sfxSlider;// Slider for SFX volume control
-    private const float MAX_MASTER_DB = 1f;
+    private const float MAX_MASTER_DB = 0f;
     private const float MAX_MUSIC_DB = -26f;
     private const float MAX_SFX_DB = -10f;
     private const float MIN_DB = -80f;
