@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -22,10 +24,30 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] TMP_Dropdown languageDropdown;
     int previousLocaleIndex = 0;
 
+    private const string GM_KEY = "GameMode";
+    [SerializeField] GameObject[] gamemodePauseTitles;
+    [SerializeField] Image gameModeWndBackground;
+    private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
+    private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
+    private readonly Color HARD_GM_COLOR = new Color(0.6698113f, 0.09033603f, 0f, 1f);
+    private Color targetGMwndColor;
+    private Color targetLightGMcolor;
+    [SerializeField] Light mainMenuLight;
+    private readonly Color LIGHT_DEFAULT_COLOR = new Color(1f, 0.8671192f, 0.504717f, 1f);
+    private readonly Color LIGHT_MEDIUM_COLOR = new Color(0.4544322f, 0.4999117f, 0.8679245f, 1f);
+    private readonly Color LIGHT_HARD_COLOR = new Color(0f, 0f, 0f, 1f);
+    [SerializeField] Animator gmWndAnimator;
+    private bool isGMneedAnimation = true;
+
     [SerializeField] Image signInIcon;
     private readonly Color failedSignInColor = new Color(1f, 0.4764151f, 0.4863637f, 1f);
     private readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
     private GPG_Manager gpg_manager;
+
+
+    private void Awake() {
+        GameModeInit();
+    }
 
     private void Start() {
         // Ensure the fader scene is not destroyed on load
@@ -36,6 +58,11 @@ public class MainmenuManager : MonoBehaviour {
         if (continueButton != null)
             continueButton?.SetActive(ProgressSaver.IsDataExist());
 
+        LanguageInit();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void LanguageInit() {
         //init locale
         previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
         if (LocalizationSettings.AvailableLocales != null && LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
@@ -43,6 +70,43 @@ public class MainmenuManager : MonoBehaviour {
         if (languageDropdown != null)
             languageDropdown.value = previousLocaleIndex;
         languageDropdown?.onValueChanged.AddListener(OnLanguageChanged);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void GameModeInit() {
+        ////init gamemode buttons
+        GameStaticInfo.Gamemode = (GameMode)PlayerPrefs.GetInt(GM_KEY, 0);
+        //if (gamemodeSelectButtons != null && gamemodeSelectButtons.Length == GameStaticInfo.GAMEMODES_COUNT) {
+        //    foreach (Button but in gamemodeSelectButtons)
+        //        but.interactable = true;
+
+        //    gamemodeSelectButtons[(int)GameStaticInfo.Gamemode].interactable = false;
+        //}
+        //init gamemode
+        if (gamemodePauseTitles != null && gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
+            foreach (GameObject tit in gamemodePauseTitles)
+                tit.SetActive(false);
+
+            gamemodePauseTitles[(int)GameStaticInfo.Gamemode].SetActive(true);
+        }
+        Debug.LogWarning(GameStaticInfo.Gamemode);
+    }
+
+    IEnumerator ChangeColorGMwnd() {
+        //Debug.Log("gm changing color started");
+        while (gameModeWndBackground.color != targetGMwndColor) {
+            gameModeWndBackground.color = Color.Lerp(gameModeWndBackground.color, targetGMwndColor, Time.deltaTime/* * GM_COLOR_CHANGING_SPEED*/);
+            yield return null;
+        }
+
+        //Debug.Log("gm Color changed");
+    }
+
+    IEnumerator ChangeColorGMmainMenu() {
+        while (mainMenuLight.color != targetLightGMcolor) {
+            mainMenuLight.color = Color.Lerp(mainMenuLight.color, targetLightGMcolor, Time.deltaTime);
+            yield return null;
+        }
     }
 
     private void OnLanguageChanged(int index) {
@@ -53,6 +117,36 @@ public class MainmenuManager : MonoBehaviour {
             GPG_Manager.OnTriggerAchievement(AchievementKey.EnglishPlease);
 
         previousLocaleIndex = index;
+    }
+
+    public void OnGameModeSet(int gamemode) {
+        GameStaticInfo.Gamemode = (GameMode)gamemode;
+
+        targetGMwndColor = GameStaticInfo.Gamemode switch {
+            GameMode.Easy => EASY_GM_COLOR,
+            GameMode.Medium => MEDIUM_GM_COLOR,
+            GameMode.Hard => HARD_GM_COLOR,
+            _ => Color.white
+        };
+
+        targetLightGMcolor = GameStaticInfo.Gamemode switch {
+            GameMode.Easy => LIGHT_DEFAULT_COLOR,
+            GameMode.Medium => LIGHT_MEDIUM_COLOR,
+            GameMode.Hard => LIGHT_HARD_COLOR,
+            _ => Color.white
+        };
+
+        StopCoroutine(ChangeColorGMwnd());
+        StartCoroutine(ChangeColorGMwnd());
+        StopCoroutine(ChangeColorGMmainMenu());
+        StartCoroutine(ChangeColorGMmainMenu());
+
+        PlayerPrefs.SetInt(GM_KEY, gamemode);
+
+        if (isGMneedAnimation) {
+            gmWndAnimator.SetTrigger("Anim");
+            isGMneedAnimation = false;
+        }
     }
 
     public void InitGPGServices(GPG_Manager gpg_manager) {

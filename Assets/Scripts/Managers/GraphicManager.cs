@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -81,7 +82,7 @@ public class GraphicManager : MonoBehaviour {
         LoadGraphicsData();
     }
 
-    public void ResetSettingsToDefault() {         
+    public void ResetSettingsToDefault() {
         bloomTog.isOn = true;
         vignetteTog.isOn = true;
         shadowCastTog.isOn = true;
@@ -91,6 +92,7 @@ public class GraphicManager : MonoBehaviour {
         shadowResolution.value = DEFAULT_GAME_RESOLUTION_INDEX;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void LoadGraphicsData() {
         bloomTog.isOn = (PlayerPrefs.GetInt(BLOOM_KEY, 1) == 1) ? true : false;
         bloomTog.onValueChanged.Invoke(bloomTog.isOn);
@@ -104,6 +106,7 @@ public class GraphicManager : MonoBehaviour {
         shadowResolution.value = PlayerPrefs.GetInt(SHADOWRESOLUTION_KEY, DEFAULT_GAME_RESOLUTION_INDEX);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveGraphicsData() {
         PlayerPrefs.SetInt(BLOOM_KEY, bloomTog.isOn ? 1 : 0);
         PlayerPrefs.SetInt(VIGNETTE_KEY, vignetteTog.isOn ? 1 : 0);

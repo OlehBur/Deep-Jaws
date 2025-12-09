@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -111,12 +112,14 @@ public class AudioManager : MonoBehaviour {
     }
 
     //save audio data in normalize format
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveAudioData() {
         PlayerPrefs.SetFloat(MASTER_KEY, masterSlider.value);
         PlayerPrefs.SetFloat(MUSIC_KEY, musicSlider.value);
         PlayerPrefs.SetFloat(SFX_KEY, sfxSlider.value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void LoadAudoData() {
         masterSlider.value = PlayerPrefs.GetFloat(MASTER_KEY, 1f);
         musicSlider.value = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);

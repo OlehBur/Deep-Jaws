@@ -68,7 +68,7 @@ public class ZoneController : MonoBehaviour {
     private void Start() {//work onlu once per game install (only for old players)
         spawnManager.OnPlayerRespawn += ZoneByLvlBehaviour;
         if (spawnManager.PlayerFish != null)
-            ZoneByLvlBehaviour(spawnManager.PlayerFish);
+            ZoneByLvlBehaviour(spawnManager.PlayerFish, false);
 
         Locale currentLocale = LocalizationSettings.SelectedLocale;
         OnLanguageChanged(currentLocale);
@@ -76,7 +76,7 @@ public class ZoneController : MonoBehaviour {
         zoneBarrierMat.SetFloat("_Progress", 0);//resert previous mat
     }
 
-    void ZoneByLvlBehaviour(Fish fish) {
+    void ZoneByLvlBehaviour(Fish fish, bool isDie) {
         switch (zoneType) {
             //case ZoneType.CoralRocks:
             //    zoneCollidersParent.SetActive(fish.Level < FishLevel.Moray)

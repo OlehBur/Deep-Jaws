@@ -162,6 +162,7 @@ public class Fish : MonoBehaviour {
         float levelSpeedProgressing = (float)level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
         float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
+        enemyProgressMultiplier = GameStaticInfo.Gamemode != GameMode.Easy ? 1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
         progressDivider *= enemyProgressMultiplier;
 
         Progress += 1f / progressDivider;
@@ -173,7 +174,7 @@ public class Fish : MonoBehaviour {
         //    Debug.LogWarning("Activated fast progress!!!");
         //Debug.LogWarning(progressDivider);
 
-        int playerDamageMultiplier = victim.IsPlayer ? 1 : 3; // player gets 1/3 damage
+        int playerDamageMultiplier = victim.IsPlayer && GameStaticInfo.Gamemode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
         int damage = (int)level * playerDamageMultiplier;
         OnFishEat?.Invoke(damage);
         //Debug.Log($"{gameObject.name} ({Progress}) eats {victim.name} ({victim.Progress}).");
@@ -231,7 +232,7 @@ public class Fish : MonoBehaviour {
             //Level++;
             OnFishLvlUp?.Invoke(gameObject);
         }
-        else if (IsPlayer && Level == GameStaticInfo.MAX_FISH_LEVEL && Progress >= KING_ABYSS_PROGRESS)
+        else if (IsPlayer && Level == GameStaticInfo.MAX_FISH_LEVEL && GameStaticInfo.Gamemode == GameMode.Hard && Progress >= KING_ABYSS_PROGRESS)
             GPG_Manager.OnTriggerAchievement(AchievementKey.KingAbyss);
 
         prefabVisualTransform.localScale
@@ -252,30 +253,26 @@ public class Fish : MonoBehaviour {
     /// <param name="other"></param>
     /// <returns></returns>
     public bool IsLegitimateTarget(Fish other, bool withChance = false) {
+        bool smallerLvl = other.Level < Level;//other - weaker 
+        bool sameLevelLegimate = other.Level == Level && other.Progress <= Progress; // same level and <= progress
+        bool allowSmLvlPlyrAtck = GameStaticInfo.Gamemode == GameMode.Hard;
+        bool isShark = Level >= GameStaticInfo.SHARK_INDEX_BARRIER;
+
         if (IsPlayer)
-            return (other.Level < Level
-            || (other.Level == Level && other.Progress < Progress));//other is weaker or equal to player
+            return (smallerLvl || sameLevelLegimate);//other is weaker or equal to player
         else {
-
             const float SAME_LVL_ATACK_CHANCE = .03f; // chance to attack same level fish
-            bool isOtherPlayer = other.CompareTag("Player");
 
-            if (other.Level <= GameStaticInfo.UNBEATABLE_FISH_LVL) //immortal fish that can't get harm (only by player)
+            if (other.Level <= GameStaticInfo.UNBEATABLE_FISH_LVL)//immortal fish that can't get harm (only by player) 
                 return false;
 
             if (withChance)
-                return (Level > GameStaticInfo.PEACEFUL_FISH_LVL //not crab
-                    && (other.Level < Level //other - weaker 
-                        || (other.Level == Level && other.Progress <= Progress //or same level and <= progress
-                            && (!isOtherPlayer && UnityEngine.Random.value <= SAME_LVL_ATACK_CHANCE //but not player and ran chance, or player or others if enemy fish is shark 
-                            || Level >= GameStaticInfo.SHARK_INDEX_BARRIER)
-                            )));
+                return smallerLvl ||
+                    (sameLevelLegimate && (UnityEngine.Random.value <= SAME_LVL_ATACK_CHANCE && //but not player and ran chance, or player or others if enemy fish is shark or hard mode
+                            (!other.IsPlayer || isShark || allowSmLvlPlyrAtck)));
             else
-                return (Level > GameStaticInfo.PEACEFUL_FISH_LVL //not crab
-                    && (other.Level < Level //other - weaker 
-                        || (other.Level == Level && other.Progress <= Progress //or same level and <= progress
-                            && (!isOtherPlayer || Level >= GameStaticInfo.SHARK_INDEX_BARRIER)
-                            )));
+                return smallerLvl ||
+                    (sameLevelLegimate && (!other.IsPlayer || isShark || allowSmLvlPlyrAtck));
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -96,6 +97,8 @@ public class FishControl : MonoBehaviour, IFish {
         // Cancel all delayed calls when disabled
         CancelInvoke();
         JoyAxis.OnAxisChanged -= OnMove;
+        if (IFish != null)
+            IFish.CurrentTarget = null;
     }
 
     private void OnDestroy() {
@@ -115,6 +118,7 @@ public class FishControl : MonoBehaviour, IFish {
             EnemyMovementBehaviour();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsFishNeedUpdate() {
         if (spawnManager != null && spawnManager.PlayerFish != null) {
             float distanceToPlayer = Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position);
@@ -137,6 +141,7 @@ public class FishControl : MonoBehaviour, IFish {
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void EnemyMovementBehaviour() {
         switch (state) {
             case EnemyState.Walking:
@@ -144,6 +149,7 @@ public class FishControl : MonoBehaviour, IFish {
                     direction = IFish.Walking();
                 else
                     direction = targetPosition - transform.position; //if the position is set, but we have passed by or something, we continue to reach it
+
                 ReactionToOtherFish();
                 break;
 
@@ -160,6 +166,7 @@ public class FishControl : MonoBehaviour, IFish {
         Movement(direction);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void PlayerMovement() {
         const float STOP_MOVING_ANGLE = 50f;
 
@@ -189,6 +196,7 @@ public class FishControl : MonoBehaviour, IFish {
             rb.linearVelocity = targetPos;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void ReactionToOtherFish() {
         int count = Physics.OverlapSphereNonAlloc(transform.position, fish.ResponseRadius, overlapResults, GameStaticInfo.ENTITY_LAYER_MASK);
         Fish closestFish = null;
@@ -216,16 +224,15 @@ public class FishControl : MonoBehaviour, IFish {
             IFish.CurrentTarget = closestFish;
             IFish.FishProximity(closestFish);
         }
-        else if (IFish?.CurrentTarget != null) {
+        else if (IFish?.CurrentTarget == null) {
             // if target is lost, return to walking
-            IFish.CurrentTarget = null;
-            if (state != EnemyState.Walking) {
-                state = EnemyState.Walking;
+            //IFish.CurrentTarget = null;
+            if (state != EnemyState.Walking)
                 SetDefaultState();
-            }
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SetTargetMovement() {//set target position on surf for movement
         if (isTargetSet || fish == null)
             return;
@@ -299,9 +306,10 @@ public class FishControl : MonoBehaviour, IFish {
                 if (IFish.CurrentTarget == null
                     || !IFish.CurrentTarget.gameObject.activeInHierarchy
                     || currentDistance > fish.ResponseRadius
-                    || IFish.CurrentTarget.Level > fish.Level
-                    || (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.CompareTag("Player") && fish.Level < GameStaticInfo.SHARK_INDEX_BARRIER)
-                    || (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.Progress >= fish.Progress)
+                    || !fish.IsLegitimateTarget(IFish.CurrentTarget)
+                    //|| IFish.CurrentTarget.Level > fish.Level
+                    //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.CompareTag("Player") && fish.Level < GameStaticInfo.SHARK_INDEX_BARRIER)
+                    //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.Progress >= fish.Progress)
                     ) {//if the target is lost
 
                     SetDefaultState();
@@ -314,6 +322,7 @@ public class FishControl : MonoBehaviour, IFish {
             default://logic of changing state when the target is reached
                 if (currentDistance < MIN_DISTANCE_TO_TARGET) {//magnitude - length of vect
                     SetDefaultState();
+
                     if (state == EnemyState.Walking)
                         SleepPhysics();
                     return;
@@ -346,6 +355,7 @@ public class FishControl : MonoBehaviour, IFish {
         //transform.forward = Vector3.Lerp(transform.forward, move.normalized, enemy.RotationSpeed); //also good solut 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SetDefaultState() {
         isTargetSet = false; // reset target when changing 
         targetPosition = transform.position; // reset target position
@@ -358,18 +368,15 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     void IFish.FishProximity(Fish otherFish) {
-        if (fish.Level == GameStaticInfo.PEACEFUL_FISH_LVL /*|| otherFish.Level <= GameStaticInfo.UNBEATABLE_FISH_LVL*/) {
-            state = EnemyState.Walking;
-            return;
+        if (fish.Level < otherFish.Level) {
+            state = EnemyState.Escape;
         }
-
-        state = (fish.Level < otherFish.Level) ?
-            EnemyState.Escape :
-                    //(enemy.Level > otherFish.Level) ?
-                    //    EnemyState.Attack :
-                    (fish.IsLegitimateTarget(otherFish, true)) ?
-                        EnemyState.Attack :
-                        EnemyState.Walking; //If the player attacks the fish the same level, only then it will start attacking
+        else if (fish.IsLegitimateTarget(otherFish, true) && fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL) {//not crab
+            state = EnemyState.Attack;
+        }
+        else {
+            state = EnemyState.Walking; //If the player attacks the fish the same level, only then it will start attacking
+        }
     }
 
     // while fish is in contact with another fish, if it is weaker, it will be eaten
@@ -516,6 +523,7 @@ public class FishControl : MonoBehaviour, IFish {
         targetPosition = transform.position + rotation * newDir;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SleepPhysics() {
         direction = Vector3.zero;
         rb.linearVelocity = Vector3.zero;
@@ -523,9 +531,8 @@ public class FishControl : MonoBehaviour, IFish {
         rb.Sleep(); // freeze physics calculations
     }
 
-
     private void OnDrawGizmos() {
-        if (fish == null)
+        if (fish == null || !gameObject.activeInHierarchy)
             return;
 
         Gizmos.color = Color.yellow;

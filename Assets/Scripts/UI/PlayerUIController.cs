@@ -117,7 +117,7 @@ public class PlayerUIController : MonoBehaviour {
     public void Init(SpawnManager sp) {
         spawnManager = sp;
         //Debug.LogWarning(spawnManager);
-        PlayerReConnect(spawnManager.PlayerFish);
+        PlayerReConnect(spawnManager.PlayerFish, false);
 
         effectsSlotsMatch[FishEffectType.Shield] = shieldIcon.transform.parent.GetComponent<RectTransform>();
         effectsSlotsMatch[FishEffectType.Stun] = stunIcon.transform.parent.GetComponent<RectTransform>();
@@ -370,7 +370,7 @@ public class PlayerUIController : MonoBehaviour {
     //    damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, damageOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
     //}
 
-    void PlayerReConnect(Fish fish) {
+    void PlayerReConnect(Fish fish, bool isDie) {
         //Debug.LogWarning("PlayerRespawn");
         if (playerFish != null && playerEffectManager != null) {
             playerFish.OnInfoStatsChanged -= UpdatePlayerInfo;
@@ -534,6 +534,6 @@ public class PlayerUIController : MonoBehaviour {
     //}
 
     public void OnDestroy() {
-        PlayerReConnect(playerFish);
+        PlayerReConnect(playerFish, false);
     }
 }

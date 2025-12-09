@@ -112,7 +112,16 @@ public enum FishLevel {
     WhiteShark
 }
 
+public enum GameMode {
+    Easy = 0,
+    Medium,
+    Hard,
+    None
+}
+
 public static class GameStaticInfo {
+    public static GameMode Gamemode { get; set; } = GameMode.Easy;
+    public const int GAMEMODES_COUNT = 3;
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish
     /// <summary>
     /// use for separating sharks from other fish, where index 6 is the barrier fish, and 

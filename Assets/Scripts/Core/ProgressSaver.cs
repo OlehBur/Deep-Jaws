@@ -7,7 +7,7 @@ using UnityEngine;
 public static class ProgressSaver {
     private static string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
 
-    public static void Save(SaveData data) {
+    public static void Save(SaveData_Player data) {
         string json = JsonUtility.ToJson(data);
         string encrypted = Encryptor.Encrypt(json);
 
@@ -18,14 +18,14 @@ public static class ProgressSaver {
         return File.Exists(SavePath);
     }
 
-    public static SaveData Load() {
+    public static SaveData_Player Load() {
         if (!IsDataExist())
             return null;
 
         string encrypted = File.ReadAllText(SavePath);
         string json = Encryptor.Decrypt(encrypted);
 
-        return JsonUtility.FromJson<SaveData>(json);
+        return JsonUtility.FromJson<SaveData_Player>(json);
     }
 
     public static void Delete() {
@@ -37,14 +37,16 @@ public static class ProgressSaver {
 }
 
 [Serializable]
-public class SaveData {
-    private const int UNVALID_VAL = -1;
+public class SaveData_Player {
+    private const int INVALID_VAL = -1;
     public Vector3 playerPosition;
     public Quaternion playerRotation;
-    public float playerProgress = UNVALID_VAL;
-    public int playerLevel = UNVALID_VAL;
-    public int playerHealth = UNVALID_VAL;
+    public float playerProgress = INVALID_VAL;
+    public int playerLevel = INVALID_VAL;
+    public int playerHealth = INVALID_VAL;
+
     public bool IsDataValid =>
         (playerPosition != null && playerRotation != null
-        && playerLevel != UNVALID_VAL && playerHealth != UNVALID_VAL && playerProgress != UNVALID_VAL);
+        && playerLevel != INVALID_VAL && playerHealth != INVALID_VAL 
+        && playerProgress != INVALID_VAL);
 }

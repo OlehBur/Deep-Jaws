@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
@@ -57,13 +58,16 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// used to notify when player respawns after death (for camera follow, etc.)
     /// </summary>
     //public event Action OnPlayerDie;
-    public event Action<Fish> OnPlayerRespawn;
+    public event Action<Fish, bool> OnPlayerRespawn;//bool - is respawn after death
     //public event Action OnFinishPoolCreation;
     //const float SPAWN_HEIGHT = 2.5f; //height offset
     private Vector3 playerSpawnPos;
     //[SerializeField] Transform[] spawnPoints;
-    private static readonly float[] SPAWN_WEIGHTS = { .5f, .35f, .15f };
-    private static readonly float[] SPAWN_WEIGHTS_EASY = { .65f, .33f, .02f };
+
+    private static readonly float[] SPAWN_WEIGHTS_EASY = { .5f, .35f, .15f };
+    private static readonly float[] SPAWN_WEIGHTS_EASY_START = { .65f, .33f, .02f };
+    private static readonly float[] SPAWN_WEIGHTS_MEDIUM = { .4f, .4f, .2f };
+    private static readonly float[] SPAWN_WEIGHTS_HARD = { .34f, .33f, .33f };
 
     [Header("Effects Prefabs")]
     //player
@@ -76,7 +80,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //    get { return PlayerFish; }
     //    private set { PlayerFish = value; }
     //}
-    private SaveData saveData;
+    private SaveData_Player saveData;
 
     [Header("Other Dependencies")]
     [SerializeField] FishAdditionalCompManager fishAdditionalComponentManager;
@@ -113,7 +117,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
         else
             PlayerFish = SpawnPlayerFish(playerSpawnPos, Quaternion.identity, false);
-        OnPlayerRespawn?.Invoke(PlayerFish);
+        OnPlayerRespawn?.Invoke(PlayerFish, false);
 
         InitSpawnPrefabs();
 
@@ -126,6 +130,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void InitPool() {
         GameObject prefab;
         Fish component;
@@ -204,8 +209,9 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             pool[i].OnFishDie -= FishDieAct;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SavePlayerData() {
-        saveData = new SaveData {
+        saveData = new SaveData_Player {
             playerPosition = /*pool[PLAYER_INDEX]*/PlayerFish.transform.position,
             playerRotation = /*pool[PLAYER_INDEX]*/PlayerFish.transform.rotation,
             playerHealth = PlayerFish.Health,
@@ -239,6 +245,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //Debug.LogWarning(playerLvl);
         const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
         Fish new_PlayerVar;
+        playerLvl = GameStaticInfo.Gamemode == GameMode.Hard ? (int)GameStaticInfo.PLAYER_INIT_LVL : playerLvl;
 
         //if (prev_PlayerVar != null) {//first spawn
         //prev_PlayerVar.OnFishDie -= FishDieAct;
@@ -309,6 +316,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// <summary>
     /// respawn all +2 lvl fishes depending on player lvl after hes death
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void RespawnEntitiesMap() {
         //Debug.LogWarning("Disabled Reinit Entities map");
         for (int i = 1; i < POOL_SIZE; i++)
@@ -443,6 +451,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int GetRandSpawnLevel() {
         const int ALLOWED_LVLS_CNT = 3;
         int[] allowedLevels = new int[ALLOWED_LVLS_CNT] {
@@ -453,7 +462,14 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         float random = UnityEngine.Random.value;//0 to 1
         float currentWeight = 0f;
         float[] spawnWeight = (PlayerFish.Level == FishLevel.SeaBass) ?
-            SPAWN_WEIGHTS_EASY : SPAWN_WEIGHTS;//easy enemies for beginner players
+            SPAWN_WEIGHTS_EASY_START : SPAWN_WEIGHTS_EASY;//easy enemies for beginner players
+        //weight by gamemode
+        spawnWeight = GameStaticInfo.Gamemode switch {
+            GameMode.Easy => spawnWeight,
+            GameMode.Medium => SPAWN_WEIGHTS_MEDIUM,
+            GameMode.Hard => SPAWN_WEIGHTS_HARD,
+            _ => SPAWN_WEIGHTS_EASY,
+        };
 
         for (int i = 0; i < ALLOWED_LVLS_CNT; i++) {
             currentWeight += spawnWeight[i];
@@ -464,6 +480,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
         return allowedLevels[0];
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void InitSpawnPrefabs() {
         int currnentRandLvl = 0;
 
@@ -539,7 +557,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 PlayerFish = SpawnPlayerFish(prefab.transform.position, playerRot, false, playerLevel + 1);
             }
 
-            OnPlayerRespawn?.Invoke(PlayerFish);
+            OnPlayerRespawn?.Invoke(PlayerFish, isDie);
         }
         else {// if enemy fish respawn
               //spawn die particles

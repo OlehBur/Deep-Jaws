@@ -36,6 +36,13 @@ public enum AchievementKey {
     Gourmet
 }
 
+public enum LederboardKey {
+    EasyModeScore,
+    MediumModeScore,
+    HardModeScore,
+    //DeadInEasyModeScore
+}
+
 /// <summary>
 /// Google Play Games Manager
 /// </summary>
@@ -70,6 +77,11 @@ public class GPG_Manager : MonoBehaviour {
             { AchievementKey.Beauty, "CgkI0PmEnbsFEAIQGw"   },//
             { AchievementKey.Gourmet, "CgkI0PmEnbsFEAIQHA"   }//
         };
+    private const string EASY_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHg";
+    private const string MEDIUM_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQFw";
+    private const string HARD_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHw";
+    private const string EASY_DEATH_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQIA";
+
     [SerializeField] MainmenuManager mainmenu;
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
 
@@ -154,9 +166,9 @@ public class GPG_Manager : MonoBehaviour {
         //});
     }
 
-    public void OnSavePlayerScoreToLeaderBoard(long score) {
+    public void OnSavePlayerScoreToLeaderBoard(LederboardKey leaderboard, long score, int deaths) {
         //const int PLAYER_CNT = 1;
-        const string LEADERBOARD_ID = "CgkI0PmEnbsFEAIQFw";
+
         //    PlayGamesPlatform.Instance.LoadScores(leaderboardId, LeaderboardStart.PlayerCentered, PLAYER_CNT, LeaderboardCollection.Public, LeaderboardTimeSpan.AllTime,
         //(data) =>
         //{
@@ -164,6 +176,13 @@ public class GPG_Manager : MonoBehaviour {
         //        0 : data.PlayerScore.value;
         //    long newScore = currentScore + score;
         //    //Debug.LogWarning("Current Score: " + currentScore + ", New Score: " + newScore);
+        string LEADERBOARD_ID = leaderboard switch {
+            LederboardKey.EasyModeScore => EASY_LEADERBOARD_ID,
+            LederboardKey.MediumModeScore => MEDIUM_LEADERBOARD_ID,
+            LederboardKey.HardModeScore => HARD_LEADERBOARD_ID,
+            //LederboardKey.DeadInEasyModeScore => EASY_DEATH_LEADERBOARD_ID,
+            _ => EASY_LEADERBOARD_ID
+        };
 
         PlayGamesPlatform.Instance.ReportScore(/*newScore*/score, LEADERBOARD_ID, success =>
         {
@@ -173,6 +192,17 @@ public class GPG_Manager : MonoBehaviour {
             else
                 Debug.LogWarning("Score report failed.");
         });
+
+        if (GameStaticInfo.Gamemode == GameMode.Easy)
+            PlayGamesPlatform.Instance.ReportScore(deaths, EASY_DEATH_LEADERBOARD_ID, success =>
+            {
+                Debug.Log("Reporting deaths: " + deaths);
+                if (success)
+                    Debug.Log("Deaths report success");
+                else
+                    Debug.LogWarning("Deaths report failed.");
+            });
+
         //});
 
         //PlayGamesPlatform.Instance.ReportScore(score, leaderboardId, success => {
