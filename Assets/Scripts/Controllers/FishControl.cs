@@ -301,6 +301,9 @@ public class FishControl : MonoBehaviour, IFish {
         dir.y = 0; // only horizontal movement
 
         float currentDistance = dir.magnitude;
+        currentDistance = (currentDistance < (fish.ScaleModifier.z + 1) * fish.JawForwardOffset) ?
+            0 : currentDistance;//stop moving if enouch close for bite
+
         switch (state) {
             case EnemyState.Attack:
                 if (IFish.CurrentTarget == null
@@ -484,12 +487,16 @@ public class FishControl : MonoBehaviour, IFish {
                                                  //   (other.gameObject.layer == LayerMask.NameToLayer("Obstacle")//fish is stuck on obstacle
                                                  //    || other.gameObject.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders")))
                                                  //    BypassObstacle(other.ClosestPoint(transform.position));
-        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
+        if (other.tag == "Shield")
+            SleepPhysics();
+        else if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
             TryContactWithBehaviour(other, false);
     }
 
     private void OnTriggerStay(Collider other) {
-        if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
+        if (other.tag == "Shield")
+            SleepPhysics();
+        else if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
             TryContactWithBehaviour(other, true);
     }
     bool CheckEatAchievements(FishLevel victimLvl) {

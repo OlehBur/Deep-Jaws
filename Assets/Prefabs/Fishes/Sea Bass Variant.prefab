@@ -80,6 +80,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -214,6 +215,10 @@ PrefabInstance:
       propertyPath: responseRadius
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: jawForwardOffset
+      value: 0.96
+      objectReference: {fileID: 0}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishMesh
       value: 
@@ -296,7 +301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4975605382687861859, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Radius
-      value: 0.65
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4975605382687861859, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Center.z
@@ -408,7 +413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8937414190267927894, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_CollisionDetection
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -419,8 +424,8 @@ PrefabInstance:
       addedObject: {fileID: 1850659993555984546}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
---- !u!4 &3605896209586709885 stripped
-Transform:
+--- !u!224 &3605896209586709885 stripped
+RectTransform:
   m_CorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
   m_PrefabInstance: {fileID: 5824918849239041869}
   m_PrefabAsset: {fileID: 0}

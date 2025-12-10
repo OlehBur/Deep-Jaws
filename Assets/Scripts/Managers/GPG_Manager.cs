@@ -33,7 +33,8 @@ public enum AchievementKey {
     Inevitability,
     MarineMedicine,
     Beauty,
-    Gourmet
+    Gourmet,
+    HardWay
 }
 
 public enum LederboardKey {
@@ -75,7 +76,8 @@ public class GPG_Manager : MonoBehaviour {
             { AchievementKey.Inevitability, "CgkI0PmEnbsFEAIQGQ" },//
             { AchievementKey.MarineMedicine, "CgkI0PmEnbsFEAIQGg" },//
             { AchievementKey.Beauty, "CgkI0PmEnbsFEAIQGw"   },//
-            { AchievementKey.Gourmet, "CgkI0PmEnbsFEAIQHA"   }//
+            { AchievementKey.Gourmet, "CgkI0PmEnbsFEAIQHA"   },//
+            { AchievementKey.HardWay, "CgkI0PmEnbsFEAIQHQ"}
         };
     private const string EASY_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHg";
     private const string MEDIUM_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQFw";

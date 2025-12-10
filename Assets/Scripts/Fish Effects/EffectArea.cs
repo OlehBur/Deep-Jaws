@@ -8,7 +8,7 @@ public class EffectArea : MonoBehaviour {
         //Transform parent = other.transform.parent;
         Rigidbody victimRb = other.attachedRigidbody;
 
-        if (!other.isTrigger && victimRb != null && victimRb.TryGetComponent(out EffectManager fem)) { //if component on fish exists - apply effect
+        if (!other.isTrigger && victimRb != null && other.tag != "Shield" && victimRb.TryGetComponent(out EffectManager fem)) { //if component on fish exists - apply effect
             fem.ApplyEffect(effectType, duration);//transform.parent. because collider is child of fish prefab
 
             if (/*other.transform.parent*/victimRb.CompareTag("Player")) //if player fish, check for achievements
@@ -20,7 +20,7 @@ public class EffectArea : MonoBehaviour {
         //Transform parent = other.transform.parent;
         Rigidbody victimRb = other.attachedRigidbody;
 
-        if (!other.isTrigger && victimRb != null && victimRb.TryGetComponent(out EffectManager fem)) {
+        if (!other.isTrigger && victimRb != null && other.tag != "Shield" && victimRb.TryGetComponent(out EffectManager fem)) {
             fem.ApplyEffect(effectType, duration);
         }
     }

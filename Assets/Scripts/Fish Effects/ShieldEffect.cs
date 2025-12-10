@@ -1,18 +1,19 @@
 using UnityEngine;
 
 public class ShieldEffect : Effect {
-    public GameObject ShieldObj {get; private set; }
+    public GameObject ShieldObj { get; private set; }
     private FishAdditionalCompManager fishAddComp;
     private AudioManager audioManager;
     private Vector3 shieldLocalPos;
     private Vector3 shieldLocalScale;
+    private const float SHIELD_SCALE_MULTIPLIER = 1.3f;
     private Transform shieldParent;
 
     public ShieldEffect(AudioManager audioManager, FishAdditionalCompManager fishAddComp, Transform parent, Vector3 shieldLocPos, Vector3 shieldLocScale) {
         this.audioManager = audioManager;
         this.fishAddComp = fishAddComp;
         shieldLocalPos = shieldLocPos;
-        shieldLocalScale = shieldLocScale;
+        shieldLocalScale = shieldLocScale * SHIELD_SCALE_MULTIPLIER;
         shieldParent = parent;
         //shieldObj = shield;
         type = FishEffectType.Shield;

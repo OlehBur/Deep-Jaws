@@ -89,7 +89,7 @@ public class MainmenuManager : MonoBehaviour {
 
             gamemodePauseTitles[(int)GameStaticInfo.Gamemode].SetActive(true);
         }
-        Debug.LogWarning(GameStaticInfo.Gamemode);
+        //Debug.LogWarning(GameStaticInfo.Gamemode);
     }
 
     IEnumerator ChangeColorGMwnd() {

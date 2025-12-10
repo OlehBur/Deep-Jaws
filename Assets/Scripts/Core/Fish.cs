@@ -59,7 +59,9 @@ public class Fish : MonoBehaviour {
 
     [SerializeField] Transform prefabVisualTransform; //for grow animation
     //public Vector3 CurrentScale { get; private set; }
-    private Vector3 scaleModifier => new Vector3(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
+    [HideInInspector] public Vector3 ScaleModifier => new Vector3(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
+    [SerializeField] float jawForwardOffset;
+    public float JawForwardOffset => jawForwardOffset;
 
 
     private const float ATTACK_INTERVAL_COEFFICIENT = 3f;
@@ -236,7 +238,7 @@ public class Fish : MonoBehaviour {
             GPG_Manager.OnTriggerAchievement(AchievementKey.KingAbyss);
 
         prefabVisualTransform.localScale
-        /*CurrentScale*/ = scaleModifier * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER);
+        /*CurrentScale*/ = ScaleModifier * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER);
         //if (CompareTag("Player"))
         //    Debug.Log("E: " + Vector3.one * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER));
     }

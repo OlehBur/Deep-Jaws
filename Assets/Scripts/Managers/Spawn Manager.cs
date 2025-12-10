@@ -1,5 +1,8 @@
+using GooglePlayGames;
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -31,6 +34,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     public const int CUTTLEFISH_SPAWN_COUNT = 30;
     public const int POOL_SIZE = 85;
     public const int PLAYER_INDEX = 0;
+    private const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
     /*[HideInInspector] public*/
     public static GameObject[] visibleFishPool { get; } = new GameObject[POOL_SIZE];
     GameObject[,] globalPool = new GameObject[(int)GameStaticInfo.MAX_FISH_LEVEL + 1, POOL_SIZE];
@@ -128,6 +132,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             PlayerFish.transform.position = Vector3.up * PlayerFish.transform.position.y;
 
         //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
+        if (GameStaticInfo.Gamemode == GameMode.Hard)
+            GPG_Manager.OnTriggerAchievement(AchievementKey.HardWay);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -241,9 +247,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //}
 
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, bool isDie = false) {
-        //playerLvl = (int)FishLevel.TigerShark;
+        //playerLvl = (int)FishLevel.Lionfish ;
         //Debug.LogWarning(playerLvl);
-        const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
         Fish new_PlayerVar;
         playerLvl = GameStaticInfo.Gamemode == GameMode.Hard ? (int)GameStaticInfo.PLAYER_INIT_LVL : playerLvl;
 
@@ -286,7 +291,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         EffectManager playerEffectManager = playerPrefab?.GetComponent<EffectManager>();
         playerEffectManager.Init(audioManager, fishAdditionalComponentManager);
         if (isDie) {//apply shield effect after every player death
-            playerEffectManager.ApplyEffect(FishEffectType.Shield, PLAYER_INIT_SHIELD_DURATION);
+            StartCoroutine(AddShieldToPlayer_Delay(playerEffectManager));
             GPG_Manager.OnTriggerAchievement(AchievementKey.HereWeGo);
             RespawnEntitiesMap();
         }
@@ -311,6 +316,11 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //prev_PlayerVar.OnFishLvlUp += PlayerLvlUpAct;
 
         return new_PlayerVar;
+    }
+
+    IEnumerator AddShieldToPlayer_Delay(EffectManager playerEffectManager) {
+        yield return null;
+        playerEffectManager.ApplyEffect(FishEffectType.Shield, PLAYER_INIT_SHIELD_DURATION);
     }
 
     /// <summary>

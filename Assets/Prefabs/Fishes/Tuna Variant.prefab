@@ -119,6 +119,10 @@ PrefabInstance:
       propertyPath: responseRadius
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: jawForwardOffset
+      value: 1.55
+      objectReference: {fileID: 0}
     - target: {fileID: 133755904755991818, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Height
       value: 4.203869
@@ -205,11 +209,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4975605382687861859, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Radius
-      value: 0.83
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 4975605382687861859, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Center.z
-      value: 1.7
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 5122027199496285179, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_MotionVectors
@@ -321,7 +325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8937414190267927894, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_CollisionDetection
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -333,8 +337,8 @@ PrefabInstance:
       addedObject: {fileID: 4100482690477474013}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
---- !u!4 &134760277016167954 stripped
-Transform:
+--- !u!224 &134760277016167954 stripped
+RectTransform:
   m_CorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
   m_PrefabInstance: {fileID: 7134317989425898530}
   m_PrefabAsset: {fileID: 0}

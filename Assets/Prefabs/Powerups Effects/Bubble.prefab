@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 779506337984155323}
   m_Layer: 0
   m_Name: Bubble
-  m_TagString: Untagged
+  m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -89,6 +89,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &779506337984155323
 CapsuleCollider:
@@ -109,7 +110,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.6
   m_Height: 1
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
