@@ -1,12 +1,16 @@
 using UnityEngine;
 
 public class SnowAnimation : MonoBehaviour {
-    //private const float SIDE_SPEED = 2f;
-    private const float DOWN_SPEED = 5f;
+    private const float SIDE_SPEED = 50f;
+    private const float DOWN_SPEED = 200f;
     private RectTransform parent;
+    private float parentWidth;
+    private float parentHeight;
 
     private void Start() {
         parent = transform as RectTransform;
+        parentWidth = parent.rect.width;
+        parentHeight = parent.rect.height;
     }
 
 
@@ -14,31 +18,27 @@ public class SnowAnimation : MonoBehaviour {
         if (gameObject.activeInHierarchy) {
             Vector2 buffPos;
             int dir;
-            float hw;
-            float hh;
-            float parentWidth = parent.rect.width;
-            float parentHeight = parent.rect.height;
+            float flakeWidthHalf;
 
             foreach (RectTransform rs in transform) {
                 buffPos = rs.anchoredPosition;
-                hw = rs.rect.width * .5f;
-                hh = rs.rect.height * .5f;
+                flakeWidthHalf = rs.rect.width * .5f * rs.localScale.x;
 
-                if (buffPos.y < -hh
-                || buffPos.x > /*Screen.width*/parentWidth + hw
-                || buffPos.x < -hw) {
+                if (buffPos.y < -flakeWidthHalf
+                || buffPos.x > /*Screen.width*/parentWidth + flakeWidthHalf
+                || buffPos.x < -flakeWidthHalf) {
 
-                    buffPos.x = Random.Range(hw, /*Screen.width*/parentWidth - hw);
-                    buffPos.y = /*Screen.height*/parentHeight + hh;
+                    buffPos.x = Random.Range(flakeWidthHalf, /*Screen.width*/parentWidth - flakeWidthHalf);
+                    buffPos.y = /*Screen.height*/parentHeight + flakeWidthHalf;
                     rs.anchoredPosition = buffPos;
                 }
 
                 dir = Random.Range(0, 5);
                 if (dir == 0)
-                    buffPos.x--;
+                    buffPos.x -= Time.unscaledDeltaTime * SIDE_SPEED;
                 else if (dir == 1)
-                    buffPos.x++;
-                buffPos.y -= Random.value * DOWN_SPEED;
+                    buffPos.x += Time.unscaledDeltaTime * SIDE_SPEED;
+                buffPos.y -= Random.value * DOWN_SPEED * Time.unscaledDeltaTime;
 
                 rs.anchoredPosition = buffPos;
             }

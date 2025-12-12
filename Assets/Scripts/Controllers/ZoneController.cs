@@ -77,6 +77,9 @@ public class ZoneController : MonoBehaviour {
     }
 
     void ZoneByLvlBehaviour(Fish fish, bool isDie) {
+        if(fish==null)
+            return;
+
         switch (zoneType) {
             //case ZoneType.CoralRocks:
             //    zoneCollidersParent.SetActive(fish.Level < FishLevel.Moray)

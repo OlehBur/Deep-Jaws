@@ -61,6 +61,11 @@ public class MainmenuManager : MonoBehaviour {
         LanguageInit();
     }
 
+    public void ResetExitGame() {
+        ResetGameData();
+        faderScene.SetActive(true);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void LanguageInit() {
         //init locale
@@ -195,10 +200,12 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     public /*static*/ void ResetGameData() {
+        PlayerLeaderboardScore.LoadSavedData();
         PlayerPrefs.DeleteAll();//delete all player prefs data 
         PlayerPrefs.SetInt(LOCALE_PREF_KEY, LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)); //except settings data 
         audioManager.SaveAudioData(); // Save current audio settings
         graphicManager.SaveGraphicsData(); // Save current graphic settings
+        PlayerLeaderboardScore.SaveLoadedData();
         ProgressSaver.Delete();
     }
 

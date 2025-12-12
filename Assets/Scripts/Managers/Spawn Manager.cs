@@ -1,8 +1,6 @@
-using GooglePlayGames;
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
-using UnityEditor;
 using UnityEngine;
 
 
@@ -95,6 +93,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private const int DEAD_BUBBLES_POOL_CNT = 8;
     private const int INK_PARTICLES_POOL_CNT = 5;//CUTTLEFISH_SPAWN_COUNT / 6
     [SerializeField] AudioManager audioManager;
+    [SerializeField] MainmenuManager mainmenuManager;
 
     /// <summary>
     /// тільки для новооновлених гравців які можливо перебувають в недозволеній зоні відповідно до рівня
@@ -250,14 +249,19 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //playerLvl = (int)FishLevel.Lionfish ;
         //Debug.LogWarning(playerLvl);
         Fish new_PlayerVar;
-        playerLvl = GameStaticInfo.Gamemode == GameMode.Hard ? (int)GameStaticInfo.PLAYER_INIT_LVL : playerLvl;
 
+        if (GameStaticInfo.Gamemode == GameMode.Hard && isDie) {
+            //playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL;
+            OnSceneExit();
+            mainmenuManager.ResetExitGame();
+            enabled = false;
+            return null;
+        }
         //if (prev_PlayerVar != null) {//first spawn
         //prev_PlayerVar.OnFishDie -= FishDieAct;
         //prev_PlayerVar.OnFishLvlUp -= PlayerLvlUpAct;
         //}
 
-        // ФІКС: передаємо null якщо рівень змінився, інакше передаємо поточний об'єкт
         GameObject alreadyDeadObj = (visibleFishPool[PLAYER_INDEX] != null &&
                                       visPool_FishComp[PLAYER_INDEX] != null &&
                                       (int)visPool_FishComp[PLAYER_INDEX].Level == playerLvl)

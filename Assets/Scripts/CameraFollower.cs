@@ -52,6 +52,9 @@ public class CameraFollower : MonoBehaviour {
     /// init after player respawn
     /// </summary>
     void ResetPlayerTarget(Fish player, bool isDie) {
+        if (player == null)
+            return;
+
         target = /*spawnManager.pool[SpawnManager.PLAYER_INDEX]*/player.transform; //get player transform
         playerFish = player;//target.GetComponent<Fish>();
 

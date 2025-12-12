@@ -166,15 +166,15 @@ public class Fish : MonoBehaviour {
         float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
         enemyProgressMultiplier = GameStaticInfo.Gamemode != GameMode.Easy ? 1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
         progressDivider *= enemyProgressMultiplier;
+        //if (IsPlayer) {
+        //    progressDivider = 2f;
+        //    Debug.LogWarning("Activated fast progress!!!");
+        //}
 
         Progress += 1f / progressDivider;
 
         if (!IsPlayer && Progress > 1f) //player can grow over 1f progress
             Progress = 1f;
-
-        //if (CompareTag("Player"))
-        //    Debug.LogWarning("Activated fast progress!!!");
-        //Debug.LogWarning(progressDivider);
 
         int playerDamageMultiplier = victim.IsPlayer && GameStaticInfo.Gamemode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
         int damage = (int)level * playerDamageMultiplier;

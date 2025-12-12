@@ -168,7 +168,7 @@ public class GPG_Manager : MonoBehaviour {
         //});
     }
 
-    public void OnSavePlayerScoreToLeaderBoard(LederboardKey leaderboard, long score, int deaths) {
+    public void OnSavePlayerScoreToLeaderBoard(LederboardKey leaderboard, long score) {
         //const int PLAYER_CNT = 1;
 
         //    PlayGamesPlatform.Instance.LoadScores(leaderboardId, LeaderboardStart.PlayerCentered, PLAYER_CNT, LeaderboardCollection.Public, LeaderboardTimeSpan.AllTime,
@@ -195,16 +195,6 @@ public class GPG_Manager : MonoBehaviour {
                 Debug.LogWarning("Score report failed.");
         });
 
-        if (GameStaticInfo.Gamemode == GameMode.Easy)
-            PlayGamesPlatform.Instance.ReportScore(deaths, EASY_DEATH_LEADERBOARD_ID, success =>
-            {
-                Debug.Log("Reporting deaths: " + deaths);
-                if (success)
-                    Debug.Log("Deaths report success");
-                else
-                    Debug.LogWarning("Deaths report failed.");
-            });
-
         //});
 
         //PlayGamesPlatform.Instance.ReportScore(score, leaderboardId, success => {
@@ -215,7 +205,17 @@ public class GPG_Manager : MonoBehaviour {
         //        Debug.LogWarning("");
         //    }
         //});
+    }
 
+    public void OnSavePlayerDeathsToLeaderBoard(int deaths) {
+        PlayGamesPlatform.Instance.ReportScore(deaths, EASY_DEATH_LEADERBOARD_ID, success =>
+        {
+            Debug.Log("Reporting deaths: " + deaths);
+            if (success)
+                Debug.Log("Deaths report success");
+            else
+                Debug.LogWarning("Deaths report failed.");
+        });
     }
 
     public static void OnTriggerAchievement(AchievementKey key) {

@@ -274,13 +274,13 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void EffectsProgressReset() {
-        shieldIcon.transform.parent.gameObject.SetActive(false);
-        stunIcon.transform.parent.gameObject.SetActive(false);
-        currentIcon.transform.parent.gameObject.SetActive(false);
-        sprintIcon.transform.parent.gameObject.SetActive(false);
-        timeIcon.transform.parent.gameObject.SetActive(false);
-        poisonIcon.transform.parent.gameObject.SetActive(false);
-        blindnessIcon.transform.parent.gameObject.SetActive(false);
+        shieldIcon?.transform.parent.gameObject.SetActive(false);
+        stunIcon?.transform.parent.gameObject.SetActive(false);
+        currentIcon?.transform.parent.gameObject.SetActive(false);
+        sprintIcon?.transform.parent.gameObject.SetActive(false);
+        timeIcon?.transform.parent.gameObject.SetActive(false);
+        poisonIcon?.transform.parent.gameObject.SetActive(false);
+        blindnessIcon?.transform.parent.gameObject.SetActive(false);
 
         stunIcon.fillAmount = 0;
         shieldIcon.fillAmount = 0;
