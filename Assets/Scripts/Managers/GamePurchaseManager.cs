@@ -5,9 +5,12 @@ using UnityEngine;
 using UnityEngine.Purchasing;
 
 public class GamePurchaseManager : MonoBehaviour {
+    [SerializeField] GPG_Manager GPGmanager;
+
     private StoreController m_StoreController;
-    public const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
-    public const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
+
+    private const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
+    private const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
 
 
     private void Awake() {
@@ -62,7 +65,7 @@ public class GamePurchaseManager : MonoBehaviour {
         if (ProgressSaver.IsDataExist()) {
             SaveData_Player currentData = ProgressSaver.Load();
             if (currentData != null) {
-                // ßêùî ó ãðàâöÿ º ÏÎÂÍÈÉ ÏÐÅÌ²ÓÌ àáî ÊÓÏËÅÍÎ ÂÈÌÊÍÅÍÍß ÐÅÊËÀÌÈ
+                // player has immunited to ad purchases 
                 if (currentData.isPremiumUser || currentData.isNoAD) {
                     Debug.Log("Local check: Paid status found in the save file! Disabling interstitial ads.");
                     ApplyNoAdsLogic(true);
@@ -75,7 +78,7 @@ public class GamePurchaseManager : MonoBehaviour {
         ApplyNoAdsLogic(false);
     }
 
-    // Îíîâëåííÿ ³ñòîð³¿ ïîêóïîê â³ä Google Play
+    // update GP purchases history
     private void OnPurchasesFetched(Orders orders) {
         bool hasPremium = false;
         bool hasFounder = false;
@@ -99,38 +102,35 @@ public class GamePurchaseManager : MonoBehaviour {
                                                     order.Info.PurchasedProductInfo.Any(p => p.productId == Application.identifier))) {
                 hasPremium = true; //old buyers get all prem
                 hasFounder = true;
+
+                GPGmanager.OnAddToFoundersLeaderboard();
             }
         }
         UpdatePremiumInSaveFile(hasPremium, hasNoAd ,hasFounder);
     }
 
-    // Çàïèñ ñòàòóñó ïîêóïêè â òâ³é ProgressSaver
+    // save purchase to ProgressSaver
     private void UpdatePremiumInSaveFile(bool isPremium, bool isNoAd, bool isFounder) {
-        // Çàâàíòàæóºìî ³ñíóþ÷èé ñåéâ àáî ñòâîðþºìî íîâèé, ÿêùî éîãî íåìàº
-        SaveData_Player currentData = ProgressSaver.IsDataExist() ? ProgressSaver.Load() : new SaveData_Player();
+        SaveData_Player currentData = ProgressSaver.IsDataExist() ?
+            ProgressSaver.Load() : new SaveData_Player();
 
         if (currentData != null) {
-            // Çì³íþºìî ïðàïîðö³
             currentData.isPremiumUser = isPremium;
             currentData.isNoAD = isNoAd;
             currentData.isFounder = isFounder;
 
-            // Ïåðåçàïèñóºìî çàøèôðîâàíèé ôàéë
             ProgressSaver.Save(currentData);
             Debug.Log($"IAP v5: Purchase status has been successfully synced with Google Play and saved! Premium: {isPremium}");
 
-            // Âìèêàºìî/âèìèêàºìî ðåêëàìó â³äïîâ³äíî äî ðåçóëüòàòó ñèíõðîí³çàö³¿
-            ApplyNoAdsLogic(isPremium || isNoAd);
+            ApplyNoAdsLogic(isPremium || isNoAd);//enab\disab ad in case
         }
     }
 
     private void ApplyNoAdsLogic(bool disableAds) {
         if (disableAds) {
-            // Òâîÿ ëîã³êà: âèìêíóòè áàíåðè, âèìêíóòè ì³æñòîð³íêîâó ðåêëàìó
             Debug.Log("ADVERTISEMENTS ARE DISABLED FOR THIS SESSION");
         }
         else {
-            // Ðåêëàìà ïðàöþº â ñòàíäàðòíîìó ðåæèì³
             Debug.Log("ADVERTISEMENT ACTIVE");
         }
     }
@@ -140,9 +140,9 @@ public class GamePurchaseManager : MonoBehaviour {
         m_StoreController.FetchPurchases();
     }
 
-    // Ïåðåâ³ðêà êóïëåíèõ òîâàð³â ï³ä ÷àñ â³äíîâëåííÿ/ñòàðòó ãðè
+    // check purchased prods during start
 
-    // ÎÁÐÎÁÊÀ ÍÅÇÀÂÅÐØÅÍÎ¯ ÏÎÊÓÏÊÈ
+    // PROCESSING AN INCOMPLETE PURCHASE
     private void OnPurchasePending(PendingOrder pendingOrder) {
         if (pendingOrder.Info != null && pendingOrder.Info.PurchasedProductInfo != null && pendingOrder.Info.PurchasedProductInfo.Count > 0) {
             string productId = pendingOrder.Info.PurchasedProductInfo[0].productId; //

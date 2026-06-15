@@ -220,7 +220,6 @@ public class Fish : MonoBehaviour {
     public void Die() {
         //Debug.Log($"{this.GetType().Name} has died.");
         Health = MaxHealth;
-        Progress = 0f;
         gameObject.SetActive(false);
         IsAlreadySelected = false;
 

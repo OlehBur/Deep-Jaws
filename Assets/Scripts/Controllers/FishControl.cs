@@ -84,18 +84,11 @@ public class FishControl : MonoBehaviour, IFish {
     //    SetDefaultState(); // Set initial state after full initialization
     //}
 
-    //private void OnEnable() {
-
-    //    //Invoke(nameof(SetDefaultState), ³dleTime); //afrer respawn or on start
-    //    //                                           //SetTargetMovement();
-    //    //if (fish != null) {
-
-    //    //}
-    //}
-
     private void OnDisable() {
         // Cancel all delayed calls when disabled
         CancelInvoke();
+        SetDefaultState();
+        SleepPhysics();
         JoyAxis.OnAxisChanged -= OnMove;
         if (IFish != null)
             IFish.CurrentTarget = null;

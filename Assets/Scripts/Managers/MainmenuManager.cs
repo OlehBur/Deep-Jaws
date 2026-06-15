@@ -17,10 +17,12 @@ public class MainmenuManager : MonoBehaviour {
     private const string LOCALE_PREF_KEY = "LocaleIndex";
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
+    [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] FaderScene faderScene;
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
+    [SerializeField] GameObject respawnWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
     int previousLocaleIndex = 0;
 
@@ -59,6 +61,9 @@ public class MainmenuManager : MonoBehaviour {
             continueButton?.SetActive(ProgressSaver.IsDataExist());
 
         LanguageInit();
+
+        if (spawnManager != null)
+            spawnManager.OnPlayerDied += () => respawnWnd.SetActive(true);
     }
 
     public void ResetAndReloadGame_Hard() {
@@ -163,14 +168,14 @@ public class MainmenuManager : MonoBehaviour {
     public void OnServicesButton(int buttonIndex) {
         switch (buttonIndex) {
             case 0:
-                gpg_manager.OnShowLeaderboard();
-                break;
+            gpg_manager.OnShowLeaderboard();
+            break;
             case 1:
-                gpg_manager.OnShowAchievements();
-                break;
+            gpg_manager.OnShowAchievements();
+            break;
             case 2:
-                gpg_manager.OnSign();
-                break;
+            gpg_manager.OnSign();
+            break;
         }
     }
 
@@ -225,5 +230,8 @@ public class MainmenuManager : MonoBehaviour {
         if (ProgressSaver.IsDataExist())
             GPG_Manager.OnTriggerAchievement(AchievementKey.Respect);
     }
+
+
+    public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
 
 }

@@ -162,7 +162,7 @@ public static class GameStaticInfo {
     }
 
     public static bool TryGetFish(GameObject fishObject, out Fish fish) {
-        return TryGetFishFromPool(fishObject, SpawnManager.visibleFishPool, SpawnManager.visPool_FishComp, out fish) ||
+        return TryGetFishFromPool(fishObject, SpawnManager.visibleFishPool, SpawnManager.VisPool_FishComp, out fish) ||
         TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool, SpawnManager.cuttlefishPool_FishComp, out fish) ||
         TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool, SpawnManager.pufferfishPool_FishComp, out fish);
     }

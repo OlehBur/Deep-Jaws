@@ -7,6 +7,22 @@ using Unity.Services.LevelPlay;
 using TMPro;
 
 public class FishAdManager : MonoBehaviour {
+    [SerializeField] SpawnManager spawnManager;
+    [SerializeField] MainmenuManager gui;
+    [SerializeField] GameObject loadingPanel;
+
+    [Header("Revive Buttons (Rewarded)")]
+    [SerializeField] private List<Button> reviveButtons = new List<Button>();
+
+    [Header("Retry Buttons (Interstitial)")]
+    [SerializeField] private List<Button> restartButtons = new List<Button>();
+    [SerializeField] List<TextMeshProUGUI> limitTxtUI = new List<TextMeshProUGUI>();
+
+
+    private LevelPlayRewardedAd rewardedAd;
+    private LevelPlayInterstitialAd interstitialAd;
+    private bool isSdkInitialized = false;
+
     private const string APP_KEY = "26b8c37b5";
     private const string REWARD_AD_UNIT_ID = "shsn3zi2t35xoese";
     private const string INTERSTITIAL_AD_UNIT_ID = "6s73h4sri4pvs62u";
@@ -16,31 +32,14 @@ public class FishAdManager : MonoBehaviour {
     private const string LAST_AD_DATE_KEY = "LastAdDate";
     private const int MAX_DAILY_REWARDED = 22;
 
-    [Header("Revive Buttons (Rewarded)")]
-    [SerializeField] private List<Button> reviveButtons = new List<Button>();
-
-    [Header("Retry Buttons (Interstitial)")]
-    [SerializeField] private List<Button> restartButtons = new List<Button>();
-    [SerializeField] List<TextMeshProUGUI> limitTxtUI = new List<TextMeshProUGUI>();
-
-    // Об'єкти реклами LevelPlay
-    private LevelPlayRewardedAd rewardedAd;
-    private LevelPlayInterstitialAd interstitialAd;
-
-    private bool isSdkInitialized = false;
 
     void Start() {
-        // 1. Підписуємося на ініціалізацію SDK
         LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
 
-        // Вмикаємо тестовий режим, якщо треба перевірити інтеграцію
         LevelPlay.SetMetaData("is_test_suite", "enable");
-
-        // Запускаємо LevelPlay
         LevelPlay.Init(APP_KEY, GetUserID());
 
-        // 2. Налаштовуємо кнопки (вішаємо лісенери)
         InitButtons();
     }
 
@@ -53,7 +52,7 @@ public class FishAdManager : MonoBehaviour {
 
         foreach (Button b in restartButtons) {
             if (b != null)
-                b.onClick.AddListener(OnRestartClicked);
+                b.onClick.AddListener(OnRetryClicked);
         }
 
         SetButtonsInteractable(true);
@@ -68,29 +67,27 @@ public class FishAdManager : MonoBehaviour {
         return PlayerPrefs.GetString(USER_ID_KEY);
     }
 
-    // Спрацює, коли LevelPlay успішно запуститься
     void SdkInitializationCompletedEvent(LevelPlayConfiguration lc) {
         isSdkInitialized = true;
         Debug.Log("The LevelPlay SDK has been successfully initialized!");
 
-        // Створюємо об'єкт Rewarded реклами
         if (rewardedAd == null) {
             rewardedAd = new LevelPlayRewardedAd(REWARD_AD_UNIT_ID);
             rewardedAd.OnAdLoaded += (adInfo) => Debug.Log("Rewarded loaded");
             rewardedAd.OnAdLoadFailed += OnRewardedLoadFailed;
             rewardedAd.OnAdRewarded += RewardedAdOnAdRewardedEvent;
             rewardedAd.OnAdClosed += OnRewardedAdClosed;
+
+            rewardedAd.LoadAd();
         }
 
-        // Створюємо об'єкт Interstitial (звичайної) реклами
         if (interstitialAd == null) {
             interstitialAd = new LevelPlayInterstitialAd(INTERSTITIAL_AD_UNIT_ID);
             interstitialAd.OnAdLoaded += (adInfo) => Debug.Log("Interstitial завантажено");
             interstitialAd.OnAdLoadFailed += OnInterstitialLoadFailed;
             interstitialAd.OnAdClosed += OnInterstitialAdClosed;
 
-            // Фоново завантажуємо звичайну рекламу, щоб вона була готова на момент смерті
-            interstitialAd.LoadAd();
+            interstitialAd.LoadAd();//load in backround
         }
     }
 
@@ -99,9 +96,8 @@ public class FishAdManager : MonoBehaviour {
         Debug.LogError($"LevelPlay initialization error: {le}");
     }
 
-    // ------------------ КЛІК НА КНОПКУ "ОЖИВИТИСЬ" (REWARDED) ------------------
-    private void OnReviveClicked() {
-        // 1. Перевіряємо зашифрований преміум/меценатів
+    private void OnReviveClicked() {//rewarded
+        // check premium\founders
         if (IsPlayerHasAddImmunitet().premium) {
             Debug.Log("The player has a premium account! We'll revive it for free.");
             RevivePlayerLogic();
@@ -113,27 +109,28 @@ public class FishAdManager : MonoBehaviour {
             return;
         }
 
-        // 2. Перевіряємо ліміт на день
+        // check day limit
         if (!CanWatchRewarded()) {
             Debug.Log("The free revival attempts have ended for today!");
             return;
         }
 
-        // 3. Перевіряємо готовність реклами і показуємо
+        //check add readiness
         if (rewardedAd != null && rewardedAd.IsAdReady()) {
-            SetButtonsInteractable(false); // Блокуємо спам-кліки
+            SetButtonsInteractable(false); 
             rewardedAd.ShowAd();
+            rewardedAd.LoadAd();
         }
-        else {
-            // Якщо реклама не встигла підвантажитися, робимо запит заново
+        else {//try load again if failed load           
             Debug.Log("Rewarded isn't ready. Let's try downloading it...");
+            loadingPanel.SetActive(false);
+            //gui.ActivateRespawnWnd();
             rewardedAd?.LoadAd();
         }
     }
 
-    // Гравець додивився відео до кінця — даємо нагороду
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
-        // Фіксуємо перегляд у лімітах
+        // recalc limits
         int currentCount = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, 0);
         PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, currentCount + 1);
         PlayerPrefs.Save();
@@ -149,49 +146,51 @@ public class FishAdManager : MonoBehaviour {
 
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
         SetButtonsInteractable(true);
+        loadingPanel.SetActive(false);
     }
 
     void OnRewardedLoadFailed(LevelPlayAdError error) {
         SetButtonsInteractable(true);
+        loadingPanel.SetActive(false);
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
 
 
-    // ------------------ КЛІК НА КНОПКУ "ПОЧАТИ ЗАНОВО" (INTERSTITIAL) ------------------
-    private void OnRestartClicked() {
-        // Якщо преміум — ніякої реклами, одразу пускаємо далі
+    private void OnRetryClicked() {//revive -> interstitial
         (bool prem, bool noadd) = IsPlayerHasAddImmunitet();
         if (prem || noadd) {
             Debug.Log("The Premium player has declined to be revived. Skip the ad.");
-            RestartGameLogic();
+            RetryGameLogic();
             return;
         }
 
-        // Перевіряємо чи готова звичайна реклама LevelPlay
+        loadingPanel.SetActive(true);
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
             SetButtonsInteractable(false);
             interstitialAd.ShowAd();
+            interstitialAd.LoadAd();
         }
         else {
-            // Якщо реклама не готова або немає інтернету — просто йдемо далі, щоб не ламати геймплей
+            //ad not ready (haha classic lucky u - bum i
             Debug.Log("The interstitial isn't ready. Just restart the game.");
-            RestartGameLogic();
+            RetryGameLogic();
         }
     }
 
     void OnInterstitialAdClosed(LevelPlayAdInfo adInfo) {
         SetButtonsInteractable(true);
-        interstitialAd.LoadAd(); // Одразу фоново завантажуємо наступну рекламу
-        RestartGameLogic();
+        loadingPanel.SetActive(false);
+        interstitialAd.LoadAd(); //load immediately load on backgr new ad
+        RetryGameLogic();
     }
 
     void OnInterstitialLoadFailed(LevelPlayAdError error) {
         SetButtonsInteractable(true);
+        loadingPanel.SetActive(false);
         Debug.LogWarning($"Loading error Interstitial: {error}");
     }
 
 
-    // ------------------ ДОПОМІЖНІ МЕТОДИ ------------------
     /// <summary>
     /// premium - delete interstitial and rewardeed ads, noAds - only del interstitial
     /// </summary>
@@ -229,14 +228,15 @@ public class FishAdManager : MonoBehaviour {
 
     private void RevivePlayerLogic() {
         Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
-        // Твій код повернення риби у гру
+        gui.DeactivateRespawnWnd();
+        spawnManager.RespawnPlayer(true, true);
     }
 
-    private void RestartGameLogic() {
+    private void RetryGameLogic() {
         Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
-        // Твій код скидання рівня або перезапуску сцени
+        gui.DeactivateRespawnWnd();
+        spawnManager.RespawnPlayer(true, false);
     }
-
 
     private void OnDestroy() {
         LevelPlay.OnInitSuccess -= SdkInitializationCompletedEvent;
