@@ -79,6 +79,7 @@ public class GPG_Manager : MonoBehaviour {
             { AchievementKey.Gourmet, "CgkI0PmEnbsFEAIQHA"   },//
             { AchievementKey.HardWay, "CgkI0PmEnbsFEAIQHQ"}
         };
+    private const string FOUNDERS_REEF_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQIQ";
     private const string EASY_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHg";
     private const string MEDIUM_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQFw";
     private const string HARD_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHw";
@@ -125,8 +126,7 @@ public class GPG_Manager : MonoBehaviour {
     IEnumerator TryAuthenticateWithDelay() {
         yield return SECOND_WAIT; // Delay for Google Play init
         //Debug.Log("Trying to authenticate...");
-        PlayGamesPlatform.Instance.Authenticate((result) =>
-        {
+        PlayGamesPlatform.Instance.Authenticate((result) => {
             if (result == SignInStatus.Success) {
                 //Debug.Log("Authentication SUCCESS");
                 isAuthenticated = true;
@@ -186,8 +186,7 @@ public class GPG_Manager : MonoBehaviour {
             _ => EASY_LEADERBOARD_ID
         };
 
-        PlayGamesPlatform.Instance.ReportScore(/*newScore*/score, LEADERBOARD_ID, success =>
-        {
+        PlayGamesPlatform.Instance.ReportScore(/*newScore*/score, LEADERBOARD_ID, success => {
             Debug.Log("Reporting score: " + score);
             if (success)
                 Debug.Log("Score report success");
@@ -208,8 +207,7 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public void OnSavePlayerDeathsToLeaderBoard(int deaths) {
-        PlayGamesPlatform.Instance.ReportScore(deaths, EASY_DEATH_LEADERBOARD_ID, success =>
-        {
+        PlayGamesPlatform.Instance.ReportScore(deaths, EASY_DEATH_LEADERBOARD_ID, success => {
             Debug.Log("Reporting deaths: " + deaths);
             if (success)
                 Debug.Log("Deaths report success");
@@ -217,6 +215,17 @@ public class GPG_Manager : MonoBehaviour {
                 Debug.LogWarning("Deaths report failed.");
         });
     }
+
+    public void OnAddToFoundersLeaderboard() {
+        PlayGamesPlatform.Instance.ReportScore(0, FOUNDERS_REEF_LEADERBOARD_ID, success => {
+            Debug.Log("Reporting founders...");
+            if (success)
+                Debug.Log("Founders report success");
+            else
+                Debug.LogWarning("Foundersreport failed.");
+        });
+        
+            }
 
     public static void OnTriggerAchievement(AchievementKey key) {
         //Debug.LogWarning(key.ToString());

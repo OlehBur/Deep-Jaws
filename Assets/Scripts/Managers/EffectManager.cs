@@ -491,6 +491,7 @@ public class EffectManager : MonoBehaviour {
         foreach (FishEffectType type in AllEffectTypes)
             if (IsEffectActive(type)) {
                 activeEffects[type].OnEffeñtExpire -= RemoveEffect;
+                activeEffects[type].DeactivateEffect();
                 activeEffects[type].Enabled = false;
             }
 

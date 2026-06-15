@@ -18,7 +18,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
-    [SerializeField] GameObject faderScene;
+    [SerializeField] FaderScene faderScene;
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
@@ -52,7 +52,7 @@ public class MainmenuManager : MonoBehaviour {
     private void Start() {
         // Ensure the fader scene is not destroyed on load
         if (faderScene != null)
-            faderScene?.SetActive(true);
+            faderScene?.gameObject.SetActive(true);
 
         // Initialize the continue button visibility based on saved data
         if (continueButton != null)
@@ -61,9 +61,11 @@ public class MainmenuManager : MonoBehaviour {
         LanguageInit();
     }
 
-    public void ResetExitGame() {
+    public void ResetAndReloadGame_Hard() {
         ResetGameData();
-        faderScene.SetActive(true);
+        PlayerPrefs.SetInt(GM_KEY, (int)GameMode.Hard);
+        faderScene.ChangeLoadScene(SceneType.Game);
+        faderScene.gameObject.SetActive(true);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

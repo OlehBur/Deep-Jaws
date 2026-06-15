@@ -34,6 +34,9 @@ public class FaderScene : MonoBehaviour {
     //    //SceneManager.sceneLoaded += OnSceneLoaded;
 
     //}
+    public void ChangeLoadScene(SceneType scene) {
+        loadScene = scene;
+    }
 
     //At the first start of the scene, the active and black object that gradually
     //becomes transparent, after which, when re -switched on, it loads the scene selected through Bul and darkens

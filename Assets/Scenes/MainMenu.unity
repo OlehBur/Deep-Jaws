@@ -3770,7 +3770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1145467986
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5590,6 +5590,7 @@ GameObject:
   - component: {fileID: 1643188028}
   - component: {fileID: 1643188027}
   - component: {fileID: 1643188029}
+  - component: {fileID: 1643188030}
   m_Layer: 0
   m_Name: Mainmenu Manager
   m_TagString: MainMenu
@@ -5655,7 +5656,7 @@ MonoBehaviour:
   audioManager: {fileID: 1643188027}
   graphicManager: {fileID: 1643188029}
   continueButton: {fileID: 1525560261}
-  faderScene: {fileID: 5645833493909592129}
+  faderScene: {fileID: 214496491906654509}
   areUSureWnd: {fileID: 2146984004}
   guideBookWnd: {fileID: 802032967}
   languageDropdown: {fileID: 1107415621}
@@ -5686,6 +5687,18 @@ MonoBehaviour:
   shadowFixSl: {fileID: 185695004}
   gameResolutSl: {fileID: 333039230}
   shadowResolution: {fileID: 185695003}
+--- !u!114 &1643188030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643188024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efb448ef6cbad542beb9e45aeb31ee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamePurchaseManager
 --- !u!1001 &1643868057
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6846,6 +6859,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8207265465255094709, guid: 3607594483251ca42a793f725b49e2d4, type: 3}
   m_PrefabInstance: {fileID: 214496491906654507}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &214496491906654509 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 915121576417312338, guid: 3607594483251ca42a793f725b49e2d4, type: 3}
+  m_PrefabInstance: {fileID: 214496491906654507}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5645833493909592129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a455ee30e4bda40aa1db242ed8eefa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &226748177541498799
 MonoBehaviour:
   m_ObjectHideFlags: 0

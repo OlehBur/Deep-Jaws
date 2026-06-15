@@ -84,7 +84,7 @@ public abstract class Effect /*: MonoBehaviour*/ {
     /// <summary>
     /// dont use by user, only after onenable = false set
     /// </summary>
-    private void DeactivateEffect() {
+    public void DeactivateEffect() {
         //const float DESTROY_DELAY_TIME = 0.05f; // delay to avoid issues with OnDestroy calling before OnExpire
         //isStartDeactivate = true;
         OnExpire();

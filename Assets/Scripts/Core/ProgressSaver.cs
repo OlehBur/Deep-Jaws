@@ -45,6 +45,10 @@ public class SaveData_Player {
     public int playerLevel = INVALID_VAL;
     public int playerHealth = INVALID_VAL;
 
+    public bool isPremiumUser = false;
+    public bool isNoAD = false;
+    public bool isFounder = false;
+
     public bool IsDataValid =>
         (playerPosition != null && playerRotation != null
         && playerLevel != INVALID_VAL && playerHealth != INVALID_VAL 

@@ -253,7 +253,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         if (GameStaticInfo.Gamemode == GameMode.Hard && isDie) {
             //playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL;
             OnSceneExit();
-            mainmenuManager.ResetExitGame();
+            mainmenuManager.ResetAndReloadGame_Hard();
             enabled = false;
             return null;
         }
