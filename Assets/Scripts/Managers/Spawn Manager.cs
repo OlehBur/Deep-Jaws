@@ -9,6 +9,9 @@ using UnityEngine;
 /// </summary>
 public class SpawnManager : MonoBehaviour //with ObjectPool
 {
+    [SerializeField] GameAdsManager gameAdsManager;
+    [SerializeField] GameManager gameManager;
+
     //pool
     [Header("Prefabs of Fishes in order of Levels")]
     [SerializeField] Transform fishPoolParent;
@@ -533,8 +536,15 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 SaveDataForDelayPlayerRespawn();
                 if (isDie)
                     OnPlayerDied?.Invoke();
-                else
+                else {
                     RespawnPlayer(false); // lvl up
+                    (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
+                    if (!prem && !noadd) {//if doesnt have immunitet
+                        gameManager.GameSetPause(true);
+                        mainmenuManager.ActivatePauseWnd(true);
+                        gameAdsManager.OnShowInterstitialAd();
+                    }
+                }
             }
             break;
         }

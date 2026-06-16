@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Services.LevelPlay;
@@ -13,7 +12,7 @@ public enum AdTarget {
     ExtraLife
 }
 
-public class FishAdManager : MonoBehaviour {
+public class GameAdsManager : MonoBehaviour {
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
     [SerializeField] GameObject loadingPanel;
@@ -108,7 +107,7 @@ public class FishAdManager : MonoBehaviour {
         adTarget = AdTarget.ExtraLife;
 
         // check premium\founders
-        if (IsPlayerHasAddImmunitet().premium) {
+        if (ProgressSaver.IsPlayerHasAdImmunitet().premium) {
             Debug.Log("The player has a premium account! We'll revive it for free.");
             RewardedRewardBeh();
             return;
@@ -141,8 +140,8 @@ public class FishAdManager : MonoBehaviour {
         }
     }
 
-    public void OnShowInterstitialAd() {//just show ad
-        (bool prem, bool noadd) = IsPlayerHasAddImmunitet();
+    public void OnShowInterstitialAd() {//just show ad (used in pause menu on exit)
+        (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (prem || noadd) {
             Debug.Log("The Premium player has declined to be revived. Skip the ad.");
             return;
@@ -183,7 +182,7 @@ public class FishAdManager : MonoBehaviour {
     private void OnRetryClicked() {//revive -> interstitial
         adTarget = AdTarget.JustRespawn;
 
-        (bool prem, bool noadd) = IsPlayerHasAddImmunitet();
+        (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (prem || noadd) {
             Debug.Log("The Premium player has declined to be revived. Skip the ad.");
             InterstitialRewardBeh();
@@ -221,14 +220,14 @@ public class FishAdManager : MonoBehaviour {
     /// premium - delete interstitial and rewardeed ads, noAds - only del interstitial
     /// </summary>
     /// <returns></returns>
-    private (bool premium, bool noAds) IsPlayerHasAddImmunitet() {
-        if (ProgressSaver.IsDataExist()) {
-            SaveData_Player data = ProgressSaver.Load();
-            if (data != null)
-                return (data.isPremiumUser, data.isNoAD);
-        }
-        return (false, false);
-    }
+    //private (bool premium, bool noAds) IsPlayerHasAddImmunitet() {
+    //    if (ProgressSaver.IsDataExist()) {
+    //        SaveData_Player data = ProgressSaver.Load();
+    //        if (data != null)
+    //            return (data.isPremiumUser, data.isNoAD);
+    //    }
+    //    return (false, false);
+    //}
 
     private bool CanWatchRewarded() {
         string today = DateTime.Today.ToString("yyyy-MM-dd");
@@ -257,7 +256,7 @@ public class FishAdManager : MonoBehaviour {
             Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
             gui.DeactivateRespawnWnd();
             spawnManager.RespawnPlayer(true, true);
-            
+
             adTarget = AdTarget.None;
         }
     }
@@ -267,7 +266,7 @@ public class FishAdManager : MonoBehaviour {
             gui.DeactivateRespawnWnd();
             spawnManager.RespawnPlayer(true, false);
             Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
-            
+
             adTarget = AdTarget.None;
         }
     }

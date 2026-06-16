@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ public class MainmenuManager : MonoBehaviour {
     private const string LOCALE_PREF_KEY = "LocaleIndex";
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
+    [SerializeField] GameObject pauseWnd;
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] FaderScene faderScene;
@@ -64,6 +66,10 @@ public class MainmenuManager : MonoBehaviour {
 
         if (spawnManager != null)
             spawnManager.OnPlayerDied += () => respawnWnd.SetActive(true);
+    }
+
+    public void ActivatePauseWnd(bool isActivate) {
+        pauseWnd.SetActive(isActivate);
     }
 
     public void ResetAndReloadGame_Hard() {

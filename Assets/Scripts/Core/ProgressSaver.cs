@@ -33,6 +33,19 @@ public static class ProgressSaver {
             File.Delete(SavePath);
     }
 
+    /// <summary>
+    /// premium - delete interstitial and rewardeed ads, noAds - only del interstitial
+    /// </summary>
+    /// <returns></returns>
+    public static (bool premium, bool noAds) IsPlayerHasAdImmunitet() {
+        if (IsDataExist()) {
+            SaveData_Player data = Load();
+            if (data != null)
+                return (data.isPremiumUser, data.isNoAD);
+        }
+        return (false, false);
+    }
+
     public static bool Exists() => File.Exists(SavePath);
 }
 

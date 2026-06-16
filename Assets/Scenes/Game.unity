@@ -23271,6 +23271,7 @@ GameObject:
   - component: {fileID: 196750669}
   - component: {fileID: 196750671}
   - component: {fileID: 196750670}
+  - component: {fileID: 196750672}
   m_Layer: 5
   m_Name: Revives txt
   m_TagString: Untagged
@@ -23397,6 +23398,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 196750668}
   m_CullTransparentMesh: 1
+--- !u!114 &196750672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196750668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:0c659d8f77e95884b9a629b505b13fd1
+    m_TableEntryReference:
+      m_KeyId: 114664986816049152
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 196750670}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &196769230
 GameObject:
   m_ObjectHideFlags: 0
@@ -45523,18 +45564,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 365168270}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1536686831}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -45546,6 +45575,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 365168270}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1167468962}
         m_TargetAssemblyTypeName: PlayerLeaderboardScore, Assembly-CSharp
@@ -94771,7 +94812,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:0c659d8f77e95884b9a629b505b13fd1
     m_TableEntryReference:
-      m_KeyId: 337680822272
+      m_KeyId: 114155322680569856
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -94824,8 +94865,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282137831
-  m_fontColor: {r: 0.9056604, g: 0.23495908, b: 0.23495908, a: 1}
+    rgba: 4283124697
+  m_fontColor: {r: 0.8490566, g: 0.29236382, b: 0.29236382, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -101524,7 +101565,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:0c659d8f77e95884b9a629b505b13fd1
     m_TableEntryReference:
-      m_KeyId: 337680822272
+      m_KeyId: 114155322680569856
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -136595,6 +136636,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7aae0d77681b7e4c8d1d964a9a1082f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameAdsManager: {fileID: 1167468966}
+  gameManager: {fileID: 1167468959}
   fishPoolParent: {fileID: 1632840716}
   prefabs:
   - {fileID: 8048190963959779323, guid: 93047e6d7cb77314a9740a440fc603be, type: 3}
@@ -136687,6 +136730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioManager: {fileID: 1167468960}
   graphicManager: {fileID: 1167468965}
+  pauseWnd: {fileID: 1536686831}
   spawnManager: {fileID: 1167468958}
   continueButton: {fileID: 0}
   faderScene: {fileID: 1365067461}
@@ -161635,7 +161679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9056604, g: 0.09409459, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.86051214, b: 0.8443396, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -201319,7 +201363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6657938, g: 1, b: 0.4198113, a: 1}
+  m_Color: {r: 0.80910313, g: 1, b: 0.6839622, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
