@@ -162,9 +162,10 @@ public static class GameStaticInfo {
     }
 
     public static bool TryGetFish(GameObject fishObject, out Fish fish) {
-        return TryGetFishFromPool(fishObject, SpawnManager.visibleFishPool, SpawnManager.VisPool_FishComp, out fish) ||
-        TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool, SpawnManager.cuttlefishPool_FishComp, out fish) ||
-        TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool, SpawnManager.pufferfishPool_FishComp, out fish);
+        return TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
+            TryGetFishFromPool(fishObject, SpawnManager.visible_poolFishObjects, SpawnManager.visible_poolFishComponents, out fish) ||//default enemies
+        TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager.cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
+        TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish);//pufferfishes
     }
 
     static bool TryGetFishFromPool(GameObject fishObject, GameObject[] pool, Fish[] fishPool, out Fish fish) {

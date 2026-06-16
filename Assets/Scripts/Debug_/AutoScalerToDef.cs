@@ -11,8 +11,8 @@ public class AutoScalerToDef : MonoBehaviour {
     private Vector3 defaultScale = new Vector3(1, 0, 1);
     private float speed = 3f;
 
-    public void Init() {
-        defaultScale = transform.localScale;
+    public void OnEnable() {
+        defaultScale = /*transform.localScale*/Vector3.one;
         transform.localScale = Vector3.zero;
     }
 
@@ -20,8 +20,8 @@ public class AutoScalerToDef : MonoBehaviour {
         transform.localScale = Vector3.Lerp(transform.localScale, defaultScale, speed * Time.deltaTime);
 
         if (V3Eq(defaultScale, transform.localScale))
-            Destroy(this);
-        //enabled = false; // Disable this script when the scale reaches the default scale
+            //Destroy(this);
+        enabled = false; // Disable this script when the scale reaches the default scale
     }
 
     //private void OnEnable() {

@@ -6,6 +6,13 @@ using UnityEngine.UI;
 using Unity.Services.LevelPlay;
 using TMPro;
 
+
+public enum AdTarget {
+    None,
+    JustRespawn,
+    ExtraLife
+}
+
 public class FishAdManager : MonoBehaviour {
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
@@ -22,6 +29,7 @@ public class FishAdManager : MonoBehaviour {
     private LevelPlayRewardedAd rewardedAd;
     private LevelPlayInterstitialAd interstitialAd;
     private bool isSdkInitialized = false;
+    private AdTarget adTarget = AdTarget.None;
 
     private const string APP_KEY = "26b8c37b5";
     private const string REWARD_AD_UNIT_ID = "shsn3zi2t35xoese";
@@ -97,27 +105,31 @@ public class FishAdManager : MonoBehaviour {
     }
 
     private void OnReviveClicked() {//rewarded
+        adTarget = AdTarget.ExtraLife;
+
         // check premium\founders
         if (IsPlayerHasAddImmunitet().premium) {
             Debug.Log("The player has a premium account! We'll revive it for free.");
-            RevivePlayerLogic();
+            RewardedRewardBeh();
             return;
         }
 
         if (!isSdkInitialized) {
             Debug.LogWarning("The ad isn't ready yet; the SDK is initializing.");
+            adTarget = AdTarget.None;
             return;
         }
 
         // check day limit
         if (!CanWatchRewarded()) {
             Debug.Log("The free revival attempts have ended for today!");
+            adTarget = AdTarget.None;
             return;
         }
 
         //check add readiness
         if (rewardedAd != null && rewardedAd.IsAdReady()) {
-            SetButtonsInteractable(false); 
+            SetButtonsInteractable(false);
             rewardedAd.ShowAd();
             rewardedAd.LoadAd();
         }
@@ -129,6 +141,19 @@ public class FishAdManager : MonoBehaviour {
         }
     }
 
+    public void OnShowInterstitialAd() {//just show ad
+        (bool prem, bool noadd) = IsPlayerHasAddImmunitet();
+        if (prem || noadd) {
+            Debug.Log("The Premium player has declined to be revived. Skip the ad.");
+            return;
+        }
+
+        if (interstitialAd != null && interstitialAd.IsAdReady()) {
+            interstitialAd.ShowAd();
+            interstitialAd.LoadAd();
+        }
+    }
+
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
         // recalc limits
         int currentCount = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, 0);
@@ -136,7 +161,7 @@ public class FishAdManager : MonoBehaviour {
         PlayerPrefs.Save();
         SetLimitAdAmountTxt(MAX_DAILY_REWARDED - currentCount);
 
-        RevivePlayerLogic();
+        RewardedRewardBeh();
     }
 
     void SetLimitAdAmountTxt(int currentCnt) {
@@ -155,12 +180,13 @@ public class FishAdManager : MonoBehaviour {
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
 
-
     private void OnRetryClicked() {//revive -> interstitial
+        adTarget = AdTarget.JustRespawn;
+
         (bool prem, bool noadd) = IsPlayerHasAddImmunitet();
         if (prem || noadd) {
             Debug.Log("The Premium player has declined to be revived. Skip the ad.");
-            RetryGameLogic();
+            InterstitialRewardBeh();
             return;
         }
 
@@ -173,7 +199,7 @@ public class FishAdManager : MonoBehaviour {
         else {
             //ad not ready (haha classic lucky u - bum i
             Debug.Log("The interstitial isn't ready. Just restart the game.");
-            RetryGameLogic();
+            InterstitialRewardBeh();
         }
     }
 
@@ -181,7 +207,7 @@ public class FishAdManager : MonoBehaviour {
         SetButtonsInteractable(true);
         loadingPanel.SetActive(false);
         interstitialAd.LoadAd(); //load immediately load on backgr new ad
-        RetryGameLogic();
+        InterstitialRewardBeh();
     }
 
     void OnInterstitialLoadFailed(LevelPlayAdError error) {
@@ -226,16 +252,24 @@ public class FishAdManager : MonoBehaviour {
                 b.interactable = interactable;
     }
 
-    private void RevivePlayerLogic() {
-        Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
-        gui.DeactivateRespawnWnd();
-        spawnManager.RespawnPlayer(true, true);
+    private void RewardedRewardBeh() {
+        if (adTarget == AdTarget.ExtraLife) {
+            Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
+            gui.DeactivateRespawnWnd();
+            spawnManager.RespawnPlayer(true, true);
+            
+            adTarget = AdTarget.None;
+        }
     }
 
-    private void RetryGameLogic() {
-        Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
-        gui.DeactivateRespawnWnd();
-        spawnManager.RespawnPlayer(true, false);
+    private void InterstitialRewardBeh() {
+        if (adTarget == AdTarget.JustRespawn) {
+            gui.DeactivateRespawnWnd();
+            spawnManager.RespawnPlayer(true, false);
+            Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
+            
+            adTarget = AdTarget.None;
+        }
     }
 
     private void OnDestroy() {

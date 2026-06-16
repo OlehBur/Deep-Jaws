@@ -341,6 +341,7 @@ GameObject:
   - component: {fileID: 2657620157071051659}
   - component: {fileID: 1337541968216851565}
   - component: {fileID: 8497921627181931671}
+  - component: {fileID: 8500345913912895586}
   m_Layer: 6
   m_Name: Crab Variant
   m_TagString: Untagged
@@ -409,6 +410,7 @@ MonoBehaviour:
   speed: 100
   responseRadius: 9
   prefabVisualTransform: {fileID: 4084185988788917315}
+  jawForwardOffset: 0
 --- !u!114 &1337541968216851565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,6 +451,18 @@ MonoBehaviour:
   "\u0456dleTime": 0.12
   timeToIdle: 4.2
   fishAnim: {fileID: 0}
+--- !u!114 &8500345913912895586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048190963959779323}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8b6629888d70b4680d06e0daf78cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoScalerToDef
 --- !u!1 &8278444404127444224
 GameObject:
   m_ObjectHideFlags: 0

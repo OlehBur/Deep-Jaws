@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 4909867401857565867}
   - component: {fileID: 4518439686828584595}
   - component: {fileID: 6908207522873932233}
+  - component: {fileID: -4461730735691493857}
   m_Layer: 6
   m_Name: Pufferfish
   m_TagString: Entity
@@ -287,6 +288,7 @@ MonoBehaviour:
   speed: 320
   responseRadius: 15
   prefabVisualTransform: {fileID: 546935209704408683}
+  jawForwardOffset: 0
 --- !u!114 &4909867401857565867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,6 +342,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 4250895824847646302}
+--- !u!114 &-4461730735691493857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4408029418071078942}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8b6629888d70b4680d06e0daf78cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoScalerToDef
 --- !u!1 &5106888172533863184
 GameObject:
   m_ObjectHideFlags: 0

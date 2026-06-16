@@ -4,10 +4,9 @@ using UnityEngine.EventSystems;
 
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
-    public RectTransform handle; 
-    public float maxRadius = 100f; 
+    public RectTransform handle;
+    public float maxRadius = 100f;
     //private Vector2 inputVector { get; set; } // [ -1; 1]
-
     //private Vector2 startPosition;
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -18,6 +17,11 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public void OnDrag(PointerEventData eventData) {
         UpdateJoystick(eventData);
+
+        if (JoyAxis.isReset) {
+            eventData.pointerDrag = null;
+            JoyAxis.isReset = false;
+        }
         //Debug.Log("Drag");
     }
 
@@ -64,5 +68,9 @@ public static class JoyAxis {
             OnAxisChanged?.Invoke(value);
         }
     }
+    /// <summary>
+    /// reset dragging etc events
+    /// </summary>
+    public static bool isReset { get; set; } = false;
     public static event Action<Vector2> OnAxisChanged;
 }

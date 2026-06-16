@@ -7,6 +7,7 @@ public class FishAnimManager : MonoBehaviour {
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator animator; // animator for fish animations (crab has no animator)
     public Animator FishAnimator { get { return animator; } private set { animator = value; } }
+    public bool IsInited { get; private set; } = false;
     const string BITE_TRIGGER_NAME = "bite"; // name of the trigger for bite animation
     //[SerializeField] GameObject biteParticleSystem = null; // particle system for bite animation (crab has no particle system)'
     private FishAdditionalCompManager fishAddCompMngr;
@@ -40,6 +41,7 @@ public class FishAnimManager : MonoBehaviour {
         this.effectManager = effectManager;
         this.fishAddCompMngr = fishAddCompMngr;
         //this.animator = animator;
+        IsInited = true;
     }
 
     void OnEnable() {
@@ -123,8 +125,8 @@ public class FishAnimManager : MonoBehaviour {
         //Debug.Log("ang: " + angle);
         float angleProgress = Mathf.LerpUnclamped(0, maxShapeRotationVal, angle / ANGLE_DETECTION); // progress from -1 to 1 (LerpUnclamped allows to go beyond the range)
         angleProgress = Mathf.Clamp(angleProgress, -maxShapeRotationVal, maxShapeRotationVal); // clamp the value to avoid exceeding the max rotation value
-        angleProgress = Mathf.Lerp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true), angleProgress, deltaTime*10); //Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
-                                                                                                                                                        //angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
+        angleProgress = Mathf.Lerp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true), angleProgress, deltaTime * 10); //Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
+                                                                                                                                                             //angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
 
         SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
         //fishMat.SetFloat("_RotationRad", /*currentRotationVal*/angleProgress);

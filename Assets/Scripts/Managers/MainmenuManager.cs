@@ -73,16 +73,32 @@ public class MainmenuManager : MonoBehaviour {
         faderScene.gameObject.SetActive(true);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void LanguageInit() {
-        //init locale
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //void LanguageInit() {
+    //    //init locale
+    //    previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
+    //    if (LocalizationSettings.AvailableLocales != null && LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
+    //        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex]; // Set default locale
+    //    if (languageDropdown != null)
+    //        languageDropdown.value = previousLocaleIndex;
+    //    languageDropdown?.onValueChanged.AddListener(OnLanguageChanged);
+    //}
+    async void LanguageInit() {
+        await LocalizationSettings.InitializationOperation.Task; // wait readiness
         previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
-        if (LocalizationSettings.AvailableLocales != null && LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex]; // Set default locale
-        if (languageDropdown != null)
+        
+        if (previousLocaleIndex < 0 || previousLocaleIndex >= LocalizationSettings.AvailableLocales.Locales.Count)
+            previousLocaleIndex = 0;
+
+        if (LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex];
+        if (languageDropdown != null) {
             languageDropdown.value = previousLocaleIndex;
-        languageDropdown?.onValueChanged.AddListener(OnLanguageChanged);
+            languageDropdown.onValueChanged.RemoveAllListeners();
+            languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
+        }
     }
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void GameModeInit() {

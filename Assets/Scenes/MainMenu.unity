@@ -5655,10 +5655,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioManager: {fileID: 1643188027}
   graphicManager: {fileID: 1643188029}
+  spawnManager: {fileID: 0}
   continueButton: {fileID: 1525560261}
   faderScene: {fileID: 214496491906654509}
   areUSureWnd: {fileID: 2146984004}
   guideBookWnd: {fileID: 802032967}
+  respawnWnd: {fileID: 0}
   languageDropdown: {fileID: 1107415621}
   gamemodePauseTitles: []
   gameModeWndBackground: {fileID: 2958404726699012490}
@@ -5699,6 +5701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8efb448ef6cbad542beb9e45aeb31ee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamePurchaseManager
+  GPGmanager: {fileID: 0}
 --- !u!1001 &1643868057
 PrefabInstance:
   m_ObjectHideFlags: 0

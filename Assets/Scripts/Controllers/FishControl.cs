@@ -68,10 +68,10 @@ public class FishControl : MonoBehaviour, IFish {
             fish.IsActive = true;//player always active and visible, because always viwed on screen
             fish.IsVisible = true;
             JoyAxis.Axis = Vector2.zero;
+            JoyAxis.OnAxisChanged += OnMove;
         }
 
         SleepPhysics();
-        JoyAxis.OnAxisChanged += OnMove;
     }
 
     //void Awake() {
@@ -87,14 +87,21 @@ public class FishControl : MonoBehaviour, IFish {
     private void OnDisable() {
         // Cancel all delayed calls when disabled
         CancelInvoke();
-        SetDefaultState();
+        //SetDefaultState(); //HARD SHIT DO NOT UNCOMMENT !!!
         SleepPhysics();
-        JoyAxis.OnAxisChanged -= OnMove;
-        if (IFish != null)
-            IFish.CurrentTarget = null;
+        //JoyAxis.OnAxisChanged -= OnMove;
+
+        if (fish != null && fish.IsPlayer) {
+            if (IFish != null)
+                IFish.CurrentTarget = null;
+            isMoved = false;
+            JoyAxis.Axis = Vector2.zero;
+            //JoyAxis.isReset = true;
+        }
     }
 
     private void OnDestroy() {
+        //if (fish.IsPlayer)
         JoyAxis.OnAxisChanged -= OnMove; // for avoiding a warning, since OnDisable is ignored by the compiler
     }
 
@@ -105,6 +112,10 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     void FixedUpdate() {
+        //if (fishAnim != null && fishAnim.IsInited) {
+        //    enabled = false;
+        //    return;
+        //}
         if (fish.IsPlayer)
             PlayerMovement();
         else if (IsFishNeedUpdate())
@@ -138,22 +149,22 @@ public class FishControl : MonoBehaviour, IFish {
     void EnemyMovementBehaviour() {
         switch (state) {
             case EnemyState.Walking:
-                if (!isTargetSet)
-                    direction = IFish.Walking();
-                else
-                    direction = targetPosition - transform.position; //if the position is set, but we have passed by or something, we continue to reach it
+            if (!isTargetSet)
+                direction = IFish.Walking();
+            else
+                direction = targetPosition - transform.position; //if the position is set, but we have passed by or something, we continue to reach it
 
-                ReactionToOtherFish();
-                break;
+            ReactionToOtherFish();
+            break;
 
             case EnemyState.Escape:
-                currentEscapeTime += Time.fixedDeltaTime;
-                direction = IFish.Escape();
-                break;
+            currentEscapeTime += Time.fixedDeltaTime;
+            direction = IFish.Escape();
+            break;
 
             case EnemyState.Attack:
-                direction = IFish.Attack();
-                break;
+            direction = IFish.Attack();
+            break;
         }
 
         Movement(direction);
@@ -299,31 +310,31 @@ public class FishControl : MonoBehaviour, IFish {
 
         switch (state) {
             case EnemyState.Attack:
-                if (IFish.CurrentTarget == null
-                    || !IFish.CurrentTarget.gameObject.activeInHierarchy
-                    || currentDistance > fish.ResponseRadius
-                    || !fish.IsLegitimateTarget(IFish.CurrentTarget)
-                    //|| IFish.CurrentTarget.Level > fish.Level
-                    //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.CompareTag("Player") && fish.Level < GameStaticInfo.SHARK_INDEX_BARRIER)
-                    //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.Progress >= fish.Progress)
-                    ) {//if the target is lost
+            if (IFish.CurrentTarget == null
+                || !IFish.CurrentTarget.gameObject.activeInHierarchy
+                || currentDistance > fish.ResponseRadius
+                || !fish.IsLegitimateTarget(IFish.CurrentTarget)
+                //|| IFish.CurrentTarget.Level > fish.Level
+                //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.CompareTag("Player") && fish.Level < GameStaticInfo.SHARK_INDEX_BARRIER)
+                //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.Progress >= fish.Progress)
+                ) {//if the target is lost
 
-                    SetDefaultState();
-                    return;
-                }
-                break;
+                SetDefaultState();
+                return;
+            }
+            break;
 
             case EnemyState.Walking:
             case EnemyState.Escape:
             default://logic of changing state when the target is reached
-                if (currentDistance < MIN_DISTANCE_TO_TARGET) {//magnitude - length of vect
-                    SetDefaultState();
+            if (currentDistance < MIN_DISTANCE_TO_TARGET) {//magnitude - length of vect
+                SetDefaultState();
 
-                    if (state == EnemyState.Walking)
-                        SleepPhysics();
-                    return;
-                }
-                break;
+                if (state == EnemyState.Walking)
+                    SleepPhysics();
+                return;
+            }
+            break;
         }
 
         float smoother = Mathf.Clamp01(currentDistance * .3f) * .95f + .05f;//from .1f to 1f
@@ -355,11 +366,13 @@ public class FishControl : MonoBehaviour, IFish {
     void SetDefaultState() {
         isTargetSet = false; // reset target when changing 
         targetPosition = transform.position; // reset target position
-        IFish.CurrentTarget = null;
+        if (IFish != null)
+            IFish.CurrentTarget = null;
         direction = Vector3.zero;
         state = EnemyState.Walking;
         currentEscapeTime = 0f;
-        fishAnim?.RotateAnimation(transform.forward, transform.forward, Time.fixedDeltaTime);//zero rotation
+        if (fishAnim != null && fishAnim.IsInited)
+            fishAnim?.RotateAnimation(transform.forward, transform.forward, Time.fixedDeltaTime);//zero rotation
         //SleepPhysics();
     }
 
@@ -526,13 +539,15 @@ public class FishControl : MonoBehaviour, IFish {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SleepPhysics() {
         direction = Vector3.zero;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.Sleep(); // freeze physics calculations
+        if (rb != null) {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.Sleep(); // freeze physics calculations
+        }
     }
 
     private void OnDrawGizmos() {
-        if (fish == null || !gameObject.activeInHierarchy)
+        if (fish == null || !gameObject.activeInHierarchy || fish.IsPlayer)
             return;
 
         Gizmos.color = Color.yellow;
@@ -541,21 +556,21 @@ public class FishControl : MonoBehaviour, IFish {
         if (isTargetSet) {
             switch (state) {
                 case EnemyState.Attack:
-                    if (IFish.CurrentTarget != null) {
-                        Gizmos.color = Color.red;
-                        //Gizmos.color = Color.magenta;
-                        Gizmos.DrawLine(transform.position, IFish.CurrentTarget.transform.position);
-                        Gizmos.DrawWireCube(transform.position, Vector3.one * 1.5f);
-                    }
-                    return;
+                if (IFish.CurrentTarget != null) {
+                    Gizmos.color = Color.red;
+                    //Gizmos.color = Color.magenta;
+                    Gizmos.DrawLine(transform.position, IFish.CurrentTarget.transform.position);
+                    Gizmos.DrawWireCube(transform.position, Vector3.one * 1.5f);
+                }
+                return;
 
                 case EnemyState.Escape:
-                    Gizmos.color = Color.blue;
-                    break;
+                Gizmos.color = Color.blue;
+                break;
 
                 case EnemyState.Walking:
-                    Gizmos.color = Color.green;
-                    break;
+                Gizmos.color = Color.green;
+                break;
             }
             if (targetPosition == null)
                 return;

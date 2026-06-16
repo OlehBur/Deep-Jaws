@@ -70,7 +70,7 @@ public class Fish : MonoBehaviour {
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
 
     public event Action<GameObject> OnFishLvlUp;
-    public event Action<GameObject, FishLevel> OnFishDie;
+    public event Action<GameObject, FishLevel, bool> OnFishDie;
     /// <summary>
     /// for save new score and aute play bite animation
     /// </summary>
@@ -166,13 +166,12 @@ public class Fish : MonoBehaviour {
         float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
         enemyProgressMultiplier = GameStaticInfo.Gamemode != GameMode.Easy ? 1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
         progressDivider *= enemyProgressMultiplier;
-        //if (IsPlayer) {
-        //    progressDivider = 2f;
-        //    Debug.LogWarning("Activated fast progress!!!");
-        //}
 
+        if (IsPlayer) {
+            progressDivider = 2f;
+            Debug.LogWarning("Activated fast progress!!!");
+        }
         Progress += 1f / progressDivider;
-
         if (!IsPlayer && Progress > 1f) //player can grow over 1f progress
             Progress = 1f;
 
@@ -223,7 +222,7 @@ public class Fish : MonoBehaviour {
         gameObject.SetActive(false);
         IsAlreadySelected = false;
 
-        OnFishDie?.Invoke(gameObject, Level);
+        OnFishDie?.Invoke(gameObject, Level, IsPlayer);
     }
 
     public void UpdateGrowSize() {

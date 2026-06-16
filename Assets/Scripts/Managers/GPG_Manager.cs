@@ -125,6 +125,9 @@ public class GPG_Manager : MonoBehaviour {
 
     IEnumerator TryAuthenticateWithDelay() {
         yield return SECOND_WAIT; // Delay for Google Play init
+        if (this == null)//in case fast open game scene
+            StopAllCoroutines();
+
         //Debug.Log("Trying to authenticate...");
         PlayGamesPlatform.Instance.Authenticate((result) => {
             if (result == SignInStatus.Success) {
@@ -151,7 +154,7 @@ public class GPG_Manager : MonoBehaviour {
         PlayGamesPlatform.DebugLogEnabled = true;
 
         PlayGamesPlatform.Activate();
-        StartCoroutine(TryAuthenticateWithDelay());
+        /*StartCoroutine(*/TryAuthenticateWithDelay()/*)*/;
         //Debug.Log("Attempting authentication...");
         //PlayGamesPlatform.Instance.Authenticate((result) =>
         //{
@@ -224,8 +227,8 @@ public class GPG_Manager : MonoBehaviour {
             else
                 Debug.LogWarning("Foundersreport failed.");
         });
-        
-            }
+
+    }
 
     public static void OnTriggerAchievement(AchievementKey key) {
         //Debug.LogWarning(key.ToString());
