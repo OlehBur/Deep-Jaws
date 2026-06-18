@@ -43,7 +43,7 @@ public class SlowdownPearlController : MonoBehaviour {
             Invoke(nameof(ActivatePearl), MAX_RESPAWN_TIME);
             floawerAnimator.Play(FLOWER_REVERSE_ANIM_NAME);
 
-            GPG_Manager.OnTriggerAchievement(AchievementKey.Beauty);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_a_fragile_beauty_in_a_sea_of_decay);
         }
     }
 

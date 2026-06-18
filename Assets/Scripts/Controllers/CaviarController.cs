@@ -25,8 +25,7 @@ public class CaviarController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-        //if ((spawnManager.PlayerFish.transform.position - transform.position).sqrMagnitude < GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {//no cost
+    void Update() {       
         float y = Mathf.Sin((Time.time + randinInitProgress) * WAVING_SPEED) * WAVING_AMPLITUDE;
         transform.localPosition = new Vector3(transform.localPosition.x, defaultY + y, transform.localPosition.z);
 
@@ -42,24 +41,17 @@ public class CaviarController : MonoBehaviour {
 
         if (caviarModel.activeInHierarchy && other.isTrigger//only mouth (trigger collider)
             && parentFish.CompareTag("Player")
-            && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*other.transform.parent.TryGetComponent<Fish>(out Fish fish)*/
-            /*&& other.transform.parent.TryGetComponent<FishAnimManager>(out FishAnimManager fishAnimManager)*/) {
+            && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)) {
             fish.FeedCaviar();
 
             ++playerEatedCaviarCnt;
             if (playerEatedCaviarCnt >= MAX_CAVIAR_EATEN_CNT)
-                GPG_Manager.OnTriggerAchievement(AchievementKey.Gourmet);
+                GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_overseas_gourmet);
 
-            //fishAnimManager.ActivateBiteAnimation();//already activated in Fish
-            /*gameObject*/
             caviarModel.SetActive(false);//disable caviar object
             current_reEnablerTime = 0f;
         }
     }
-
-    //private void OnDisable() {
-    //    Invoke(nameof(ActivateCaviar), Random.Range(MAX_REENABLE_TIME * .5f, MAX_REENABLE_TIME));//reset waving with random delay
-    //}
 
     void OnDestroy() {
         PlayerPrefs.SetFloat(KEY_STR + gameObject.name, current_reEnablerTime);
@@ -72,9 +64,7 @@ public class CaviarController : MonoBehaviour {
         if (Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
             /*gameObject*/
             caviarModel.SetActive(true);
-        else {
+        else 
             current_reEnablerTime = 0f;
-            //Invoke(nameof(ActivateCaviar), MAX_REENABLE_TIME * .5f);//try again later
-        }
     }
 }

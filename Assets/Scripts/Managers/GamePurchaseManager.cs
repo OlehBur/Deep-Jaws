@@ -1,21 +1,42 @@
 using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
+
+
 public class GamePurchaseManager : MonoBehaviour {
+    public static GamePurchaseManager Instance { get; private set; }
+    /// <summary>
+    /// no ads, premium, founders
+    /// </summary>
+    public event Action<bool, bool, bool> OnUpdateAccountTittles;
+
     [SerializeField] GPG_Manager GPGmanager;
+    //[SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
 
     private StoreController m_StoreController;
-
     private const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
     private const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
 
 
     private void Awake() {
+        if (Instance != null && Instance != this) {
+            Instance.ReInit(GPGmanager, /*purchaseUIvisualizer, */m_StoreController);
+            Destroy(gameObject);
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
         //local fast check on start without internet
         CheckPremiumLocally();
+    }
+
+    void ReInit(GPG_Manager GPGmanager, /*PurchaseUIvisualizer purchaseUIvisualizer,*/ StoreController m_StoreController) {
+        this.GPGmanager = this.GPGmanager == null ? GPGmanager : this.GPGmanager;
+        //this.purchaseUIvisualizer = this.purchaseUIvisualizer == null ? purchaseUIvisualizer : this.purchaseUIvisualizer;
+        this.m_StoreController = this.m_StoreController == null ? m_StoreController : this.m_StoreController;
     }
 
     async void Start() {
@@ -47,20 +68,6 @@ public class GamePurchaseManager : MonoBehaviour {
         }
     }
 
-    // МИТТЄВА ПЕРЕВІРКА ПРИ ЗАХОДІ
-    //private void CheckPremiumLocally() {
-    //    if (ProgressSaver.IsDataExist()) {
-    //        SaveData_Player currentData = ProgressSaver.Load();
-    //        if (currentData != null && currentData.isPremiumUser) {
-    //            Debug.Log("Локальна перевірка: Преміум знайдено в зашифрованому сейві! Вимикаємо рекламу.");
-    //            ApplyNoAdsLogic(true);
-    //            return;
-    //        }
-    //    }
-
-    //    Debug.Log("Локальна перевірка: Преміум в сейві не активний.");
-    //    ApplyNoAdsLogic(false);
-    //}
     private void CheckPremiumLocally() {
         if (ProgressSaver.IsDataExist()) {
             SaveData_Player currentData = ProgressSaver.Load();
@@ -106,11 +113,13 @@ public class GamePurchaseManager : MonoBehaviour {
                 GPGmanager.OnAddToFoundersLeaderboard();
             }
         }
-        UpdatePremiumInSaveFile(hasPremium, hasNoAd ,hasFounder);
+        UpdatePremiumInSaveFile(hasNoAd, hasPremium, hasFounder);
+        OnUpdateAccountTittles?.Invoke(hasNoAd, hasPremium, hasFounder);
+        //purchaseUIvisualizer.InitAccountTittles(hasNoAd, hasPremium, hasFounder);
     }
 
     // save purchase to ProgressSaver
-    private void UpdatePremiumInSaveFile(bool isPremium, bool isNoAd, bool isFounder) {
+    private void UpdatePremiumInSaveFile(bool isNoAd, bool isPremium, bool isFounder) {
         SaveData_Player currentData = ProgressSaver.IsDataExist() ?
             ProgressSaver.Load() : new SaveData_Player();
 
@@ -172,22 +181,7 @@ public class GamePurchaseManager : MonoBehaviour {
                 }
             }
         }
-        //if (pendingOrder.Info != null && pendingOrder.Info.PurchasedProductInfo != null && pendingOrder.Info.PurchasedProductInfo.Count > 0) {
-        //    string productId = pendingOrder.Info.PurchasedProductInfo[0].productId;
-        //    Debug.Log($"IAP v5: Обробка незавершеної покупки для продукту: {productId}");
-
-        //    if (string.Equals(productId, PREMIUM_PRODUCT_ID, StringComparison.Ordinal)) {
-        //        ActivateNoAdsStatus();
-        //        m_StoreController.ConfirmPurchase(pendingOrder);
-        //    }
-        //}
     }
-
-    //private void ActivateNoAdsStatus() {
-    //    Debug.Log("IAP v5: Статус БЕЗ РЕКЛАМИ активовано!");
-    //    PlayerPrefs.SetInt("IsPremiumUser", 1);
-    //    PlayerPrefs.Save();
-    //}
 
     public void BuyPremium() {
         if (m_StoreController != null) {

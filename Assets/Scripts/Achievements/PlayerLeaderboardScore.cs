@@ -11,7 +11,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
     public void Init(SpawnManager spawnManager) {
         this.spawnManager = spawnManager;
-        PlayerReconnect(/*spawnManager.pool[SpawnManager.PLAYER_INDEX].GetComponent<Fish>()*/spawnManager.PlayerFish, false);
+        PlayerReconnect(spawnManager.PlayerFish, false);
         spawnManager.OnPlayerRespawn += PlayerReconnect;
         EasyDeaths = PlayerPrefs.GetInt(DEATHS_KEY, 0);
         //Debug.LogWarning("Deaths: " + EasyDeaths);
@@ -73,12 +73,12 @@ public class PlayerLeaderboardScore : MonoBehaviour {
         spawnManager.OnPlayerRespawn -= PlayerReconnect;
     }
 
-    LederboardKey GetLederboardByGameMode() {
+    /*LederboardKey*/string GetLederboardByGameMode() {
         return GameStaticInfo.Gamemode switch {
-            GameMode.Easy => LederboardKey.EasyModeScore,
-            GameMode.Medium => LederboardKey.MediumModeScore,
-            GameMode.Hard => LederboardKey.HardModeScore,
-            _ => LederboardKey.EasyModeScore,
+            GameMode.Easy => GPGSIds.leaderboard_harbor_breeze_appetite,
+            GameMode.Medium => GPGSIds.leaderboard_ocean_voyage_appetite,
+            GameMode.Hard => GPGSIds.leaderboard_deadly_maelstrom_appetite,
+            _ => GPGSIds.leaderboard_harbor_breeze_appetite,
         };
     }
 }

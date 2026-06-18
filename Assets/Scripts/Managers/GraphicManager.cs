@@ -10,12 +10,6 @@ public class GraphicManager : MonoBehaviour {
     [SerializeField] Light mainLight;
     [SerializeField] Volume mainVolume;
     [SerializeField] UniversalRenderPipelineAsset urpAsset;
-    //[SerializeField] LightShadows shadowType = LightShadows.Hard;
-    //[SerializeField] UnityEngine.Rendering.Universal.ShadowResolution shadowResolution = UnityEngine.Rendering.Universal.ShadowResolution._2048;
-    //[SerializeField][Range(0f, 100f)] float ShadowDistance = 50f;
-    //[SerializeField][Range(0f, 1f)] float RenderScale = .8f;
-    //[SerializeField] bool BloomActive = true;
-    //[SerializeField] bool VignetteActive = true;
 
     [Header("UI elements")]
     [SerializeField] Toggle bloomTog;
@@ -25,13 +19,13 @@ public class GraphicManager : MonoBehaviour {
     [SerializeField] Slider shadowFixSl;
     [SerializeField] Slider gameResolutSl;
     [SerializeField] TMP_Dropdown shadowResolution;
+
     private const float SHADOW_DIST_MULTIPLIER = 100f;
     private const float DEFAULT_SHADOW_DIST = .5f;
     private const float DEFAYLT_GAME_RESOLUTION = .8f;
     private const int DEFAULT_GAME_RESOLUTION_INDEX = 2;
     private const float SHADOW_FIX_MULTIPLIER = 10f;
     private const float DEFAULT_SHADOW_FIX = .1f;
-
     private const string BLOOM_KEY = "bloom_active";
     private const string VIGNETTE_KEY = "vignette_active";
     private const string SHADOWCAST_KEY = "shadow_active";
@@ -124,29 +118,4 @@ public class GraphicManager : MonoBehaviour {
     private void OnDisable() {
         SaveGraphicsData();
     }
-
-    //private void OnValidate() {
-    ////UniversalRenderPipelineAsset urpAsset = GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
-    ////if (urpAsset != null) {
-    ////urpAsset.castS
-    //mainLight.shadows = shadowType;
-    //urpAsset.mainLightShadowmapResolution = (int)shadowResolution;
-    //urpAsset.shadowDistance = ShadowDistance;
-    //urpAsset.renderScale = RenderScale;
-
-    //if (mainVolume.profile.TryGet(out Bloom bloom))
-    //    bloom.active = BloomActive;
-    //if (mainVolume.profile.TryGet(out Vignette vignette))
-    //    vignette.active = VignetteActive;
-
-    //Debug.Log("URP Asset modified at runtime");
-    ////}
-    ////QualitySettings.shadows = shadowQuality;//ShadowQuality.All; //All або Disable, HardOnly, SoftOnly
-    ////QualitySettings.shadowDistance = shadowDistance;//100f; // максимальна дистанція тіней
-    ////QualitySettings.shadowResolution = shadowResolution;//ShadowResolution.High; //High або Low, Medium, 
-    ////Debug.Log("On Validate Shadow settings");
-    //}
-
-    // Update is called once per frame
-
 }

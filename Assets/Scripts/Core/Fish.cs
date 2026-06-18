@@ -3,7 +3,6 @@ using System;
 using UnityEngine;
 
 
-
 public enum FishSpeedModifierType {
     Current,
     Sprint,
@@ -15,36 +14,23 @@ public enum FishSpeedModifierType {
 /// Class for the player and enemy fish (base component for fish prefab)
 /// </summary>
 public class Fish : MonoBehaviour {
-    [SerializeField]/*[Range(0, GameStaticInfo.MAX_FISH_LEVEL)]*/ FishLevel level;
+    [SerializeField] FishLevel level;
     [SerializeField] int health;
     [SerializeField] float speed;
     [SerializeField] int responseRadius;
-    //const int RIQIDBODY_VELOCITY_MULTIPLIER = 80;
-    const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
-    private float SpeedMultiplier { get; set; } = 1;
-    private float SpeedMultiplierSecond { get; set; } = 1;
-    private float SpeedMultiplierThird { get; set; } = 1;
-    private float SpeedMultiplierFourth { get; set; } = 1;
-    public FishLevel Level { get { return level; } /*protected set { level = value; }*/ }
+    [SerializeField] Transform prefabVisualTransform; //for grow animation
+    [SerializeField] float jawForwardOffset;
+
+    public FishLevel Level => level;
     public int Health { get { return health; } protected set { health = value; } }
     public int MaxHealth { get; private set; }
-    public float Speed { get { return speed * /*RIQIDBODY_VELOCITY_MULTIPLIER **/ SpeedMultiplier * SpeedMultiplierSecond * SpeedMultiplierThird * SpeedMultiplierFourth; } protected set { speed = value; } }
-    public int ResponseRadius { get { return responseRadius /** RIQIDBODY_VELOCITY_MULTIPLIER*/; }/* protected set { responseRadius = value; }*/ }
-    private const float ROTATION_SPEED_MULTIPLIER = .02f; // multiplier for rotation speed
-    public float RotationSpeed => /*Speed*/speed * ROTATION_SPEED_MULTIPLIER;
+    public float Speed { get { return speed * SpeedMultiplier * SpeedMultiplierSecond * SpeedMultiplierThird * SpeedMultiplierFourth; } protected set { speed = value; } }
+    public int ResponseRadius => responseRadius;
+    public float RotationSpeed => speed * ROTATION_SPEED_MULTIPLIER;
     /// <summary>
     /// Random value in enemies during sparing
     /// </summary>
     public float Progress { get; protected set; }
-    private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
-    private const float MIN_PROGRESS_GAIN_MULTIPLIER = 11f;
-    // <summary>
-    // For enemy fish - that crossed their collider for the first time, 
-    // for the player - that he crossed his collider and he goes to this victim.
-    // </summary>
-    //public Fish CurrentTarget { get; protected set; }
-    //public bool IsPlayer { get; private set; }
-
     /// <summary>
     /// чи активний об'єкт риби (залежить від відстанні до гравця), для відповідного обчислення абож очікування в скриптах
     /// whether the fish object is active (depending on the distance to the player), for the corresponding calculation or wait in the scripts
@@ -57,18 +43,9 @@ public class Fish : MonoBehaviour {
     /// </summary>
     public bool IsAlreadySelected { get; set; } = false;
 
-    [SerializeField] Transform prefabVisualTransform; //for grow animation
-    //public Vector3 CurrentScale { get; private set; }
     [HideInInspector] public Vector3 ScaleModifier => new Vector3(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
-    [SerializeField] float jawForwardOffset;
     public float JawForwardOffset => jawForwardOffset;
-
-
-    private const float ATTACK_INTERVAL_COEFFICIENT = 3f;
-    private const float MAX_ATTACK_INTERVAL = 1.1f; // maximum attack interval while fish stay collision with the victim
-    private const float KING_ABYSS_PROGRESS = 1.5f; // progress for king abyss achievement
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
-
     public event Action<GameObject> OnFishLvlUp;
     public event Action<GameObject, FishLevel, bool> OnFishDie;
     /// <summary>
@@ -78,25 +55,23 @@ public class Fish : MonoBehaviour {
     public event Action OnFishDamage;
     public event Action OnInfoStatsChanged;
 
+    private float SpeedMultiplier { get; set; } = 1;
+    private float SpeedMultiplierSecond { get; set; } = 1;
+    private float SpeedMultiplierThird { get; set; } = 1;
+    private float SpeedMultiplierFourth { get; set; } = 1;
 
-    private void /*Fish*/Awake(/*FishLevel level, int health, float speed, int responseRadius, bool isPlayer = false*/) {
+    private const float ROTATION_SPEED_MULTIPLIER = .02f; // multiplier for rotation speed
+    private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
+    private const float MIN_PROGRESS_GAIN_MULTIPLIER = 11f;
+    private const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
+    private const float ATTACK_INTERVAL_COEFFICIENT = 3f;
+    private const float MAX_ATTACK_INTERVAL = 1.1f; // maximum attack interval while fish stay collision with the victim
+    private const float KING_ABYSS_PROGRESS = 1.5f; // progress for king abyss achievement
+
+
+    private void Awake() {
         MaxHealth = health; // store the initial health as max health
-        //this.level = level;
-        //this.health = health;
-        //this.speed = speed;
-        //this.responseRadius = responseRadius;
-        //IsPlayer = isPlayer;
-        //OnInfoStatsChanged?.Invoke();
     }
-
-    //private void Start() {
-    //Health = Health / 4;
-    //Progress = .9f;
-    //UpdateGrowSize();
-    //Debug.LogWarning("max progress");
-
-    //OnInfoStatsChanged?.Invoke();
-    //}
 
     private void OnEnable() {
         SpeedMultiplier = 1f;
@@ -107,11 +82,6 @@ public class Fish : MonoBehaviour {
         OnInfoStatsChanged?.Invoke();
         UpdateGrowSize();
     }
-
-    //public object Clone() {
-    //    return MemberwiseClone();
-    //}
-
     public void CopyData(int health, float progress) {
         Health = health;
         Progress = progress;
@@ -122,19 +92,19 @@ public class Fish : MonoBehaviour {
     public void ChangeSpeedMultiplier(float value, FishSpeedModifierType index) {
         switch (index) {
             case FishSpeedModifierType.Sprint:
-                SpeedMultiplier = value;
-                break;
+            SpeedMultiplier = value;
+            break;
             case FishSpeedModifierType.Current:
-                SpeedMultiplierSecond = value;
-                break;
+            SpeedMultiplierSecond = value;
+            break;
             case FishSpeedModifierType.StopTime:
-                SpeedMultiplierThird = value;
-                break;
+            SpeedMultiplierThird = value;
+            break;
             case FishSpeedModifierType.Poison:
-                SpeedMultiplierFourth = value;
-                break;
+            SpeedMultiplierFourth = value;
+            break;
             default:
-                break;
+            break;
         }
     }
 
@@ -142,18 +112,6 @@ public class Fish : MonoBehaviour {
         Progress = UnityEngine.Random.value;
         UpdateGrowSize(); // update scale after setting progress
     }
-
-    /// <summary>
-    /// only for player fish, sets level and resets progress
-    /// </summary>
-    /// <param name="lvl"></param>
-    //public void SetLvl(int lvl) {
-    //    Level = (FishLevel)Math.Min(lvl, (int)GameStaticInfo.MAX_FISH_LEVEL);
-    //    Progress = 0f;//only the player resets progress each time he reaches a level, enemies remain at the initial spawn level
-
-    //    OnFishLvlUp?.Invoke(gameObject);
-    //    OnInfoStatsChanged?.Invoke();
-    //}
 
     /// <summary>
     /// return true if fish is alive, false if fish is dead
@@ -227,19 +185,12 @@ public class Fish : MonoBehaviour {
     }
 
     public void UpdateGrowSize() {
-        if (IsPlayer && Progress >= 1f && Level != GameStaticInfo.MAX_FISH_LEVEL) {//player with max level will not grow
-            //Progress = 0f;
-            //level up only if event has subscribers (onl in player (implemented in grow of the player interface method))
-            //Level++;
+        if (IsPlayer && Progress >= 1f && Level != GameStaticInfo.MAX_FISH_LEVEL) //player with max level will not grow
             OnFishLvlUp?.Invoke(gameObject);
-        }
         else if (IsPlayer && Level == GameStaticInfo.MAX_FISH_LEVEL && GameStaticInfo.Gamemode == GameMode.Hard && Progress >= KING_ABYSS_PROGRESS)
-            GPG_Manager.OnTriggerAchievement(AchievementKey.KingAbyss);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_king_of_the_abyss);
 
-        prefabVisualTransform.localScale
-        /*CurrentScale*/ = ScaleModifier * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER);
-        //if (CompareTag("Player"))
-        //    Debug.Log("E: " + Vector3.one * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER));
+        prefabVisualTransform.localScale = ScaleModifier * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER);
     }
 
     /// <summary>
@@ -279,21 +230,12 @@ public class Fish : MonoBehaviour {
 }
 
 
-//public interface IPlayerFish {
-//    void Movement();
-//    //void Turn();
-//    //void UpdateModel(); //after grow -> spawn manager - get and change model
-//    void Grow() { }//base.Grow();//UpdateModel();
-//}
-
-
 public enum EnemyState {
     Walking,
     Escape,
     Attack
 }
 
-//public class EnemyFish : Fish {
 public interface IFish {
     /// <summary>
     /// Time spent in idle state
@@ -304,8 +246,8 @@ public interface IFish {
     /// </summary>
     float TimeToIdle { get; }
     EnemyState State { get; }
-    //риба відносно якої відбувається реакція - the fish relative to which the reaction occurs
-    Fish/*FishMultiPrefabController*/ CurrentTarget { get; set; }
+    //the fish relative to which the reaction occurs
+    Fish CurrentTarget { get; set; }
 
     void FishProximity(Fish player);
     /// <summary>
@@ -315,8 +257,7 @@ public interface IFish {
     Vector3 Walking();
     Vector3 Escape();
     /// <summary>
-    /// навідміну від walking та escape - не зберігає цільової позиції, оскільки жертва точно тікатиме 
-    /// unlike walking and escape, does not store the target position, since the victim will definitely run away
+       /// unlike walking and escape, does not store the target position, since the victim will definitely run away
     /// </summary>
     /// <returns></returns>
     Vector3 Attack();

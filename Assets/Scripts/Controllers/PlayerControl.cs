@@ -195,7 +195,7 @@ public class PlayerControl : MonoBehaviour/*, IPlayerFish*/ {
 
     //bool CheckEatAchievements(FishLevel victimLvl) {
     //    if (victimLvl == GameStaticInfo.PEACEFUL_FISH_LVL)//if eat crab
-    //        GPG_Manager.OnTriggerAchievement(AchievementKey.FriendNow);
+    //        GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_youre_my_friend_now);
     //    else if (victimLvl == player.Level)//same lvl
     //        GPG_Manager.OnTriggerAchievement(AchievementKey.Cannibalism);
     //    else if (victimLvl == FishLevel.Mackarel && player.Level == FishLevel.Moray)

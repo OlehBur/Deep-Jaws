@@ -65,7 +65,7 @@ public class HealerFruitController : MonoBehaviour {
             && parentFish.TryGetComponent(out FishAnimManager animManager)) {
 
             if (fish.Health <= fish.MaxHealth * MIN_HEALTH_MULTIPLIER)
-                GPG_Manager.OnTriggerAchievement(AchievementKey.MarineMedicine);
+                GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_algae_are_beneficial_to_health);
 
             audioManager.PlayVFX(VFX_clip.Heal);
             //audioSource.PlayOneShot(healClip);

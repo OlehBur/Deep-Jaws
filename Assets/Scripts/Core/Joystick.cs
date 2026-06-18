@@ -6,11 +6,8 @@ using UnityEngine.EventSystems;
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
     public RectTransform handle;
     public float maxRadius = 100f;
-    //private Vector2 inputVector { get; set; } // [ -1; 1]
-    //private Vector2 startPosition;
 
     public void OnPointerDown(PointerEventData eventData) {
-        //startPosition = transform.position;
         UpdateJoystick(eventData);
         //Debug.Log("Click");
     }

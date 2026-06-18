@@ -12,8 +12,6 @@ public class FishHeartbeatsManager : MonoBehaviour {
     [SerializeField] Transform heartbeatParent;
     [SerializeField] RenderTexture heartbeatView;
     [SerializeField] RenderTexture defaultView;
-    private const int TEXTURE_SIZE_DIVIDER = 4; //â big texture resolution is expensive for mobile devices
-
     [Header("for otimization disabling")]
     [SerializeField] GameObject shaderCamerasParent;
     [SerializeField] Image uiShaderVisualize;
@@ -27,6 +25,9 @@ public class FishHeartbeatsManager : MonoBehaviour {
     private readonly Color STRONG_ENEMY_COLOR = Color.red;
     private readonly Color UNKNOWN_ENEMY_COLOR = Color.blue;
     private readonly Color PLAYER_COLOR = new Color(.8f, .8f, .8f, .4f);
+
+    private const int TEXTURE_SIZE_DIVIDER = 4; //â big texture resolution is expensive for mobile devices
+
 
     public void Init(SpawnManager spawnManager) {
         this.spawnManager = spawnManager;
@@ -79,19 +80,15 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
         if (fish.IsActive) {
             particleMainModule = fishHeartbeatsParticlesPool[index].main;
-
-            //if (fish.TryGetComponent<Fish>(out Fish enemyFish)) {
             enemyFishColor = (fish.Level <= GameStaticInfo.UNBEATABLE_FISH_LVL) ? UNBEATABLE_ENEMY_COLOR :
                 (fish.Level == playerLevel) ? SAME_ENEMY_COLOR :
                 (fish.Level < playerLevel) ? WEAK_ENEMY_COLOR :
-                /*(enemyFish.Level > playerLevel) ?*/ STRONG_ENEMY_COLOR;
+                    STRONG_ENEMY_COLOR;
 
             enemyFishColor = (fish == spawnManager.PlayerFish) ?
                 PLAYER_COLOR : enemyFishColor;
-            //}
 
             particleMainModule.startColor = enemyFishColor;
-            //fishHeartbeatsParticlesPool[index].gameObject.SetActive(isActivate);
             fishHeartbeatsParticlesPool[index].gameObject.SetActive(true);
         }
         else

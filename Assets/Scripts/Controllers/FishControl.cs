@@ -219,10 +219,6 @@ public class FishControl : MonoBehaviour, IFish {
             }
         }
 
-        //if (IEnemy.CurrentTarget == null)
-        //    return;
-        //IEnemy.FishProximity(IEnemy.CurrentTarget);
-
         //update target only if fish found
         if (closestFish != null) {
             IFish.CurrentTarget = closestFish;
@@ -230,7 +226,6 @@ public class FishControl : MonoBehaviour, IFish {
         }
         else if (IFish?.CurrentTarget == null) {
             // if target is lost, return to walking
-            //IFish.CurrentTarget = null;
             if (state != EnemyState.Walking)
                 SetDefaultState();
         }
@@ -243,7 +238,6 @@ public class FishControl : MonoBehaviour, IFish {
 
         Vector3 randomDirection = Random.insideUnitSphere * WALKING_RADIUS_MULTIPLIER * fish.Speed;
         randomDirection += transform.position;//near pos obj
-        //randomDirection.y = 0f;
 
         if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, WALKING_RADIUS_MULTIPLIER * fish.ResponseRadius, NavMesh.AllAreas)) { //if point on surf
             targetPosition = hit.position;
@@ -314,10 +308,7 @@ public class FishControl : MonoBehaviour, IFish {
                 || !IFish.CurrentTarget.gameObject.activeInHierarchy
                 || currentDistance > fish.ResponseRadius
                 || !fish.IsLegitimateTarget(IFish.CurrentTarget)
-                //|| IFish.CurrentTarget.Level > fish.Level
-                //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.CompareTag("Player") && fish.Level < GameStaticInfo.SHARK_INDEX_BARRIER)
-                //|| (IFish.CurrentTarget.Level == fish.Level && IFish.CurrentTarget.Progress >= fish.Progress)
-                ) {//if the target is lost
+               ) {//if the target is lost
 
                 SetDefaultState();
                 return;
@@ -340,26 +331,18 @@ public class FishControl : MonoBehaviour, IFish {
         float smoother = Mathf.Clamp01(currentDistance * .3f) * .95f + .05f;//from .1f to 1f
         Vector3 move = dir.normalized * fish.Speed * Time.fixedDeltaTime * smoother;
         if (move != Vector3.zero)
-            //rb.MovePosition(rb.position + move);
             rb.linearVelocity = move;
         else
             SleepPhysics();
 
-        //Vector3 newRot = Vector3./*Lerp*/SmoothDamp(transform.forward, moveDir.normalized, ref rotateVelocity, Time.unscaledDeltaTime);
-
         // smooth rotation
-        Vector3 rot = Vector3./*Lerp*/SmoothDamp(transform.forward, move.normalized, /*enemy.RotationSpeed*/ref rotateVelocity, Time.deltaTime);
+        Vector3 rot = Vector3.SmoothDamp(transform.forward, move.normalized, /*enemy.RotationSpeed*/ref rotateVelocity, Time.deltaTime);
 
         if (rot != Vector3.zero) {
             Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(rot, Vector3.up), fish.RotationSpeed * Time.deltaTime);
-            //float angleDetect_Smooth = Mathf.SmoothDamp(20, 0, ref rotAnimVelocity, Time.fixedDeltaTime);
-
-            //rb.MoveRotation(Quaternion.LookRotation(rot, Vector3.up));
-            fishAnim?.RotateAnimation(transform.forward, rot, Time.deltaTime/*, angleDetect_Smooth*/);//call fish animation manager to rotate the fish model
-            //rb.MoveRotation(newSmoothRot);
+            fishAnim?.RotateAnimation(transform.forward, rot, Time.deltaTime);//call fish animation manager to rotate the fish model
             transform.rotation = newSmoothRot;
         }
-        //transform.forward = Vector3.Lerp(transform.forward, move.normalized, enemy.RotationSpeed); //also good solut 
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -373,7 +356,6 @@ public class FishControl : MonoBehaviour, IFish {
         currentEscapeTime = 0f;
         if (fishAnim != null && fishAnim.IsInited)
             fishAnim?.RotateAnimation(transform.forward, transform.forward, Time.fixedDeltaTime);//zero rotation
-        //SleepPhysics();
     }
 
     void IFish.FishProximity(Fish otherFish) {
@@ -390,48 +372,19 @@ public class FishControl : MonoBehaviour, IFish {
 
     // while fish is in contact with another fish, if it is weaker, it will be eaten
     private void OnCollisionEnter(Collision collision) {
-        //Transform parent = collision.collider.transform.parent;
         GameObject collisObj = collision.collider.gameObject;
-
-        //if (parent != null && GameStaticInfo.TryGetFish(parent.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
-        //&& other == IEnemy.CurrentTarget //collision obj is our victim
-        //    && enemy.IsLegitimateTarget(other)//victim is weaker
-        //    ) {
-        //    if (!enemy.Eat(other) && collisObj != null) {
-        //        SetDefaultState();
-        //        //spawnManager.DeactivatePrefab(collision.collider.transform.parent.gameObject);//fish is eaten, deactivate and respawn
-        //    }
-        //}
 
         if (collisObj.layer == LayerMask.NameToLayer("Obstacle")
             || collisObj.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders")) //fish is stuck on obstacle
-            BypassObstacle(collision.GetContact(0).point/*collision.collider.transform.position*/);
+            BypassObstacle(collision.GetContact(0).point);
 
         SleepPhysics();
     }
 
     // while fish is in contact with another fish, it will deal damage to it
     private void OnCollisionStay(Collision collision) {
-        //Transform parent = collision.collider.transform.parent;
-
         GameObject collisObj = collision.collider.gameObject;
 
-        //if (parent != null && GameStaticInfo.TryGetFish(parent.gameObject, out Fish other)/* parent.TryGetComponent<Fish>(out Fish other)*/
-        //        && other == IEnemy.CurrentTarget //collision obj is our victim
-        //        && enemy.IsLegitimateTarget(other)//victim is weaker
-        //        ) {
-
-        //    contactTime += Time.fixedDeltaTime;
-
-        //    //float defaultAttackFrequency = 1f / enemy.Level; // default attack (fish just stand) frequency 
-        //    if (contactTime >= enemy.DeffaultAttackTime) {//damage each second
-        //        contactTime = 0f;
-        //        enemy.Eat(other);
-        //        //if (!enemy.Eat(other) && collision.collider.gameObject != null)
-        //        //spawnManager.DeactivatePrefab(collision.collider.transform.parent.gameObject);
-        //    }
-        //}
-        //else
         if (collisObj.layer == LayerMask.NameToLayer("Obstacle")
             || collisObj.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders")) //fish is stuck on obstacle
             BypassObstacle(collision.GetContact(0).point/*collider.transform.position*/);
@@ -441,13 +394,12 @@ public class FishControl : MonoBehaviour, IFish {
 
 
     void TryContactWithBehaviour(Collider collider, bool isStayContact) {
-        //Transform parent = collider.transform.parent;
         Rigidbody victimRb = collider.attachedRigidbody;
         GameObject collisObj = collider.gameObject;
 
         //if other fish
         if (victimRb != null && transform != victimRb//not self collision
-             && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish other)/*parent.TryGetComponent<Fish>(out Fish other)*/        //if collision with another fish
+             && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish other)     //if collision with another fish
         && (fish.IsPlayer || other == IFish.CurrentTarget) //collision obj is our victim
             && fish.IsLegitimateTarget(other)//victim is weaker
             ) {
@@ -455,12 +407,9 @@ public class FishControl : MonoBehaviour, IFish {
             if (isStayContact) {
                 contactTime += (fish.IsPlayer) ? Time.unscaledDeltaTime : Time.fixedDeltaTime;
 
-                //float defaultAttackFrequency = 1f / enemy.Level; // default attack (fish just stand) frequency 
                 if (contactTime >= fish.DeffaultAttackTime) {//damage each second
                     contactTime = 0f;
                     fish.Eat(other);
-                    //if (!enemy.Eat(other) && collision.collider.gameObject != null)
-                    //spawnManager.DeactivatePrefab(collision.collider.transform.parent.gameObject);
 
                     if (fish.IsPlayer)
                         CheckEatAchievements(other.Level);
@@ -470,12 +419,10 @@ public class FishControl : MonoBehaviour, IFish {
                 if (fish.IsPlayer)
                     CheckEatAchievements(other.Level);
 
-                if (!fish.Eat(other)/* && collisObj != null*/) {//on enter
+                if (!fish.Eat(other)) {//on enter
                     SetDefaultState();
-                    //spawnManager.DeactivatePrefab(collision.collider.transform.parent.gameObject);//fish is eaten, deactivate and respawn
                 }
             }
-
             //if obstacle spawn zone (only sphere collider)
             if (!fish.IsPlayer && collider is SphereCollider && collisObj.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders"))
                 BypassObstacle(collider.ClosestPoint(transform.position));
@@ -488,11 +435,7 @@ public class FishControl : MonoBehaviour, IFish {
         SleepPhysics();
     }
 
-    private void OnTriggerEnter(Collider other) {//some invisible obstacles like player spawn zone (only sphere collider)
-                                                 //if (other is SphereCollider /*MeshCollider meshC && meshC.convex*/ &&
-                                                 //   (other.gameObject.layer == LayerMask.NameToLayer("Obstacle")//fish is stuck on obstacle
-                                                 //    || other.gameObject.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders")))
-                                                 //    BypassObstacle(other.ClosestPoint(transform.position));
+    private void OnTriggerEnter(Collider other) {//some invisible obstacles like player spawn zone (only sphere collider)                                                 
         if (other.tag == "Shield")
             SleepPhysics();
         else if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
@@ -507,11 +450,11 @@ public class FishControl : MonoBehaviour, IFish {
     }
     bool CheckEatAchievements(FishLevel victimLvl) {
         if (victimLvl == GameStaticInfo.PEACEFUL_FISH_LVL)//if eat crab
-            GPG_Manager.OnTriggerAchievement(AchievementKey.FriendNow);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_youre_my_friend_now);
         else if (victimLvl == fish.Level)//same lvl
-            GPG_Manager.OnTriggerAchievement(AchievementKey.Cannibalism);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_cannibalism);
         else if (victimLvl == FishLevel.Mackarel && fish.Level == FishLevel.Moray)
-            GPG_Manager.OnTriggerAchievement(AchievementKey.ThreatSnack);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_former_threat_current_snack);
 
         return true;
     }
@@ -547,9 +490,16 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     private void OnDrawGizmos() {
-        if (fish == null || !gameObject.activeInHierarchy || fish.IsPlayer)
+        if (fish == null || !gameObject.activeInHierarchy)
             return;
 
+        if (fish.IsPlayer) {//for player
+            Gizmos.color = Color.orange;
+            Gizmos.DrawWireSphere(transform.position, fish.ResponseRadius);
+            return;
+        }
+
+        //for anemies stages
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, fish.ResponseRadius);
 

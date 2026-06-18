@@ -1,33 +1,30 @@
 ﻿using UnityEngine;
 
 public class StunInitiatorEffet : Effect {
-    //private const float STUN_RADIUS = 100f;
     private int collidedObjCnt = 0;
     private Collider[] collideObjects = new Collider[15];
 
 
     protected override void OnApply() {
-        //bool isPlayer = CompareTag("Player");
         type = FishEffectType.StunInitiator;
 
         collidedObjCnt = Physics.OverlapSphereNonAlloc(target.transform.position,
-            /*STUN_RADIUS*/GameStaticInfo.STUN_SONAR_RADIUS,
+            GameStaticInfo.STUN_SONAR_RADIUS,
             collideObjects,
-            GameStaticInfo.ENTITY_LAYER_MASK /*Physics.AllLayers*/,
+            GameStaticInfo.ENTITY_LAYER_MASK,
             QueryTriggerInteraction.Ignore);
 
         for (int i = 0; i < collidedObjCnt; i++) {
-            //Transform parent = collideObjects[i].transform.parent;
             Rigidbody victimRb = collideObjects[i].attachedRigidbody;
 
-            if (collideObjects[i] != null && victimRb != null /*!collideObjects[i].isTrigger &&*/
+            if (collideObjects[i] != null && victimRb != null 
                 && victimRb.gameObject != target.gameObject) {
                 if (victimRb.TryGetComponent(out EffectManager effectManager))
                     effectManager.ApplyEffect(FishEffectType.Stun, /*Duration*/GameStaticInfo.STUN_DEFAULT_DURATION);
 
-                if (GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish victimFish)//parent.TryGetComponent<Fish>(out Fish fish)
+                if (GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish victimFish)
                    && target.IsPlayer && victimFish.Level == FishLevel.Pufferfish)
-                    GPG_Manager.OnTriggerAchievement(AchievementKey.Inevitability);
+                    GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_am_inevitability);
             }
         }
         //Debug.Log(collidedObjCnt);

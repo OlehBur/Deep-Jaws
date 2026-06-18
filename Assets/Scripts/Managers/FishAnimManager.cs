@@ -6,50 +6,36 @@ public class FishAnimManager : MonoBehaviour {
     [SerializeField] Fish fish;
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator animator; // animator for fish animations (crab has no animator)
-    public Animator FishAnimator { get { return animator; } private set { animator = value; } }
-    public bool IsInited { get; private set; } = false;
-    const string BITE_TRIGGER_NAME = "bite"; // name of the trigger for bite animation
-    //[SerializeField] GameObject biteParticleSystem = null; // particle system for bite animation (crab has no particle system)'
-    private FishAdditionalCompManager fishAddCompMngr;
+    [SerializeField] SkinnedMeshRenderer fishSkinnedMesh; //To get Mesh material
     [SerializeField] Transform editableTransform;
     [SerializeField] Vector3 biteParticleLocPos;
-    private AudioManager audioManager;
-    //[SerializeField] AudioSource biteAudioSource; // audio source for bite sound effect
+    [SerializeField] float bubbleMaxXoffset = 0; //change the width of the bubble in the rotation (to make the ends of the tail out)
     [SerializeField] bool isUseRotatingShader = false;
 
-    [SerializeField] SkinnedMeshRenderer fishSkinnedMesh; //To get Mesh material
-    //[SerializeField] MeshRenderer fishMesh; //To get Mesh material
-    private MaterialPropertyBlock matPropBlock;
-    const float SPRINT_SPEED_MULTIPLIER = 2f; // multiplier for sprint speed
+    public Animator FishAnimator { get { return animator; } private set { animator = value; } }
+    public bool IsInited { get; private set; } = false;
+    
+    private FishAdditionalCompManager fishAddCompMngr;    
+    private AudioManager audioManager;   
+    private MaterialPropertyBlock matPropBlock;    
     private float matDefSprintSpeed; // default sprint speed in the material
     //private Material fishMat;
     private float maxShapeRotationVal;
-    //private float rotAnimVelocity = 0f;
-
-    //[SerializeField] GameObject bubbleShield = null;
     private EffectManager effectManager;
-    [SerializeField] float bubbleMaxXoffset = 0; //change the width of the bubble in the rotation (to make the ends of the tail out)
+    
     private const float BUBBLE_INIT_X_OFFSET = 0;
-
-    //for shape rotation
-    //private Quaternion prevRotation;
-
+    private const string BITE_TRIGGER_NAME = "bite"; // name of the trigger for bite animation
+    private const float SPRINT_SPEED_MULTIPLIER = 2f; // multiplier for sprint speed
 
 
     public void Init(AudioManager audioManager, EffectManager effectManager, FishAdditionalCompManager fishAddCompMngr/*Animator animator*/) {
         this.audioManager = audioManager;
         this.effectManager = effectManager;
         this.fishAddCompMngr = fishAddCompMngr;
-        //this.animator = animator;
         IsInited = true;
     }
 
     void OnEnable() {
-        //if (fishMesh != null)
-        //    fishMat = fishMesh.material;
-        //else if (fishSkinnedMesh != null)
-        //    fishMat = fishSkinnedMesh.material;
-
         //init set prop block
 
         if (fishSkinnedMesh == null) {
@@ -65,21 +51,15 @@ public class FishAnimManager : MonoBehaviour {
 
         fish.OnFishEat += FishEatAnim;/* Debug.LogWarning("eat fish event");*/
 
-        //prevRotation = rb.rotation;
-        ////bubbleInitXoffset = bubbleShield.transform.localScale.x;
-
-
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
-            0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);//fishMat?.GetFloat("_MaxRotationValue") ?? 0;
-        //biteAudioSource.enabled = fish.IsPlayer; // enable audio source only for player fish
-    }
+            0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
+          }
 
     private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {
         matPropBlock = new MaterialPropertyBlock();
         SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_Frequency", false, skinnedMesh.sharedMaterial.GetFloat("_Frequency"));
         SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_MaxRotationValue", false, skinnedMesh.sharedMaterial.GetFloat("_MaxRotationValue"));
         SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_RotationRad", false, skinnedMesh.sharedMaterial.GetFloat("_RotationRad"));
-        //fishSkinnedMesh.material.SetFloat("_RotationRad", 0f);// test
     }
 
     public static float SetGetMaterialWithPropBlock(ref SkinnedMeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, bool isGet, float value = 0) {
@@ -101,10 +81,8 @@ public class FishAnimManager : MonoBehaviour {
     public void SprintAnimation(bool isSprinting = true) {
         if (isSprinting)
             SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed * SPRINT_SPEED_MULTIPLIER);
-        //fishMat.SetFloat("_Frequency", matDefSprintSpeed * SPRINT_SPEED_MULTIPLIER/* + sprintAudioSource.volume * matDefSprintSpeed*/); //double (max) the speed of the fish material effect
         else
             SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed);
-        //fishMat.SetFloat("_Frequency", matDefSprintSpeed);
     }
 
     public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime, float enemyAnimDeltaMultiplier = .08f) {
@@ -116,9 +94,6 @@ public class FishAnimManager : MonoBehaviour {
         Quaternion currentRotation = rb.rotation;
 
         // ang betw
-        //Vector3 fromDir = current * Vector3.forward;
-        //Vector3 toDir = next * Vector3.forward;
-
         float angle = Vector3.SignedAngle(fromDir, toDir, Vector3.up);
         //float speed = Mathf.Abs(angle) / deltaTime;  //curr angul speed
         //Debug.Log("Obj rot! Speed: " + speed + "°/s");
@@ -129,9 +104,7 @@ public class FishAnimManager : MonoBehaviour {
                                                                                                                                                              //angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
 
         SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
-        //fishMat.SetFloat("_RotationRad", /*currentRotationVal*/angleProgress);
 
-        //prevRotation = currentRotation;
         GameObject bubbleShield = effectManager.ShieldObj;
         if (bubbleShield != null && bubbleMaxXoffset != 0 && bubbleShield.activeInHierarchy) {
             //enlargement of the scale of the bubble by width while turning the model 
@@ -140,7 +113,6 @@ public class FishAnimManager : MonoBehaviour {
             //x pos change from -BUBBLE_INIT_X_OFFSET to +BUBBLE_INIT_X_OFFSETbubbleMaxXoffset
             float newXOffset = Mathf.LerpUnclamped(BUBBLE_INIT_X_OFFSET, bubbleMaxXoffset, angleProgress / maxShapeRotationVal);
             bubbleShield.transform.localPosition = new Vector3(newXOffset, bp.y, bp.z);
-            //}
         }
     }
 
@@ -149,22 +121,18 @@ public class FishAnimManager : MonoBehaviour {
     }
 
     public void ActivateBiteAnimation(bool isNeedParticles = true) {
-        //if(animator.isActiveAndEnabled)
         FishAnimator?.SetTrigger(BITE_TRIGGER_NAME); // play bite animation
-        //biteParticleSystem.SetActive(true); //play particle on awake
 
-        if (isNeedParticles && fish.IsVisible/*IsPlayer*/ /*Vector3.Distance(transform.position, Camera.main.transform.position) <= biteAudioSource.maxDistance*/) {//for optimization
-            //if (biteAudioSource.enabled)
-            //    biteAudioSource.PlayOneShot(biteAudioSource.clip); // play bite sound effect
+        if (isNeedParticles && fish.IsVisible) {//for optimization
             if (fish.IsPlayer)//only player
                 audioManager.PlayVFX(VFX_clip.Bite);
 
             fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
-                editableTransform/*transform.parent*/,
+                editableTransform,
                 biteParticleLocPos,
                 Vector3.one,
                 Quaternion.identity);
-            //Instantiate(biteParticleSystem, biteParticleSystem.transform.position, biteParticleSystem.transform.rotation).SetActive(true); // instantiate bite particle system at fish position
+
         }
     }
 
@@ -173,7 +141,6 @@ public class FishAnimManager : MonoBehaviour {
             return;
 
         SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, 0);
-        //fishMat.SetFloat("_RotationRad", 0);
         fish.OnFishEat -= FishEatAnim;
     }
 }

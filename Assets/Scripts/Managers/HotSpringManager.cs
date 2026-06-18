@@ -2,7 +2,6 @@ using UnityEngine;
 
 
 /// <summary>
-/// активує бульбашку кожен рандомний проміжок часу за умови відстутності вже активованої бульбашки 
 /// activates a bubble at random intervals if no bubble is currently active.
 /// </summary>
 public class HotSpringManager : MonoBehaviour {
@@ -17,7 +16,6 @@ public class HotSpringManager : MonoBehaviour {
     void Start() {
         timeToSpawn = Random.Range(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL);
     }
-
 
     void Update() {
         if (!bubbleChild.activeInHierarchy) {

@@ -13,45 +13,86 @@ public enum AdTarget {
 }
 
 public class GameAdsManager : MonoBehaviour {
+    public static GameAdsManager Instance { get; private set; }
+
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
     [SerializeField] GameObject loadingPanel;
-
+    [SerializeField] List<TextMeshProUGUI> limitTxtUI = null;
     [Header("Revive Buttons (Rewarded)")]
-    [SerializeField] private List<Button> reviveButtons = new List<Button>();
-
+    [SerializeField] List<Button> reviveButtons = null;
     [Header("Retry Buttons (Interstitial)")]
-    [SerializeField] private List<Button> restartButtons = new List<Button>();
-    [SerializeField] List<TextMeshProUGUI> limitTxtUI = new List<TextMeshProUGUI>();
+    [SerializeField] List<Button> restartButtons = null;
+    [Header("Show Ad (Interstitial)")]
+    [SerializeField] List<Button> simpleAdButtons = null;
 
+    //public SpawnManager SpawnManager => spawnManager;
+    //public MainmenuManager MainmenuManager => gui;
+    //public GameObject LoadingPanel=> loadingPanel;
+    //public List<Button> RevertiveButtons => reviveButtons;
+    //public List<Button> RestartButtons => restartButtons;
+    //public List<TextMeshProUGUI> LimitTxtUI => limitTxtUI;
 
     private LevelPlayRewardedAd rewardedAd;
     private LevelPlayInterstitialAd interstitialAd;
     private bool isSdkInitialized = false;
     private AdTarget adTarget = AdTarget.None;
+    private float timeAfterInterstetial = 0f;
 
     private const string APP_KEY = "26b8c37b5";
     private const string REWARD_AD_UNIT_ID = "shsn3zi2t35xoese";
     private const string INTERSTITIAL_AD_UNIT_ID = "6s73h4sri4pvs62u";
-
     private const string USER_ID_KEY = "userId";
     private const string REWARDED_LIMIT_KEY = "DailyRewardedCount";
     private const string LAST_AD_DATE_KEY = "LastAdDate";
     private const int MAX_DAILY_REWARDED = 22;
+    private const float INTERSTETIAL_TIME_INTERVAL = 4 * 60;//m*s (m)
 
+
+    private void Awake() {
+        if (Instance != null && Instance != this) {
+            Instance.InitGameUI(spawnManager, gui, loadingPanel, reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void InitGameUI(SpawnManager spawnManager, MainmenuManager gui, GameObject loadingPanel, List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
+        this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
+        this.gui = this.gui == null ? gui : this.gui;
+        this.loadingPanel = this.loadingPanel == null ? loadingPanel : this.loadingPanel;
+
+        this.limitTxtUI = IsListNeedToCopy(this.limitTxtUI, limitTxtUI) ?
+            new List<TextMeshProUGUI>(limitTxtUI) : this.limitTxtUI;
+        this.reviveButtons = IsListNeedToCopy(this.reviveButtons, reviveButtons) ?
+            new List<Button>(reviveButtons) : this.reviveButtons;
+        this.restartButtons = IsListNeedToCopy(this.restartButtons, restartButtons) ?
+            new List<Button>(restartButtons) : this.restartButtons;
+        this.simpleAdButtons = IsListNeedToCopy(this.simpleAdButtons, simpleAdButtons) ?
+            new List<Button>(simpleAdButtons) : this.simpleAdButtons;
+
+        InitAdButtons();
+    }
 
     void Start() {
         LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
 
-        LevelPlay.SetMetaData("is_test_suite", "enable");
+        //LevelPlay.SetMetaData("is_test_suite", "enable");
         LevelPlay.Init(APP_KEY, GetUserID());
-
-        InitButtons();
     }
 
+    bool IsInterstetialTime => Time.time - timeAfterInterstetial >= timeAfterInterstetial;
+    void ResetInterstetialTime() => timeAfterInterstetial = Time.time;
 
-    void InitButtons() {
+    bool IsListNeedToCopy<T>(List<T> currentList, List<T> newList) =>
+         (currentList == null || currentList.Count == 0)
+            && newList != null && newList.Count > 0;
+
+    void InitAdButtons() {
         foreach (Button b in reviveButtons) {
             if (b != null)
                 b.onClick.AddListener(OnReviveClicked);
@@ -61,6 +102,10 @@ public class GameAdsManager : MonoBehaviour {
             if (b != null)
                 b.onClick.AddListener(OnRetryClicked);
         }
+
+        foreach (Button b in simpleAdButtons)
+            if (b != null)
+                b.onClick.AddListener(() => OnShowInterstitialAd());
 
         SetButtonsInteractable(true);
     }
@@ -140,17 +185,28 @@ public class GameAdsManager : MonoBehaviour {
         }
     }
 
-    public void OnShowInterstitialAd() {//just show ad (used in pause menu on exit)
+    /// <summary>
+    /// return true if ad should appear
+    /// </summary>
+    /// <returns></returns>
+    public bool OnShowInterstitialAd() {//just show ad (used in pause menu on exit)
+        if (IsInterstetialTime)
+            ResetInterstetialTime();
+        else
+            return false;
+
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (prem || noadd) {
-            Debug.Log("The Premium player has declined to be revived. Skip the ad.");
-            return;
+            Debug.Log("The Premium player has declined. Skip the ad.");
+            return false;
         }
 
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
             interstitialAd.ShowAd();
             interstitialAd.LoadAd();
         }
+
+        return true;
     }
 
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
@@ -182,10 +238,17 @@ public class GameAdsManager : MonoBehaviour {
     private void OnRetryClicked() {//revive -> interstitial
         adTarget = AdTarget.JustRespawn;
 
+        if (IsInterstetialTime)
+            ResetInterstetialTime();
+        else {
+            InterstitialRespawnBeh();
+            return;
+        }
+
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (prem || noadd) {
             Debug.Log("The Premium player has declined to be revived. Skip the ad.");
-            InterstitialRewardBeh();
+            InterstitialRespawnBeh();
             return;
         }
 
@@ -198,7 +261,7 @@ public class GameAdsManager : MonoBehaviour {
         else {
             //ad not ready (haha classic lucky u - bum i
             Debug.Log("The interstitial isn't ready. Just restart the game.");
-            InterstitialRewardBeh();
+            InterstitialRespawnBeh();
         }
     }
 
@@ -206,7 +269,7 @@ public class GameAdsManager : MonoBehaviour {
         SetButtonsInteractable(true);
         loadingPanel.SetActive(false);
         interstitialAd.LoadAd(); //load immediately load on backgr new ad
-        InterstitialRewardBeh();
+        InterstitialRespawnBeh();
     }
 
     void OnInterstitialLoadFailed(LevelPlayAdError error) {
@@ -249,6 +312,9 @@ public class GameAdsManager : MonoBehaviour {
         foreach (var b in restartButtons)
             if (b != null)
                 b.interactable = interactable;
+        foreach (var b in simpleAdButtons)
+            if (b != null)
+                b.interactable = interactable;
     }
 
     private void RewardedRewardBeh() {
@@ -261,11 +327,11 @@ public class GameAdsManager : MonoBehaviour {
         }
     }
 
-    private void InterstitialRewardBeh() {
+    private void InterstitialRespawnBeh() {
         if (adTarget == AdTarget.JustRespawn) {
             gui.DeactivateRespawnWnd();
             spawnManager.RespawnPlayer(true, false);
-            Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
+            //Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
 
             adTarget = AdTarget.None;
         }

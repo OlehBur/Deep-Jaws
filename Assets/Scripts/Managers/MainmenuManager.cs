@@ -12,12 +12,10 @@ using UnityEngine.UI;
 /// responsible for the activity of the graphical interface related to the game
 /// </summary>
 public class MainmenuManager : MonoBehaviour {
-    public static readonly string GAME_SCENE_NAME = "Game";
-    public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
-    public static readonly string LOADING_SCENE_NAME = "LoadScene";
-    private const string LOCALE_PREF_KEY = "LocaleIndex";
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
+    [SerializeField] Light mainMenuLight;
+    [SerializeField] Animator gmWndAnimator;
     [SerializeField] GameObject pauseWnd;
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
@@ -26,27 +24,31 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] GameObject respawnWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
-    int previousLocaleIndex = 0;
-
-    private const string GM_KEY = "GameMode";
     [SerializeField] GameObject[] gamemodePauseTitles;
     [SerializeField] Image gameModeWndBackground;
+    [SerializeField] Image signInIcon;
+
+    public static readonly string GAME_SCENE_NAME = "Game";
+    public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
+    public static readonly string LOADING_SCENE_NAME = "LoadScene";
+
+    private int previousLocaleIndex = 0;
+    private bool isGMneedAnimation = true;
+    private Color targetGMwndColor;
+    private Color targetLightGMcolor;
+    private GPG_Manager gpg_manager;
+
     private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
     private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
     private readonly Color HARD_GM_COLOR = new Color(0.6698113f, 0.09033603f, 0f, 1f);
-    private Color targetGMwndColor;
-    private Color targetLightGMcolor;
-    [SerializeField] Light mainMenuLight;
     private readonly Color LIGHT_DEFAULT_COLOR = new Color(1f, 0.8671192f, 0.504717f, 1f);
     private readonly Color LIGHT_MEDIUM_COLOR = new Color(0.4544322f, 0.4999117f, 0.8679245f, 1f);
     private readonly Color LIGHT_HARD_COLOR = new Color(0f, 0f, 0f, 1f);
-    [SerializeField] Animator gmWndAnimator;
-    private bool isGMneedAnimation = true;
-
-    [SerializeField] Image signInIcon;
     private readonly Color failedSignInColor = new Color(1f, 0.4764151f, 0.4863637f, 1f);
     private readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
-    private GPG_Manager gpg_manager;
+
+    private const string LOCALE_PREF_KEY = "LocaleIndex";
+    private const string GM_KEY = "GameMode";
 
 
     private void Awake() {
@@ -54,12 +56,10 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void Start() {
-        // Ensure the fader scene is not destroyed on load
-        if (faderScene != null)
+        if (faderScene != null)        // Ensure the fader scene is not destroyed on load
             faderScene?.gameObject.SetActive(true);
 
-        // Initialize the continue button visibility based on saved data
-        if (continueButton != null)
+        if (continueButton != null)// Initialize the continue button visibility based on saved data
             continueButton?.SetActive(ProgressSaver.IsDataExist());
 
         LanguageInit();
@@ -79,20 +79,10 @@ public class MainmenuManager : MonoBehaviour {
         faderScene.gameObject.SetActive(true);
     }
 
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //void LanguageInit() {
-    //    //init locale
-    //    previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
-    //    if (LocalizationSettings.AvailableLocales != null && LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
-    //        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex]; // Set default locale
-    //    if (languageDropdown != null)
-    //        languageDropdown.value = previousLocaleIndex;
-    //    languageDropdown?.onValueChanged.AddListener(OnLanguageChanged);
-    //}
     async void LanguageInit() {
         await LocalizationSettings.InitializationOperation.Task; // wait readiness
         previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
-        
+
         if (previousLocaleIndex < 0 || previousLocaleIndex >= LocalizationSettings.AvailableLocales.Locales.Count)
             previousLocaleIndex = 0;
 
@@ -107,15 +97,8 @@ public class MainmenuManager : MonoBehaviour {
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void GameModeInit() {
-        ////init gamemode buttons
+    void GameModeInit() {//init gamemode buttons        
         GameStaticInfo.Gamemode = (GameMode)PlayerPrefs.GetInt(GM_KEY, 0);
-        //if (gamemodeSelectButtons != null && gamemodeSelectButtons.Length == GameStaticInfo.GAMEMODES_COUNT) {
-        //    foreach (Button but in gamemodeSelectButtons)
-        //        but.interactable = true;
-
-        //    gamemodeSelectButtons[(int)GameStaticInfo.Gamemode].interactable = false;
-        //}
         //init gamemode
         if (gamemodePauseTitles != null && gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
             foreach (GameObject tit in gamemodePauseTitles)
@@ -148,7 +131,7 @@ public class MainmenuManager : MonoBehaviour {
         PlayerPrefs.SetInt(LOCALE_PREF_KEY, index); // Save the selected locale index
 
         if (previousLocaleIndex != index)
-            GPG_Manager.OnTriggerAchievement(AchievementKey.EnglishPlease);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_dont_understand);
 
         previousLocaleIndex = index;
     }
@@ -228,7 +211,7 @@ public class MainmenuManager : MonoBehaviour {
         UnityEngine.SceneManagement.SceneManager.LoadScene(LOADING_SCENE_NAME);
     }
 
-    public /*static*/ void ResetGameData() {
+    public void ResetGameData() {
         PlayerLeaderboardScore.LoadSavedData();
         PlayerPrefs.DeleteAll();//delete all player prefs data 
         PlayerPrefs.SetInt(LOCALE_PREF_KEY, LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)); //except settings data 
@@ -238,22 +221,17 @@ public class MainmenuManager : MonoBehaviour {
         ProgressSaver.Delete();
     }
 
-    public void OnExitButtonClicked() {
-        // Exit the application
-        Application.Quit();
-    }
-
     public void OnSkipGuide() {
         if (!ProgressSaver.IsDataExist())
-            GPG_Manager.OnTriggerAchievement(AchievementKey.AreYouSerious);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_are_you_serious);
     }
 
     public void OnCompleteGuide() {
         if (ProgressSaver.IsDataExist())
-            GPG_Manager.OnTriggerAchievement(AchievementKey.Respect);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_you_have_my_respect);
     }
 
 
     public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
-
+    public void OnExitButtonClicked() => Application.Quit();
 }

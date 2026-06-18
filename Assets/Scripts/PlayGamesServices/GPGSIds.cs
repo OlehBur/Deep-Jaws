@@ -44,12 +44,13 @@ public static class GPGSIds
         public const string achievement_a_fragile_beauty_in_a_sea_of_decay = "CgkI0PmEnbsFEAIQGw"; // <GPGSID>
         public const string achievement_youre_fast_as_flash = "CgkI0PmEnbsFEAIQBg"; // <GPGSID>
         public const string achievement_are_you_serious = "CgkI0PmEnbsFEAIQBA"; // <GPGSID>
-        public const string leaderboard_easiest_mode_turned_out_to_be_the_hardest_for_me = "CgkI0PmEnbsFEAIQIA"; // <GPGSID>
         public const string achievement_i_am_the_danger = "CgkI0PmEnbsFEAIQDQ"; // <GPGSID>
+        public const string leaderboard_the_founders_reef = "CgkI0PmEnbsFEAIQIQ"; // <GPGSID>
         public const string achievement_dot_dot_dot_dash_dash_dash_dot_dot_dot = "CgkI0PmEnbsFEAIQEA"; // <GPGSID>
         public const string achievement_finally_true_speed = "CgkI0PmEnbsFEAIQEQ"; // <GPGSID>
         public const string achievement_mackerel_again = "CgkI0PmEnbsFEAIQDw"; // <GPGSID>
         public const string achievement_algae_are_beneficial_to_health = "CgkI0PmEnbsFEAIQGg"; // <GPGSID>
+        public const string leaderboard_easiest_mode__hardest = "CgkI0PmEnbsFEAIQIA"; // <GPGSID>
         public const string achievement_youre_not_escaping_this = "CgkI0PmEnbsFEAIQDg"; // <GPGSID>
         public const string achievement_overseas_gourmet = "CgkI0PmEnbsFEAIQHA"; // <GPGSID>
         public const string achievement_i_am_inevitability = "CgkI0PmEnbsFEAIQGQ"; // <GPGSID>

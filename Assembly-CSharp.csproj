@@ -79,7 +79,6 @@
     <Compile Include="Assets\Scripts\Debug_\TestTriggCollider.cs" />
     <Compile Include="Assets\Scripts\Fish Effects\StunInitiatorEffet.cs" />
     <Compile Include="Assets\Scripts\Fish Effects\BlindnessEffect.cs" />
-    <Compile Include="Assets\Scripts\Controllers\FishMultiPrefabController.cs" />
     <Compile Include="Assets\Scripts\Core\Joystick.cs" />
     <Compile Include="Assets\Scripts\Managers\FishAnimManager.cs" />
     <Compile Include="Assets\Scripts\Fish Effects\StunEffect.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="Assets\Scripts\Debug_\FPS_Viewer.cs" />
     <Compile Include="Assets\Scripts\Controllers\HydraController.cs" />
     <Compile Include="Assets\Scripts\Managers\GameAdsManager.cs" />
+    <Compile Include="Assets\Scripts\UI\PurchaseUIvisualizer.cs" />
     <Compile Include="Assets\Scripts\Core\Fish.cs" />
     <Compile Include="Assets\Scripts\Controllers\SlowdownPearlController.cs" />
     <Compile Include="Assets\Scripts\Controllers\HealerFruitController.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scripts\Core\Encryptor.cs" />
     <Compile Include="Assets\Scripts\Core\GameStaticInfo.cs" />
     <Compile Include="Assets\Scripts\Fish Effects\ShieldEffect.cs" />
+    <Compile Include="Assets\Scripts\Core\GlobalEventSystem.cs" />
     <Compile Include="Assets\Scripts\Controllers\FishControl.cs" />
     <Compile Include="Assets\Scripts\Achievements\PlayerLeaderboardScore.cs" />
     <Compile Include="Assets\Scripts\Controllers\ShieldBubbleControl.cs" />
@@ -1280,14 +1281,6 @@
       <HintPath>Library\ScriptAssemblies\Unity.Recorder.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AdaptivePerformance.Simulator.Google.Extension.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.AdaptivePerformance.Simulator.Google.Extension.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.AdaptivePerformance.Google.Android.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.AdaptivePerformance.Google.Android.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
       <Private>False</Private>
@@ -1536,10 +1529,6 @@
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AdaptivePerformance.Google.Android">
-      <HintPath>Library\ScriptAssemblies\Unity.AdaptivePerformance.Google.Android.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Purchasing.SecurityStub.csproj">
@@ -1553,6 +1542,14 @@
     <ProjectReference Include="Unity.Purchasing.Stores.csproj">
       <Project>{F007AE29-18EC-CB4B-EDC8-911E17338994}</Project>
       <Name>Unity.Purchasing.Stores</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.AdaptivePerformance.Simulator.Google.Extension.Editor.csproj">
+      <Project>{A8983735-34B6-02FC-732F-75E3B073F446}</Project>
+      <Name>Unity.AdaptivePerformance.Simulator.Google.Extension.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.AdaptivePerformance.Google.Android.Editor.csproj">
+      <Project>{55DA1DB0-CEB4-CE5B-E883-506BE52F28E8}</Project>
+      <Name>Unity.AdaptivePerformance.Google.Android.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Stores.XboxCloudServices.csproj">
       <Project>{754D8A1E-4D0B-0DCC-A440-E3C7ACDE708B}</Project>
@@ -1581,6 +1578,10 @@
     <ProjectReference Include="Unity.Purchasing.SecurityCore.csproj">
       <Project>{97C86EE7-3A48-A64E-FBBE-AF3CE96660C5}</Project>
       <Name>Unity.Purchasing.SecurityCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.AdaptivePerformance.Google.Android.csproj">
+      <Project>{6B4E57C0-35A1-3EE4-E05F-2BECCFDC1B29}</Project>
+      <Name>Unity.AdaptivePerformance.Google.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

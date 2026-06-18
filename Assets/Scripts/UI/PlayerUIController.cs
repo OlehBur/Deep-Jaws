@@ -293,13 +293,7 @@ public class PlayerUIController : MonoBehaviour {
 
     void ActivateDamageOverlay() {
         damageOverlay.gameObject.SetActive(true);
-        //if (playerFish.gameObject.TryGetComponent<AudioSource>(out AudioSource audioSource)) {
-        //audioSource.PlayOneShot(damageAudio);
-        //Debug.LogWarning(damageAudio);
-        //}
         audioManager.PlayVFX(VFX_clip.Damage);
-
-        //InvokeRepeating(nameof(DamageOverlayAnim), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
         StartCoroutine(OverlayFader(damageOverlay, FishEffectType.None));
     }
 
@@ -325,7 +319,6 @@ public class PlayerUIController : MonoBehaviour {
                 blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
                 yield return HALF_OVERLAY_UPD_WAIT;
             }
-            //yield return null;
         }
 
         while (blindnessOverlay.color.a > 0f) {//final fade out
@@ -333,7 +326,6 @@ public class PlayerUIController : MonoBehaviour {
             yield return HALF_OVERLAY_UPD_WAIT;
         }
 
-        //if (!playerEffectManager.IsEffectActive(FishEffectType.Blindness))
         blindnessOverlay.gameObject.SetActive(false);
 
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
@@ -347,15 +339,9 @@ public class PlayerUIController : MonoBehaviour {
             if (textElement != null)
                 textElement.color = new Color(textElement.color.r, textElement.color.g, textElement.color.b, textElement.color.a - updateInterval);
 
-            //if (!playerEffectManager.IsEffectActive(type))
-            //    break;
-
-            yield return OVERLAY_UPD_WAIT/*new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL)*/;
+            yield return OVERLAY_UPD_WAIT;
         }
-
-        //if (type == FishEffectType.None || !playerEffectManager.IsEffectActive(type))
         overlay.gameObject.SetActive(false);
-
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
     }
 
@@ -381,11 +367,8 @@ public class PlayerUIController : MonoBehaviour {
         if (spawnManager == null || spawnManager.PlayerFish == null)//for debug
             return;
 
-        ////unsubscribe from events of the previous player fish if it exists
-        //PlayerEventsResub(playerFish);
-
-        playerFish = fish/*spawnManager.PlayerFish*//*pool[SpawnManager.PLAYER_INDEX].GetComponent<Fish>()*/; //get player fish component
-        playerEffectManager = /*spawnManager.PlayerFish*/fish.GetComponent<EffectManager>(); //get player transform
+        playerFish = fish; 
+        playerEffectManager = fish.GetComponent<EffectManager>(); //get player transform
 
         //syubscribe to events of the new player fish
         playerFish.OnInfoStatsChanged += UpdatePlayerInfo; // subscribe to player fish stats change event
@@ -459,7 +442,7 @@ public class PlayerUIController : MonoBehaviour {
 
         const float MAX_EFFECTS_CNT = 5; // max effects count that can be displayed in the UI
                                          //repos
-        int effectsCnt = playerEffectManager./*ActiveEffectsCnt*/GetActiveEffectCnt(TypeEffects.VisibleUI)/*activeEffects.Count*/;
+        int effectsCnt = playerEffectManager.GetActiveEffectCnt(TypeEffects.VisibleUI)/*activeEffects.Count*/;
 
         if (!isAdded)//if effect expires - hide icon
             effectsSlotsMatch[type].gameObject.SetActive(false);
@@ -494,15 +477,11 @@ public class PlayerUIController : MonoBehaviour {
         };
 
         if (currentOverlay != null) {
-            //if (overlayCoroutines.TryGetValue(type, out Coroutine corutine) && corutine != null)
-            //StopCoroutine(corutine);
-
             if (type == FishEffectType.Blindness) {
                 if (isAdded) {
                     Effect effect = playerEffectManager.activeEffects[FishEffectType.Blindness];
                     blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
                     blindnessOverlay.gameObject.SetActive(true);
-                    //overlayCoroutines[type] =
                     StartCoroutine(BlindnessOverlayAnimation(effect));
                 }
                 else
@@ -511,27 +490,14 @@ public class PlayerUIController : MonoBehaviour {
             else {
 
                 if (isAdded) {
-                    //StopCoroutine(OverlayFader(currentOverlay, type));
                     currentOverlay.color = new Color(currentOverlay.color.r, currentOverlay.color.g, currentOverlay.color.b, 1);
                     currentOverlay.gameObject.SetActive(true);
                 }
                 else
-                    //StopCoroutine(OverlayFader(currentOverlay, type));
-                    //overlayCoroutines[type] =
                     StartCoroutine(OverlayFader(currentOverlay, type));
-                //InvokeRepeating(nameof(StopTimeOverlayAnimFading), OVERLAYS_UPDATE_INTERVAL, OVERLAYS_UPDATE_INTERVAL);
             }
         }
     }
-
-    //void StopTimeOverlayAnimFading() {
-    //    if (stopTimeOverlay.color.a <= 0) {
-    //        stopTimeOverlay.gameObject.SetActive(true);
-    //        CancelInvoke(nameof(StopTimeOverlayAnimFading));
-    //    }
-
-    //    stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, stopTimeOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
-    //}
 
     public void OnDestroy() {
         PlayerReConnect(playerFish, false);

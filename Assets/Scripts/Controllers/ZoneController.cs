@@ -44,25 +44,6 @@ public class ZoneController : MonoBehaviour {
             ZoneType.DeepCorals => hammerheadWarnLocalizedString.GetLocalizedString(),
             _ => morayWarnLocalizedString.GetLocalizedString()
         };
-        //    switch (newLocale.Identifier.Code) {
-        //        case "en":
-        //            fishLvlRequirMsg = "You need to reach at least the level ";
-        //            fishLvlRequirMsg += zoneType switch {
-        //                ZoneType.AlgaesForest => "Moray Eel",
-        //                ZoneType.DeepCorals => "Hammerhead Shark",
-        //                _ => "Moray Eel"
-        //            };
-        //            break;
-
-        //        case "uk":
-        //            fishLvlRequirMsg = "Вам потрібно досягти хоча б рівня ";
-        //            fishLvlRequirMsg += zoneType switch {
-        //                ZoneType.AlgaesForest => "Мурени",
-        //                ZoneType.DeepCorals => "Акули-молота",
-        //                _ => "Мурени"
-        //            };
-        //            break;
-        //    }
     }
 
     private void Start() {//work onlu once per game install (only for old players)
@@ -77,7 +58,7 @@ public class ZoneController : MonoBehaviour {
     }
 
     void ZoneByLvlBehaviour(Fish fish, bool isDie) {
-        if(fish==null)
+        if (fish == null)
             return;
 
         switch (zoneType) {
@@ -86,22 +67,20 @@ public class ZoneController : MonoBehaviour {
 
             //        break;
             case ZoneType.AlgaesForest:
-                barrierCollider.enabled = /*SetActive*/fish.Level < FishLevel./*Mackarel*/Moray;
-                break;
+            barrierCollider.enabled = fish.Level < FishLevel.Moray;
+            break;
             case ZoneType.DeepCorals:
-                barrierCollider.enabled = /*SetActive*/fish.Level < FishLevel.HammerShark;
-                break;
+            barrierCollider.enabled = fish.Level < FishLevel.HammerShark;
+            break;
         }
     }
 
     private void OnCollisionStay/*Enter*/(Collision collision) {
-        //Transform parent = collision.collider.transform.parent;
         Rigidbody victimRb = collision.collider.attachedRigidbody;
 
         if (victimRb != null && victimRb.CompareTag("Player")) {
             playerUIController.ActivateZoneOverlay(fishLvlRequirMsg);
             if (!isBarrierAnimationActive) {
-                //StopCoroutine(BarrierTouchAnimation());
                 StartCoroutine(BarrierTouchAnimation());
                 zoneBarrierMat.SetVector("_TouchPosition", collision.GetContact(0).point);
             }
@@ -127,22 +106,4 @@ public class ZoneController : MonoBehaviour {
 
         isBarrierAnimationActive = false;
     }
-
-    //tp player if he already in the zone (examp after game update)
-    //private void OnCollisionStay(Collision collision) {
-    //    if (isInAllowTPfromZone) {
-    //        if (sceneLoadTime - Time.time > SCENE_LOAD_TP_ALLOW_TIME) {// only if real stay instean collision stay
-    //            isInAllowTPfromZone = false;
-    //            return;
-    //        }
-
-    //        Transform parent = collision.collider.transform.parent;
-
-    //        if (parent != null && parent.CompareTag("Player")) {
-    //            Debug.Log("OnCollisionStay~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    //            isInAllowTPfromZone = false;
-    //            parent.transform.position = Vector3.up * parent.transform.position.y;
-    //        }
-    //    }
-    //}
 }

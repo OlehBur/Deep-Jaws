@@ -136,7 +136,7 @@ public class AudioManager : MonoBehaviour {
             MusicVolume = SliderToDB(value, MAX_MUSIC_DB);
 
             if (value == 0f)
-                GPG_Manager.OnTriggerAchievement(AchievementKey.GiveItBack);
+                GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_hey_give_it_back);
         });
         sfxSlider.onValueChanged.AddListener(value => SFXVolume = SliderToDB(value, MAX_SFX_DB));
     }

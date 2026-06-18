@@ -24,16 +24,7 @@ public class FaderScene : MonoBehaviour {
     private const float FADING_SPEED = .025f;
     private const float FADE_EPSILON = .01f;
     private bool isLoadSceneStarted = false;
-    //private static FaderScene instance { get; set; }
 
-
-    //void Awake() {
-    //    //instance = this;
-    //    //DontDestroyOnLoad(gameObject);
-
-    //    //SceneManager.sceneLoaded += OnSceneLoaded;
-
-    //}
     public void ChangeLoadScene(SceneType scene) {
         loadScene = scene;
     }
@@ -61,18 +52,6 @@ public class FaderScene : MonoBehaviour {
             }
     }
 
-    //void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-    //    if (isInitFade)
-    //        return;
-
-    //    SceneManager.sceneLoaded -= OnSceneLoaded;
-    //    Destroy(gameObject);
-    //}
-
-    //void OnDestroy() {
-    //    SceneManager.sceneLoaded -= OnSceneLoaded;
-    //}
-
     IEnumerator Load() {
         AudioListener.volume = 0f; // disable all sounds
 
@@ -96,24 +75,20 @@ public class FaderScene : MonoBehaviour {
             SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
 
-        while (asyncLoad.progress < 0.9f) {
+        while (asyncLoad.progress < 0.9f) 
             yield return null;
-        }
 
         asyncLoad.allowSceneActivation = true;
 
-        while (/*!asyncLoad.isDone || */(loadScene == SceneType.Game && !GameManager.IsSceneReady)) {
+        while (!asyncLoad.isDone || (loadScene == SceneType.Game && !GameManager.IsSceneReady)) 
             yield return null;
-        }
 
         if (loadScene == SceneType.Game) {
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
             SceneManager.UnloadSceneAsync(MainmenuManager.LOADING_SCENE_NAME);
         }
-        else {
-            AudioListener.volume = 1f; // 
-        }
-        //AudioListener.volume = 1f; // enable
+        else 
+            AudioListener.volume = 1f; 
     }
 
 }

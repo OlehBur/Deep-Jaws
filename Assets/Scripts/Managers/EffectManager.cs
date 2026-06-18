@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 public enum TypeEffects {
     All,
     VisibleUI,
@@ -13,44 +12,33 @@ public enum TypeEffects {
 }
 
 public class EffectManager : MonoBehaviour {
-    public Dictionary<FishEffectType, Effect> activeEffects { get; private set; } = new();
-    public event Action<FishEffectType, bool> OnEffectChanges;
-
     [Header("Icons for effects (World)")]
     [SerializeField] GameObject shieldIcon;
     [SerializeField] GameObject stunIcon;
     [SerializeField] GameObject currentIcon;
     [SerializeField] GameObject poisonIcon;
-
     [SerializeField] Rigidbody rb;
-    private Vector3 prevPos;
     [SerializeField] SkinnedMeshRenderer fishSkinnedRenderer;
     [SerializeField] Transform editableTransform;
-
-    /*[SerializeField]*/
-    public GameObject ShieldObj { get; set; } = null;
-    private AudioSource speedEffectSource;
-    private AudioManager audioManager;
-    private FishAdditionalCompManager fishAdditionalComponentManager;
     [SerializeField] public bool IsHaveShield = true;
     [SerializeField] Vector3 shieldLocalPos;
     [SerializeField] Vector3 shieldLocalScale;
     [SerializeField] Vector3 whirlLocalPos;
-    //[SerializeField] GameObject currentBubblesWhirl;
-    //[SerializeField] GameObject waterTrail;
-    //[SerializeField] GameObject shieldObj = null;
     [SerializeField] Fish fish;
     [SerializeField] FishAnimManager fishAnim;
 
+    public Dictionary<FishEffectType, Effect> activeEffects { get; private set; } = new();
+    public event Action<FishEffectType, bool> OnEffectChanges;
+    public GameObject ShieldObj { get; set; } = null;
     // cache all effect types for iteration
     public static readonly FishEffectType[] AllEffectTypes = (FishEffectType[])Enum.GetValues(typeof(FishEffectType));
-    //private readonly Dictionary<FishEffectType, Component> existingComponents = new();
 
-    //fixed update optimization
-    private bool hasSpeedEffects = false;
-    //private bool isPlayerFish;
+    private bool hasSpeedEffects = false;    //fixed update optimization
+    private AudioSource speedEffectSource;
+    private AudioManager audioManager;
+    private FishAdditionalCompManager fishAdditionalComponentManager;
+    private Vector3 prevPos;
 
-    //private const float Y_OFFSET = 2f;
     private const float X_OFFSET_DOUBLE = .6f;
     private const float X_OFFSET_TRIPLE = 1.2f;
     private const float X_OFFSET_FOURTH = 1.8f;
@@ -68,10 +56,7 @@ public class EffectManager : MonoBehaviour {
             return;
 
         this.audioManager = audioManager;
-        /*this.*/
-        speedEffectSource = audioManager.playerRevolumeAudioSource/*speedEffectSource*/;
-        //isPlayerFish = CompareTag("Player");
-        //CacheExistingComponents(); //cache existing components on start
+        speedEffectSource = audioManager.playerRevolumeAudioSource;
     }
     private void OnEnable() {
         if (fishSkinnedRenderer != null)//if respawn afret freezetime effect activation
@@ -103,58 +88,35 @@ public class EffectManager : MonoBehaviour {
     }
 
 
-    // cache existing components to avoid multiple GetComponent calls
-    //private void CacheExistingComponents() {
-    //    foreach (FishEffectType type in AllEffectTypes) {
-    //        if (TryGetEffectComponent(type, out Component component)) {
-    //            existingComponents[type] = component;
-    //        }
-    //    }
-    //}
-
     public int GetActiveEffectCnt(TypeEffects key) {
-        // clear without allocations
-        //List<FishEffectType> keysToRemove = new List<FishEffectType>();
-        //foreach (KeyValuePair<FishEffectType, Effect> kvp in activeEffects) {
-        //    if (kvp.Value == null) {
-        //        keysToRemove.Add(kvp.Key);
-        //    }
-        //}
-
-        //foreach (FishEffectType key in keysToRemove) {
-        //    activeEffects.Remove(key);
-        //}
-
-        //return activeEffects.Count;
-
         int cnt = 0;
 
         foreach (KeyValuePair<FishEffectType, Effect> kvp in activeEffects)
             if (kvp.Value != null && kvp.Value.Enabled)
                 switch (key) {
                     case TypeEffects.All:
-                        cnt++;
-                        break;
+                    cnt++;
+                    break;
 
                     case TypeEffects.VisibleUI:
-                        if (IsVisibleEffect(kvp.Key, true))
-                            cnt++;
-                        break;
+                    if (IsVisibleEffect(kvp.Key, true))
+                        cnt++;
+                    break;
 
                     case TypeEffects.VisibleWorld:
-                        if (IsVisibleEffect(kvp.Key, false))
-                            cnt++;
-                        break;
+                    if (IsVisibleEffect(kvp.Key, false))
+                        cnt++;
+                    break;
 
                     case TypeEffects.Negative:
-                        if (IsNegativeEffect(kvp.Key))
-                            cnt++;
-                        break;
+                    if (IsNegativeEffect(kvp.Key))
+                        cnt++;
+                    break;
 
                     case TypeEffects.Positive:
-                        if (!IsNegativeEffect(kvp.Key))
-                            cnt++;
-                        break;
+                    if (!IsNegativeEffect(kvp.Key))
+                        cnt++;
+                    break;
                 }
 
 
@@ -175,39 +137,9 @@ public class EffectManager : MonoBehaviour {
                 && type != FishEffectType.FreezeTime && type != FishEffectType.StunInitiator;
     }
 
-    public static bool IsNegativeEffect(FishEffectType type) {
-        return type == FishEffectType.Stun || type == FishEffectType.Poison || type == FishEffectType.Blindness;
-    }
+    public static bool IsNegativeEffect(FishEffectType type) =>
+        type == FishEffectType.Stun || type == FishEffectType.Poison || type == FishEffectType.Blindness;
 
-    //private bool TryGetEffectComponent(FishEffectType type, out Component component) {
-    //    // check cache
-    //    if (existingComponents.TryGetValue(type, out component) && component != null) {
-    //        return true;
-    //    }
-
-    //    //if cache miss - try get component
-    //    switch (type) {
-    //        case FishEffectType.Shield:
-    //            return TryGetComponent(out component);
-    //        case FishEffectType.CurrentSpeed:
-    //            return TryGetComponent(out CurrentEffect currentEffect) && (component = currentEffect) != null;
-    //        case FishEffectType.FreezeTime:
-    //            return TryGetComponent(out StopTimeEffect timeEffect) && (component = timeEffect) != null;
-    //        case FishEffectType.StunInitiator:
-    //            return TryGetComponent(out StunInitiatorEffet stunInit) && (component = stunInit) != null;
-    //        case FishEffectType.Poison:
-    //            return TryGetComponent(out PoisonEffect poison) && (component = poison) != null;
-    //        case FishEffectType.Stun:
-    //            return TryGetComponent(out StunEffect stun) && (component = stun) != null;
-    //        case FishEffectType.SprintSpeed:
-    //            return TryGetComponent(out SprintEffect sprint) && (component = sprint) != null;
-    //        case FishEffectType.Blindness:
-    //            return TryGetComponent(out BlindnessEffect blindness) && (component = blindness) != null;
-    //        default:
-    //            component = null;
-    //            return false;
-    //    }
-    //}
 
     public void ApplyEffect(FishEffectType type, float duration) {
         if (activeEffects.TryGetValue(type, out Effect existing) && existing != null && existing.Enabled) {
@@ -218,16 +150,10 @@ public class EffectManager : MonoBehaviour {
         if (fish == null)
             return;
 
-        // first check exist compon
-        //if (TryGetEffectComponent(type, out Component existingComponent) && existingComponent is Effect existingEffect) {
-        //    newEffect = existingEffect;
-        //}
-        //else
-
         Effect newEffect = InitNewEffect(type);
 
         if (newEffect != null) {
-            activeEffects[type] = newEffect; //        newEffect = AddEffectComponent(type);
+            activeEffects[type] = newEffect;
             newEffect.Init(fish, duration);
 
             if (type == FishEffectType.Shield) {//import after Init (shield obj added in apply meth in init)
@@ -254,11 +180,6 @@ public class EffectManager : MonoBehaviour {
     }
 
     public void RemoveEffect(FishEffectType type) {
-        //if (activeEffects.TryGetValue(type, out Effect effect) && effect != null) {
-        //    effect.OnEffeñtExpire -= RemoveEffect;
-        //}
-
-        //activeEffects.Remove(type);
         UpdateIconVisualization();
         UpdateSpeedEffectsFlag(); // upd flag
         OnEffectChanges?.Invoke(type, false);
@@ -272,10 +193,10 @@ public class EffectManager : MonoBehaviour {
 
     private void CheckAchievements() {
         if (IsEffectActive(FishEffectType.SprintSpeed) && IsEffectActive(FishEffectType.CurrentSpeed)/*activeEffects.ContainsKey(FishEffectType.SprintSpeed) && activeEffects.ContainsKey(FishEffectType.CurrentSpeed)*/)
-            GPG_Manager.OnTriggerAchievement(AchievementKey.FlashSpeed);
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_youre_fast_as_flash);
 
-        if (/*activeEffects.Count*/GetActiveEffectCnt(TypeEffects.VisibleUI) >= 4)
-            GPG_Manager.OnTriggerAchievement(AchievementKey.Impossible);
+        if (GetActiveEffectCnt(TypeEffects.VisibleUI) >= 4)
+            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_thats_impossible_seriously);
     }
 
 
@@ -296,27 +217,6 @@ public class EffectManager : MonoBehaviour {
             }
         }
     }
-
-    //private int GetVisibleEffectsCount() {
-    //    int count = 0;
-    //    foreach (var kvp in activeEffects)
-    //        if (kvp.Value != null && ShouldShowIcon(kvp.Key))
-    //            count++;
-
-    //    return count;
-    //}
-
-    /// <summary>
-    /// icons that shouldnt shown in world - return false
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    //private bool ShouldShowIcon(FishEffectType type) {
-    //    return type != FishEffectType.SprintSpeed &&
-    //           type != FishEffectType.StunInitiator &&
-    //           type != FishEffectType.FreezeTime &&
-    //           type != FishEffectType.Blindness;
-    //}
 
     private float[] GetIconOffsets(int count) {
         return count switch {
@@ -350,24 +250,6 @@ public class EffectManager : MonoBehaviour {
                 icon.transform.localPosition = new Vector3(xOffset, /*Y_OFFSET*/0f, 0f);
         }
     }
-
-    //private Effect AddEffectComponent(FishEffectType type) {//if exist before adding - return existing
-    //    if (TryGetEffectComponent(type, out Component existing) && existing is Effect existingEffect)
-    //        return existingEffect;
-
-    //    return type switch {
-    //        FishEffectType.Shield => CreateShieldEffect(),
-    //        FishEffectType.CurrentSpeed => CreateCurrentEffect(),
-    //        FishEffectType.Stun => gameObject.AddComponent<StunEffect>(),
-    //        FishEffectType.StunInitiator => gameObject.AddComponent<StunInitiatorEffet>(),
-    //        FishEffectType.SprintSpeed => CreateSprintEffect(),
-    //        FishEffectType.FreezeTime => CreateFreezeTimeEffect(),
-    //        FishEffectType.Poison => CreatePoisonEffect(),
-    //        FishEffectType.Blindness => gameObject.AddComponent<BlindnessEffect>(),
-    //        _ => null
-    //    };
-    //}
-
     Effect InitNewEffect(FishEffectType type) {
         return type switch {
             FishEffectType.Shield => CreateShieldEffect(),
@@ -385,11 +267,6 @@ public class EffectManager : MonoBehaviour {
     private Effect CreateShieldEffect() {
         if (!IsHaveShield)
             return null;
-        //if (shieldObj == null) return null;
-
-        //ShieldEffect shieldEffect = gameObject.AddComponent<ShieldEffect>();
-        //shieldEffect.Init(shieldObj);
-        //existingComponents[FishEffectType.Shield] = shieldEffect; // upd cache
 
         ShieldEffect shieldEffect = new(audioManager,
             fishAdditionalComponentManager,
@@ -401,35 +278,19 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateCurrentEffect() {
-        //CurrentEffect speedEffect = gameObject.AddComponent<CurrentEffect>();
-        //speedEffect.Init(currentBubblesWhirl);
-
-        //if (speedEffectSource != null)
-        //    speedEffectSource.enabled = isPlayerFish;
-        //existingComponents[FishEffectType.CurrentSpeed] = speedEffect; //upd cache
-
         CurrentEffect speedEffect = new(fishAdditionalComponentManager, transform, whirlLocalPos);
 
         if (speedEffectSource != null)//not null only for player
             speedEffectSource.enabled = true;
-        //    speedEffectSource.enabled = fish.IsPlayer;
 
         return speedEffect;
     }
 
     private Effect CreateSprintEffect() {
-        //SprintEffect sprintEffect = gameObject.AddComponent<SprintEffect>();
-        //sprintEffect.Init(waterTrail, fishAnim);
-
-        //if (speedEffectSource != null)
-        //    speedEffectSource.enabled = isPlayerFish;
-        //existingComponents[FishEffectType.SprintSpeed] = sprintEffect; // upd cache
-
         SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, editableTransform, whirlLocalPos);
 
         if (speedEffectSource != null)
             speedEffectSource.enabled = true;
-        //    speedEffectSource.enabled = fish.IsPlayer;
 
         return sprintEffect;
     }
@@ -438,12 +299,7 @@ public class EffectManager : MonoBehaviour {
         if (!fish.IsPlayer)
             return null;
 
-        //StopTimeEffect stopTimeEffect = gameObject.AddComponent<StopTimeEffect>();
-        //stopTimeEffect.Init(fishSkinnedRenderer, fishAnim.FishAnimator);
-        //existingComponents[FishEffectType.FreezeTime] = stopTimeEffect; // upd cache
-
         StopTimeEffect stopTimeEffect = new(fishSkinnedRenderer, fishAnim.FishAnimator);
-
         return stopTimeEffect;
     }
 
@@ -451,18 +307,13 @@ public class EffectManager : MonoBehaviour {
         if (fish.Level == FishLevel.Cuttlefish || fish.Level == FishLevel.Pufferfish)
             return null;
 
-        //PoisonEffect poisonEffect = gameObject.AddComponent<PoisonEffect>();
-        //existingComponents[FishEffectType.Poison] = poisonEffect; // upd cache
-
         PoisonEffect poisonEffect = new();
-
         return poisonEffect;
     }
 
     private void FixedUpdate() {
         if (!fish.IsPlayer || speedEffectSource == null
-            || (!hasSpeedEffects && speedEffectSource.volume == 0f)
-            /*|| !speedEffectSource.enabled*/)
+            || (!hasSpeedEffects && speedEffectSource.volume == 0f))
             return;
 
         float velocity = (prevPos - rb.position).magnitude / Time.fixedDeltaTime;
@@ -495,15 +346,7 @@ public class EffectManager : MonoBehaviour {
                 activeEffects[type].Enabled = false;
             }
 
-        //    foreach (KeyValuePair<FishEffectType, Effect> kvp in activeEffects.ToArray()) { //safe iteration
-        //if (kvp.Value != null) {
-        //    kvp.Value.OnEffeñtExpire -= RemoveEffect;
-        //    kvp.Value.Enabled = false;
-        //    //Destroy(kvp.Value);
-        //}
-        //}
         activeEffects.Clear();
-
         SetAllIconsActive(false);
     }
 }
