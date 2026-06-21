@@ -32,6 +32,7 @@ public class GameAdsManager : MonoBehaviour {
     //public List<Button> RevertiveButtons => reviveButtons;
     //public List<Button> RestartButtons => restartButtons;
     //public List<TextMeshProUGUI> LimitTxtUI => limitTxtUI;
+    public bool IsAdStartShow { get; private set; } = false;
 
     private LevelPlayRewardedAd rewardedAd;
     private LevelPlayInterstitialAd interstitialAd;
@@ -46,7 +47,7 @@ public class GameAdsManager : MonoBehaviour {
     private const string REWARDED_LIMIT_KEY = "DailyRewardedCount";
     private const string LAST_AD_DATE_KEY = "LastAdDate";
     private const int MAX_DAILY_REWARDED = 22;
-    private const float INTERSTETIAL_TIME_INTERVAL = 4 * 60;//m*s (m)
+    private const float INTERSTETIAL_TIME_INTERVAL = 2 * 60;//m*s (m)
 
 
     private void Awake() {
@@ -85,11 +86,11 @@ public class GameAdsManager : MonoBehaviour {
         LevelPlay.Init(APP_KEY, GetUserID());
     }
 
-    bool IsInterstetialTime => Time.time - timeAfterInterstetial >= timeAfterInterstetial;
+    bool IsInterstetialTime => Time.time - timeAfterInterstetial >= INTERSTETIAL_TIME_INTERVAL;
     void ResetInterstetialTime() => timeAfterInterstetial = Time.time;
 
     bool IsListNeedToCopy<T>(List<T> currentList, List<T> newList) =>
-         (currentList == null || currentList.Count == 0)
+         (currentList == null || currentList.Count == 0 || currentList[0] == null)
             && newList != null && newList.Count > 0;
 
     void InitAdButtons() {
@@ -150,17 +151,20 @@ public class GameAdsManager : MonoBehaviour {
 
     private void OnReviveClicked() {//rewarded
         adTarget = AdTarget.ExtraLife;
+        IsAdStartShow = true;
 
         // check premium\founders
         if (ProgressSaver.IsPlayerHasAdImmunitet().premium) {
             Debug.Log("The player has a premium account! We'll revive it for free.");
             RewardedRewardBeh();
+            IsAdStartShow = false;
             return;
         }
 
         if (!isSdkInitialized) {
             Debug.LogWarning("The ad isn't ready yet; the SDK is initializing.");
             adTarget = AdTarget.None;
+            IsAdStartShow = false;
             return;
         }
 
@@ -168,6 +172,7 @@ public class GameAdsManager : MonoBehaviour {
         if (!CanWatchRewarded()) {
             Debug.Log("The free revival attempts have ended for today!");
             adTarget = AdTarget.None;
+            IsAdStartShow = false;
             return;
         }
 
@@ -178,6 +183,7 @@ public class GameAdsManager : MonoBehaviour {
             rewardedAd.LoadAd();
         }
         else {//try load again if failed load           
+            IsAdStartShow = true;
             Debug.Log("Rewarded isn't ready. Let's try downloading it...");
             loadingPanel.SetActive(false);
             //gui.ActivateRespawnWnd();
@@ -201,6 +207,7 @@ public class GameAdsManager : MonoBehaviour {
             return false;
         }
 
+        IsAdStartShow = true;
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
             interstitialAd.ShowAd();
             interstitialAd.LoadAd();
@@ -215,6 +222,7 @@ public class GameAdsManager : MonoBehaviour {
         PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, currentCount + 1);
         PlayerPrefs.Save();
         SetLimitAdAmountTxt(MAX_DAILY_REWARDED - currentCount);
+        IsAdStartShow = false;
 
         RewardedRewardBeh();
     }
@@ -227,15 +235,17 @@ public class GameAdsManager : MonoBehaviour {
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
         SetButtonsInteractable(true);
         loadingPanel.SetActive(false);
+        IsAdStartShow = false;
     }
 
     void OnRewardedLoadFailed(LevelPlayAdError error) {
+        IsAdStartShow = false;
         SetButtonsInteractable(true);
         loadingPanel.SetActive(false);
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
 
-    private void OnRetryClicked() {//revive -> interstitial
+    public void OnRetryClicked() {//revive -> interstitial
         adTarget = AdTarget.JustRespawn;
 
         if (IsInterstetialTime)
@@ -268,6 +278,7 @@ public class GameAdsManager : MonoBehaviour {
     void OnInterstitialAdClosed(LevelPlayAdInfo adInfo) {
         SetButtonsInteractable(true);
         loadingPanel.SetActive(false);
+        IsAdStartShow = false;
         interstitialAd.LoadAd(); //load immediately load on backgr new ad
         InterstitialRespawnBeh();
     }
@@ -275,6 +286,7 @@ public class GameAdsManager : MonoBehaviour {
     void OnInterstitialLoadFailed(LevelPlayAdError error) {
         SetButtonsInteractable(true);
         loadingPanel.SetActive(false);
+        IsAdStartShow = false;
         Debug.LogWarning($"Loading error Interstitial: {error}");
     }
 

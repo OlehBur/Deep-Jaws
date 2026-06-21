@@ -23,6 +23,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] GameObject respawnWnd;
+    [SerializeField] TextMeshProUGUI respawnTimer;
     [SerializeField] TMP_Dropdown languageDropdown;
     [SerializeField] GameObject[] gamemodePauseTitles;
     [SerializeField] Image gameModeWndBackground;
@@ -37,6 +38,7 @@ public class MainmenuManager : MonoBehaviour {
     private Color targetGMwndColor;
     private Color targetLightGMcolor;
     private GPG_Manager gpg_manager;
+    private int respawnTime = 0;
 
     private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
     private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
@@ -49,6 +51,7 @@ public class MainmenuManager : MonoBehaviour {
 
     private const string LOCALE_PREF_KEY = "LocaleIndex";
     private const string GM_KEY = "GameMode";
+    private const int RESPAWN_TIME = 5;
 
 
     private void Awake() {
@@ -65,7 +68,27 @@ public class MainmenuManager : MonoBehaviour {
         LanguageInit();
 
         if (spawnManager != null)
-            spawnManager.OnPlayerDied += () => respawnWnd.SetActive(true);
+            spawnManager.OnPlayerDied += ActivateRespawnWnd;
+    }
+
+    void ActivateRespawnWnd() {
+        respawnWnd.SetActive(true);
+        respawnTime = RESPAWN_TIME;
+
+        InvokeRepeating(nameof(RespawnWndTimer), 0f, 1f);
+    }
+
+    void RespawnWndTimer() {
+        respawnTimer.text = respawnTime.ToString();
+        --respawnTime;
+
+        if (GameAdsManager.Instance.IsAdStartShow || !respawnWnd.activeInHierarchy) {
+            CancelInvoke(nameof(RespawnWndTimer));
+            return;
+        }
+
+        if (respawnTime < 0)
+            GameAdsManager.Instance.OnRetryClicked();
     }
 
     public void ActivatePauseWnd(bool isActivate) {

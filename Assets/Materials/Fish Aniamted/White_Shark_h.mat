@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -28,6 +28,26 @@ Material:
     m_TexEnvs:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 4168d7d9b0beecf4a8014177d9ac2767, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0a62e89f186d4d6784dc41b5adf3592f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_274de14cd3654efd9bf13cc7e14524cb_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_443da9bb584a45ba819e31fbd8f67305_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_6acb90cfa92a45c3a413467c4b98817e_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_a8c5c7ba2a814780a2c6ced4275804de_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -44,11 +64,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ChameleonSkin: 0
+    - _FishMetallic: 0
+    - _FishMetallic_Normal: 0
+    - _FishSmoothness: 0.35
     - _FixerOffset: -1.9
     - _Frequency: 7.3
+    - _InvisiblySkin: 0
     - _MaxRotationValue: 0.088
+    - _MercuryScale: 3
+    - _MercurySkin: 0
     - _Offset: 0.25
-    - _QueueControl: 0
+    - _QueueControl: 1
     - _QueueOffset: 0
     - _RotationRad: 0
     - _UnscaledTime: 0

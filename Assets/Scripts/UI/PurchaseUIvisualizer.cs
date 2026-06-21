@@ -11,6 +11,15 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     private void Start() {
         GamePurchaseManager.Instance.OnUpdateAccountTittles += InitAccountTittles;
+        LocalLoadTitles();
+    }
+
+    void LocalLoadTitles() {
+        if (ProgressSaver.IsDataExist()) {
+            SaveData_Player currentData = ProgressSaver.Load();
+            if (currentData != null)
+                InitAccountTittles(currentData.isNoAD, currentData.isPremiumUser, currentData.isFounder);
+        }
     }
 
     void OpenLoyaltyRewardedWnd() {

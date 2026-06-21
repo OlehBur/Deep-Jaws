@@ -70,7 +70,8 @@ public class AudioManager : MonoBehaviour {
             _ => damage
         };
 
-        vfxGameAudioSource.PlayOneShot(audioClip);
+        if (vfxGameAudioSource != null)
+            vfxGameAudioSource.PlayOneShot(audioClip);
     }
 
 
@@ -131,8 +132,7 @@ public class AudioManager : MonoBehaviour {
     //load audio data on start
     void OnEnable() {
         masterSlider.onValueChanged.AddListener(value => MasterVolume = SliderToDB(value, MAX_MASTER_DB));
-        musicSlider.onValueChanged.AddListener(value =>
-        {
+        musicSlider.onValueChanged.AddListener(value => {
             MusicVolume = SliderToDB(value, MAX_MUSIC_DB);
 
             if (value == 0f)
