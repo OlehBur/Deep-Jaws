@@ -11,14 +11,21 @@ public class GamePurchaseManager : MonoBehaviour {
     /// <summary>
     /// no ads, premium, founders
     /// </summary>
-    public event Action<bool, bool, bool> OnUpdateAccountTittles;
+    public event Action<AccountTitles> OnUpdateAccountTittles;
+    public event Action<PurchasedSkins> OnUpdatePurchasedSkins;
 
     [SerializeField] GPG_Manager GPGmanager;
+    [SerializeField] AccountTitles ac;
     //[SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
 
     private StoreController m_StoreController;
+    //private AccountTitles accountTitles;
+    //private PurchasedSkins purchasedSkins;
     private const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
     private const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
+    private const string ASHFLOW_PRODUCT_ID = "com.deepjaws.ashflow";
+    private const string CHAMELEON_PRODUCT_ID = "com.deepjaws.chameleon";
+    private const string MERCURY_PRODUCT_ID = "com.deepjaws.mercury";
 
 
     private void Awake() {
@@ -30,7 +37,7 @@ public class GamePurchaseManager : MonoBehaviour {
         Instance = this;
         DontDestroyOnLoad(gameObject);
         //local fast check on start without internet
-        CheckPremiumLocally();
+        CheckPurchasesLocally();
     }
 
     void ReInit(GPG_Manager GPGmanager, /*PurchaseUIvisualizer purchaseUIvisualizer,*/ StoreController m_StoreController) {
@@ -68,16 +75,29 @@ public class GamePurchaseManager : MonoBehaviour {
         }
     }
 
-    private void CheckPremiumLocally() {
+    private void CheckPurchasesLocally() {
         if (ProgressSaver.IsDataExist()) {
             SaveData_Player currentData = ProgressSaver.Load();
             if (currentData != null) {
+                AccountTitles accountTitles = new();
+                PurchasedSkins purchasedSkins = new();
+
                 // player has immunited to ad purchases 
                 if (currentData.isPremiumUser || currentData.isNoAD) {
                     Debug.Log("Local check: Paid status found in the save file! Disabling interstitial ads.");
-                    ApplyNoAdsLogic(true);
-                    return;
+                    ApplyNoAdsLogic(true);                    
                 }
+                accountTitles.HasPremium = currentData.isPremiumUser;
+                accountTitles.HasNoAd = currentData.isNoAD;
+                accountTitles.HasFounder = currentData.isFounder;
+                purchasedSkins.Mercury=currentData.hasMercurySkin;
+                purchasedSkins.Chameleon = currentData.hasChameleon;
+                purchasedSkins.Ashflow = currentData.hasAshflowSkin;
+                purchasedSkins.Selected = currentData.selectedSkin;
+
+                OnUpdateAccountTittles?.Invoke(accountTitles);
+                OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
+                return;
             }
         }
 
@@ -87,61 +107,73 @@ public class GamePurchaseManager : MonoBehaviour {
 
     // update GP purchases history
     private void OnPurchasesFetched(Orders orders) {
-        bool hasPremium = false;
-        bool hasFounder = false;
-        bool hasNoAd = false;
+        AccountTitles accountTitles = new();
+        PurchasedSkins purchasedSkins = new();
+        //bool hasPremium = false;
+        //bool hasFounder = false;
+        //bool hasNoAd = false;
 
-        if (orders.ConfirmedOrders != null) {//full premium
-            if (orders.ConfirmedOrders.Any(order => order.Info != null &&
-                                                    order.Info.PurchasedProductInfo != null &&
-                                                    order.Info.PurchasedProductInfo.Any(p => p.productId == PREMIUM_PRODUCT_ID))) {
-                hasPremium = true;
-            }//only interstitial remove
-            if (orders.ConfirmedOrders.Any(order => order.Info != null &&
-                                                    order.Info.PurchasedProductInfo != null &&
-                                                    order.Info.PurchasedProductInfo.Any(p => p.productId == NOADD_PRODUCT_ID))) {
-                hasNoAd = true;
-            }
+        if (orders.ConfirmedOrders != null) {
+            //full premium
+            if (IsHasProduct(orders, PREMIUM_PRODUCT_ID))
+                accountTitles.HasPremium = true;
+
+            //only interstitial remove
+            if (IsHasProduct(orders, NOADD_PRODUCT_ID))
+                accountTitles.HasNoAd = true;
 
             //old founder check
-            if (orders.ConfirmedOrders.Any(order => order.Info != null &&
-                                                    order.Info.PurchasedProductInfo != null &&
-                                                    order.Info.PurchasedProductInfo.Any(p => p.productId == Application.identifier))) {
-                hasPremium = true; //old buyers get all prem
-                hasFounder = true;
+            if (IsHasProduct(orders, Application.identifier)) {
+                accountTitles.HasPremium = true; //old buyers get all prem
+                accountTitles.HasFounder = true;
 
                 GPGmanager.OnAddToFoundersLeaderboard();
             }
+
+            if (IsHasProduct(orders, ASHFLOW_PRODUCT_ID))
+                purchasedSkins.Ashflow = true;
+
+            if (IsHasProduct(orders, MERCURY_PRODUCT_ID))
+                purchasedSkins.Mercury = true;
+
+            if(IsHasProduct(orders,CHAMELEON_PRODUCT_ID))
+                purchasedSkins.Chameleon = true; 
         }
-        UpdatePremiumInSaveFile(hasNoAd, hasPremium, hasFounder);
-        OnUpdateAccountTittles?.Invoke(hasNoAd, hasPremium, hasFounder);
+
+        UpdatePremiumInSaveFile(accountTitles);
+        OnUpdateAccountTittles?.Invoke(accountTitles);
+        OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
         //purchaseUIvisualizer.InitAccountTittles(hasNoAd, hasPremium, hasFounder);
     }
 
+    bool IsHasProduct(Orders orders, string PRODUCT_ID) {
+        return orders.ConfirmedOrders.Any(order => order.Info != null &&
+                                                     order.Info.PurchasedProductInfo != null &&
+                                                     order.Info.PurchasedProductInfo.Any(p => p.productId == PRODUCT_ID));
+    }
+
     // save purchase to ProgressSaver
-    private void UpdatePremiumInSaveFile(bool isNoAd, bool isPremium, bool isFounder) {
+    private void UpdatePremiumInSaveFile(AccountTitles accountTitles) {
         SaveData_Player currentData = ProgressSaver.IsDataExist() ?
             ProgressSaver.Load() : new SaveData_Player();
 
         if (currentData != null) {
-            currentData.isPremiumUser = isPremium;
-            currentData.isNoAD = isNoAd;
-            currentData.isFounder = isFounder;
+            currentData.isPremiumUser = accountTitles.HasPremium;
+            currentData.isNoAD = accountTitles.HasNoAd;
+            currentData.isFounder = accountTitles.HasFounder;
 
             ProgressSaver.Save(currentData);
-            Debug.Log($"IAP v5: Purchase status has been successfully synced with Google Play and saved! Premium: {isPremium}");
+            Debug.Log($"IAP v5: Purchase status has been successfully synced with Google Play and saved! Premium: {accountTitles.HasPremium}");
 
-            ApplyNoAdsLogic(isPremium || isNoAd);//enab\disab ad in case
+            ApplyNoAdsLogic(accountTitles.HasPremium || accountTitles.HasNoAd);//enab\disab ad in case
         }
     }
 
     private void ApplyNoAdsLogic(bool disableAds) {
-        if (disableAds) {
+        if (disableAds) 
             Debug.Log("ADVERTISEMENTS ARE DISABLED FOR THIS SESSION");
-        }
-        else {
+        else 
             Debug.Log("ADVERTISEMENT ACTIVE");
-        }
     }
 
     private void OnProductsFetched(List<Product> products) {

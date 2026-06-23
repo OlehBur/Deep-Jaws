@@ -9,7 +9,6 @@ using UnityEngine;
 /// </summary>
 public class SpawnManager : MonoBehaviour //with ObjectPool
 {
-
     [Header("Managers Dependencies")]
     [SerializeField] FishAdditionalCompManager fishAdditionalComponentManager;
     [SerializeField] AudioManager audioManager;
@@ -87,6 +86,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
 
     public void Init() {
+        LoadSaveInfo();
+
         fishAdditionalComponentManager.Init(SHIELDS_POOL_CNT,
             DEAD_BUBBLES_POOL_CNT,
             BITE_PARTICLES_POOL_CNT,
@@ -110,6 +111,19 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
         if (GameStaticInfo.Gamemode == GameMode.Hard)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_the_hard_way);
+    }
+
+    public void LoadSaveInfo() {
+        if (ProgressSaver.IsDataExist()) {
+            SaveData_Player currentData = ProgressSaver.Load();
+     
+            if (currentData != null) {
+                PurchasedSkins purchasedSkins = new();
+                purchasedSkins.Mercury = currentData.hasMercurySkin;
+                purchasedSkins.Chameleon = currentData.hasChameleon;
+                purchasedSkins.Ashflow = currentData.hasAshflowSkin;
+            }
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

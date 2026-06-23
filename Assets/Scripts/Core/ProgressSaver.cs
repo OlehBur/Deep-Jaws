@@ -62,8 +62,13 @@ public class SaveData_Player {
     public bool isNoAD = false;
     public bool isFounder = false;
 
+    public bool hasAshflowSkin = false;
+    public bool hasMercurySkin = false;
+    public bool hasChameleon = false;
+    public Skins selectedSkin;
+
     public bool IsDataValid =>
         (playerPosition != null && playerRotation != null
-        && playerLevel != INVALID_VAL && playerHealth != INVALID_VAL 
+        && playerLevel != INVALID_VAL && playerHealth != INVALID_VAL
         && playerProgress != INVALID_VAL);
 }

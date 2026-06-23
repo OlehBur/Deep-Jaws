@@ -23,6 +23,27 @@ public enum GameMode {
     None
 }
 
+public struct AccountTitles {
+    public bool HasNoAd;
+    public bool HasPremium;
+    public bool HasFounder;
+}
+
+public enum Skins {
+    Default,
+    Mercury,
+    Chameleon,
+    Ashflow
+}
+
+public struct PurchasedSkins {
+    public bool Mercury;//1
+    public bool Chameleon;//2
+    public bool Ashflow;//3
+    public Skins Selected;
+}
+
+
 public static class GameStaticInfo {
     public static GameMode Gamemode { get; set; } = GameMode.Easy;
     public const int GAMEMODES_COUNT = 3;

@@ -2009,7 +2009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334f59943d5b46d4a9e36a8015313427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureName: Invisibly
+  textureName: Ash
   shaderMat: {fileID: -876546973899608171, guid: 703b11460a7abfc42b02c87b780582b2, type: 3}
   textureSize: {x: 1080, y: 1080}
   tapToBake: 0
@@ -2503,6 +2503,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
       propertyPath: m_Name
       value: Hammerhead_Shark
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3555,7 +3559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3bb8fa7e77b4e884f9b5f24ecdcb2e1b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
