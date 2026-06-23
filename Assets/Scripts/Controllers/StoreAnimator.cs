@@ -1,50 +1,14 @@
-using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-
-[Serializable]
-public class AccountsButtons {
-    public Button buyNoAd;
-    public Button buyPremium;
-    public TextMeshProUGUI noAdTxt;
-    public TextMeshProUGUI premiumTxt;
-}
-
-[Serializable]
-public class SkinsButtons {
-    public Button buyMercury;
-    public Button selectMercury;
-    public TextMeshProUGUI mercurySelectTxt;
-    public Button buyChameleon;
-    public Button selectChameleon;
-    public TextMeshProUGUI chameleonSelectTxt;
-    public Button buyAshflow;
-    public Button selectAshflow;
-    public TextMeshProUGUI ashflowSelectTxt;
-}
 
 public class StoreAnimator : MonoBehaviour {
     [SerializeField] Transform[] transforms;
-    [SerializeField] AccountsButtons accountsButtons;
-    [SerializeField] SkinsButtons skinsButtons;
-
+   
     private BlinkAnim[] blinkAnims;
 
 
     void Start() {
-        GamePurchaseManager.Instance.OnUpdatePurchasedSkins += UpdateSkinsSection;
-        GamePurchaseManager.Instance.OnUpdateAccountTittles += UpdateAccountSection;
         InitBlinks();
-    }
-
-    void UpdateSkinsSection(PurchasedSkins skins) {
-
-    }
-
-    void UpdateAccountSection(AccountTitles accountTitles) {
-
     }
 
     private void Update() {
@@ -78,7 +42,7 @@ public class BlinkAnim {
         this.objTransform = transform;
         startScale = transform.localScale.x;
 
-        seed = Random.Range(0f, 100f);
+        seed = UnityEngine.Random.Range(0f, 100f);
     }
 
     public void Update() {

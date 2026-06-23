@@ -14,20 +14,27 @@ using UnityEngine.UI;
 public class MainmenuManager : MonoBehaviour {
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
+
+    [Header("MainMenu Scene")]
     [SerializeField] Light mainMenuLight;
     [SerializeField] Animator gmWndAnimator;
-    [SerializeField] GameObject pauseWnd;
-    [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] FaderScene faderScene;
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
-    [SerializeField] GameObject respawnWnd;
-    [SerializeField] TextMeshProUGUI respawnTimer;
     [SerializeField] TMP_Dropdown languageDropdown;
-    [SerializeField] GameObject[] gamemodePauseTitles;
     [SerializeField] Image gameModeWndBackground;
     [SerializeField] Image signInIcon;
+
+    [Header("Game Scene")]
+    /// <summary>
+    /// only for game scene
+    /// </summary>
+    [SerializeField] GameObject[] gamemodePauseTitles;
+    [SerializeField] GameObject pauseWnd;
+    [SerializeField] SpawnManager spawnManager;
+    [SerializeField] GameObject respawnWnd;
+    [SerializeField] TextMeshProUGUI respawnTimer;
 
     public static readonly string GAME_SCENE_NAME = "Game";
     public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
@@ -241,7 +248,8 @@ public class MainmenuManager : MonoBehaviour {
         audioManager.SaveAudioData(); // Save current audio settings
         graphicManager.SaveGraphicsData(); // Save current graphic settings
         PlayerLeaderboardScore.SaveLoadedData();
-        ProgressSaver.Delete();
+        //ProgressSaver.Delete();
+        ProgressSaver.DeleteOnlyGameData();
     }
 
     public void OnSkipGuide() {

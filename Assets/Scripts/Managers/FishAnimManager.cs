@@ -13,16 +13,17 @@ public class FishAnimManager : MonoBehaviour {
     [SerializeField] bool isUseRotatingShader = false;
 
     public Animator FishAnimator { get { return animator; } private set { animator = value; } }
+    public SkinnedMeshRenderer FishSkinnedMesh => fishSkinnedMesh;
     public bool IsInited { get; private set; } = false;
-    
-    private FishAdditionalCompManager fishAddCompMngr;    
-    private AudioManager audioManager;   
-    private MaterialPropertyBlock matPropBlock;    
+
+    private FishAdditionalCompManager fishAddCompMngr;
+    private AudioManager audioManager;
+    private MaterialPropertyBlock matPropBlock;
     private float matDefSprintSpeed; // default sprint speed in the material
     //private Material fishMat;
     private float maxShapeRotationVal;
     private EffectManager effectManager;
-    
+
     private const float BUBBLE_INIT_X_OFFSET = 0;
     private const string BITE_TRIGGER_NAME = "bite"; // name of the trigger for bite animation
     private const float SPRINT_SPEED_MULTIPLIER = 2f; // multiplier for sprint speed
@@ -53,7 +54,7 @@ public class FishAnimManager : MonoBehaviour {
 
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
-          }
+    }
 
     private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {
         matPropBlock = new MaterialPropertyBlock();

@@ -501,5 +501,6 @@ public class PlayerUIController : MonoBehaviour {
 
     public void OnDestroy() {
         PlayerReConnect(playerFish, false);
+        StopAllCoroutines();
     }
 }

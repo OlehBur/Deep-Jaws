@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using UnityEngine;
 
 public enum FishLevel {
@@ -23,13 +24,29 @@ public enum GameMode {
     None
 }
 
+public enum AccountPurchase {
+    NoAd,
+    Premium,
+    SupportDev
+}
+
 public struct AccountTitles {
     public bool HasNoAd;
     public bool HasPremium;
     public bool HasFounder;
+    public string NoAdPrice;
+    public string PremiumPrice;
+    public string SupportDevPrice;
+    public string GetPrice(AccountPurchase ap) =>
+    ap switch {
+        AccountPurchase.SupportDev => SupportDevPrice,
+        AccountPurchase.Premium => PremiumPrice,
+        AccountPurchase.NoAd => NoAdPrice,
+        _ => "---"
+    };
 }
 
-public enum Skins {
+public enum Skin {
     Default,
     Mercury,
     Chameleon,
@@ -40,7 +57,17 @@ public struct PurchasedSkins {
     public bool Mercury;//1
     public bool Chameleon;//2
     public bool Ashflow;//3
-    public Skins Selected;
+    public string MercuryPrice;
+    public string ChameleonPrice;
+    public string AshflowPrice;
+    public Skin Selected;
+    public string GetPrice(Skin s) =>
+        s switch {
+            Skin.Chameleon => ChameleonPrice,
+            Skin.Mercury => MercuryPrice,
+            Skin.Ashflow => AshflowPrice,
+            _ => "---"
+        };
 }
 
 
@@ -74,6 +101,12 @@ public static class GameStaticInfo {
     public const float STUN_DEFAULT_DURATION = 15f; //default stun duration
 
     public static bool IS_ENEMY_DETECTOR_ENABLED { get; set; } = false;
+
+    public static readonly int FISH_WAVING_MERCURY_PROP = Shader.PropertyToID("_MercurySkin");
+    public static readonly int FISH_WAVING_CHAMELEON_PROP = Shader.PropertyToID("_ChameleonSkin");
+    public static readonly int FISH_WAVING_MERCURYSCALE_PROP = Shader.PropertyToID("_MercuryScale");
+    public static readonly int FISH_WAVING_ASHFLOW_PROP = Shader.PropertyToID("_AshflowSkin");
+    public const int MERCURY_SKIN_BASE_SCALE = 3;
 
     public enum LocalizationID {
         English = 0,

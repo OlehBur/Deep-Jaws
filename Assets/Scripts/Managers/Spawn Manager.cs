@@ -62,7 +62,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private Vector3 playerPos;
     private Quaternion playerRot;
     private float playerProg;
-    private SaveData_Player saveData;
+    private SaveData saveData;
     /// <summary>
     /// тільки для новооновлених гравців які можливо перебувають в недозволеній зоні відповідно до рівня
     /// only for newly updated players who may be in an unauthorized zone according to their level
@@ -115,8 +115,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     public void LoadSaveInfo() {
         if (ProgressSaver.IsDataExist()) {
-            SaveData_Player currentData = ProgressSaver.Load();
-     
+            SaveData currentData = ProgressSaver.Load();
+
             if (currentData != null) {
                 PurchasedSkins purchasedSkins = new();
                 purchasedSkins.Mercury = currentData.hasMercurySkin;
@@ -149,10 +149,52 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             playerPool_FishComponents[playerInd] = newPlayerFish;
 
             PrefabNamingTaging(playerPrefab, newPlayerFish.Level, true);
-            PrefabInitFishAnimAndEffectManagers(playerPrefab, true);
+            PrefabInitFishAnimAndEffectManagers(playerPrefab, out FishAnimManager fishAnim, true);
+            InitPlayerSkins(newPlayerFish, fishAnim);
             AddInitAutoScalerComponent(playerPrefab);
 
             playerPrefab.SetActive(false);
+        }
+    }
+
+    void InitPlayerSkins(Fish fish, FishAnimManager fishAnim) {
+        //load selected skin
+        Skin selectedSkin;
+        SaveData currentData = ProgressSaver.IsDataExist() ?
+            ProgressSaver.Load() : new SaveData();
+        if (currentData != null && currentData.selectedSkin != Skin.Default)
+            selectedSkin = currentData.selectedSkin;
+        else
+            return;
+
+        MaterialPropertyBlock propBlock = new MaterialPropertyBlock();
+        SkinnedMeshRenderer renderer = fishAnim.FishSkinnedMesh;
+
+        switch (selectedSkin) {
+            case Skin.Chameleon:
+            renderer.GetPropertyBlock(propBlock);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+            renderer.SetPropertyBlock(propBlock);
+            break;
+
+            case Skin.Mercury:
+            renderer.GetPropertyBlock(propBlock);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)fish.Level + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+            renderer.SetPropertyBlock(propBlock);
+            break;
+
+            case Skin.Ashflow:
+            renderer.GetPropertyBlock(propBlock);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+            propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+            renderer.SetPropertyBlock(propBlock);
+            break;
         }
     }
 
@@ -189,7 +231,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 prefab = Instantiate(prefabs[i], fishPoolParent);
                 globalPool_Objects[i, j] = prefab;
 
-                PrefabInitFishAnimAndEffectManagers(prefab);
+                PrefabInitFishAnimAndEffectManagers(prefab, out FishAnimManager fishAnim);
 
                 enemyFish = prefab.GetComponent<Fish>();
                 globalPool_Components[i, j] = enemyFish;
@@ -201,8 +243,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void PrefabInitFishAnimAndEffectManagers(GameObject prefab, bool isPlayer = false) {
-        if (prefab.TryGetComponent(out FishAnimManager fishAnim) && prefab.TryGetComponent(out EffectManager effectManager)) {
+    void PrefabInitFishAnimAndEffectManagers(GameObject prefab, out FishAnimManager fishAnim, bool isPlayer = false) {
+        if (prefab.TryGetComponent(out fishAnim) && prefab.TryGetComponent(out EffectManager effectManager)) {
             if (isPlayer) {
                 fishAnim.Init(audioManager, effectManager, fishAdditionalComponentManager);
                 effectManager.Init(audioManager, fishAdditionalComponentManager);
@@ -211,7 +253,6 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 fishAnim.Init(null, effectManager, fishAdditionalComponentManager);
                 effectManager.Init(null, fishAdditionalComponentManager);
             }
-
         }
     }
 
@@ -264,13 +305,14 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SavePlayerData() {
-        saveData = new SaveData_Player {
-            playerPosition = PlayerFish.transform.position,
-            playerRotation = PlayerFish.transform.rotation,
-            playerHealth = PlayerFish.Health,
-            playerLevel = (int)PlayerFish.Level,
-            playerProgress = PlayerFish.Progress
-        };
+        SaveData saveData = ProgressSaver.IsDataExist() ? ProgressSaver.Load() : new SaveData();
+
+        saveData.playerPosition = PlayerFish.transform.position;
+        saveData.playerRotation = PlayerFish.transform.rotation;
+        saveData.playerHealth = PlayerFish.Health;
+        saveData.playerLevel = (int)PlayerFish.Level;
+        saveData.playerProgress = PlayerFish.Progress;
+
         ProgressSaver.Save(saveData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
@@ -488,7 +530,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         int currnentRandLvl = 0;
 
         //spawn player from save
-        if (saveData != null && saveData.IsDataValid) {
+        if (saveData != null && saveData.IsGameDataValid) {
             PlayerFish = SpawnPlayerFish(saveData.playerPosition, saveData.playerRotation, true, saveData.playerLevel, saveData.playerProgress);
         }
         else//for begin
