@@ -141,22 +141,22 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         propBlock = new MaterialPropertyBlock();
 
         chameleonRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
         chameleonRenderer.SetPropertyBlock(propBlock);
 
         mercuryRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
         propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)FishLevel.Moray + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
         mercuryRenderer.SetPropertyBlock(propBlock);
 
         ashflowRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
         ashflowRenderer.SetPropertyBlock(propBlock);
     }
 

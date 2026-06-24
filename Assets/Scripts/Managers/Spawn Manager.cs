@@ -173,26 +173,26 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         switch (selectedSkin) {
             case Skin.Chameleon:
             renderer.GetPropertyBlock(propBlock);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
             renderer.SetPropertyBlock(propBlock);
             break;
 
             case Skin.Mercury:
             renderer.GetPropertyBlock(propBlock);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
             propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)fish.Level + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
             renderer.SetPropertyBlock(propBlock);
             break;
 
             case Skin.Ashflow:
             renderer.GetPropertyBlock(propBlock);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-            propBlock.SetInt(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
             renderer.SetPropertyBlock(propBlock);
             break;
         }

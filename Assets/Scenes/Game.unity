@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 78e3e073dd8ae0046b78f2cfd345a07b, type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -100250,8 +100250,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1746237835}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &832680030
@@ -136780,21 +136779,21 @@ MonoBehaviour:
   graphicManager: {fileID: 1167468965}
   mainMenuLight: {fileID: 0}
   gmWndAnimator: {fileID: 0}
-  pauseWnd: {fileID: 1536686831}
-  spawnManager: {fileID: 1167468958}
   continueButton: {fileID: 0}
   faderScene: {fileID: 1365067461}
   areUSureWnd: {fileID: 0}
   guideBookWnd: {fileID: 0}
-  respawnWnd: {fileID: 1948432449}
-  respawnTimer: {fileID: 504770452}
   languageDropdown: {fileID: 3899363771366420239}
+  gameModeWndBackground: {fileID: 0}
+  signInIcon: {fileID: 0}
   gamemodePauseTitles:
   - {fileID: 1046079283}
   - {fileID: 2121569645}
   - {fileID: 429122904}
-  gameModeWndBackground: {fileID: 0}
-  signInIcon: {fileID: 0}
+  pauseWnd: {fileID: 1536686831}
+  spawnManager: {fileID: 1167468958}
+  respawnWnd: {fileID: 1948432449}
+  respawnTimer: {fileID: 504770452}
 --- !u!114 &1167468962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204825,71 +204824,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5536005452097133351, guid: 595d0269e48ba2245ad5bbcd7e497064, type: 3}
   m_PrefabInstance: {fileID: 1746224309}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1746237833
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1746237835}
-  - component: {fileID: 1746237834}
-  m_Layer: 0
-  m_Name: Reflection Probe
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!215 &1746237834
-ReflectionProbe:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746237833}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Type: 0
-  m_Mode: 0
-  m_RefreshMode: 0
-  m_TimeSlicingMode: 0
-  m_Resolution: 128
-  m_UpdateFrequency: 0
-  m_BoxSize: {x: 10, y: 10, z: 10}
-  m_BoxOffset: {x: 0, y: 0, z: 0}
-  m_NearClip: 0.3
-  m_FarClip: 1000
-  m_ShadowDistance: 100
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.07342471, g: 0.4716981, b: 0.4265005, a: 0}
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IntensityMultiplier: 1
-  m_BlendDistance: 1
-  m_HDR: 1
-  m_BoxProjection: 0
-  m_RenderDynamicObjects: 0
-  m_UseOcclusionCulling: 1
-  m_Importance: 1
-  m_CustomBakedTexture: {fileID: 0}
---- !u!4 &1746237835
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746237833}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 832575519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1747035242
 GameObject:
   m_ObjectHideFlags: 0

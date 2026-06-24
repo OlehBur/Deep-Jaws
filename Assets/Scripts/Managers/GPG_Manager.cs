@@ -66,11 +66,14 @@ public class GPG_Manager : MonoBehaviour {
             Instance.ReInit(mainmenu);
             DontDestroyOnLoad(gameObject);
 
-            SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => { OnSign(); };//every time after scene load (game->mainmenu expmpl) - re-authenticate
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            //SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => { OnSign(); };//every time after scene load (game->mainmenu expmpl) - re-authenticate
         }
         else
             Destroy(gameObject);
     }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) => OnSign();
 
     void ReInit(MainmenuManager mainmenu) {
         this.mainmenu =
@@ -81,7 +84,7 @@ public class GPG_Manager : MonoBehaviour {
     public void OnShowAchievements() {
         //Social.ShowAchievementsUI();
         if (!isAuthenticated) {
-            //Debug.LogWarning("Cannot show achievements, not authenticated.");
+            Debug.LogWarning("Cannot show achievements, not authenticated.");
             return;
         }
         //Debug.LogWarning("OnShowAchievements called");
@@ -90,7 +93,7 @@ public class GPG_Manager : MonoBehaviour {
 
     public void OnShowLeaderboard() {
         if (!isAuthenticated) {
-            //    Debug.LogWarning("Cannot show leaderboard, not authenticated.");
+            Debug.LogWarning("Cannot show leaderboard, not authenticated.");
             return;
         }
         //Debug.LogWarning("OnShowLeaderboard called");
@@ -109,27 +112,39 @@ public class GPG_Manager : MonoBehaviour {
                 isAuthenticated = true;
             }
             else {
-                //Debug.Log("Authentication FAILED: " + result);
+                Debug.Log("Authentication FAILED: " + result);
                 isAuthenticated = false;
             }
         });
 
-        if (mainmenu == null)
+        UpdateMainMenuUI();
+
+        //if (mainmenu == null)
+        //    mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
+        ////Debug.Log("Main menu found: " + (mainmenu != null));
+
+        //yield return null; // Wait for the main menu to be ready
+
+        //mainmenu?.InitGPGServices(this);
+        //mainmenu?.ChangeSignInColor(isAuthenticated);
+    }
+
+    private void UpdateMainMenuUI() {
+        if (mainmenu == null) {
             mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
-        //Debug.Log("Main menu found: " + (mainmenu != null));
+        }
 
-        yield return null; // Wait for the main menu to be ready
-
-        mainmenu?.InitGPGServices(this);
-        mainmenu?.ChangeSignInColor(isAuthenticated);
+        if (mainmenu != null) {
+            mainmenu.InitGPGServices(this);
+            mainmenu.ChangeSignInColor(isAuthenticated);
+        }
     }
 
     public void OnSign() {
         PlayGamesPlatform.DebugLogEnabled = true;
 
         PlayGamesPlatform.Activate();
-        /*StartCoroutine(*/
-        TryAuthenticateWithDelay()/*)*/;
+        StartCoroutine(TryAuthenticateWithDelay());
         //Debug.Log("Attempting authentication...");
     }
 
@@ -168,7 +183,7 @@ public class GPG_Manager : MonoBehaviour {
         PlayGamesPlatform.Instance.UnlockAchievement(/*achievements[achievementKey]*/achievementKey);
 
     private void OnDestroy() {
-        SceneManager.sceneLoaded -= (Scene scene, LoadSceneMode mode) => { OnSign(); };
+        SceneManager.sceneLoaded -= OnSceneLoaded/*(Scene scene, LoadSceneMode mode) => { OnSign(); }*/;
     }
 }
 
