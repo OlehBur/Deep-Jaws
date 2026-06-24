@@ -20,7 +20,7 @@ public class EffectArea : MonoBehaviour {
         //Transform parent = other.transform.parent;
         Rigidbody victimRb = other.attachedRigidbody;
 
-        if (!other.isTrigger && victimRb != null && other.tag != "Shield" && victimRb.TryGetComponent(out EffectManager fem)) {
+        if (!GameManager.IsGamePaused && !other.isTrigger && victimRb != null && other.tag != "Shield" && victimRb.TryGetComponent(out EffectManager fem)) {
             fem.ApplyEffect(effectType, duration);
         }
     }

@@ -18,6 +18,14 @@ public static class ProgressSaver {
         return File.Exists(SavePath);
     }
 
+    public static bool IsGameDataExist() {
+        SaveData data = Load();
+        if (data != null)
+            return data.IsGameDataValid;
+        
+        return false;
+    }
+
     public static SaveData Load() {
         if (!IsDataExist())
             return null;
@@ -63,8 +71,8 @@ public class SaveData {
     private const int INVALID_VAL = -1;
 
     //game data
-    public Vector3 playerPosition;
-    public Quaternion playerRotation;
+    public Vector3 playerPosition = Vector3.zero;
+    public Quaternion playerRotation = Quaternion.identity;
     public float playerProgress = INVALID_VAL;
     public int playerLevel = INVALID_VAL;
     public int playerHealth = INVALID_VAL;
@@ -82,7 +90,7 @@ public class SaveData {
     public bool confirmedLoyalty = false;
 
     public bool IsGameDataValid =>
-        (playerPosition != null && playerRotation != null
+        (playerPosition != Vector3.zero && playerRotation != Quaternion.identity
         && playerLevel != INVALID_VAL && playerHealth != INVALID_VAL
         && playerProgress != INVALID_VAL);
 

@@ -211,9 +211,10 @@ public class GameAdsManager : MonoBehaviour {
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
             interstitialAd.ShowAd();
             interstitialAd.LoadAd();
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {

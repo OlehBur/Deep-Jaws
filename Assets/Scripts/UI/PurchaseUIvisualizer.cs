@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 
 
 [Serializable]
@@ -17,7 +18,7 @@ public class AccountsButtons {
                     .Cast<AccountPurchase>()
                     .ToArray();
 
-    public const string PURCHASED_TEXT = "PURCHASED";
+    //public const string PURCHASED_TEXT = "PURCHASED";
 
     public Button GetButton(AccountPurchase s) =>
         s switch {
@@ -55,8 +56,8 @@ public class SkinsButtons {
                     .Skip(1)//without default
                     .ToArray();
 
-    public const string SELECT_TEXT = "SELECT";
-    public const string SELECTED_TEXT = "SELECTED";
+    //public const string SELECT_TEXT = "SELECT";
+    //public const string SELECTED_TEXT = "SELECTED";
 
     public Button GetButton(Skin s, bool isSelect) =>
         isSelect ?
@@ -225,7 +226,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
             if (isOwned) {
                 skinsButtons.GetButton(purchasedSkins.Selected, SELECT_BUTTON_TEXT_ID).interactable = false;
-                skinsButtons.GetText(purchasedSkins.Selected, SELECT_BUTTON_TEXT_ID).text = SkinsButtons.SELECTED_TEXT;
+                skinsButtons.GetText(purchasedSkins.Selected, SELECT_BUTTON_TEXT_ID).text = /*SkinsButtons.SELECTED_TEXT*/LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_selected");
             }
         }
     }
@@ -234,7 +235,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         skinsButtons.GetButton(s, BUY_BUTTON_TEXT_ID).gameObject.SetActive(false);//buy disable
         skinsButtons.GetButton(s, SELECT_BUTTON_TEXT_ID).gameObject.SetActive(true);//select button active
         skinsButtons.GetButton(s, SELECT_BUTTON_TEXT_ID).interactable = true;//select interactable
-        skinsButtons.GetText(s, SELECT_BUTTON_TEXT_ID).text = SkinsButtons.SELECT_TEXT;
+        skinsButtons.GetText(s, SELECT_BUTTON_TEXT_ID).text = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_select")/*SkinsButtons.SELECT_TEXT*/;
     }
 
     void SaveSelectedSkinToProgress(Skin skin) {
@@ -279,7 +280,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     void BuyedAccountPurchUIBeh(AccountPurchase ap) {
         accountsButtons.GetButton(ap).interactable = false;//buy disable
-        accountsButtons.GetText(ap).text = AccountsButtons.PURCHASED_TEXT;
+        accountsButtons.GetText(ap).text = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_purchased");//AccountsButtons.PURCHASED_TEXT;
     }
 
     void LocalLoadTitlesAndSkins() {

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +19,8 @@ public class GameManager : MonoBehaviour {
 
     private const float FIXED_DELTA_TINE_LOW = .05f;
     private const float FIXED_DELTA_TINE_HIGH = .02f;
-    public static float currentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
+    public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
+    public static bool IsGamePaused => Time.timeScale == 0f;
     public static bool IsSceneReady { get; private set; } = false;
     private const float CANVAS_ACTIVATE_DELAY = .5f;
     private const float SCENE_ACTIVATE_DELAY = .1f;
@@ -58,17 +58,17 @@ public class GameManager : MonoBehaviour {
     void SetFPSSettings() {
         if (SystemInfo.processorCount < 5) {
             Application.targetFrameRate = 30;
-            currentFixedDeltaTime = Time.fixedDeltaTime = FIXED_DELTA_TINE_LOW;
+            CurrentFixedDeltaTime = Time.fixedDeltaTime = FIXED_DELTA_TINE_LOW;
         }
         else {
             Application.targetFrameRate = 60;
-            currentFixedDeltaTime = Time.fixedDeltaTime = FIXED_DELTA_TINE_HIGH;
+            CurrentFixedDeltaTime = Time.fixedDeltaTime = FIXED_DELTA_TINE_HIGH;
         }
     }
 
     public static void SetFixedDeltaTime(bool isRestoreTime, float newDelta = FIXED_DELTA_TINE_LOW) {
         if (isRestoreTime)
-            Time.fixedDeltaTime = currentFixedDeltaTime;
+            Time.fixedDeltaTime = CurrentFixedDeltaTime;
         else
             Time.fixedDeltaTime = newDelta;
     }

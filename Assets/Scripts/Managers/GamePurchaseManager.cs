@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.Purchasing;
 
 
@@ -26,7 +27,7 @@ public class GamePurchaseManager : MonoBehaviour {
     private const string ASHFLOW_PRODUCT_ID = "com.deepjaws.ashflow";
     private const string CHAMELEON_PRODUCT_ID = "com.deepjaws.chameleon";
     private const string MERCURY_PRODUCT_ID = "com.deepjaws.mercury";
-    private const string PURCHASED_PRODUCT = "Purchased";
+    //private const string PURCHASED_PRODUCT = "Purchased";
     private const string OWNED_PRODUCT = "Owned";
     private const string ERROR_PRICE = "---";
 
@@ -109,6 +110,8 @@ public class GamePurchaseManager : MonoBehaviour {
                 if (currentData.isPremiumUser || currentData.isNoAD) //Debug.Log("Local check: Paid status found in the save file! Disabling interstitial ads.");
                     ApplyNoAdsLogic(true);
 
+                string purchasedTxt = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_purchased");
+
                 accountTitles.HasPremium = currentData.isPremiumUser;
                 accountTitles.HasNoAd = currentData.isNoAD;
                 accountTitles.HasFounder = currentData.isFounder;
@@ -118,8 +121,8 @@ public class GamePurchaseManager : MonoBehaviour {
                 purchasedSkins.Ashflow = currentData.hasAshflowSkin;
                 purchasedSkins.Selected = currentData.selectedSkin;
 
-                accountTitles.NoAdPrice = accountTitles.HasPremium ? PURCHASED_PRODUCT : ERROR_PRICE;
-                accountTitles.PremiumPrice = accountTitles.HasPremium ? PURCHASED_PRODUCT : ERROR_PRICE;
+                accountTitles.NoAdPrice = accountTitles.HasPremium ? /*PURCHASED_PRODUCT*/purchasedTxt : ERROR_PRICE;
+                accountTitles.PremiumPrice = accountTitles.HasPremium ? /*PURCHASED_PRODUCT*/purchasedTxt : ERROR_PRICE;
                 accountTitles.SupportDevPrice = ERROR_PRICE;
                 purchasedSkins.MercuryPrice = purchasedSkins.Mercury ? OWNED_PRODUCT : ERROR_PRICE;
                 purchasedSkins.ChameleonPrice = purchasedSkins.Chameleon ? OWNED_PRODUCT : ERROR_PRICE;
@@ -255,10 +258,12 @@ public class GamePurchaseManager : MonoBehaviour {
             }
         }
 
+        string purchasedTxt = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_purchased");
+
         //local prices
-        at.NoAdPrice = at.HasNoAd ? "Purchased" : (m_StoreController != null ? GetProductLocalPrice(NOADD_PRODUCT_ID) : "...");
-        at.PremiumPrice = at.HasPremium ? "Purchased" : (m_StoreController != null ? GetProductLocalPrice(PREMIUM_PRODUCT_ID) : "...");
-        at.SupportDevPrice = m_StoreController != null ? GetProductLocalPrice(SUPPORT_DEV_ID) : "...";
+        at.NoAdPrice = at.HasNoAd ? /*PURCHASED_PRODUCT */purchasedTxt : (m_StoreController != null ? GetProductLocalPrice(NOADD_PRODUCT_ID) : ERROR_PRICE);
+        at.PremiumPrice = at.HasPremium ? /*PURCHASED_PRODUCT */purchasedTxt : (m_StoreController != null ? GetProductLocalPrice(PREMIUM_PRODUCT_ID) : ERROR_PRICE);
+        at.SupportDevPrice = m_StoreController != null ? GetProductLocalPrice(SUPPORT_DEV_ID) : ERROR_PRICE;
 
         return at;
     }

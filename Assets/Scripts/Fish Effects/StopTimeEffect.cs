@@ -32,7 +32,7 @@ public class StopTimeEffect : Effect {
     protected override void OnApply() {
         //Debug.Log($"{target.name} has applied StopTime Effect for {Duration} s.");
         GameManager.ChangeGameTime(STOP_TIME_SCALE);
-        GameManager.SetFixedDeltaTime(false, GameManager.currentFixedDeltaTime * STOP_TIME_SCALE);
+        GameManager.SetFixedDeltaTime(false, GameManager.CurrentFixedDeltaTime * STOP_TIME_SCALE);
         target.ChangeSpeedMultiplier(STOPTIME_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);//for smoothest animation of objects
         currentTime = Time.time;
         fishAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;

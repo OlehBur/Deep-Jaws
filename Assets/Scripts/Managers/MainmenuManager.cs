@@ -42,6 +42,7 @@ public class MainmenuManager : MonoBehaviour {
 
     private int previousLocaleIndex = 0;
     private bool isGMneedAnimation = true;
+    private bool isExistGameData = false;
     private Color targetGMwndColor;
     private Color targetLightGMcolor;
     private GPG_Manager gpg_manager;
@@ -66,11 +67,13 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void Start() {
+        isExistGameData = ProgressSaver.IsGameDataExist();
+
         if (faderScene != null)        // Ensure the fader scene is not destroyed on load
             faderScene?.gameObject.SetActive(true);
 
         if (continueButton != null)// Initialize the continue button visibility based on saved data
-            continueButton?.SetActive(ProgressSaver.IsDataExist());
+            continueButton?.SetActive(isExistGameData);
 
         LanguageInit();
 
@@ -216,7 +219,7 @@ public class MainmenuManager : MonoBehaviour {
 
     //open ar u sur wnd if player already has saved game data
     public void OnNewGameClick() {
-        if (ProgressSaver.IsDataExist())
+        if (isExistGameData)
             areUSureWnd?.SetActive(true);
         else
             guideBookWnd?.SetActive(true);
@@ -253,12 +256,12 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     public void OnSkipGuide() {
-        if (!ProgressSaver.IsDataExist())
+        if (!isExistGameData)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_are_you_serious);
     }
 
     public void OnCompleteGuide() {
-        if (ProgressSaver.IsDataExist())
+        if (isExistGameData)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_you_have_my_respect);
     }
 

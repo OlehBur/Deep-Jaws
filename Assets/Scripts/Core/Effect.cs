@@ -56,7 +56,10 @@ public abstract class Effect /*: MonoBehaviour*/ {
         if (Time.timeScale == 0f)//in pause menu effect must be freezed
             return;
 
-        LeftTime -= Time.unscaledDeltaTime/*deltaTime*/;
+        float delta = type == FishEffectType.FreezeTime ? 
+            Time.unscaledDeltaTime : Time.deltaTime;
+
+        LeftTime -= delta/*deltaTime*/;
 
         if (LeftTime <= 0f || Enabled == false) {
             Enabled = false;
