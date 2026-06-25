@@ -17,6 +17,7 @@ public class GameAdsManager : MonoBehaviour {
 
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
+    [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] GameObject loadingPanel;
     [SerializeField] List<TextMeshProUGUI> limitTxtUI = null;
     [Header("Revive Buttons (Rewarded)")]
@@ -26,12 +27,6 @@ public class GameAdsManager : MonoBehaviour {
     [Header("Show Ad (Interstitial)")]
     [SerializeField] List<Button> simpleAdButtons = null;
 
-    //public SpawnManager SpawnManager => spawnManager;
-    //public MainmenuManager MainmenuManager => gui;
-    //public GameObject LoadingPanel=> loadingPanel;
-    //public List<Button> RevertiveButtons => reviveButtons;
-    //public List<Button> RestartButtons => restartButtons;
-    //public List<TextMeshProUGUI> LimitTxtUI => limitTxtUI;
     public bool IsAdStartShow { get; private set; } = false;
 
     private LevelPlayRewardedAd rewardedAd;
@@ -52,7 +47,7 @@ public class GameAdsManager : MonoBehaviour {
 
     private void Awake() {
         if (Instance != null && Instance != this) {
-            Instance.InitGameUI(spawnManager, gui, loadingPanel, reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
+            Instance.ReInitGameUI(spawnManager, gui, loadingPanel, noInternetConnectionWnd, reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
             Destroy(gameObject);
             return;
         }
@@ -61,10 +56,11 @@ public class GameAdsManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    void InitGameUI(SpawnManager spawnManager, MainmenuManager gui, GameObject loadingPanel, List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
+    void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui, GameObject loadingPanel, GameObject noInternetConnectionWnd, List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
         this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
         this.gui = this.gui == null ? gui : this.gui;
         this.loadingPanel = this.loadingPanel == null ? loadingPanel : this.loadingPanel;
+        this.noInternetConnectionWnd = this.noInternetConnectionWnd == null ? noInternetConnectionWnd : this.noInternetConnectionWnd;
 
         this.limitTxtUI = IsListNeedToCopy(this.limitTxtUI, limitTxtUI) ?
             new List<TextMeshProUGUI>(limitTxtUI) : this.limitTxtUI;
@@ -152,12 +148,24 @@ public class GameAdsManager : MonoBehaviour {
     private void OnReviveClicked() {//rewarded
         adTarget = AdTarget.ExtraLife;
         IsAdStartShow = true;
+        loadingPanel.SetActive(true);
 
         // check premium\founders
-        if (ProgressSaver.IsPlayerHasAdImmunitet().premium) {
+        if (ProgressSaver.IsPlayerHasAdImmunitet().premium && CanWatchRewarded()) {
+            RewardedLimitRecalc();
             Debug.Log("The player has a premium account! We'll revive it for free.");
             RewardedRewardBeh();
             IsAdStartShow = false;
+            loadingPanel.SetActive(false);
+            return;
+        }
+
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            if (noInternetConnectionWnd != null)
+                noInternetConnectionWnd.gameObject.SetActive(true);
+            IsAdStartShow = false;
+            adTarget = AdTarget.None;
+            loadingPanel.SetActive(false);
             return;
         }
 
@@ -165,6 +173,7 @@ public class GameAdsManager : MonoBehaviour {
             Debug.LogWarning("The ad isn't ready yet; the SDK is initializing.");
             adTarget = AdTarget.None;
             IsAdStartShow = false;
+            loadingPanel.SetActive(false);
             return;
         }
 
@@ -173,12 +182,14 @@ public class GameAdsManager : MonoBehaviour {
             Debug.Log("The free revival attempts have ended for today!");
             adTarget = AdTarget.None;
             IsAdStartShow = false;
+            loadingPanel.SetActive(false);
             return;
         }
 
         //check add readiness
         if (rewardedAd != null && rewardedAd.IsAdReady()) {
             SetButtonsInteractable(false);
+            loadingPanel.SetActive(false);
             rewardedAd.ShowAd();
             rewardedAd.LoadAd();
         }
@@ -219,13 +230,17 @@ public class GameAdsManager : MonoBehaviour {
 
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
         // recalc limits
-        int currentCount = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, 0);
-        PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, currentCount + 1);
-        PlayerPrefs.Save();
-        SetLimitAdAmountTxt(MAX_DAILY_REWARDED - currentCount);
+        RewardedLimitRecalc();
         IsAdStartShow = false;
 
         RewardedRewardBeh();
+    }
+
+    void RewardedLimitRecalc() {
+        int currentCount = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, 1);
+        PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, currentCount + 1);
+        PlayerPrefs.Save();
+        SetLimitAdAmountTxt(MAX_DAILY_REWARDED - currentCount - 1);
     }
 
     void SetLimitAdAmountTxt(int currentCnt) {
@@ -265,7 +280,6 @@ public class GameAdsManager : MonoBehaviour {
 
         loadingPanel.SetActive(true);
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
-            SetButtonsInteractable(false);
             interstitialAd.ShowAd();
             interstitialAd.LoadAd();
         }
@@ -273,6 +287,7 @@ public class GameAdsManager : MonoBehaviour {
             //ad not ready (haha classic lucky u - bum i
             Debug.Log("The interstitial isn't ready. Just restart the game.");
             InterstitialRespawnBeh();
+            loadingPanel.SetActive(false);
         }
     }
 

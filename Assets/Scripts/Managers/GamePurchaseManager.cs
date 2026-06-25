@@ -19,15 +19,12 @@ public class GamePurchaseManager : MonoBehaviour {
     [SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
 
     private StoreController m_StoreController;
-    //private AccountTitles accountTitles;
-    //private PurchasedSkins purchasedSkins;
     private const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
     private const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
     private const string SUPPORT_DEV_ID = "com.deepjaws.support_developer";
     private const string ASHFLOW_PRODUCT_ID = "com.deepjaws.ashflow";
     private const string CHAMELEON_PRODUCT_ID = "com.deepjaws.chameleon";
     private const string MERCURY_PRODUCT_ID = "com.deepjaws.mercury";
-    //private const string PURCHASED_PRODUCT = "Purchased";
     private const string OWNED_PRODUCT = "Owned";
     private const string ERROR_PRICE = "---";
 
@@ -44,6 +41,9 @@ public class GamePurchaseManager : MonoBehaviour {
         //local fast check on start without internet
         CheckPurchasesLocally();
     }
+
+    public void ForceOnUpdateAccountTittles(AccountTitles at) =>
+        OnUpdateAccountTittles?.Invoke(at);
 
     void ReInit(GPG_Manager GPGmanager, PurchaseUIvisualizer purchaseUIvisualizer, StoreController m_StoreController) {
         this.GPGmanager = GPGmanager;//this.GPGmanager == null ? GPGmanager : this.GPGmanager;
@@ -77,15 +77,15 @@ public class GamePurchaseManager : MonoBehaviour {
             await m_StoreController.Connect();
             Debug.Log("IAP v5: Connected to the store. Retrieving products...");
 
-            var initialProductsToFetch = new List<ProductDefinition>
+            List<ProductDefinition> initialProductsToFetch = new List<ProductDefinition>
             {
                 new(PREMIUM_PRODUCT_ID, ProductType.NonConsumable),
                 new(NOADD_PRODUCT_ID, ProductType.NonConsumable),
                 new(SUPPORT_DEV_ID, ProductType.Consumable),
                 new(ASHFLOW_PRODUCT_ID, ProductType.NonConsumable),
                 new(CHAMELEON_PRODUCT_ID, ProductType.NonConsumable),
-                new(MERCURY_PRODUCT_ID, ProductType.NonConsumable),
-                new(Application.identifier, ProductType.NonConsumable)
+                new(MERCURY_PRODUCT_ID, ProductType.NonConsumable)
+                //new(Application.identifier, ProductType.NonConsumable)
             };
 
             m_StoreController.FetchProducts(initialProductsToFetch);
@@ -139,66 +139,28 @@ public class GamePurchaseManager : MonoBehaviour {
 
     // update GP purchases history
     private void OnPurchasesFetched(Orders orders) {
-        AccountTitles accountTitles = new();
-        PurchasedSkins purchasedSkins = new();
-        string priceBuffer;
+        AccountTitles accountTitles = GetCurrentAccountTitles();
+        PurchasedSkins purchasedSkins = GetCurrentPurchasedSkins();
 
-        if (orders.ConfirmedOrders != null) {
-            //full premium
-            if (IsHasProduct(orders, PREMIUM_PRODUCT_ID, out priceBuffer)) {
+        if (orders.ConfirmedOrders != null) {            
+            if (IsHasProduct(orders, PREMIUM_PRODUCT_ID))   //full premium
                 accountTitles.HasPremium = true;
-                accountTitles.PremiumPrice = priceBuffer;
-            }
-            else
-                accountTitles.PremiumPrice = GetProductLocalPrice(PREMIUM_PRODUCT_ID);
-
-            //only interstitial remove
-            if (IsHasProduct(orders, NOADD_PRODUCT_ID, out priceBuffer)) {
+            if (IsHasProduct(orders, NOADD_PRODUCT_ID))            //only interstitial remove
                 accountTitles.HasNoAd = true;
-                accountTitles.NoAdPrice = priceBuffer;
-            }
-            else
-                accountTitles.NoAdPrice = GetProductLocalPrice(NOADD_PRODUCT_ID);
-
-            accountTitles.SupportDevPrice = GetProductLocalPrice(SUPPORT_DEV_ID);
-
-            //old founder check
-            if (IsHasProduct(orders, Application.identifier, out priceBuffer)) {
-                accountTitles.HasPremium = true; //old buyers get all prem
-                accountTitles.HasFounder = true;
-
-                if (GPGmanager != null)
-                    GPGmanager.OnAddToFoundersLeaderboard();
-            }
-
-            if (IsHasProduct(orders, ASHFLOW_PRODUCT_ID, out priceBuffer)) {
+            //old founder check in gpg_manager
+            if (IsHasProduct(orders, ASHFLOW_PRODUCT_ID))
                 purchasedSkins.Ashflow = true;
-                purchasedSkins.AshflowPrice = priceBuffer;
-            }
-            else
-                purchasedSkins.AshflowPrice = GetProductLocalPrice(ASHFLOW_PRODUCT_ID);
-
-            if (IsHasProduct(orders, MERCURY_PRODUCT_ID, out priceBuffer)) {
+            if (IsHasProduct(orders, MERCURY_PRODUCT_ID))
                 purchasedSkins.Mercury = true;
-                purchasedSkins.MercuryPrice = priceBuffer;
-            }
-            else
-                purchasedSkins.MercuryPrice = GetProductLocalPrice(MERCURY_PRODUCT_ID);
-
-            if (IsHasProduct(orders, CHAMELEON_PRODUCT_ID, out priceBuffer)) {
+            if (IsHasProduct(orders, CHAMELEON_PRODUCT_ID))
                 purchasedSkins.Chameleon = true;
-                purchasedSkins.ChameleonPrice = priceBuffer;
-            }
-            else
-                purchasedSkins.ChameleonPrice = GetProductLocalPrice(CHAMELEON_PRODUCT_ID);
         }
 
         if (ProgressSaver.IsDataExist())//load local sekected skuin
             purchasedSkins.Selected = ProgressSaver.Load().selectedSkin;
 
         UpdatePremiumInSaveFile(accountTitles, purchasedSkins);
-        OnUpdateAccountTittles?.Invoke(accountTitles);
-        OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
+        RefreshUI();
     }
 
     string GetProductLocalPrice(string id) {
@@ -210,8 +172,8 @@ public class GamePurchaseManager : MonoBehaviour {
             prod.metadata.localizedPriceString : ERROR_PRICE;
     }
 
-    bool IsHasProduct(Orders orders, string PRODUCT_ID, out string realPrice) {
-        realPrice = GetProductLocalPrice(PREMIUM_PRODUCT_ID);
+    bool IsHasProduct(Orders orders, string PRODUCT_ID/*, out string realPrice*/) {
+        //realPrice = GetProductLocalPrice(PREMIUM_PRODUCT_ID);
 
         return orders.ConfirmedOrders.Any(order => order.Info != null &&
                                                      order.Info.PurchasedProductInfo != null &&
@@ -300,7 +262,8 @@ public class GamePurchaseManager : MonoBehaviour {
         OnUpdateAccountTittles?.Invoke(accountTitles);
         OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
 
-        m_StoreController.FetchPurchases();//Debug.Log("IAP v5: Items received. Checking purchase history...");
+        Debug.LogWarning("Disabled manual call FetchPurchases");
+        //m_StoreController.FetchPurchases();//Debug.Log("IAP v5: Items received. Checking purchase history...");
     }
 
     // PROCESSING AN INCOMPLETE PURCHASE

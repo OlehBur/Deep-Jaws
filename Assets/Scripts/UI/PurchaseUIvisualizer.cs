@@ -14,11 +14,7 @@ public class AccountsButtons {
     public TextMeshProUGUI noAdTxt;//from price to bought and interactable false
     public TextMeshProUGUI premiumTxt;
     public TextMeshProUGUI supportDevTxt;
-    public static readonly AccountPurchase[] ACCOUNT_PURCH_ITERATORS = Enum.GetValues(typeof(AccountPurchase))
-                    .Cast<AccountPurchase>()
-                    .ToArray();
-
-    //public const string PURCHASED_TEXT = "PURCHASED";
+    public static readonly AccountPurchase[] ACCOUNT_PURCH_ITERATORS = (AccountPurchase[])Enum.GetValues(typeof(AccountPurchase)); //Enum.GetValues(typeof(AccountPurchase))                    .Cast<AccountPurchase>()                    .ToArray();
 
     public Button GetButton(AccountPurchase s) =>
         s switch {
@@ -267,8 +263,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     void UpdateAccountSection(AccountTitles accountTitles) {
         foreach (AccountPurchase ap in AccountsButtons.ACCOUNT_PURCH_ITERATORS) {
-            if (ap != AccountPurchase.SupportDev)//support dev can buyed multiple times
-                accountsButtons.GetButton(ap).interactable = true;
+            accountsButtons.GetButton(ap).interactable = true;
             accountsButtons.GetText(ap).text = accountTitles.GetPrice(ap);
         }
 
@@ -276,6 +271,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             BuyedAccountPurchUIBeh(AccountPurchase.NoAd);
         if (accountTitles.HasPremium)
             BuyedAccountPurchUIBeh(AccountPurchase.Premium);
+        //support dev can buyed multiple times
     }
 
     void BuyedAccountPurchUIBeh(AccountPurchase ap) {
@@ -296,13 +292,15 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         SaveData currentData = ProgressSaver.IsDataExist() ?
             ProgressSaver.Load() : new SaveData();
 
-        if (currentData != null && !currentData.confirmedLoyalty) {//PlayerPrefs.GetInt(PREF_LOYALTYCONFIRMED_KEY, 0) == 1;
-            loyaltyRewardedWnd.SetActive(true);            //PlayerPrefs.SetInt(PREF_LOYALTYCONFIRMED_KEY, 1);            //PlayerPrefs.Save();
+        if (currentData != null && !currentData.confirmedLoyalty) {
+            loyaltyRewardedWnd.SetActive(true);            
             currentData.confirmedLoyalty = true;
+
+            ProgressSaver.Save(currentData);
         }
     }
 
-    private void InitMainMenuAccountTittles(/*bool isNoAdd, bool isPremium, bool isFounder*/AccountTitles at) {
+    private void InitMainMenuAccountTittles(AccountTitles at) {
         if (titleAdFree == null || titlePremium == null || titleFounder == null)
             return;
 
