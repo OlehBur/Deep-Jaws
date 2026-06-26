@@ -535,6 +535,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
         else//for begin
             PlayerFish = SpawnPlayerFish(PlayerInitSpawnPos, Quaternion.identity, false);
+
         OnPlayerRespawn?.Invoke(PlayerFish, false);
 
         for (int i = 0; i < POOL_SIZE; i++) {

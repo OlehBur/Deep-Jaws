@@ -95,7 +95,8 @@ public class SkinsButtons {
 public class PurchaseUIvisualizer : MonoBehaviour {
     [SerializeField] AccountsButtons accountsButtons;
     [SerializeField] SkinsButtons skinsButtons;
-    [SerializeField] Button resetButton;
+    [SerializeField] Button resetSkinsButton;
+    [SerializeField] Button restorePurchaseButton;
     [SerializeField] GameObject loyaltyRewardedWnd;
     [SerializeField] Animator titleAdFree;
     [SerializeField] Animator titlePremium;
@@ -176,7 +177,8 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         accountsButtons.buyPremium.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_Premium);
         accountsButtons.buySupportDev.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_SupportDev);
         //other
-        resetButton.onClick.AddListener(SetDefaultSkin);
+        resetSkinsButton.onClick.AddListener(SetDefaultSkin);
+        restorePurchaseButton.onClick.AddListener(GamePurchaseManager.Instance.OnRestorePurchases);
     }
 
     void SetDefaultSkin() {

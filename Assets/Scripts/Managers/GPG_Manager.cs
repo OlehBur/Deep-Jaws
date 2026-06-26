@@ -180,25 +180,6 @@ public class GPG_Manager : MonoBehaviour {
                         purchaseManager.RefreshUI();
                     }
                 });
-                //CheckFounderStatus((isFounder) => {
-                //    if (isFounder) {
-                //        SaveData currentData = ProgressSaver.IsDataExist() ?
-                //        ProgressSaver.Load() : new SaveData();
-                //        AccountTitles accountTitles = new();
-
-                //        accountTitles.HasPremium = true; //old buyers get all prem
-                //        accountTitles.HasFounder = true;
-                //        accountTitles.HasNoAd = true;
-
-                //        currentData.isFounder = true;
-                //        currentData.isPremiumUser = true;
-                //        currentData.isNoAD = true;
-
-                //        OnAddToFoundersLeaderboard();
-                //        ProgressSaver.Save(currentData);//Debug.Log($"IAP v5: Purchase status has been successfully synced with Google Play and saved! Premium: {accountTitles.HasPremium}");
-                //        purchaseManager.ForceOnUpdateAccountTittles(accountTitles);
-                //    }
-                //});
             }
             else {
                 Debug.Log("Authentication FAILED: " + result);
@@ -207,15 +188,6 @@ public class GPG_Manager : MonoBehaviour {
         });
 
         UpdateMainMenuUI();
-
-        //if (mainmenu == null)
-        //    mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
-        ////Debug.Log("Main menu found: " + (mainmenu != null));
-
-        //yield return null; // Wait for the main menu to be ready
-
-        //mainmenu?.InitGPGServices(this);
-        //mainmenu?.ChangeSignInColor(isAuthenticated);
     }
 
     private void UpdateMainMenuUI() {
@@ -268,11 +240,11 @@ public class GPG_Manager : MonoBehaviour {
 
     }
 
-    public static void OnTriggerAchievement(/*AchievementKey*/string achievementKey) =>        //Debug.LogWarning(key.ToString());
-        PlayGamesPlatform.Instance.UnlockAchievement(/*achievements[achievementKey]*/achievementKey);
+    public static void OnTriggerAchievement(string achievementKey) =>       
+        PlayGamesPlatform.Instance.UnlockAchievement(achievementKey);
 
     private void OnDestroy() {
-        SceneManager.sceneLoaded -= OnSceneLoaded/*(Scene scene, LoadSceneMode mode) => { OnSign(); }*/;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 

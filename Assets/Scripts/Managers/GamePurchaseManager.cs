@@ -85,10 +85,10 @@ public class GamePurchaseManager : MonoBehaviour {
                 new(ASHFLOW_PRODUCT_ID, ProductType.NonConsumable),
                 new(CHAMELEON_PRODUCT_ID, ProductType.NonConsumable),
                 new(MERCURY_PRODUCT_ID, ProductType.NonConsumable)
-                //new(Application.identifier, ProductType.NonConsumable)
             };
 
             m_StoreController.FetchProducts(initialProductsToFetch);
+            m_StoreController.FetchPurchases();//get history for restore
             if (purchaseUIvisualizer != null)
                 purchaseUIvisualizer.SetActiveNoInternetWnd(false);
         }
@@ -96,6 +96,16 @@ public class GamePurchaseManager : MonoBehaviour {
             Debug.LogError($"IAP v5: Offline mode or network error: {e.Message}");
             if (purchaseUIvisualizer != null)
                 purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+        }
+    }
+
+    public void OnRestorePurchases() {
+        if (m_StoreController != null) {
+            Debug.Log("IAP v5: Manual restore purchases requested...");
+            m_StoreController.FetchPurchases();
+        }
+        else {
+            Debug.LogWarning("IAP v5: Cannot restore, store controller is null.");
         }
     }
 
