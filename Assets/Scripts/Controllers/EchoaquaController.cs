@@ -5,26 +5,30 @@ public class EchoaquaController : MonoBehaviour {
     [SerializeField] /*Collider*/GameObject vibrissaeColliders/*echoaquaTriggerCollider*/;
     [SerializeField] GameObject lightsVibrissaeParent;
     [SerializeField] /*Collider*/Transform mapPreviewCollider/*echoaquaSolidCollider*/;
-    private const float SHADER_UPDATE_INTERVAL = .05f;
-    private float mapPreviewColliderInitialY;
-    private const float MAP_PREVIEW_COLLIDER_OFFSET_Y = 35f;
+
     [SerializeField] FishHeartbeatsManager heartbeatsManager;
     [SerializeField] PlayerUIController playerUIController;
     [SerializeField] Transform ecqhoMembraneCenter;
 
-    private float cooldownTimer = 0;
-    private const float COOLDOWN_TIME = SCAN_PREVIEW_TIME + 15f;
-    private const float SCAN_PREVIEW_TIME = 3f;
-    private bool isReverseProgress = false;
-
     [SerializeField] AudioManager audioManager;
     //[SerializeField] AudioSource echoaquaAudioSource;
     //[SerializeField] AudioClip echoquaClip;
+
     [SerializeField] Animator echoaquaAnimator;
+
     private const string VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes";
     private const string REVERSE_VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes_Reverse";
     private const string MEMBRANE_ANIMATION_NAME = "Echoaqua_Membrane";
 
+    private const float SHADER_UPDATE_INTERVAL = .05f;
+    private const float MAP_PREVIEW_COLLIDER_OFFSET_Y = 35f;
+
+    private const float COOLDOWN_TIME = SCAN_PREVIEW_TIME + 15f;
+    private const float SCAN_PREVIEW_TIME = 3f;
+
+    private float mapPreviewColliderInitialY;
+    private float cooldownTimer = 0;
+    private bool isReverseProgress = false;
 
     //// Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -62,9 +66,6 @@ public class EchoaquaController : MonoBehaviour {
 
     //called by animation event (int MEMBRANE_ANIMATION)
     public void ActivateEcho() {
-        mapPreviewCollider.position = new Vector3(mapPreviewCollider.position.x, mapPreviewColliderInitialY, mapPreviewCollider.position.z);
-        //echoaquaSolidCollider.enabled = true;
-
         //playerUIController.SetPlayableAreaActive(false);
         echoaquaShader.SetVector("_ScanPosNormalize", /*ecqhoMembraneCenter.position*/GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position));
         //Debug.Log(GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position));
@@ -86,6 +87,7 @@ public class EchoaquaController : MonoBehaviour {
 
     void UpdateShaderProgress() {
         const float PROGRESS_DELTA_SPEED = .06f;
+        const float PROGRESS_TRIGGER_FOR_COLLIDER = .4f;
         float currentProg = echoaquaShader.GetFloat("_Progress");
 
         if (isReverseProgress) {//ending animation
@@ -97,6 +99,9 @@ public class EchoaquaController : MonoBehaviour {
             currentProg -= PROGRESS_DELTA_SPEED;
         }
         else {
+            if (currentProg >= PROGRESS_TRIGGER_FOR_COLLIDER)
+                mapPreviewCollider.position = new Vector3(mapPreviewCollider.position.x, mapPreviewColliderInitialY, mapPreviewCollider.position.z);
+            //echoaquaSolidCollider.enabled = true;
             if (currentProg >= 1) {
                 CancelInvoke(nameof(UpdateShaderProgress));
                 return;

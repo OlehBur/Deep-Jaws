@@ -110,7 +110,7 @@ public class PlayerUIController : MonoBehaviour {
     private Fish playerFish; // reference to the player fish component
     private static readonly WaitForSeconds OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL);
     private static readonly WaitForSeconds HALF_OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL * .5f);
-    private static readonly WaitForSeconds BLINDNESS_DARK_WAIT = new WaitForSeconds(1.8f);
+    private static readonly WaitForSeconds BLINDNESS_DARK_WAIT = new WaitForSeconds(1.4f);
 
     [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
 
@@ -243,33 +243,33 @@ public class PlayerUIController : MonoBehaviour {
 
         switch (effectType) {
             case FishEffectType.Stun:
-                stunIcon.fillAmount = progress;
-                stunIcon.transform.parent.gameObject.SetActive(stunIcon.fillAmount != 0);
-                break;
+            stunIcon.fillAmount = progress;
+            stunIcon.transform.parent.gameObject.SetActive(stunIcon.fillAmount != 0);
+            break;
             case FishEffectType.Shield:
-                shieldIcon.fillAmount = progress;
-                shieldIcon.transform.parent.gameObject.SetActive(shieldIcon.fillAmount != 0);
-                break;
+            shieldIcon.fillAmount = progress;
+            shieldIcon.transform.parent.gameObject.SetActive(shieldIcon.fillAmount != 0);
+            break;
             case FishEffectType.CurrentSpeed:
-                currentIcon.fillAmount = progress;
-                currentIcon.transform.parent.gameObject.SetActive(currentIcon.fillAmount != 0);
-                break;
+            currentIcon.fillAmount = progress;
+            currentIcon.transform.parent.gameObject.SetActive(currentIcon.fillAmount != 0);
+            break;
             case FishEffectType.SprintSpeed:
-                sprintIcon.fillAmount = progress;
-                sprintIcon.transform.parent.gameObject.SetActive(sprintIcon.fillAmount != 0);
-                break;
+            sprintIcon.fillAmount = progress;
+            sprintIcon.transform.parent.gameObject.SetActive(sprintIcon.fillAmount != 0);
+            break;
             case FishEffectType.FreezeTime:
-                timeIcon.fillAmount = progress;
-                timeIcon.transform.parent.gameObject.SetActive(timeIcon.fillAmount != 0);
-                break;
+            timeIcon.fillAmount = progress;
+            timeIcon.transform.parent.gameObject.SetActive(timeIcon.fillAmount != 0);
+            break;
             case FishEffectType.Poison:
-                poisonIcon.fillAmount = progress;
-                poisonIcon.transform.parent.gameObject.SetActive(poisonIcon.fillAmount != 0);
-                break;
+            poisonIcon.fillAmount = progress;
+            poisonIcon.transform.parent.gameObject.SetActive(poisonIcon.fillAmount != 0);
+            break;
             case FishEffectType.Blindness:
-                blindnessIcon.fillAmount = progress;
-                blindnessIcon.transform.parent.gameObject.SetActive(blindnessIcon.fillAmount != 0);
-                break;
+            blindnessIcon.fillAmount = progress;
+            blindnessIcon.transform.parent.gameObject.SetActive(blindnessIcon.fillAmount != 0);
+            break;
         }
     }
 
@@ -298,9 +298,12 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     IEnumerator BlindnessOverlayAnimation(Effect effect) {
+        const float OVERLAY_MAX_ALPHA = 1f;
+        const float OVERLAY_MIN_ALPHA = .2f;
+
         while (effect != null && effect.Enabled) {
 
-            while (blindnessOverlay.color.a < 1f) {//blink
+            while (blindnessOverlay.color.a < OVERLAY_MAX_ALPHA) {//blink
                 blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a + OVERLAYS_UPDATE_INTERVAL);
 
                 if (effect == null || !effect.Enabled)
@@ -312,7 +315,7 @@ public class PlayerUIController : MonoBehaviour {
             if (effect != null && effect.Enabled)
                 yield return BLINDNESS_DARK_WAIT;
 
-            while (blindnessOverlay.color.a > 0f) {
+            while (blindnessOverlay.color.a > OVERLAY_MIN_ALPHA) {
                 if (effect == null || !effect.Enabled)
                     break;
 
@@ -367,7 +370,7 @@ public class PlayerUIController : MonoBehaviour {
         if (spawnManager == null || spawnManager.PlayerFish == null)//for debug
             return;
 
-        playerFish = fish; 
+        playerFish = fish;
         playerEffectManager = fish.GetComponent<EffectManager>(); //get player transform
 
         //syubscribe to events of the new player fish

@@ -126,7 +126,7 @@ public class Fish : MonoBehaviour {
         progressDivider *= enemyProgressMultiplier;
 
         //if (IsPlayer) {
-        //    progressDivider = 2f;
+        //    progressDivider = 3f;
         //    Debug.LogWarning("Activated fast progress!!!");
         //}
 

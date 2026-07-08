@@ -55,7 +55,7 @@ public class JellyfishController : MonoBehaviour {
         maxRandYOffsetMultipliers = new float[jellyfishCnt];
 
         if (IsJellifishHasBehaviour()) {//jelly fish has coldown and has effects etc.
-            currentColdown = -coldownTime;//in case if player spawn in jellyfish
+            currentColdown = /*-coldownTime*/0;//in case if player spawn in jellyfish
             jellyColliders = new Collider[jellyfishCnt];
         }
 

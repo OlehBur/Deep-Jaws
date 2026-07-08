@@ -120,8 +120,8 @@ public static class GameStaticInfo {
     }
 
     public static bool TryGetFish(GameObject fishObject, out Fish fish) {
-        Debug.LogWarning("Player inviolability Activated!");
-        return //TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
+        //Debug.LogWarning("Player inviolability Activated!");
+        return TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
             TryGetFishFromPool(fishObject, SpawnManager.visible_poolFishObjects, SpawnManager.visible_poolFishComponents, out fish) ||//default enemies
         TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager.cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
         TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish);//pufferfishes

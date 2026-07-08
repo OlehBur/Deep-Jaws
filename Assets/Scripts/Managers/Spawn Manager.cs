@@ -316,7 +316,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.Save(saveData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.Lionfish ;
+        //playerLvl = (int)FishLevel.HammerShark;
+        //playerProgress = .9f;
         //Debug.LogWarning(playerLvl);
         int playerIndex = playerLvl - 1;
 

@@ -27,6 +27,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
     private readonly Color PLAYER_COLOR = new Color(.8f, .8f, .8f, .4f);
 
     private const int TEXTURE_SIZE_DIVIDER = 4; //â big texture resolution is expensive for mobile devices
+    private const float HERTBEAT_PARTICLES_UPDATE_INTERVAL = 0.05f; 
 
 
     public void Init(SpawnManager spawnManager) {
@@ -99,7 +100,9 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
     public void SetActivateShaderPreparation(bool isActivate) {
         if (isActivate)
-            ReInitPool();
+            InvokeRepeating(nameof(ReInitPool), 0f, HERTBEAT_PARTICLES_UPDATE_INTERVAL);
+        else
+            CancelInvoke(nameof(ReInitPool));
 
         heartbeatParent.gameObject.SetActive(isActivate);
         shaderCamerasParent.SetActive(isActivate);

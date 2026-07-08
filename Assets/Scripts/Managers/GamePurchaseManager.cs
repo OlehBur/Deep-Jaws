@@ -89,6 +89,7 @@ public class GamePurchaseManager : MonoBehaviour {
 
             m_StoreController.FetchProducts(initialProductsToFetch);
             m_StoreController.FetchPurchases();//get history for restore
+            //Debug.LogWarning("FetchPurchases on start disabled");
             if (purchaseUIvisualizer != null)
                 purchaseUIvisualizer.SetActiveNoInternetWnd(false);
         }
@@ -101,6 +102,9 @@ public class GamePurchaseManager : MonoBehaviour {
 
     public void OnRestorePurchases() {
         if (m_StoreController != null) {
+            if (Application.internetReachability == NetworkReachability.NotReachable && purchaseUIvisualizer != null)
+                purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+
             Debug.Log("IAP v5: Manual restore purchases requested...");
             m_StoreController.FetchPurchases();
         }
@@ -152,7 +156,7 @@ public class GamePurchaseManager : MonoBehaviour {
         AccountTitles accountTitles = GetCurrentAccountTitles();
         PurchasedSkins purchasedSkins = GetCurrentPurchasedSkins();
 
-        if (orders.ConfirmedOrders != null) {            
+        if (orders.ConfirmedOrders != null) {
             if (IsHasProduct(orders, PREMIUM_PRODUCT_ID))   //full premium
                 accountTitles.HasPremium = true;
             if (IsHasProduct(orders, NOADD_PRODUCT_ID))            //only interstitial remove

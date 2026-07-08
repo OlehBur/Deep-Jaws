@@ -40,7 +40,7 @@ public class FishControl : MonoBehaviour, IFish {
     private Vector2 moveInput;
     private Vector3 moveDir = Vector3.zero;
     private bool isMoved = false;
-    private const float ROTATION_TIME_MULTIPLIER = .005f;
+    private const float ROTATION_TIME_MULTIPLIER = .002f;
 
     //reaction to other fish
     private Collider[] overlapResults = new Collider[5];

@@ -54,6 +54,8 @@ public class FishAnimManager : MonoBehaviour {
 
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
+
+        FishAnimator?.SetTrigger(BITE_TRIGGER_NAME);//fix jaw pos in case of death during bite animation
     }
 
     private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {
