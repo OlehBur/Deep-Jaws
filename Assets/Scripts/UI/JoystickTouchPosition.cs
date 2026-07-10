@@ -54,9 +54,9 @@ public class JoystickTouchPosition : MonoBehaviour/*, IPointerClickHandler,*/ /*
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
                 joystickBackground.anchoredPosition = initialJoystickCenter;
         }
-#endif 
+#endif
         /*#elif*/
-#if UNITY_ANDROID              
+#if UNITY_ANDROID
         if (Touchscreen.current != null) {
             // ќтримаЇмо св≥тову позиц≥ю центра ст≥ка
             Vector3 stickWorldCenter = stickHandlerParentRect.TransformPoint(stickHandlerRect.localPosition);

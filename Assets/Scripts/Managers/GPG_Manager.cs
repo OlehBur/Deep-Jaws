@@ -114,6 +114,7 @@ public class GPG_Manager : MonoBehaviour {
             return;
         }
 
+        Debug.LogWarning("TODO: change founder status date condition");
         PlayGamesPlatform.Instance.LoadAchievements((achievements) => {
             string targetAchievementId = GPGSIds.achievement_youre_my_friend_now;
             var achievement = achievements.FirstOrDefault(a => a.id == targetAchievementId);

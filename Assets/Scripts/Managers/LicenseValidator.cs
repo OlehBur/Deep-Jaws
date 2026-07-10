@@ -47,7 +47,7 @@ public class LicenseValidator : MonoBehaviour {
 #else
     // Production
     string installer = Application.installerName;
-    isGameFromPlayStore = (installer == "com.android.vending");
+    isFromPlayStore = (installer == "com.android.vending");
     Debug.Log($"<color=yellow>[LicenseValidator]</color> Installer checking: {installer}");
 #endif
 

@@ -113,6 +113,9 @@ public class PlayerUIController : MonoBehaviour {
     private static readonly WaitForSeconds BLINDNESS_DARK_WAIT = new WaitForSeconds(1.4f);
 
     [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
+    [SerializeField] Image sprintProgressPC;
+    private bool isPlayableAreaActive = true;
+
 
     public void Init(SpawnManager sp) {
         spawnManager = sp;
@@ -135,11 +138,20 @@ public class PlayerUIController : MonoBehaviour {
         poisonOverlay.color = new Color(poisonOverlay.color.r, poisonOverlay.color.g, poisonOverlay.color.b, 1f);
         zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
+
+#if UNITY_EDITOR || PLAY_GAMES_PC
+        playebleAreaUI.SetActive(false);
+        sprintProgressPC.transform.parent.gameObject.SetActive(true);
+#else
+        sprintProgressPC.transform.parent.gameObject.SetActive(false);
+        playebleAreaUI.SetActive(true);
+#endif
     }
 
     public void SetPlayableAreaActive(bool isActive) {
         //if (UIplayebleArea != null)
         playebleAreaUI.SetActive(isActive);
+        isPlayableAreaActive = isActive;
         JoyAxis.Axis = Vector2.zero; // reset joystick input
     }
 
@@ -198,8 +210,31 @@ public class PlayerUIController : MonoBehaviour {
             else  //!null & enabled
                 SetEffectProgress(eff.Key, eff.Value);
 
-        SprintButtonBehaviour();
+        if (isPlayableAreaActive) {
+            SprintButtonBehaviour();
+#if UNITY_EDITOR || PLAY_GAMES_PC
+            WASD_MovingBehaviour();
+#endif
+        }
     }
+
+#if UNITY_EDITOR || PLAY_GAMES_PC
+    void WASD_MovingBehaviour() {
+        if (Keyboard.current == null)
+            return;
+
+        Vector2 moveInput = Vector2.zero;
+        if (Keyboard.current.wKey.isPressed)
+            moveInput.y += 1f;
+        if (Keyboard.current.sKey.isPressed)
+            moveInput.y -= 1f;
+        if (Keyboard.current.aKey.isPressed)
+            moveInput.x -= 1f;
+        if (Keyboard.current.dKey.isPressed)
+            moveInput.x += 1f;
+        JoyAxis.Axis = moveInput.normalized; // set the joystick axis to the normalized input vector
+    }
+#endif
 
     void UpdatePlayerInfo() {
         int lvlProgress = (int)(playerFish.Progress * 100);
@@ -214,21 +249,25 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void SprintButtonBehaviour() {
+#if UNITY_EDITOR || PLAY_GAMES_PC   //for Googlr Play Games PC
         if (sprintButton.interactable) {
-#if UNITY_EDITOR
+
             if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
                 OnSpintButtonClick();
-#endif
+
             return;
         }
+#endif
 
         if (currentSprintCooldownTime >= SPRINT_BUTTON_COOLDOWN) {
             sprintButton.interactable = true;
             currentSprintCooldownTime = 0f;
             sprintButton.image.fillAmount = 1f; // reset the button fill amount
+            sprintProgressPC.fillAmount = 1f;
         }
         else {
             sprintButton.image.fillAmount = currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
+            sprintProgressPC.fillAmount = sprintButton.image.fillAmount;
             currentSprintCooldownTime += Time.deltaTime;
         }
     }
