@@ -88,6 +88,7 @@ public class SaveData {
     public Skin selectedSkin;
 
     public bool confirmedLoyalty = false;
+    public bool isLicensed = false;
 
     public bool IsGameDataValid =>
         (playerPosition != Vector3.zero && playerRotation != Quaternion.identity
