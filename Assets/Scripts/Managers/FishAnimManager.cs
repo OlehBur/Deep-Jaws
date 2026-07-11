@@ -27,6 +27,7 @@ public class FishAnimManager : MonoBehaviour {
     private const float BUBBLE_INIT_X_OFFSET = 0;
     private const string BITE_TRIGGER_NAME = "bite"; // name of the trigger for bite animation
     private const float SPRINT_SPEED_MULTIPLIER = 2f; // multiplier for sprint speed
+    private const float FIX_JAW_BITE_DELEY_TIME = .5f; // delay time to fix the jaw position in case of death during bite animation
 
 
     public void Init(AudioManager audioManager, EffectManager effectManager, FishAdditionalCompManager fishAddCompMngr/*Animator animator*/) {
@@ -55,7 +56,11 @@ public class FishAnimManager : MonoBehaviour {
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
 
-        FishAnimator?.SetTrigger(BITE_TRIGGER_NAME);//fix jaw pos in case of death during bite animation
+        Invoke(nameof(DeleyaedJawBite), FIX_JAW_BITE_DELEY_TIME);
+    }
+
+    void DeleyaedJawBite() {
+        FishAnimator?.SetTrigger(BITE_TRIGGER_NAME);
     }
 
     private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {

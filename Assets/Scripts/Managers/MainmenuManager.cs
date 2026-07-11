@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
+using System; //  for Uri.EscapeDataString
 
 
 /// <summary>
@@ -60,6 +60,8 @@ public class MainmenuManager : MonoBehaviour {
     private const string LOCALE_PREF_KEY = "LocaleIndex";
     private const string GM_KEY = "GameMode";
     private const int RESPAWN_TIME = 5;
+    private const string REPORT_EMAIL = "bovv.company@gmail.com";
+    private const string REPORT_SUBJECT = "Bug Report: Deep Jaws";
 
 
     private void Awake() {
@@ -265,7 +267,29 @@ public class MainmenuManager : MonoBehaviour {
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_you_have_my_respect);
     }
 
+    public void OpenEmailClientForBugReport() {
+        string bodyTemplate =
+            "Please describe the bug below:\n\n\n" +
+            "Steps to reproduce (how can we trigger this bug):\n\n\n" +
+            "Additional links to videos/photos (if any):\n\n\n" +
+            "--- \n" +
+            "Device info (optional): " + SystemInfo.deviceModel + "\n" +
+            "OS: " + SystemInfo.operatingSystem;
 
-    public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
+        //form corr link
+        // with text escaping, spaces or etc. convert to %0A like
+        string emailUrl = string.Format(
+            "mailto:{0}?subject={1}&body={2}",
+            REPORT_EMAIL,
+            Uri.EscapeDataString(REPORT_SUBJECT),
+            Uri.EscapeDataString(bodyTemplate)
+        );
+
+        Application.OpenURL(emailUrl);
+
+        Debug.Log("Open Mail Client...");
+    }
+
+public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
     public void OnExitButtonClicked() => Application.Quit();
 }

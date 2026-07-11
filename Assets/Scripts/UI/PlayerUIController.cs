@@ -22,15 +22,30 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] Image timeIcon;
     [SerializeField] Image poisonIcon;
     [SerializeField] Image blindnessIcon;
-
-    private SpawnManager spawnManager;
-    private EffectManager playerEffectManager;
-    private const string DEFAULT_FISH_ICONS_PARENT_NAME = "effects_icons";
-
     [SerializeField] Button sprintButton; // button for sprint effect activation
-    const float SPRINT_BUTTON_COOLDOWN = 20f;
-    const float SPRINT_EFFECT_DURATION = 5f;
-    float currentSprintCooldownTime = 0;
+
+    [Header("Overlays")]
+    [SerializeField] Image damageOverlay; // red overlay for damage effect
+    [SerializeField] Image stopTimeOverlay; // viol overlay for stop time effect
+    [SerializeField] Image stunOverlay;
+    [SerializeField] Image poisonOverlay;
+    [SerializeField] Image blindnessOverlay;
+    [SerializeField] Image zoneOverlay;
+    [SerializeField] TextMeshProUGUI zoneOverlayMsg;
+    //[SerializeField] AudioClip damageAudio;
+    [SerializeField] AudioManager audioManager;
+
+    [Header("Player Info")]
+    [SerializeField] TextMeshProUGUI healthProgresCurr_txt;
+    [SerializeField] TextMeshProUGUI healthProgresMax_txt;
+    [SerializeField] TextMeshProUGUI lvlProgres_txt;
+    [SerializeField] TextMeshProUGUI lvl_txt;
+    [SerializeField] Image healthBar; // image to display player health bar
+    [SerializeField] Image lvlBar; // image to display player level bar
+    [SerializeField] Transform playerProgressIconsParent;
+    [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
+    //[SerializeField] Image sprintProgressPC;
+    [SerializeField] Transform sprintProgressPC;
 
     public static readonly Vector2[] iconsPositionsMultipliers1 = new Vector2[1] { new Vector2(.5f, .7f) };
     public static readonly Vector2[] iconsPositionsMultipliers2 = new Vector2[2]{
@@ -81,40 +96,26 @@ public class PlayerUIController : MonoBehaviour {
         iconsPositionsMultipliers6,
         iconsPositionsMultipliers7
     };
-    private readonly Dictionary<FishEffectType, RectTransform> effectsSlotsMatch = new Dictionary<FishEffectType, RectTransform> { };
 
-    [Header("Overlays")]
-    [SerializeField] Image damageOverlay; // red overlay for damage effect
-    [SerializeField] Image stopTimeOverlay; // viol overlay for stop time effect
-    [SerializeField] Image stunOverlay;
-    [SerializeField] Image poisonOverlay;
-    [SerializeField] Image blindnessOverlay;
-    [SerializeField] Image zoneOverlay;
-    [SerializeField] TextMeshProUGUI zoneOverlayMsg;
-    //[SerializeField] AudioClip damageAudio;
-    [SerializeField] AudioManager audioManager;
-    private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
-    private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
-    private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
-    //private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
-
-    [Header("Player Info")]
-    [SerializeField] TextMeshProUGUI healthProgresCurr_txt;
-    [SerializeField] TextMeshProUGUI healthProgresMax_txt;
-    [SerializeField] TextMeshProUGUI lvlProgres_txt;
-    [SerializeField] TextMeshProUGUI lvl_txt;
-    [SerializeField] Image healthBar; // image to display player health bar
-    [SerializeField] Image lvlBar; // image to display player level bar
-    [SerializeField] Transform playerProgressIconsParent;
+    private SpawnManager spawnManager;
+    private EffectManager playerEffectManager;
+    private float currentSprintCooldownTime = 0;
     private int currentPlayerProgressIconInd = 0;
     private Fish playerFish; // reference to the player fish component
+    private bool isPlayableAreaActive = true;
+
+    private readonly Dictionary<FishEffectType, RectTransform> effectsSlotsMatch = new Dictionary<FishEffectType, RectTransform> { };//private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
     private static readonly WaitForSeconds OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL);
     private static readonly WaitForSeconds HALF_OVERLAY_UPD_WAIT = new WaitForSeconds(OVERLAYS_UPDATE_INTERVAL * .5f);
     private static readonly WaitForSeconds BLINDNESS_DARK_WAIT = new WaitForSeconds(1.4f);
+    private static readonly Vector3 SPRINT_BAR_SCALE_MULTIPLIER = new Vector3(0f, 1f, 1f);
 
-    [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
-    [SerializeField] Image sprintProgressPC;
-    private bool isPlayableAreaActive = true;
+    private const string DEFAULT_FISH_ICONS_PARENT_NAME = "effects_icons";
+    private const float SPRINT_BUTTON_COOLDOWN = 20f;
+    private const float SPRINT_EFFECT_DURATION = 5f;
+    private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
+    private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
+    private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
 
 
     public void Init(SpawnManager sp) {
@@ -141,16 +142,17 @@ public class PlayerUIController : MonoBehaviour {
 
 #if UNITY_EDITOR || PLAY_GAMES_PC
         playebleAreaUI.SetActive(false);
-        sprintProgressPC.transform.parent.gameObject.SetActive(true);
+        sprintProgressPC./*transform.*/parent.gameObject.SetActive(true);
 #else
-        sprintProgressPC.transform.parent.gameObject.SetActive(false);
+        sprintProgressPC./*transform.*/parent.gameObject.SetActive(false);
         playebleAreaUI.SetActive(true);
 #endif
     }
 
     public void SetPlayableAreaActive(bool isActive) {
-        //if (UIplayebleArea != null)
+#if !UNITY_EDITOR && !PLAY_GAMES_PC
         playebleAreaUI.SetActive(isActive);
+#endif
         isPlayableAreaActive = isActive;
         JoyAxis.Axis = Vector2.zero; // reset joystick input
     }
@@ -175,35 +177,14 @@ public class PlayerUIController : MonoBehaviour {
         timeIcon.transform.parent.gameObject.SetActive(false);
         poisonIcon.transform.parent.gameObject.SetActive(false);
         blindnessIcon.transform.parent.gameObject.SetActive(false);
-        //shieldIcon.fillAmount = 0;
-        //stunIcon.fillAmount = 0;
-        //sprintIcon.fillAmount = 0;
-        //currentIcon.fillAmount = 0;
-        //timeIcon.fillAmount = 0;
-        //poisonIcon.fillAmount = 0;
     }
 
     // Update is called once per frame
     void Update() {
-        //if ((playerEffectManager == null || playerFish == null) && spawnManager.PlayerFish != null) {
-        //    PlayerReConnect(spawnManager.PlayerFish);
-        //    return;
-        //}
 
         //activate and draw progress for all effects icons that have player
         EffectsProgressReset(); // reset all icons progress
-                                //foreach (FishEffectType effectType in playerEffectManager.activeEffects.Keys)
 
-        //foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
-        //    if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value)) {
-        //        if (value == null) {
-        //            EffectsBehaviour(effectType, false);
-        //            //playerEffectManager.RemoveEffect(effectType);
-        //            //Debug.LogWarning(effectType + " " + value + " " + value.LeftTime);
-        //        }
-        //        SetEffectProgress(effectType, value);
-        //        value = null;
-        //    }
         foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.activeEffects)
             if (eff.Value == null || !eff.Value.Enabled)
                 EffectsBehaviour(eff.Key, false);
@@ -249,25 +230,23 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void SprintButtonBehaviour() {
-#if UNITY_EDITOR || PLAY_GAMES_PC   //for Googlr Play Games PC
         if (sprintButton.interactable) {
-
+#if UNITY_EDITOR || PLAY_GAMES_PC   //for Googlr Play Games PC
             if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
                 OnSpintButtonClick();
-
+#endif
             return;
         }
-#endif
 
         if (currentSprintCooldownTime >= SPRINT_BUTTON_COOLDOWN) {
             sprintButton.interactable = true;
             currentSprintCooldownTime = 0f;
             sprintButton.image.fillAmount = 1f; // reset the button fill amount
-            sprintProgressPC.fillAmount = 1f;
+            sprintProgressPC.localScale = Vector3.one;//fillAmount = 1f;
         }
         else {
             sprintButton.image.fillAmount = currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
-            sprintProgressPC.fillAmount = sprintButton.image.fillAmount;
+            sprintProgressPC.localScale = Vector3.right * sprintButton.image.fillAmount + SPRINT_BAR_SCALE_MULTIPLIER;//fillAmount = sprintButton.image.fillAmount;
             currentSprintCooldownTime += Time.deltaTime;
         }
     }
@@ -387,17 +366,6 @@ public class PlayerUIController : MonoBehaviour {
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
     }
 
-    //void DamageOverlayAnim() {
-    //    if (damageOverlay.color.a <= 0) {
-    //        CancelInvoke(nameof(DamageOverlayAnim));
-    //        damageOverlay.gameObject.SetActive(false);
-    //        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
-    //        return;
-    //    }
-
-    //    damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, damageOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
-    //}
-
     void PlayerReConnect(Fish fish, bool isDie) {
         //Debug.LogWarning("PlayerRespawn");
         if (playerFish != null && playerEffectManager != null) {
@@ -419,6 +387,7 @@ public class PlayerUIController : MonoBehaviour {
 
         sprintButton.interactable = true;
         sprintButton.image.fillAmount = 1f; // reset the button fill amount
+        sprintProgressPC.localScale = Vector3.one;//fillAmount = 1f;
         currentSprintCooldownTime = 0f;
 
         DisactivateDefaultIcons();

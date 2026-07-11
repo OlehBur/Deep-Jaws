@@ -78,6 +78,7 @@ public class GameAdsManager : MonoBehaviour {
         LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
 
+
         //LevelPlay.SetMetaData("is_test_suite", "enable");
         LevelPlay.Init(APP_KEY, GetUserID());
     }
@@ -119,6 +120,7 @@ public class GameAdsManager : MonoBehaviour {
     void SdkInitializationCompletedEvent(LevelPlayConfiguration lc) {
         isSdkInitialized = true;
         Debug.Log("The LevelPlay SDK has been successfully initialized!");
+        //LevelPlay.LaunchTestSuite();
 
         if (rewardedAd == null) {
             rewardedAd = new LevelPlayRewardedAd(REWARD_AD_UNIT_ID);
