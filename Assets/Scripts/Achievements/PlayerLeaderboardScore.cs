@@ -18,7 +18,6 @@ public class PlayerLeaderboardScore : MonoBehaviour {
     }
 
     void PlayerReconnect(Fish player, bool isDie) {
-        Debug.LogWarning("FUCK WORk");
         if (this.player != null && this.player != player)
             this.player.OnFishEat -= OnScoreAdd;
         this.player = player;

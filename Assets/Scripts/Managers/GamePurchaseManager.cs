@@ -276,7 +276,7 @@ public class GamePurchaseManager : MonoBehaviour {
         OnUpdateAccountTittles?.Invoke(accountTitles);
         OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
 
-        Debug.LogWarning("Disabled manual call FetchPurchases");
+        //Debug.LogWarning("Disabled manual call FetchPurchases");
         //m_StoreController.FetchPurchases();//Debug.Log("IAP v5: Items received. Checking purchase history...");
     }
 

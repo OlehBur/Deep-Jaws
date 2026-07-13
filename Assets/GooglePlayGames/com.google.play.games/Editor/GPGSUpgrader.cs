@@ -18,6 +18,7 @@
 
 namespace GooglePlayGames.Editor
 {
+    using System.IO;
     using UnityEditor;
     using UnityEngine;
 
@@ -34,7 +35,7 @@ namespace GooglePlayGames.Editor
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
-            //Debug.Log("GPGSUpgrader start");
+            Debug.Log("GPGSUpgrader start");
 
             GPGSProjectSettings.Instance.Set(GPGSUtil.LASTUPGRADEKEY, PluginVersion.VersionKey);
             GPGSProjectSettings.Instance.Set(GPGSUtil.PLUGINVERSIONKEY,
@@ -53,7 +54,7 @@ namespace GooglePlayGames.Editor
             {
                 AssetDatabase.Refresh();
             }
-            //Debug.Log("GPGSUpgrader done");
+            Debug.Log("GPGSUpgrader done");
         }
     }
 }

@@ -58,11 +58,6 @@ public class GPG_Manager : MonoBehaviour {
     private bool isAuthenticated = false;
 
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
-    //private const string FOUNDERS_REEF_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQIQ";
-    //private const string EASY_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHg";
-    //private const string MEDIUM_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQFw";
-    //private const string HARD_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQHw";
-    //private const string EASY_DEATH_LEADERBOARD_ID = "CgkI0PmEnbsFEAIQIA";
 
 
     void Awake() {
@@ -72,7 +67,6 @@ public class GPG_Manager : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
-            //SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => { OnSign(); };//every time after scene load (game->mainmenu expmpl) - re-authenticate
         }
         else
             Destroy(gameObject);
@@ -95,6 +89,7 @@ public class GPG_Manager : MonoBehaviour {
             return;
         }
         //Debug.LogWarning("OnShowAchievements called");
+
         PlayGamesPlatform.Instance.ShowAchievementsUI();
     }
 

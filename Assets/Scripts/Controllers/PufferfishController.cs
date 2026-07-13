@@ -58,7 +58,7 @@ public class PufferfishController : MonoBehaviour {
         //Transform parent = collision.collider.transform.parent;
         Rigidbody victimRb = collision.collider.attachedRigidbody;
 
-        if (victimRb != null && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish fish)//parent.TryGetComponent<Fish>(out Fish fish) 
+        if (!collision.collider.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) && victimRb != null && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish fish)//parent.TryGetComponent<Fish>(out Fish fish) 
             && fish.Level != FishLevel.Pufferfish)
             fish.TakeDamage(DAMAGE_CNT);
     }

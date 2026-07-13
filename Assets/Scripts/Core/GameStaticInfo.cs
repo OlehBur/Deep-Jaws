@@ -87,6 +87,14 @@ public static class GameStaticInfo {
     private const string ENTITY_LAYER_STR = "Entity"; //layer for entities, where fish are located
     public static int ENTITY_LAYER_MASK { get; } = LayerMask.GetMask(ENTITY_LAYER_STR);//layer id for entities
 
+    public const string TAG_BUBBLESHIELD = "Shield";
+    public const string TAG_PLAYER = "Player";
+    public const string TAG_ENTITY = "Entity";
+    public const string TAG_MAP_PREV = "MapReview";
+
+    public const string NAME_PLAYER = "Player ";
+    public const string NAME_ENEMY = "Enemy ";
+
     /// <summary>
     /// RigidbodyConstraints for all fish ( rot: freze X and Z  pos: freeze Y )
     /// </summary>

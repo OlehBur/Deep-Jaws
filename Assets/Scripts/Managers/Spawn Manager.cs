@@ -200,8 +200,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void PrefabNamingTaging(GameObject prefab, FishLevel level, bool isPlayer = false) {
-        string name = isPlayer ? "Player " : "Enemy ";
-        string tag = isPlayer ? "Player" : "Entity";
+        string name = isPlayer ? GameStaticInfo.NAME_PLAYER: GameStaticInfo.NAME_ENEMY;
+        string tag = isPlayer ? GameStaticInfo.TAG_PLAYER : GameStaticInfo.TAG_ENTITY;
 
         prefab.name = name + level.ToString();
         prefab.tag = tag;

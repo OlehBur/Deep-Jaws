@@ -44,6 +44,7 @@ public class GameAdsManager : MonoBehaviour {
     private const string LAST_AD_DATE_KEY = "LastAdDate";
     private const int MAX_DAILY_REWARDED = 22;
     private const float INTERSTETIAL_TIME_INTERVAL = 2 * 60;//m*s (m)
+    private const float INTERSETIAL_DELAY_RELOAD = 10f;
 
 
     private void Awake() {
@@ -134,7 +135,7 @@ public class GameAdsManager : MonoBehaviour {
 
         if (interstitialAd == null) {
             interstitialAd = new LevelPlayInterstitialAd(INTERSTITIAL_AD_UNIT_ID);
-            interstitialAd.OnAdLoaded += (adInfo) => Debug.Log("Interstitial завантажено");
+            interstitialAd.OnAdLoaded += (adInfo) => Debug.Log("Interstitial loaded");
             interstitialAd.OnAdLoadFailed += OnInterstitialLoadFailed;
             interstitialAd.OnAdClosed += OnInterstitialAdClosed;
 
@@ -234,9 +235,21 @@ public class GameAdsManager : MonoBehaviour {
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
         // recalc limits
         RewardedLimitRecalc();
-        //RewardedRewardBeh();
-        //ResetState();
         isRewardEarned = true;
+
+        //  in case if OnAdClosed worked first, it reset adTarget to None via ResetState().
+        if (adTarget == AdTarget.None)
+            adTarget = AdTarget.ExtraLife;
+        // If IsAdStartShow == false, it means that OnAdClosed has already been executed.
+        if (!IsAdStartShow)
+            ProcessEarnedReward();
+    }
+
+    void ProcessEarnedReward() {
+        if (isRewardEarned) {
+            RewardedRewardBeh();
+            isRewardEarned = false;
+        }
     }
 
     void RewardedLimitRecalc() {
@@ -252,17 +265,17 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
-        if (isRewardEarned) {
-            RewardedRewardBeh();
-            isRewardEarned = false;
-        }
+        //if (isRewardEarned) {
+            ProcessEarnedReward();
+            //RewardedRewardBeh();
+            //isRewardEarned = false;
+        //}
 
         rewardedAd.LoadAd();
         ResetState();
     }
 
     void OnRewardedLoadFailed(LevelPlayAdError error) {
-        ResetState();
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
 
@@ -308,7 +321,13 @@ public class GameAdsManager : MonoBehaviour {
 
     void OnInterstitialLoadFailed(LevelPlayAdError error) {
         Debug.LogWarning($"Loading error Interstitial: {error}");
-        ResetState();
+        //Try to load again (preferably add a delay via Invoke or Coroutine for 5-10 seconds to avoid spamming the server)
+        Invoke(nameof(RetryLoadInterstitial), INTERSETIAL_DELAY_RELOAD);
+    }
+
+    void RetryLoadInterstitial() {
+        if (interstitialAd != null && !interstitialAd.IsAdReady())
+            interstitialAd.LoadAd();
     }
 
     private bool CanWatchRewarded() {

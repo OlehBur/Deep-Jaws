@@ -21,18 +21,7 @@ public class JoystickTouchPosition : MonoBehaviour/*, IPointerClickHandler,*/ /*
     }
 
     private void Update() {
-
 #if UNITY_EDITOR
-        //  if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) //is screen touched
-        //{
-        //      if (RectTransformUtility.ScreenPointToLocalPointInRectangle(currentRect, Mouse.current.position.ReadValue(), null, out Vector2 localPoint)
-        //          //&& Vector2.Distance(Mouse.current.position.ReadValue(), stickHandlerParentRect.rect.position) <= stickHandler.dynamicOriginRange
-        //          ) {
-
-        //          handleRectBuffer = stickHandlerRect.rect;
-        //          joystickBackground.anchoredPosition = localPoint - joystickBackground.rect.size * .5f - stickHandlerRect.rect.size;
-        //      }
-        //  }
         if (Mouse.current != null) {
             // get the world position of the stick center
             Vector3 stickWorldCenter = stickHandlerParentRect.TransformPoint(stickHandlerRect.localPosition);
@@ -78,25 +67,9 @@ public class JoystickTouchPosition : MonoBehaviour/*, IPointerClickHandler,*/ /*
             else if (Touchscreen.current.primaryTouch.press.wasReleasedThisFrame)
                 joystickBackground.anchoredPosition = initialJoystickCenter;
         }
-
-    }
 #endif
+    }
 
-    //public void OnPointerDown(PointerEventData eventData) {
-    //    if (handleRectBuffer != stickHandler.rect &&
-    //        RectTransformUtility.ScreenPointToLocalPointInRectangle(transform as RectTransform, eventData.position, null, out Vector2 localPoint)) {
 
-    //        handleRectBuffer = stickHandler.rect;
-    //        joystickBackground.anchoredPosition = localPoint;
-    //        //Debug.Log($"Joystick position set to: {joystick.anchoredPosition}");
-
-    //        //ExecuteEvents.Execute<IPointerDownHandler>(//immitate pointer down event
-    //        //    stickHandler,
-    //        //    eventData,
-    //        //    ExecuteEvents.pointerDownHandler
-    //        //);
-
-    //    }
-    //}
 }
 

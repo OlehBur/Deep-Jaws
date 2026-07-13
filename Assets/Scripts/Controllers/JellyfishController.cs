@@ -152,7 +152,7 @@ public class JellyfishController : MonoBehaviour {
 
     //cooldown and sound only for player fish
     private void OnTriggerStay(Collider other) {
-        if (isJellyColliderActive && !other.isTrigger && other.CompareTag("Player")) {
+        if (isJellyColliderActive && !other.isTrigger && other.CompareTag(GameStaticInfo.TAG_PLAYER)) {
             //jellyCollider.enabled = false;
             isJellyColliderActive = false;
             SetActivateColliders(isJellyColliderActive);

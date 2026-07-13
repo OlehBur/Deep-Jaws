@@ -436,14 +436,14 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     private void OnTriggerEnter(Collider other) {//some invisible obstacles like player spawn zone (only sphere collider)                                                 
-        if (other.tag == "Shield")
+        if (other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD))
             SleepPhysics();
         else if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
             TryContactWithBehaviour(other, false);
     }
 
     private void OnTriggerStay(Collider other) {
-        if (other.tag == "Shield")
+        if (other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD))
             SleepPhysics();
         else if (fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL && !other.isTrigger)
             TryContactWithBehaviour(other, true);

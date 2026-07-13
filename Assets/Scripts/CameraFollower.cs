@@ -180,7 +180,7 @@ public class CameraFollower : MonoBehaviour {
         isDetectObstacle = isEnter;
         //}
         //else
-        if (collider.CompareTag("MapReview") && isEnter)
+        if (collider.CompareTag(GameStaticInfo.TAG_MAP_PREV) && isEnter)
             //if (isEnter)
             currentHeightOffset = CAM_HEIGHT_MAP_OFFSET;
         //else
