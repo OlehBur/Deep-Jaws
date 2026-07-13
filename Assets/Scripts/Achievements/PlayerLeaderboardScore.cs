@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerLeaderboardScore : MonoBehaviour {
     private SpawnManager spawnManager;
     private Fish player;
-    private long score = 0;
+    public static long Score { get; private set; } = 0;
     private static int EasyDeaths { get; set; }
     private const string DEATHS_KEY = "Deaths";
 
@@ -18,7 +18,8 @@ public class PlayerLeaderboardScore : MonoBehaviour {
     }
 
     void PlayerReconnect(Fish player, bool isDie) {
-        if (this.player != null)
+        Debug.LogWarning("FUCK WORk");
+        if (this.player != null && this.player != player)
             this.player.OnFishEat -= OnScoreAdd;
         this.player = player;
         //else
@@ -30,8 +31,8 @@ public class PlayerLeaderboardScore : MonoBehaviour {
                 GPG_Manager.Instance?.OnSavePlayerDeathsToLeaderBoard(EasyDeaths);
             }
             else if (GameStaticInfo.Gamemode == GameMode.Hard) {
-                GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), score);
-                score = 0; // Reset score when the player is disabled
+                GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
+                Score = 0; // Reset score when the player is disabled
                            //Debug.Log("LeadBoardScore PlayerReconnect");
             }
         }
@@ -48,19 +49,19 @@ public class PlayerLeaderboardScore : MonoBehaviour {
     }
 
     private void OnScoreAdd(int score) {
-        this.score += score;
+        Score += score;
         //Debug.Log($"Player score: {this.score}");
     }
 
     public void OnPauseMenuOpen() { //save score when the pause menu is opened
-        GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), score);
-        score = 0; // Reset score when the player is disabled
+        GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
+        Score = 0; // Reset score when the player is disabled
         //Debug.Log("LeadBoardScore OnDisable");
     }
 
     private void OnApplicationQuit() {
-        GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), score);
-        score = 0; // Reset score when the player is disabled
+        GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
+        Score = 0; // Reset score when the player is disabled
         //Debug.Log("OnApplicationQuit");
     }
 
@@ -73,7 +74,8 @@ public class PlayerLeaderboardScore : MonoBehaviour {
         spawnManager.OnPlayerRespawn -= PlayerReconnect;
     }
 
-    /*LederboardKey*/string GetLederboardByGameMode() {
+    /*LederboardKey*/
+    string GetLederboardByGameMode() {
         return GameStaticInfo.Gamemode switch {
             GameMode.Easy => GPGSIds.leaderboard_harbor_breeze_appetite,
             GameMode.Medium => GPGSIds.leaderboard_ocean_voyage_appetite,

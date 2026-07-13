@@ -18,7 +18,7 @@ public class GameAdsManager : MonoBehaviour {
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
     [SerializeField] GameObject noInternetConnectionWnd;
-    [SerializeField] GameObject loadingPanel;
+    //[SerializeField] GameObject loadingPanel;
     [SerializeField] List<TextMeshProUGUI> limitTxtUI = null;
     [Header("Revive Buttons (Rewarded)")]
     [SerializeField] List<Button> reviveButtons = null;
@@ -34,6 +34,7 @@ public class GameAdsManager : MonoBehaviour {
     private bool isSdkInitialized = false;
     private AdTarget adTarget = AdTarget.None;
     private float timeAfterInterstetial = 0f;
+    private bool isRewardEarned = false;
 
     private const string APP_KEY = "26b8c37b5";
     private const string REWARD_AD_UNIT_ID = "shsn3zi2t35xoese";
@@ -47,7 +48,7 @@ public class GameAdsManager : MonoBehaviour {
 
     private void Awake() {
         if (Instance != null && Instance != this) {
-            Instance.ReInitGameUI(spawnManager, gui, loadingPanel, noInternetConnectionWnd, reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
+            Instance.ReInitGameUI(spawnManager, gui, /*loadingPanel,*/ noInternetConnectionWnd, reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
             Destroy(gameObject);
             return;
         }
@@ -56,10 +57,10 @@ public class GameAdsManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui, GameObject loadingPanel, GameObject noInternetConnectionWnd, List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
+    void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui, /*GameObject loadingPanel,*/ GameObject noInternetConnectionWnd, List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
         this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
         this.gui = this.gui == null ? gui : this.gui;
-        this.loadingPanel = this.loadingPanel == null ? loadingPanel : this.loadingPanel;
+        //this.loadingPanel = this.loadingPanel == null ? loadingPanel : this.loadingPanel;
         this.noInternetConnectionWnd = this.noInternetConnectionWnd == null ? noInternetConnectionWnd : this.noInternetConnectionWnd;
 
         this.limitTxtUI = IsListNeedToCopy(this.limitTxtUI, limitTxtUI) ?
@@ -77,7 +78,6 @@ public class GameAdsManager : MonoBehaviour {
     void Start() {
         LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
-
 
         //LevelPlay.SetMetaData("is_test_suite", "enable");
         LevelPlay.Init(APP_KEY, GetUserID());
@@ -150,58 +150,59 @@ public class GameAdsManager : MonoBehaviour {
     private void OnReviveClicked() {//rewarded
         adTarget = AdTarget.ExtraLife;
         IsAdStartShow = true;
-        loadingPanel.SetActive(true);
+        //loadingPanel.SetActive(true);
+        gui.loadingPanel.SetActive(true);
+        SetButtonsInteractable(false);
 
         // check premium\founders
         if (ProgressSaver.IsPlayerHasAdImmunitet().premium && CanWatchRewarded()) {
             RewardedLimitRecalc();
             Debug.Log("The player has a premium account! We'll revive it for free.");
             RewardedRewardBeh();
-            IsAdStartShow = false;
-            loadingPanel.SetActive(false);
+            ResetState();
             return;
         }
 
         if (Application.internetReachability == NetworkReachability.NotReachable) {
             if (noInternetConnectionWnd != null)
                 noInternetConnectionWnd.gameObject.SetActive(true);
-            IsAdStartShow = false;
-            adTarget = AdTarget.None;
-            loadingPanel.SetActive(false);
+            ResetState();
             return;
         }
 
         if (!isSdkInitialized) {
             Debug.LogWarning("The ad isn't ready yet; the SDK is initializing.");
-            adTarget = AdTarget.None;
-            IsAdStartShow = false;
-            loadingPanel.SetActive(false);
+            ResetState();
             return;
         }
 
         // check day limit
         if (!CanWatchRewarded()) {
             Debug.Log("The free revival attempts have ended for today!");
-            adTarget = AdTarget.None;
-            IsAdStartShow = false;
-            loadingPanel.SetActive(false);
+            ResetState();
             return;
         }
 
         //check add readiness
         if (rewardedAd != null && rewardedAd.IsAdReady()) {
-            SetButtonsInteractable(false);
-            loadingPanel.SetActive(false);
             rewardedAd.ShowAd();
-            rewardedAd.LoadAd();
+            //rewardedAd.LoadAd();
         }
-        else {//try load again if failed load           
-            IsAdStartShow = true;
+        else {//try load again if failed load   
             Debug.Log("Rewarded isn't ready. Let's try downloading it...");
-            loadingPanel.SetActive(false);
+            //loadingPanel.SetActive(false);
             //gui.ActivateRespawnWnd();
             rewardedAd?.LoadAd();
+            ResetState();
         }
+    }
+
+    private void ResetState() {
+        IsAdStartShow = false;
+        adTarget = AdTarget.None;
+        //loadingPanel.SetActive(false);
+        gui.loadingPanel.SetActive(false);
+        SetButtonsInteractable(true);
     }
 
     /// <summary>
@@ -222,8 +223,8 @@ public class GameAdsManager : MonoBehaviour {
 
         IsAdStartShow = true;
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
+            gui.loadingPanel.SetActive(true);
             interstitialAd.ShowAd();
-            interstitialAd.LoadAd();
             return true;
         }
 
@@ -233,9 +234,9 @@ public class GameAdsManager : MonoBehaviour {
     void RewardedAdOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
         // recalc limits
         RewardedLimitRecalc();
-        IsAdStartShow = false;
-
-        RewardedRewardBeh();
+        //RewardedRewardBeh();
+        //ResetState();
+        isRewardEarned = true;
     }
 
     void RewardedLimitRecalc() {
@@ -251,15 +252,17 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
-        SetButtonsInteractable(true);
-        loadingPanel.SetActive(false);
-        IsAdStartShow = false;
+        if (isRewardEarned) {
+            RewardedRewardBeh();
+            isRewardEarned = false;
+        }
+
+        rewardedAd.LoadAd();
+        ResetState();
     }
 
     void OnRewardedLoadFailed(LevelPlayAdError error) {
-        IsAdStartShow = false;
-        SetButtonsInteractable(true);
-        loadingPanel.SetActive(false);
+        ResetState();
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
 
@@ -273,54 +276,40 @@ public class GameAdsManager : MonoBehaviour {
             return;
         }
 
+        gui.loadingPanel.SetActive(true);
+        SetButtonsInteractable(false);
+
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (prem || noadd) {
             Debug.Log("The Premium player has declined to be revived. Skip the ad.");
             InterstitialRespawnBeh();
+            ResetState();
             return;
         }
 
-        loadingPanel.SetActive(true);
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
             interstitialAd.ShowAd();
-            interstitialAd.LoadAd();
+            //interstitialAd.LoadAd();
         }
         else {
             //ad not ready (haha classic lucky u - bum i
             Debug.Log("The interstitial isn't ready. Just restart the game.");
             InterstitialRespawnBeh();
-            loadingPanel.SetActive(false);
+            ResetState();
         }
     }
 
     void OnInterstitialAdClosed(LevelPlayAdInfo adInfo) {
-        SetButtonsInteractable(true);
-        loadingPanel.SetActive(false);
-        IsAdStartShow = false;
         interstitialAd.LoadAd(); //load immediately load on backgr new ad
         InterstitialRespawnBeh();
+
+        ResetState();
     }
 
     void OnInterstitialLoadFailed(LevelPlayAdError error) {
-        SetButtonsInteractable(true);
-        loadingPanel.SetActive(false);
-        IsAdStartShow = false;
         Debug.LogWarning($"Loading error Interstitial: {error}");
+        ResetState();
     }
-
-
-    /// <summary>
-    /// premium - delete interstitial and rewardeed ads, noAds - only del interstitial
-    /// </summary>
-    /// <returns></returns>
-    //private (bool premium, bool noAds) IsPlayerHasAddImmunitet() {
-    //    if (ProgressSaver.IsDataExist()) {
-    //        SaveData_Player data = ProgressSaver.Load();
-    //        if (data != null)
-    //            return (data.isPremiumUser, data.isNoAD);
-    //    }
-    //    return (false, false);
-    //}
 
     private bool CanWatchRewarded() {
         string today = DateTime.Today.ToString("yyyy-MM-dd");

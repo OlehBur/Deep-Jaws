@@ -498,6 +498,9 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int GetRandSpawnLevel() {
+        if (PlayerFish == null)
+            return (int)GameStaticInfo.PLAYER_INIT_LVL;
+
         const int ALLOWED_LVLS_CNT = 3;
         int[] allowedLevels = new int[ALLOWED_LVLS_CNT] {
             Math.Max((int) PlayerFish.Level - 1, 0),
@@ -666,6 +669,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         const float WEIGHT_FIXER = 0.01f; //to control some fish spawn points distribution
         float distanceToPlayer = 0f;
         int currentSpawnPointIndex = (int)(lvl * SPAWN_POINTS_WEIGHT + WEIGHT_FIXER);
+        Vector3 playerPos = PlayerFish == null ? Vector3.zero : PlayerFish.transform.position;
 
         Transform/*[]*/ spawnPoints = currentSpawnPointIndex switch {
             0 => weakFishSpawnPointsParent/*weakFishSpawnPoints*/,
@@ -682,7 +686,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //rand spawn position farthest from player by distance
         for (int i = 0; i <= pointsMaxInd; i++) {//max attempts to find suitable spawn point
             index = (int)(UnityEngine.Random.value * pointsMaxInd);
-            distanceToPlayer = Vector3.Distance(/*pool[PLAYER_INDEX]*/PlayerFish.transform.position, spawnPoints.GetChild(index).position);
+            distanceToPlayer = Vector3.Distance(/*pool[PLAYER_INDEX]*/playerPos, spawnPoints.GetChild(index).position);
 
             if (distanceToPlayer < GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW/* && distanceToPlayer < MAX_DISTANCE_FROM_PLAYER*/)
                 continue;

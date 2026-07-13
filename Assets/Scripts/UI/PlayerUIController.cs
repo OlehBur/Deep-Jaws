@@ -40,12 +40,13 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI healthProgresMax_txt;
     [SerializeField] TextMeshProUGUI lvlProgres_txt;
     [SerializeField] TextMeshProUGUI lvl_txt;
+    [SerializeField] TextMeshProUGUI score_txt;
     [SerializeField] Image healthBar; // image to display player health bar
     [SerializeField] Image lvlBar; // image to display player level bar
     [SerializeField] Transform playerProgressIconsParent;
     [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
     //[SerializeField] Image sprintProgressPC;
-    [SerializeField] Transform sprintProgressPC;
+    [SerializeField] Image sprintProgressPC;
 
     public static readonly Vector2[] iconsPositionsMultipliers1 = new Vector2[1] { new Vector2(.5f, .7f) };
     public static readonly Vector2[] iconsPositionsMultipliers2 = new Vector2[2]{
@@ -116,6 +117,7 @@ public class PlayerUIController : MonoBehaviour {
     private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
     private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
     private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
+    private const float SPRINT_PROGRESS_PC_LOADING_ALPHA = 0.5f;
 
 
     public void Init(SpawnManager sp) {
@@ -142,9 +144,9 @@ public class PlayerUIController : MonoBehaviour {
 
 #if UNITY_EDITOR || PLAY_GAMES_PC
         playebleAreaUI.SetActive(false);
-        sprintProgressPC./*transform.*/parent.gameObject.SetActive(true);
+        sprintProgressPC.transform.parent.gameObject.SetActive(true);
 #else
-        sprintProgressPC./*transform.*/parent.gameObject.SetActive(false);
+        sprintProgressPC.transform.parent.gameObject.SetActive(false);
         playebleAreaUI.SetActive(true);
 #endif
     }
@@ -227,6 +229,8 @@ public class PlayerUIController : MonoBehaviour {
 
         lvl_txt.text = ((int)playerFish.Level).ToString();
         lvlBar.fillAmount = playerFish.Progress;
+
+        score_txt.text = PlayerLeaderboardScore.Score.ToString();
     }
 
     void SprintButtonBehaviour() {
@@ -242,11 +246,13 @@ public class PlayerUIController : MonoBehaviour {
             sprintButton.interactable = true;
             currentSprintCooldownTime = 0f;
             sprintButton.image.fillAmount = 1f; // reset the button fill amount
-            sprintProgressPC.localScale = Vector3.one;//fillAmount = 1f;
+            sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
+            sprintProgressPC.color = new Color(sprintProgressPC.color.r, sprintProgressPC.color.g, sprintProgressPC.color.b, 1f);
         }
         else {
             sprintButton.image.fillAmount = currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
-            sprintProgressPC.localScale = Vector3.right * sprintButton.image.fillAmount + SPRINT_BAR_SCALE_MULTIPLIER;//fillAmount = sprintButton.image.fillAmount;
+            sprintProgressPC.transform.localScale = Vector3.right * sprintButton.image.fillAmount + SPRINT_BAR_SCALE_MULTIPLIER;//fillAmount = sprintButton.image.fillAmount;
+            sprintProgressPC.color = new Color(sprintProgressPC.color.r, sprintProgressPC.color.g, sprintProgressPC.color.b, SPRINT_PROGRESS_PC_LOADING_ALPHA);
             currentSprintCooldownTime += Time.deltaTime;
         }
     }
@@ -387,7 +393,8 @@ public class PlayerUIController : MonoBehaviour {
 
         sprintButton.interactable = true;
         sprintButton.image.fillAmount = 1f; // reset the button fill amount
-        sprintProgressPC.localScale = Vector3.one;//fillAmount = 1f;
+        sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
+        sprintProgressPC.color = new Color(sprintProgressPC.color.r, sprintProgressPC.color.g, sprintProgressPC.color.b, 1f);
         currentSprintCooldownTime = 0f;
 
         DisactivateDefaultIcons();

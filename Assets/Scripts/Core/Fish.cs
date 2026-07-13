@@ -147,7 +147,7 @@ public class Fish : MonoBehaviour {
 
     public void FeedCaviar(/*float foodNutrition*/) {
         Progress += 1 / (MIN_PROGRESS_GAIN_MULTIPLIER + (float)level * MIN_PROGRESS_GAIN_MULTIPLIER);
-        OnFishEat?.Invoke(0);
+        OnFishEat?.Invoke(1);
         UpdateGrowSize();
         OnInfoStatsChanged?.Invoke();
     }

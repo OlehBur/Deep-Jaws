@@ -5,6 +5,9 @@
     "m_Properties": [
         {
             "m_Id": "0a902a4d6b8d446db45b7ed7e217f49a"
+        },
+        {
+            "m_Id": "d5bbc15de5a14a28af6716b11b214c19"
         }
     ],
     "m_Keywords": [],
@@ -41,6 +44,9 @@
         },
         {
             "m_Id": "8f7e3516b1344534b52ac414b1db6f34"
+        },
+        {
+            "m_Id": "23124fbb6c2342be9441237bb53f5380"
         }
     ],
     "m_GroupDatas": [
@@ -50,6 +56,20 @@
     ],
     "m_StickyNoteDatas": [],
     "m_Edges": [
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "23124fbb6c2342be9441237bb53f5380"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "cd970ad732314c76a5af9c510ebd60d0"
+                },
+                "m_SlotId": 0
+            }
+        },
         {
             "m_OutputSlot": {
                 "m_Node": {
@@ -104,20 +124,6 @@
                     "m_Id": "cd970ad732314c76a5af9c510ebd60d0"
                 },
                 "m_SlotId": 2
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "a8c5c7ba2a814780a2c6ced4275804de"
-                },
-                "m_SlotId": 0
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "cd970ad732314c76a5af9c510ebd60d0"
-                },
-                "m_SlotId": 0
             }
         },
         {
@@ -307,6 +313,42 @@
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "23124fbb6c2342be9441237bb53f5380",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 43.99932861328125,
+            "y": -599.6943359375,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "ca67b25dd14e4a7f854081c718be021c"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "d5bbc15de5a14a28af6716b11b214c19"
+    }
 }
 
 {
@@ -589,10 +631,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 25.0,
-            "y": 211.0,
+            "x": 12.999999046325684,
+            "y": 214.00001525878907,
             "width": 118.0,
-            "height": 34.0
+            "height": 33.99998474121094
         }
     },
     "m_Slots": [
@@ -917,6 +959,29 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "ca67b25dd14e4a7f854081c718be021c",
+    "m_Id": 0,
+    "m_DisplayName": "TextureEdge",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "ccf1e9ea52114a92a3e65230c46d25b4",
     "m_Id": 1,
     "m_DisplayName": "Out",
@@ -943,8 +1008,8 @@
     "m_ObjectId": "cd4212700f854b39a7bfdcc382f791c4",
     "m_Title": "Noise World Texture",
     "m_Position": {
-        "x": -628.0,
-        "y": -466.0
+        "x": -628.0000610351563,
+        "y": -466.00006103515627
     }
 }
 
@@ -995,6 +1060,39 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector3ShaderProperty",
+    "m_ObjectId": "d5bbc15de5a14a28af6716b11b214c19",
+    "m_Guid": {
+        "m_GuidSerialized": "2a4e5733-5ebe-45b0-8f18-cdf61f92e0dc"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "TextureEdge",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "TextureEdge",
+    "m_DefaultReferenceName": "_TextureEdge",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "d7b59fb13f4e46d1a295ead53e858475",
@@ -1027,6 +1125,9 @@
     "m_ChildObjectList": [
         {
             "m_Id": "0a902a4d6b8d446db45b7ed7e217f49a"
+        },
+        {
+            "m_Id": "d5bbc15de5a14a28af6716b11b214c19"
         }
     ]
 }

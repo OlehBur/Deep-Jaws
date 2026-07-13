@@ -14,6 +14,7 @@ using System; //  for Uri.EscapeDataString
 public class MainmenuManager : MonoBehaviour {
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
+    [SerializeField] public GameObject loadingPanel;
 
     [Header("MainMenu Scene")]
     [SerializeField] Light mainMenuLight;
@@ -84,6 +85,11 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     void ActivateRespawnWnd() {
+        if (GameStaticInfo.Gamemode == GameMode.Hard) {
+            spawnManager.RespawnPlayer(true, false);
+            return;
+        }
+
         respawnWnd.SetActive(true);
         respawnTime = RESPAWN_TIME;
 
@@ -290,6 +296,6 @@ public class MainmenuManager : MonoBehaviour {
         Debug.Log("Open Mail Client...");
     }
 
-public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
+    public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
     public void OnExitButtonClicked() => Application.Quit();
 }

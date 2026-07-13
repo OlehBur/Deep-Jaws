@@ -136,22 +136,7 @@ public class GPG_Manager : MonoBehaviour {
                 }
             }
             onComplete(false);
-        });        //    string targetAchievementId = GPGSIds.achievement_youre_my_friend_now;
-        //    //var founderAchievement = achievements.FirstOrDefault(a => a.id == targetAchievementId) as PlayGamesAchievement;
-        //    var founderAchievement = achievements.FirstOrDefault(a => a.id == targetAchievementId) as dynamic;
-
-        //    if (founderAchievement != null && founderAchievement.completed) {
-        //        DateTime releaseDate = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
-        //        DateTime achievementDate = (DateTime)founderAchievement.lastReportedDate;
-
-        //        if (achievementDate < releaseDate) {
-        //            Debug.Log($"Фаундер виявлений! Досягнення отримано: {founderAchievement.lastReportedDate}");
-        //            onComplete(true);
-        //            return;
-        //        }
-        //    }
-        //    onComplete(false);
-        //});
+        });
     }
 
     IEnumerator TryAuthenticateWithDelay() {
@@ -159,13 +144,15 @@ public class GPG_Manager : MonoBehaviour {
         if (this == null)//in case fast open game scene
             StopAllCoroutines();
 
+        if (mainmenu != null)
+            mainmenu.loadingPanel.SetActive(true);
         //Debug.Log("Trying to authenticate...");
         PlayGamesPlatform.Instance.Authenticate((result) => {
             if (result == SignInStatus.Success) {
                 //Debug.Log("Authentication SUCCESS");
                 isAuthenticated = true;
                 mainmenu.ChangeSignInColor(true);
-                
+
                 CheckFounderStatus((isFounder) => {
                     if (isFounder) {
                         SaveData currentData = ProgressSaver.IsDataExist() ?
@@ -186,6 +173,9 @@ public class GPG_Manager : MonoBehaviour {
                 Debug.Log("Authentication FAILED: " + result);
                 isAuthenticated = false;
             }
+
+            if (mainmenu != null)
+                mainmenu.loadingPanel.SetActive(false);
         });
 
         UpdateMainMenuUI();
@@ -241,7 +231,7 @@ public class GPG_Manager : MonoBehaviour {
 
     }
 
-    public static void OnTriggerAchievement(string achievementKey) =>       
+    public static void OnTriggerAchievement(string achievementKey) =>
         PlayGamesPlatform.Instance.UnlockAchievement(achievementKey);
 
     private void OnDestroy() {
