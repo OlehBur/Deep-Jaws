@@ -443,8 +443,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// <param name="prefab"></param>
     private void DeactivatePrefab(GameObject prefab, FishLevel level, bool isPlayer, bool isDie = true) {
         int visIndex = 0;
-        if (isPlayer)
-            Debug.LogWarning("Player died on level: " + level);
+        //if (isPlayer)
+            //Debug.LogWarning("Player died on level: " + level);
 
         switch (level) {
             case FishLevel.Pufferfish:

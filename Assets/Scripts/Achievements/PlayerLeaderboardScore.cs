@@ -39,24 +39,24 @@ public class PlayerLeaderboardScore : MonoBehaviour {
             player.OnFishEat += OnScoreAdd;
     }
 
-    public static void LoadSavedData() {
+    public static void LoadSavedData() =>
         EasyDeaths = PlayerPrefs.GetInt(DEATHS_KEY, 0);
-    }
 
-    public static void SaveLoadedData() {
+
+    public static void SaveLoadedData() =>
         PlayerPrefs.SetInt(DEATHS_KEY, EasyDeaths);
-    }
 
-    private void OnScoreAdd(int score) {
+
+    private void OnScoreAdd(int score) =>
         Score += score;
-        //Debug.Log($"Player score: {this.score}");
-    }
+    //Debug.Log($"Player score: {this.score}");
 
-    public void OnPauseMenuOpen() { //save score when the pause menu is opened
+    public void OnPauseMenuOpen() => //save score when the pause menu is opened
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
-        Score = 0; // Reset score when the player is disabled
-        //Debug.Log("LeadBoardScore OnDisable");
-    }
+    //Score = 0; // Reset score when the player is disabled
+    //Debug.Log("LeadBoardScore OnDisable");
+
+    public void OnResetScore() => Score = 0;
 
     private void OnApplicationQuit() {
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);

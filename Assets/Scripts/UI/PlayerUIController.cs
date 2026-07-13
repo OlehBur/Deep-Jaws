@@ -152,9 +152,9 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     public void SetPlayableAreaActive(bool isActive) {
-#if !UNITY_EDITOR && !PLAY_GAMES_PC
-        playebleAreaUI.SetActive(isActive);
-#endif
+//#if !UNITY_EDITOR && !PLAY_GAMES_PC
+//        playebleAreaUI.SetActive(isActive);
+//#endif
         isPlayableAreaActive = isActive;
         JoyAxis.Axis = Vector2.zero; // reset joystick input
     }
@@ -162,6 +162,7 @@ public class PlayerUIController : MonoBehaviour {
     public void OnSpintButtonClick() {
         playerEffectManager.ApplyEffect(FishEffectType.SprintSpeed, SPRINT_EFFECT_DURATION);
         sprintButton.interactable = false; // disable the button after applying the effect
+        currentSprintCooldownTime = 0f; // reset the cooldown timer
     }
 
     //deactivates icons visualized above the fish , since the player has a more detailed visualization in the interface
@@ -256,7 +257,7 @@ public class PlayerUIController : MonoBehaviour {
             currentSprintCooldownTime += Time.deltaTime;
         }
     }
-
+     
     /// <summary>
     /// sets the progress of the effect icon that affects the player, 
     /// </summary>
