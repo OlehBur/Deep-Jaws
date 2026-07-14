@@ -12,9 +12,6 @@ public class StoreAnimator : MonoBehaviour {
     }
 
     private void Update() {
-        //if (blinkAnims[0] != null)
-        //for (int i = 0; i < blinkAnims.Length; i++)
-        //    blinkAnims[i].Update();
         foreach (BlinkAnim blAnim in blinkAnims)
             blAnim.Update();
     }

@@ -112,10 +112,6 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     void FixedUpdate() {
-        //if (fishAnim != null && fishAnim.IsInited) {
-        //    enabled = false;
-        //    return;
-        //}
         if (fish.IsPlayer)
             PlayerMovement();
         else if (IsFishNeedUpdate())
@@ -180,13 +176,13 @@ public class FishControl : MonoBehaviour, IFish {
         // rotation in dir of movement
         Vector3 newRot = Vector3./*Lerp*/SmoothDamp(
             transform.forward, moveDir.normalized,/*player.RotationSpeed*/ ref rotateVelocity,
-            fish.RotationSpeed * ROTATION_TIME_MULTIPLIER, Mathf.Infinity, Time.unscaledDeltaTime);
+            fish.RotationSpeed * ROTATION_TIME_MULTIPLIER, Mathf.Infinity, Time.fixedUnscaledDeltaTime);
         Quaternion newLook = Quaternion.LookRotation(newRot, Vector3.up);
 
         if (newRot != Vector3.zero) {
-            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed * Time.unscaledDeltaTime);
+            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed * Time.fixedUnscaledDeltaTime);
 
-            fishAnim.RotateAnimation(transform.forward, newRot, Time.unscaledDeltaTime, .040f /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
+            fishAnim.RotateAnimation(transform.forward, newRot, Time.fixedUnscaledDeltaTime, .040f /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
             transform.rotation = newSmoothRot;
         }
 
@@ -194,7 +190,7 @@ public class FishControl : MonoBehaviour, IFish {
         float movingScalerByRotation = Mathf.Clamp01(1.1f - Mathf.Clamp01(Quaternion.Angle(transform.rotation, newLook) / STOP_MOVING_ANGLE)); //.1f to 1f  
         //Debug.Log(movingScalerByRotation);
         moveDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        Vector3 targetPos = moveDir * fish.Speed * Time./*fixedDeltaTime*/unscaledDeltaTime * movingScalerByRotation;
+        Vector3 targetPos = moveDir * fish.Speed * Time.fixedUnscaledDeltaTime * movingScalerByRotation;
 
         if (targetPos != Vector3.zero)
             rb.linearVelocity = targetPos;
@@ -336,11 +332,11 @@ public class FishControl : MonoBehaviour, IFish {
             SleepPhysics();
 
         // smooth rotation
-        Vector3 rot = Vector3.SmoothDamp(transform.forward, move.normalized, /*enemy.RotationSpeed*/ref rotateVelocity, Time.deltaTime);
+        Vector3 rot = Vector3.SmoothDamp(transform.forward, move.normalized, /*enemy.RotationSpeed*/ref rotateVelocity, Time.fixedDeltaTime);
 
         if (rot != Vector3.zero) {
-            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(rot, Vector3.up), fish.RotationSpeed * Time.deltaTime);
-            fishAnim?.RotateAnimation(transform.forward, rot, Time.deltaTime);//call fish animation manager to rotate the fish model
+            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(rot, Vector3.up), fish.RotationSpeed * Time.fixedDeltaTime);
+            fishAnim?.RotateAnimation(transform.forward, rot, Time.fixedDeltaTime);//call fish animation manager to rotate the fish model
             transform.rotation = newSmoothRot;
         }
     }

@@ -52,6 +52,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     public static Fish[] pufferfishPool_FishComponents { get; } = new Fish[PUFFERFISH_SPAWN_COUNT];
     public static GameObject[] cuttlefishPool_Objects { get; } = new GameObject[CUTTLEFISH_SPAWN_COUNT];
     public static Fish[] cuttlefishPool_FishComponents { get; } = new Fish[CUTTLEFISH_SPAWN_COUNT];
+    public int PlayerPoolSize => prefabs.Length - 1;//crab is uncounted
 
     private Vector3 PlayerInitSpawnPos;
     private static readonly float[] SPAWN_WEIGHTS_EASY = { .5f, .35f, .15f };
@@ -128,11 +129,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void InitPlayerPool() {
-        int poolSize = prefabs.Length - 1;//crab is uncounted
-        playerPool_Objects = new GameObject[poolSize];
-        playerPool_FishComponents = new Fish[poolSize];
+        playerPool_Objects = new GameObject[PlayerPoolSize];
+        playerPool_FishComponents = new Fish[PlayerPoolSize];
 
-        for (int playerInd = 0, prefabInd = 1; playerInd < poolSize; playerInd++, prefabInd++) {
+        for (int playerInd = 0, prefabInd = 1; playerInd < PlayerPoolSize; playerInd++, prefabInd++) {
 
             GameObject playerPrefab = Instantiate(prefabs[prefabInd], fishPoolParent);
             Fish newPlayerFish = playerPrefab.GetComponent<Fish>();
@@ -316,7 +316,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.Save(saveData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.HammerShark;
+        //playerLvl = (int)FishLevel.Lionfish;
         //playerProgress = .9f;
         //Debug.LogWarning(playerLvl);
         int playerIndex = playerLvl - 1;
@@ -372,11 +372,13 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     /// respawn all +2 lvl fishes depending on player lvl after hes death
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void RespawnEntitiesMap(FishLevel newPlayerFishLVL) {
+    void RespawnEntitiesMap(FishLevel playerFishLVL) {
         //Debug.LogWarning("Disabled Reinit Entities map");
         for (int i = 0; i < POOL_SIZE; i++)
-            if (visible_poolFishObjects[i].activeInHierarchy && visible_poolFishComponents[i].Level > newPlayerFishLVL + 1)
+            if (visible_poolFishObjects[i].activeInHierarchy && visible_poolFishComponents[i].Level > playerFishLVL) {
                 visible_poolFishComponents[i].Die();
+                Debug.LogWarning("Respawn entity: " + visible_poolFishComponents[i]);
+            }
     }
 
     void FishDieAct(GameObject gameObject, FishLevel level, bool isPlayer) {

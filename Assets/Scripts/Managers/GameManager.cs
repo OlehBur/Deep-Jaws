@@ -16,12 +16,13 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public static float CurrentDefaultGameTime { get; private set; }
     public static readonly float DEFAULT_GAME_TIME = 1f;
-
+    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC();
     private const float FIXED_DELTA_TINE_LOW = .05f;
     private const float FIXED_DELTA_TINE_HIGH = .02f;
     public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
     public static bool IsGamePaused => Time.timeScale == 0f;
     public static bool IsSceneReady { get; private set; } = false;
+
     private const float CANVAS_ACTIVATE_DELAY = .5f;
     private const float SCENE_ACTIVATE_DELAY = .1f;
 

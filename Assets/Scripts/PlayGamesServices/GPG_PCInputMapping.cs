@@ -1,28 +1,26 @@
-//#if PLAY_GAMES_PC
 using UnityEngine;
 using Google.Play.InputMapping;
 using System.Collections.Generic;
-#if PLAY_GAMES_PC
-using Google.Android.Libraries.Play.Games.Inputmapping;
-#endif
+//#if PLAY_GAMES_PC
+//using Google.Android.Libraries.Play.Games.Inputmapping;
+//#endif
 
-public enum GameActionId { SPRINT = 0,   MOVE_FORWARD = 1, MOVE_LEFT = 2, MOVE_RIGHT = 3, MOVE_BACKWARD = 4 }
+public enum GameActionId { SPRINT = 0, MOVE_FORWARD = 1, MOVE_LEFT = 2, MOVE_RIGHT = 3, MOVE_BACKWARD = 4 }
 public enum GameGroupId { GAMEPLAY = 1 }
 
 
 public class GPG_PCInputMapping : MonoBehaviour {
     void Start() {
-#if PLAY_GAMES_PC
-        //  get the input mapping client from Google Play
-        PlayInputMappingClient inputMappingClient = PlayInputSDK.GetInputMappingClient();
-
-        DJ_PlayGamesInputProvider myProvider = new DJ_PlayGamesInputProvider();
-
-        // register it in the Google Play system
-        inputMappingClient.RegisterInputMappingProvider(myProvider);
-        
-        Debug.Log("Google Play Input Mapping successfully registered!");
-#endif
+        //#if PLAY_GAMES_PC
+        if (GameManager.IsRunOnPC) {
+            //  get the input mapping client from Google Play
+            PlayInputMappingClient inputMappingClient = PlayInput.GetInputMappingClient();
+            DJ_PlayGamesInputProvider myProvider = new DJ_PlayGamesInputProvider();
+            // register it in the Google Play system
+            inputMappingClient.SetInputMappingProvider(myProvider);
+            Debug.Log("Google Play Input Mapping successfully registered!");
+        }
+        //#endif
     }
 }
 

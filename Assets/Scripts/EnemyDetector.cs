@@ -28,7 +28,6 @@ public class EnemyDetector : MonoBehaviour {
                     if (colliders[i] == null)
                         continue;
 
-                    //enemyFish = colliders[i].transform.parent.GetComponent<Fish>();
                     GameStaticInfo.TryGetFish(colliders[i].transform.parent.gameObject, out enemyFish);
                     if (enemyFish != null && enemyFish != playerFish && enemyFish.IsLegitimateTarget(playerFish)) {
 

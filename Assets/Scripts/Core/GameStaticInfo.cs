@@ -146,4 +146,30 @@ public static class GameStaticInfo {
             return true;
         }
     }
+
+    public static bool IsRunningOnPlayGamesPC() {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    try
+    {
+        using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        {
+            using (AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+            {
+                using (AndroidJavaObject packageManager = currentActivity.Call<AndroidJavaObject>("getPackageManager"))
+                {
+                    //  check uniq GPG PC mark
+                    return packageManager.Call<bool>("hasSystemFeature", "com.google.android.play.feature.HPE_EXPERIENCE");
+                }
+            }
+        }
+    }
+    catch (System.Exception e)
+    {
+        UnityEngine.Debug.LogError("Помилка перевірки платформи: " + e.Message);
+        return false;
+    }
+#else
+        return false;
+#endif
+    }
 }

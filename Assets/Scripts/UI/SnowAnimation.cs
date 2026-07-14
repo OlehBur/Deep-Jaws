@@ -3,16 +3,17 @@ using UnityEngine;
 public class SnowAnimation : MonoBehaviour {
     private const float SIDE_SPEED = 50f;
     private const float DOWN_SPEED = 200f;
+
     private RectTransform parent;
     private float parentWidth;
     private float parentHeight;
+
 
     private void Start() {
         parent = transform as RectTransform;
         parentWidth = parent.rect.width;
         parentHeight = parent.rect.height;
     }
-
 
     void Update() {
         if (gameObject.activeInHierarchy) {
@@ -25,11 +26,11 @@ public class SnowAnimation : MonoBehaviour {
                 flakeWidthHalf = rs.rect.width * .5f * rs.localScale.x;
 
                 if (buffPos.y < -flakeWidthHalf
-                || buffPos.x > /*Screen.width*/parentWidth + flakeWidthHalf
+                || buffPos.x > parentWidth + flakeWidthHalf
                 || buffPos.x < -flakeWidthHalf) {
 
-                    buffPos.x = Random.Range(flakeWidthHalf, /*Screen.width*/parentWidth - flakeWidthHalf);
-                    buffPos.y = /*Screen.height*/parentHeight + flakeWidthHalf;
+                    buffPos.x = Random.Range(flakeWidthHalf, parentWidth - flakeWidthHalf);
+                    buffPos.y = parentHeight + flakeWidthHalf;
                     rs.anchoredPosition = buffPos;
                 }
 

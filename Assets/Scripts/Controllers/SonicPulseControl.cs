@@ -23,6 +23,7 @@ public class SonicPulseControl : MonoBehaviour {
             if (curentRechargeTime <= 0f)
                 triggerCollider.enabled = true;
         }
+
         IndicatorBlinking();
         if (playAnim)
             PulseScalingAnim();

@@ -26,7 +26,7 @@ public class ModelsAroundView : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        /*transform*/parentWithModels.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
+        parentWithModels.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
         currentAngle += rotationSpeed * Time.deltaTime;
 
         if (currentAngle >= ANGLE_TRIGGER) {

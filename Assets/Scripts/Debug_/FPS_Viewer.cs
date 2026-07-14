@@ -23,7 +23,7 @@ public class FPS_Viewer : MonoBehaviour {
 
     IEnumerator LogPerformance() {
         while (true) {
-            yield return UPD_WAIT/*new WaitForSeconds(updateInterval)*/;
+            yield return UPD_WAIT;
 
             int fps = (int)(frameCount / currentTime);
             if (ExtendedInfo) {
@@ -42,19 +42,4 @@ public class FPS_Viewer : MonoBehaviour {
         currentTime += Time.unscaledDeltaTime;
         frameCount++;
     }
-
-    //private void Awake() {
-    //    fpsText = GetComponent<TextMeshProUGUI>();
-    //}
-
-    //void Update() {
-    //    currentTime += Time.unscaledDeltaTime;
-
-    //    if (currentTime > updateInterval) {
-    //        int fps = (int)(1f / Time.unscaledDeltaTime);
-
-    //        fpsText.text = $"FPS: {fps.ToString()}"; // display FPS
-    //        currentTime = 0f; // reset timer
-    //    }
-    //}
 }

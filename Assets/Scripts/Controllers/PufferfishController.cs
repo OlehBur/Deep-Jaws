@@ -16,17 +16,6 @@ public class PufferfishController : MonoBehaviour {
     public void Init(AudioManager audioManager) {
         this.audioManager = audioManager;
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    //void Start() {
-    //    Fish fish = GetComponent<Fish>();
-    //    fish.SetRandomProgress();
-    //    GetComponent<EnemyControl>().Init(spawnManager);
-    //}
-
-    // Update is called once per frame
-    //void Update() {
-    //    if (Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) return;
-    //}
 
     private void OnTriggerEnter(Collider other) {
         //Transform parent = other.transform.parent;

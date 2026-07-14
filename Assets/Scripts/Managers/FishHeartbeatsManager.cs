@@ -24,10 +24,10 @@ public class FishHeartbeatsManager : MonoBehaviour {
     private readonly Color UNBEATABLE_ENEMY_COLOR = Color.orange;
     private readonly Color STRONG_ENEMY_COLOR = Color.red;
     private readonly Color UNKNOWN_ENEMY_COLOR = Color.blue;
-    private readonly Color PLAYER_COLOR = new Color(.8f, .8f, .8f, .4f);
+    private readonly Color PLAYER_COLOR = new Color(.0f, .9f, 1f, 1f);
 
     private const int TEXTURE_SIZE_DIVIDER = 4; //â big texture resolution is expensive for mobile devices
-    private const float HERTBEAT_PARTICLES_UPDATE_INTERVAL = 0.05f; 
+    private const float HERTBEAT_PARTICLES_UPDATE_INTERVAL = 0.05f;
 
 
     public void Init(SpawnManager spawnManager) {
@@ -50,7 +50,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
     void ReInitPool() {
         if (fishHeartbeatsParticlesPool == null)
-            fishHeartbeatsParticlesPool = new ParticleSystem[SpawnManager.POOL_SIZE + SpawnManager.PUFFERFISH_SPAWN_COUNT + SpawnManager.CUTTLEFISH_SPAWN_COUNT];
+            fishHeartbeatsParticlesPool = new ParticleSystem[SpawnManager.POOL_SIZE + SpawnManager.PUFFERFISH_SPAWN_COUNT + SpawnManager.CUTTLEFISH_SPAWN_COUNT + spawnManager.PlayerPoolSize];
         FishLevel playerLevel = spawnManager.PlayerFish.Level;
         ParticleSystem.MainModule particleMainModule;
 
@@ -63,6 +63,9 @@ public class FishHeartbeatsManager : MonoBehaviour {
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
         foreach (Fish fish in SpawnManager.cuttlefishPool_FishComponents)
+            InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
+
+        foreach (Fish fish in SpawnManager.playerPool_FishComponents)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
     }
 
