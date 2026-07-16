@@ -41,7 +41,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         handle.anchoredPosition = clamped;
 
         JoyAxis.Axis = clamped / maxRadius;
-        //Debug.Log($"Joystick Input: {JoyAxis.Axis} ");
+        Debug.Log($"Joystick Input: {JoyAxis.Axis} ");
     }
 
     private void OnDisable() {//like user release joystick (in case when joystick immediately disabled)

@@ -2,12 +2,10 @@ using UnityEngine;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using System.Reflection;
-using UnityEngine.SocialPlatforms;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
-using TMPro;
 
 
 
@@ -120,7 +118,7 @@ public class GPG_Manager : MonoBehaviour {
 
                 if (prop != null) {
                     DateTime achievementDate = (DateTime)prop.GetValue(achievement, null);
-                    DateTime releaseDate = new DateTime(2026, 7, 16, 0, 0, 0, DateTimeKind.Utc);
+                    DateTime releaseDate = new DateTime(2026, 7, 18, 0, 0, 0, DateTimeKind.Utc);
                     Debug.LogWarning(achievementDate);
 
                     if (achievementDate < releaseDate) {

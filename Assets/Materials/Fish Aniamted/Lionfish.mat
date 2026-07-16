@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Tiger_Shark_h
+  m_Name: Lionfish
   m_Shader: {fileID: -6465566751694194690, guid: 337dafcd03c826049acf056be987ba98, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -27,7 +27,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 377778cdbc843fe4594913b95d0548e8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 46e67dc942a17514187cfd1a8ba5c147, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleCubemap_b5c25f8cf7ca434b91089fae111d57f7_Cube_1_Cubemap:
+        m_Texture: {fileID: 8900000, guid: 0d84913d01d000e45bd8c5ad5099eb40, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleReflectedCubemap_30005f72fa0e4c5299fbc284c4abfde3_Cube_1_Cubemap:
+        m_Texture: {fileID: 8900000, guid: 5b28a7cc5787b4042a23a54677631d12, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleReflectedCubemap_dcf6349f1fe9443f938dae144d4f23e5_Cube_1_Cubemap:
@@ -58,6 +66,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_fe8f52c9d5ea45479cd4f4a7926e7c42_Out_0_Texture2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -77,23 +89,24 @@ Material:
     - _FishMetallic: 0
     - _FishMetallic_Normal: 0
     - _FishSmoothness: 0.35
-    - _FixerOffset: -1.83
-    - _Frequency: 11.84
+    - _FixerOffset: -0.8
+    - _Frequency: 4.57
     - _InvisiblySkin: 0
-    - _MaxRotationValue: 0.148
+    - _IsAshSkin: 1
+    - _MaxRotationValue: 0.412
     - _MercuryScale: 3
     - _MercurySkin: 0
-    - _Offset: 0.26
+    - _Offset: 0.06
     - _QueueControl: 1
-    - _QueueOffset: 0
+    - _QueueOffset: -50
     - _RotationRad: 0
-    - _TexureEdgingPower: 3
+    - _TexureEdgingPower: 1
     - _UnscaledTime: 0
     - _UnscaledTimeClip: 0.000001
-    - _WaveXamplitude: 0.44
+    - _WaveXamplitude: 1.66
     - _XRMotionVectorsPass: 0
     m_Colors:
-    - _BodySmoothEdge: {r: -0.95, g: 3.4, b: 0, a: 0}
+    - _BodySmoothEdge: {r: -0.06, g: 1.37, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2635674992861930167

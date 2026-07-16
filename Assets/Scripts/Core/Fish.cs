@@ -20,7 +20,9 @@ public class Fish : MonoBehaviour {
     [SerializeField] int responseRadius;
     [SerializeField] Transform prefabVisualTransform; //for grow animation
     [SerializeField] float jawForwardOffset;
+    [SerializeField] Rigidbody rb;
 
+    public Rigidbody Rb => rb;
     public FishLevel Level => level;
     public int Health { get { return health; } protected set { health = value; } }
     public int MaxHealth { get; private set; }
@@ -60,7 +62,7 @@ public class Fish : MonoBehaviour {
     private float SpeedMultiplierThird { get; set; } = 1;
     private float SpeedMultiplierFourth { get; set; } = 1;
 
-    private const float ROTATION_SPEED_MULTIPLIER = .02f; // multiplier for rotation speed
+    private const float ROTATION_SPEED_MULTIPLIER = .07f; // multiplier for rotation speed
     private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
     private const float MIN_PROGRESS_GAIN_MULTIPLIER = 11f;
     private const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
@@ -126,7 +128,7 @@ public class Fish : MonoBehaviour {
         progressDivider *= enemyProgressMultiplier;
 
         //if (IsPlayer) {
-        //    progressDivider = 3f;
+        //    progressDivider = 4f;
         //    Debug.LogWarning("Activated fast progress!!!");
         //}
 
@@ -257,7 +259,7 @@ public interface IFish {
     Vector3 Walking();
     Vector3 Escape();
     /// <summary>
-       /// unlike walking and escape, does not store the target position, since the victim will definitely run away
+    /// unlike walking and escape, does not store the target position, since the victim will definitely run away
     /// </summary>
     /// <returns></returns>
     Vector3 Attack();

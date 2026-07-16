@@ -149,7 +149,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             playerPool_FishComponents[playerInd] = newPlayerFish;
 
             PrefabNamingTaging(playerPrefab, newPlayerFish.Level, true);
-            PrefabInitFishAnimAndEffectManagers(playerPrefab, out FishAnimManager fishAnim, true);
+            PrefabInitFishAnimAndEffectManagers(playerPrefab, out FishAnim fishAnim, true);
             InitPlayerSkins(newPlayerFish, fishAnim);
             AddInitAutoScalerComponent(playerPrefab);
 
@@ -157,7 +157,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
     }
 
-    void InitPlayerSkins(Fish fish, FishAnimManager fishAnim) {
+    void InitPlayerSkins(Fish fish, FishAnim fishAnim) {
         //load selected skin
         Skin selectedSkin;
         SaveData currentData = ProgressSaver.IsDataExist() ?
@@ -231,7 +231,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 prefab = Instantiate(prefabs[i], fishPoolParent);
                 globalPool_Objects[i, j] = prefab;
 
-                PrefabInitFishAnimAndEffectManagers(prefab, out FishAnimManager fishAnim);
+                PrefabInitFishAnimAndEffectManagers(prefab, out FishAnim fishAnim);
 
                 enemyFish = prefab.GetComponent<Fish>();
                 globalPool_Components[i, j] = enemyFish;
@@ -243,7 +243,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void PrefabInitFishAnimAndEffectManagers(GameObject prefab, out FishAnimManager fishAnim, bool isPlayer = false) {
+    void PrefabInitFishAnimAndEffectManagers(GameObject prefab, out FishAnim fishAnim, bool isPlayer = false) {
         if (prefab.TryGetComponent(out fishAnim) && prefab.TryGetComponent(out EffectManager effectManager)) {
             if (isPlayer) {
                 fishAnim.Init(audioManager, effectManager, fishAdditionalComponentManager);

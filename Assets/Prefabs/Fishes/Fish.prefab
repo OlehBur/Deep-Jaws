@@ -514,6 +514,7 @@ MonoBehaviour:
   responseRadius: 0
   prefabVisualTransform: {fileID: 7123836628690870832}
   jawForwardOffset: 0
+  rb: {fileID: 8937414190267927894}
 --- !u!114 &2241224056577220843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,11 +555,11 @@ MonoBehaviour:
   fish: {fileID: -1864179227958482298}
   rb: {fileID: 8937414190267927894}
   animator: {fileID: 3870166449409053846}
+  fishSkinnedMesh: {fileID: 0}
   editableTransform: {fileID: 7123836628690870832}
   biteParticleLocPos: {x: 0, y: 0, z: 0}
-  isUseRotatingShader: 1
-  fishSkinnedMesh: {fileID: 0}
   bubbleMaxXoffset: 0
+  isUseRotatingShader: 1
 --- !u!114 &3402444889329153434
 MonoBehaviour:
   m_ObjectHideFlags: 0

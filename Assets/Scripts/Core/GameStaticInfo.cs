@@ -85,7 +85,7 @@ public static class GameStaticInfo {
     public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Cuttlefish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
 
     private const string ENTITY_LAYER_STR = "Entity"; //layer for entities, where fish are located
-    public static int ENTITY_LAYER_MASK { get; } = LayerMask.GetMask(ENTITY_LAYER_STR);//layer id for entities
+    public static int ENTITY_LAYER_MASK => LayerMask.GetMask(ENTITY_LAYER_STR);//layer id for entities
 
     public const string TAG_BUBBLESHIELD = "Shield";
     public const string TAG_PLAYER = "Player";

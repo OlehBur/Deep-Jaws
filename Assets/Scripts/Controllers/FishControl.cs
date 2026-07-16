@@ -10,7 +10,7 @@ public class FishControl : MonoBehaviour, IFish {
     /// </summary>
     [SerializeField] float ³dleTime;
     [SerializeField] float timeToIdle;
-    [SerializeField] FishAnimManager fishAnim;
+    [SerializeField] FishAnim fishAnim;
 
     private IFish IFish;
     Fish IFish.CurrentTarget { get; set; }
@@ -32,7 +32,7 @@ public class FishControl : MonoBehaviour, IFish {
     private bool isTargetSet = false; // flag to check if target is set
     private const float TIME_CHANGE_ESCAPE_DIR = 1.5f;
     private float currentEscapeTime = 0f;
-    private const float WALKING_RADIUS_MULTIPLIER = .1f;
+    private const float WALKING_RADIUS_MULTIPLIER = 10f;
     private const float MIN_DISTANCE_TO_TARGET = 0.05f;
     private const float TIME_RECALC_WAY = .2f;
 
@@ -40,7 +40,7 @@ public class FishControl : MonoBehaviour, IFish {
     private Vector2 moveInput;
     private Vector3 moveDir = Vector3.zero;
     private bool isMoved = false;
-    private const float ROTATION_TIME_MULTIPLIER = .002f;
+    private const float ROTATION_SMOOTH_TIME = .1f;
 
     //reaction to other fish
     private Collider[] overlapResults = new Collider[5];
@@ -59,7 +59,7 @@ public class FishControl : MonoBehaviour, IFish {
             GetComponent<Rigidbody>() : rb;
         rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;//in case it was stunned before
         rb.linearVelocity = Vector3.zero; // Reset angular velocity to prevent unwanted rotation
-        fishAnim = GetComponent<FishAnimManager>();
+        fishAnim = GetComponent<FishAnim>();
 
         CancelInvoke();
         SetDefaultState();
@@ -107,7 +107,7 @@ public class FishControl : MonoBehaviour, IFish {
 
     private void OnMove(Vector2 input/*InputAction.CallbackContext context*/) {
         moveInput = input;
-
+        //Debug.Log(input);
         isMoved = input != Vector2.zero;
     }
 
@@ -121,7 +121,7 @@ public class FishControl : MonoBehaviour, IFish {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsFishNeedUpdate() {
         if (spawnManager != null && spawnManager.PlayerFish != null) {
-            float distanceToPlayer = Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position);
+            float distanceToPlayer = Vector3.Distance(spawnManager.PlayerFish./*transform*/Rb.position, /*transform.position*/rb.position);
             if (distanceToPlayer > GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY) {
                 if (fish.IsActive)
                     fish.IsActive = false;
@@ -148,7 +148,7 @@ public class FishControl : MonoBehaviour, IFish {
             if (!isTargetSet)
                 direction = IFish.Walking();
             else
-                direction = targetPosition - transform.position; //if the position is set, but we have passed by or something, we continue to reach it
+                direction = targetPosition - /*transform.position*/rb.position; //if the position is set, but we have passed by or something, we continue to reach it
 
             ReactionToOtherFish();
             break;
@@ -166,39 +166,55 @@ public class FishControl : MonoBehaviour, IFish {
         Movement(direction);
     }
 
+    //[SerializeField] float rotationSpeed = 1f;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void PlayerMovement() {
-        const float STOP_MOVING_ANGLE = 50f;
-
         if (!isMoved) //parasyte movement detection
             SleepPhysics();
 
         // rotation in dir of movement
-        Vector3 newRot = Vector3./*Lerp*/SmoothDamp(
-            transform.forward, moveDir.normalized,/*player.RotationSpeed*/ ref rotateVelocity,
-            fish.RotationSpeed * ROTATION_TIME_MULTIPLIER, Mathf.Infinity, Time.fixedUnscaledDeltaTime);
+        moveDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+        Vector3 currentForward = rb.rotation * Vector3.forward;
+        Vector3 newRot =
+        //    Vector3.SmoothDamp(
+        //transform.forward, moveDir.normalized, ref rotateVelocity,
+        //    /*fish.RotationSpeed*/ ROTATION_SMOOTH_TIME, Mathf.Infinity, Time.fixedUnscaledDeltaTime);
+        Vector3.RotateTowards(/*transform.forward*/currentForward, moveDir.normalized, (1f / ROTATION_SMOOTH_TIME) * Time.fixedUnscaledDeltaTime, 0f);
         Quaternion newLook = Quaternion.LookRotation(newRot, Vector3.up);
 
         if (newRot != Vector3.zero) {
-            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed * Time.fixedUnscaledDeltaTime);
+            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed);
 
-            fishAnim.RotateAnimation(transform.forward, newRot, Time.fixedUnscaledDeltaTime, .040f /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
-            transform.rotation = newSmoothRot;
+            fishAnim.RotateAnimation(/*transform.forward*/currentForward, newRot, Time.fixedUnscaledDeltaTime/*, .040f*/ /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
+            rb.MoveRotation(newSmoothRot);
         }
 
         //movement
-        float movingScalerByRotation = Mathf.Clamp01(1.1f - Mathf.Clamp01(Quaternion.Angle(transform.rotation, newLook) / STOP_MOVING_ANGLE)); //.1f to 1f  
         //Debug.Log(movingScalerByRotation);
-        moveDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        Vector3 targetPos = moveDir * fish.Speed * Time.fixedUnscaledDeltaTime * movingScalerByRotation;
+        Vector3 targetPos = moveDir * fish.Speed * GetMovingScalerByRotation(/*transform.rotation*/rb.rotation, newLook, moveDir);
 
-        if (targetPos != Vector3.zero)
+        if (targetPos != Vector3.zero) {//LINEAR VELOCITY USE WITHOUT TIME.DELTA ITS ALREADY IN VELOCITY CALCULATION
+                                        //rb.linearVelocity = targetPos;
+                                        //rb.MovePosition(rb.position + targetPos * Time.fixedUnscaledDeltaTime);
+            targetPos.y = rb.linearVelocity.y;
             rb.linearVelocity = targetPos;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    float GetMovingScalerByRotation(Quaternion currRotation, Quaternion newRotation, Vector3 moveDir) {
+        if (moveDir == Vector3.zero)
+            return 0f;
+
+        const float STOP_MOVING_ANGLE = 50f;
+
+        Quaternion newLook = Quaternion.LookRotation(moveDir, Vector3.up);
+        return Mathf.Clamp01(1.1f - Mathf.Clamp01(Quaternion.Angle(currRotation, newRotation) / STOP_MOVING_ANGLE)); //.1f to 1f  
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void ReactionToOtherFish() {
-        int count = Physics.OverlapSphereNonAlloc(transform.position, fish.ResponseRadius, overlapResults, GameStaticInfo.ENTITY_LAYER_MASK);
+        int count = Physics.OverlapSphereNonAlloc(/*transform.position*/rb.position, fish.ResponseRadius, overlapResults, GameStaticInfo.ENTITY_LAYER_MASK);
         Fish closestFish = null;
         float dist = fish.ResponseRadius;
         for (int i = 0; i < count; i++) {
@@ -206,7 +222,7 @@ public class FishControl : MonoBehaviour, IFish {
             if (col.gameObject.transform.parent.gameObject == gameObject)
                 continue;
 
-            float newDist = Vector3.Distance(transform.position, col.transform.position);
+            float newDist = Vector3.Distance(/*transform.position*/rb.position, col.transform.position);
             if (dist > newDist) {//get closest fish
                 dist = newDist;
                 //Debug.Log($"{name} see {col.name} on dist {dist}");
@@ -232,12 +248,12 @@ public class FishControl : MonoBehaviour, IFish {
         if (isTargetSet || fish == null)
             return;
 
-        Vector3 randomDirection = Random.insideUnitSphere * WALKING_RADIUS_MULTIPLIER * fish.Speed;
-        randomDirection += transform.position;//near pos obj
+        Vector3 randomDirection = Random.insideUnitSphere * fish.Speed * WALKING_RADIUS_MULTIPLIER;
+        randomDirection += /*transform.position*/rb.position;//near pos obj
 
         if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, WALKING_RADIUS_MULTIPLIER * fish.ResponseRadius, NavMesh.AllAreas)) { //if point on surf
             targetPosition = hit.position;
-            targetPosition.y = transform.position.y; // keep the same height as the fish
+            targetPosition.y = /*transform*/rb.position.y; // keep the same height as the fish
             isTargetSet = true;
             state = EnemyState.Walking;
             direction = IFish.Walking();
@@ -252,7 +268,7 @@ public class FishControl : MonoBehaviour, IFish {
     Vector3 IFish.Walking() {
         SetTargetMovement();
 
-        return targetPosition - transform.position;
+        return targetPosition - /*transform.position*/rb.position;
     }
 
     Vector3 IFish.Escape() {
@@ -267,16 +283,16 @@ public class FishControl : MonoBehaviour, IFish {
             const float ESCAPE_ANGLE_HALF = 55f;
             float randomAngle = Random.Range(-ESCAPE_ANGLE_HALF, ESCAPE_ANGLE_HALF);
 
-            Vector3 awayDir = (transform.position - IFish.CurrentTarget.transform.position); // move away from the target
+            Vector3 awayDir = (/*transform.position*/rb.position - IFish.CurrentTarget./*transform*/Rb.position); // move away from the target
             awayDir.y = 0f; //only horizontal movement
             Quaternion rotation = Quaternion.AngleAxis(randomAngle, Vector3.up);
 
-            targetPosition = transform.position + rotation * awayDir;
-            targetPosition.y = transform.position.y; // keep the same height as the fish
+            targetPosition = /*transform.position*/rb.position + rotation * awayDir;
+            targetPosition.y = /*transform*/rb.position.y; // keep the same height as the fish
             isTargetSet = true;
         }
 
-        return targetPosition - transform.position;
+        return targetPosition - /*transform.position*/rb.position;
     }
 
     Vector3 IFish.Attack() {
@@ -288,21 +304,21 @@ public class FishControl : MonoBehaviour, IFish {
             return Vector3.zero;
         }
 
-        return IFish.CurrentTarget.transform.position - transform.position; // move towards
+        return IFish.CurrentTarget./*transform*/Rb.position - /*transform.position*/rb.position; // move towards
     }
 
     void Movement(Vector3 dir) {
         dir.y = 0; // only horizontal movement
 
-        float currentDistance = dir.magnitude;
-        currentDistance = (currentDistance < (fish.ScaleModifier.z + 1) * fish.JawForwardOffset) ?
-            0 : currentDistance;//stop moving if enouch close for bite
+        float currentDistanceToTarget = dir.magnitude;
+        currentDistanceToTarget = (currentDistanceToTarget < (fish.ScaleModifier.z + 1) * fish.JawForwardOffset) ?
+            0 : currentDistanceToTarget;//stop moving if enouch close for bite
 
         switch (state) {
             case EnemyState.Attack:
             if (IFish.CurrentTarget == null
                 || !IFish.CurrentTarget.gameObject.activeInHierarchy
-                || currentDistance > fish.ResponseRadius
+                || currentDistanceToTarget > fish.ResponseRadius
                 || !fish.IsLegitimateTarget(IFish.CurrentTarget)
                ) {//if the target is lost
 
@@ -314,7 +330,7 @@ public class FishControl : MonoBehaviour, IFish {
             case EnemyState.Walking:
             case EnemyState.Escape:
             default://logic of changing state when the target is reached
-            if (currentDistance < MIN_DISTANCE_TO_TARGET) {//magnitude - length of vect
+            if (currentDistanceToTarget < MIN_DISTANCE_TO_TARGET) {//magnitude - length of vect
                 SetDefaultState();
 
                 if (state == EnemyState.Walking)
@@ -324,34 +340,44 @@ public class FishControl : MonoBehaviour, IFish {
             break;
         }
 
-        float smoother = Mathf.Clamp01(currentDistance * .3f) * .95f + .05f;//from .1f to 1f
-        Vector3 move = dir.normalized * fish.Speed * Time.fixedDeltaTime * smoother;
-        if (move != Vector3.zero)
-            rb.linearVelocity = move;
-        else
-            SleepPhysics();
+        // rotation in dir of movement
+        Vector3 currentForward = rb.rotation * Vector3.forward;
+        Vector3 newRot = //Vector3.SmoothDamp(transform.forward, dir.normalized, ref rotateVelocity, ROTATION_SMOOTH_TIME, Mathf.Infinity, Time.fixedDeltaTime);
+        Vector3.RotateTowards(/*transform.forward*/currentForward, dir.normalized, (1f / ROTATION_SMOOTH_TIME) * Time.fixedDeltaTime, 0f);
+        Quaternion newLook = Quaternion.LookRotation(newRot, Vector3.up);
 
-        // smooth rotation
-        Vector3 rot = Vector3.SmoothDamp(transform.forward, move.normalized, /*enemy.RotationSpeed*/ref rotateVelocity, Time.fixedDeltaTime);
+        if (newRot != Vector3.zero) {
+            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed);
 
-        if (rot != Vector3.zero) {
-            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(rot, Vector3.up), fish.RotationSpeed * Time.fixedDeltaTime);
-            fishAnim?.RotateAnimation(transform.forward, rot, Time.fixedDeltaTime);//call fish animation manager to rotate the fish model
-            transform.rotation = newSmoothRot;
+            if (fishAnim != null && fishAnim.IsInited)
+                fishAnim.RotateAnimation(/*transform.forward*/currentForward, newRot, Time.fixedDeltaTime);
+            rb.MoveRotation(newSmoothRot);
+        }
+
+        //smooth movement
+        float smoother = Mathf.Clamp01(currentDistanceToTarget * .3f) * .95f + .05f;//from .1f to 1f
+        Vector3 targetPos = dir.normalized * fish.Speed * smoother * GetMovingScalerByRotation(/*transform*/rb.rotation, newLook, dir);
+        if (targetPos != Vector3.zero) {
+            //rb.linearVelocity = targetPos;
+            //rb.MovePosition(rb.position + targetPos * Time.fixedDeltaTime);
+            targetPos.y = rb.linearVelocity.y;
+            rb.linearVelocity = targetPos;
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SetDefaultState() {
         isTargetSet = false; // reset target when changing 
-        targetPosition = transform.position; // reset target position
+        targetPosition = /*transform.position*/rb.position; // reset target position
         if (IFish != null)
             IFish.CurrentTarget = null;
         direction = Vector3.zero;
         state = EnemyState.Walking;
         currentEscapeTime = 0f;
+        Vector3 currentForward = rb.rotation * Vector3.forward;
+
         if (fishAnim != null && fishAnim.IsInited)
-            fishAnim?.RotateAnimation(transform.forward, transform.forward, Time.fixedDeltaTime);//zero rotation
+            fishAnim?.RotateAnimation(/*transform.forward*/currentForward, /*transform.forward*/currentForward, Time.fixedDeltaTime);//zero rotation
     }
 
     void IFish.FishProximity(Fish otherFish) {
@@ -421,7 +447,7 @@ public class FishControl : MonoBehaviour, IFish {
             }
             //if obstacle spawn zone (only sphere collider)
             if (!fish.IsPlayer && collider is SphereCollider && collisObj.layer == LayerMask.NameToLayer("AvoidDynamicCameraColliders"))
-                BypassObstacle(collider.ClosestPoint(transform.position));
+                BypassObstacle(collider.ClosestPoint(/*transform.position*/rb.position));
 
         }
     }
@@ -468,11 +494,11 @@ public class FishControl : MonoBehaviour, IFish {
         isTargetSet = true;
         IFish.CurrentTarget = null;
 
-        Vector3 newDir = (transform.position - obstaclePos); // move away from the target
+        Vector3 newDir = (/*transform.position*/rb.position - obstaclePos); // move away from the target
         newDir.y = 0f; // only horizontal movement
         Quaternion rotation = Quaternion.AngleAxis(randomAngle, Vector3.up);
 
-        targetPosition = transform.position + rotation * newDir;
+        targetPosition = /*transform.position*/rb.position + rotation * newDir;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -491,13 +517,13 @@ public class FishControl : MonoBehaviour, IFish {
 
         if (fish.IsPlayer) {//for player
             Gizmos.color = Color.orange;
-            Gizmos.DrawWireSphere(transform.position, fish.ResponseRadius);
+            Gizmos.DrawWireSphere(rb.position, fish.ResponseRadius);
             return;
         }
 
         //for anemies stages
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, fish.ResponseRadius);
+        Gizmos.DrawWireSphere(rb.position, fish.ResponseRadius);
 
         if (isTargetSet) {
             switch (state) {
@@ -505,8 +531,8 @@ public class FishControl : MonoBehaviour, IFish {
                 if (IFish.CurrentTarget != null) {
                     Gizmos.color = Color.red;
                     //Gizmos.color = Color.magenta;
-                    Gizmos.DrawLine(transform.position, IFish.CurrentTarget.transform.position);
-                    Gizmos.DrawWireCube(transform.position, Vector3.one * 1.5f);
+                    Gizmos.DrawLine(rb.position, IFish.CurrentTarget.Rb.position);
+                    Gizmos.DrawWireCube(rb.position, Vector3.one * 1.5f);
                 }
                 return;
 
@@ -522,7 +548,7 @@ public class FishControl : MonoBehaviour, IFish {
                 return;
 
             Gizmos.DrawWireSphere(targetPosition, 0.5f);
-            Gizmos.DrawLine(transform.position, targetPosition);
+            Gizmos.DrawLine(/*transform.position*/rb.position, targetPosition);
         }
     }
 }

@@ -1,9 +1,9 @@
 using UnityEngine;
-using Google.Play.InputMapping;
 using System.Collections.Generic;
-//#if PLAY_GAMES_PC
-//using Google.Android.Libraries.Play.Games.Inputmapping;
-//#endif
+#if UNITY_ANDROID
+using Google.Play.InputMapping;
+#endif
+
 
 public enum GameActionId { SPRINT = 0, MOVE_FORWARD = 1, MOVE_LEFT = 2, MOVE_RIGHT = 3, MOVE_BACKWARD = 4 }
 public enum GameGroupId { GAMEPLAY = 1 }
@@ -11,7 +11,7 @@ public enum GameGroupId { GAMEPLAY = 1 }
 
 public class GPG_PCInputMapping : MonoBehaviour {
     void Start() {
-        //#if PLAY_GAMES_PC
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (GameManager.IsRunOnPC) {
             //  get the input mapping client from Google Play
             PlayInputMappingClient inputMappingClient = PlayInput.GetInputMappingClient();
@@ -20,10 +20,11 @@ public class GPG_PCInputMapping : MonoBehaviour {
             inputMappingClient.SetInputMappingProvider(myProvider);
             Debug.Log("Google Play Input Mapping successfully registered!");
         }
-        //#endif
+#endif
     }
 }
 
+#if UNITY_ANDROID
 public class DJ_PlayGamesInputProvider : PlayInputMappingProvider {
     private PlayInputControls CreateSimpleControls(int androidKeyCode) {
         return PlayInputControls.Create(
@@ -44,3 +45,4 @@ public class DJ_PlayGamesInputProvider : PlayInputMappingProvider {
         return PlayInputMap.Create(new List<PlayInputGroup> { movementGroup }, PlayMouseSettings.Create(false, false));
     }
 }
+#endif

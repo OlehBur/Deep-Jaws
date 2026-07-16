@@ -26,7 +26,7 @@ public class StopTimeEffect : Effect {
 
     private void InitPropBlock() {
         fishMatProp = new MaterialPropertyBlock();
-        FishAnimManager.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")/*STOP_VALUE_FOR_SHADER*/);
+        FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")/*STOP_VALUE_FOR_SHADER*/);
     }
 
     protected override void OnApply() {
@@ -42,7 +42,7 @@ public class StopTimeEffect : Effect {
     protected override void OnExpire() {
         //Debug.Log($"{target.name} has expired StopTime Effect after {Duration} s.");
         target.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);
-        FishAnimManager.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, STOP_VALUE_FOR_SHADER/*fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")*/);
+        FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, STOP_VALUE_FOR_SHADER/*fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")*/);
         //fishRenderer.sharedMaterial.SetFloat("_UnscaledTime", STOP_VALUE_FOR_SHADER); /*wfwf*/
         GameManager.SetFixedDeltaTime(true);
         GameManager.ChangeGameTime(GameManager.DEFAULT_GAME_TIME);
@@ -55,7 +55,7 @@ public class StopTimeEffect : Effect {
         //if(isStartedDiactivation)
         //    return;
         currentTime += Time.unscaledDeltaTime;
-        FishAnimManager.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, /*isStartDeactivate ? STOP_VALUE_FOR_SHADER :*/ currentTime);
+        FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, /*isStartDeactivate ? STOP_VALUE_FOR_SHADER :*/ currentTime);
 
         base.UpdateTimer();
 

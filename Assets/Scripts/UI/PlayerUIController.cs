@@ -142,7 +142,6 @@ public class PlayerUIController : MonoBehaviour {
         zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
 
-        //#if UNITY_EDITOR || PLAY_GAMES_PC
         if (GameManager.IsRunOnPC || Application.isEditor) {
             playebleAreaUI.SetActive(false);
             sprintProgressPC.transform.parent.gameObject.SetActive(true);
@@ -159,7 +158,7 @@ public class PlayerUIController : MonoBehaviour {
         //#endif
         //isPlayableAreaActive = isActive;
         Debug.LogWarning("Playable area always active!");
-        JoyAxis.Axis = Vector2.zero; // reset joystick input
+        //JoyAxis.Axis = Vector2.zero; // reset joystick input
     }
 
     public void OnSpintButtonClick() {
@@ -199,13 +198,10 @@ public class PlayerUIController : MonoBehaviour {
         //if (isPlayableAreaActive)
         SprintButtonBehaviour();
 
-        //#if UNITY_EDITOR || PLAY_GAMES_PC
         if (GameManager.IsRunOnPC || Application.isEditor)
             WASD_MovingBehaviour();
-        //#endif
     }
 
-//#if UNITY_EDITOR || PLAY_GAMES_PC
     void WASD_MovingBehaviour() {
         if (Keyboard.current == null)
             return;
@@ -219,9 +215,9 @@ public class PlayerUIController : MonoBehaviour {
             moveInput.x -= 1f;
         if (Keyboard.current.dKey.isPressed)
             moveInput.x += 1f;
+
         JoyAxis.Axis = moveInput.normalized; // set the joystick axis to the normalized input vector
     }
-//#endif
 
     void UpdatePlayerInfo() {
         int lvlProgress = (int)(playerFish.Progress * 100);
@@ -239,10 +235,10 @@ public class PlayerUIController : MonoBehaviour {
 
     void SprintButtonBehaviour() {
         if (sprintButton.interactable) {
-//#if UNITY_EDITOR || PLAY_GAMES_PC   //for Googlr Play Games PC
+            //for Googlr Play Games PC
             if ((GameManager.IsRunOnPC || Application.isEditor) && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
                 OnSpintButtonClick();
-//#endif
+
             return;
         }
 

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: White_Shark_h
+  m_Name: Tiger_Shark
   m_Shader: {fileID: -6465566751694194690, guid: 337dafcd03c826049acf056be987ba98, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,12 +26,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _ChameleonSkin_049c9fe3ce044f5592300031d9d6622e_Albedo_1472887850_Texture2D:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4168d7d9b0beecf4a8014177d9ac2767, type: 3}
+        m_Texture: {fileID: 2800000, guid: 377778cdbc843fe4594913b95d0548e8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleReflectedCubemap_dcf6349f1fe9443f938dae144d4f23e5_Cube_1_Cubemap:
@@ -77,29 +73,27 @@ Material:
     m_Ints: []
     m_Floats:
     - _AshflowSkin: 0
-    - _ChameleonSkin: -0
+    - _ChameleonSkin: 0
     - _FishMetallic: 0
     - _FishMetallic_Normal: 0
     - _FishSmoothness: 0.35
-    - _FixerOffset: -1.9
-    - _Frequency: 7.3
+    - _FixerOffset: -1.83
+    - _Frequency: 11.84
     - _InvisiblySkin: 0
-    - _IsAshSkin: 0
-    - _MaxRotationValue: 0.088
+    - _MaxRotationValue: 0.148
     - _MercuryScale: 3
     - _MercurySkin: 0
-    - _Offset: 0.25
+    - _Offset: 0.26
     - _QueueControl: 1
     - _QueueOffset: 0
     - _RotationRad: 0
-    - _TexureEdgingPower: 4
+    - _TexureEdgingPower: 3
     - _UnscaledTime: 0
     - _UnscaledTimeClip: 0.000001
-    - _WaveXampl_progress: 0.95
-    - _WaveXamplitude: 0.51
+    - _WaveXamplitude: 0.44
     - _XRMotionVectorsPass: 0
     m_Colors:
-    - _BodySmoothEdge: {r: -0.62, g: 7.7, b: 0, a: 0}
+    - _BodySmoothEdge: {r: -0.95, g: 3.4, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2635674992861930167

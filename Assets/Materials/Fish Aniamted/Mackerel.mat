@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Tuna_h
+  m_Name: Mackerel
   m_Shader: {fileID: -6465566751694194690, guid: 337dafcd03c826049acf056be987ba98, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -27,7 +27,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: b1736351db5921241aab5bf475ad7dde, type: 3}
+        m_Texture: {fileID: 2800000, guid: 85f1db19139080341bbf809c3cdfb6c8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleCubemap_b5c25f8cf7ca434b91089fae111d57f7_Cube_1_Cubemap:
@@ -51,6 +51,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_443da9bb584a45ba819e31fbd8f67305_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_46832690f6854786b83d10b54ee457a0_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -85,23 +89,24 @@ Material:
     - _FishMetallic: 0
     - _FishMetallic_Normal: 0
     - _FishSmoothness: 0.35
-    - _FixerOffset: -1.55
-    - _Frequency: 14.1
+    - _FixerOffset: -0.95
+    - _Frequency: 7.51
     - _InvisiblySkin: 0
-    - _MaxRotationValue: 0.214
+    - _IsAshSkin: 0
+    - _MaxRotationValue: 0.26
     - _MercuryScale: 3
     - _MercurySkin: 0
-    - _Offset: 0.09
+    - _Offset: 0.23
     - _QueueControl: 1
     - _QueueOffset: 0
-    - _RotationRad: 0
-    - _TexureEdgingPower: 1
+    - _RotationRad: 0.06
+    - _TexureEdgingPower: 0.5
     - _UnscaledTime: 0
     - _UnscaledTimeClip: 0.000001
-    - _WaveXamplitude: 1
+    - _WaveXamplitude: 0.75
     - _XRMotionVectorsPass: 0
     m_Colors:
-    - _BodySmoothEdge: {r: -2.46, g: 2.12, b: 0, a: 0}
+    - _BodySmoothEdge: {r: -4.38, g: 3.01, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2635674992861930167

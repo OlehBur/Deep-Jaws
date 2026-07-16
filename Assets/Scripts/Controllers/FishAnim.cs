@@ -2,7 +2,7 @@
 
 
 [RequireComponent(typeof(Fish))]
-public class FishAnimManager : MonoBehaviour {
+public class FishAnim : MonoBehaviour {
     [SerializeField] Fish fish;
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator animator; // animator for fish animations (crab has no animator)
@@ -86,24 +86,35 @@ public class FishAnimManager : MonoBehaviour {
             SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_Frequency", false, matDefSprintSpeed);
     }
 
-    public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime, float enemyAnimDeltaMultiplier = .08f) {
+    //[SerializeField] float angleDetct = 13f;
+    //[SerializeField] float delta0 = 0.4f;
+    public void RotateAnimation(Vector3 fromDir, Vector3 toDir, float deltaTime/*, float enemyAnimDeltaMultiplier = .08f*/) {
         if (!isUseRotatingShader)
             return;
 
-        const float ANGLE_MIN_MULTIPLIER = 2.5f;
-        float ANGLE_DETECTION = 45f - (float)fish.Level * ANGLE_MIN_MULTIPLIER; // decrease the detection angle with increasing fish level
+        //const float ANGLE_MIN_MULTIPLIER = 2.5f;
+        /*const*/
+        float ANGLE_DETECTION = /*12*/14f/*32f - (float)fish.Level * ANGLE_MIN_MULTIPLIER*/; // decrease the detection angle with increasing fish level
+        //const float ROTATION_DELTA = .5f;
+        const float SMOOTHING_SPEED = 20f;
         Quaternion currentRotation = rb.rotation;
 
         // ang betw
         float angle = Vector3.SignedAngle(fromDir, toDir, Vector3.up);
+        float currentAngleProgress = SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true);
         //float speed = Mathf.Abs(angle) / deltaTime;  //curr angul speed
         //Debug.Log("Obj rot! Speed: " + speed + "°/s");
         //Debug.Log("ang: " + angle);
         float angleProgress = Mathf.LerpUnclamped(0, maxShapeRotationVal, angle / ANGLE_DETECTION); // progress from -1 to 1 (LerpUnclamped allows to go beyond the range)
-        angleProgress = Mathf.Clamp(angleProgress, -maxShapeRotationVal, maxShapeRotationVal); // clamp the value to avoid exceeding the max rotation value
-        angleProgress = Mathf.Lerp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true), angleProgress, deltaTime * 10); //Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
-                                                                                                                                                             //angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
+        angleProgress = Mathf.Clamp(angleProgress, -maxShapeRotationVal, maxShapeRotationVal); // clamp the value to avoid exceeding the max rotation value     
 
+        //if (fish.IsPlayer && angle != 0)
+        //    Debug.Log("angle: " + angle + " currentAngProgress: " + currentAngleProgress + " angleProgress:" + angleProgress);                                                                                                                              //angleProgress, ref rotAnimVelocity, enemyAnimDeltaMultiplier, Mathf.Infinity, deltaTime);
+
+        //Math PErfect Smooth: 1f - Mathf.Exp(...)
+        float smoothT = 1f - Mathf.Exp(-SMOOTHING_SPEED * deltaTime);
+        angleProgress = Mathf.Lerp(currentAngleProgress, angleProgress, smoothT);
+        //angleProgress = Mathf.Lerp(currentAngleProgress, angleProgress, ROTATION_DELTA); //Mathf.SmoothDamp(SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", true)/*fishMat.GetFloat("_RotationRad")*/,
         SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_RotationRad", false, angleProgress);
 
         GameObject bubbleShield = effectManager.ShieldObj;

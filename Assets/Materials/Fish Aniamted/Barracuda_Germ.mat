@@ -30,6 +30,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 081d870f56c3be147a03f5298467eebe, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleReflectedCubemap_dcf6349f1fe9443f938dae144d4f23e5_Cube_1_Cubemap:
+        m_Texture: {fileID: 8900000, guid: 0b440116bb9d82c43bb96d38a7948d20, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0a62e89f186d4d6784dc41b5adf3592f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_443da9bb584a45ba819e31fbd8f67305_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -48,15 +56,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AshflowSkin: 0
+    - _ChameleonSkin: 0
+    - _FishMetallic: 0
     - _FishMetallic_Normal: 0
     - _FishSmoothness: 0.35
     - _FixerOffset: 6.96
     - _Frequency: 18.6
     - _MaxRotationValue: 0.355
+    - _MercuryScale: 3
+    - _MercurySkin: 0
     - _Offset: 0.2
     - _QueueControl: 1
     - _QueueOffset: 0
     - _RotationRad: 0
+    - _TexureEdgingPower: 3
     - _UnscaledTime: 0
     - _UnscaledTimeClip: 0.000001
     - _WaveXamplitude: 1

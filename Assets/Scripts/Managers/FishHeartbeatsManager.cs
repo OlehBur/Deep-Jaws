@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 
 /// <summary>
-/// клас для ініціалізації частинок серцебиття риб та управління компонентів що відповідають за їх відображення як камери та текстури рендеру
 /// class for initializing fish heartbeat particles and managing components responsible for their display such as cameras and render textures
 /// </summary>
 public class FishHeartbeatsManager : MonoBehaviour {

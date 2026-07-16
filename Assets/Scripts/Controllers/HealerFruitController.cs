@@ -62,7 +62,7 @@ public class HealerFruitController : MonoBehaviour {
         Transform parentFish = other.transform.parent;
 
         if (other.isTrigger && parentFish.CompareTag("Player") && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
-            && parentFish.TryGetComponent(out FishAnimManager animManager)) {
+            && parentFish.TryGetComponent(out FishAnim animManager)) {
 
             if (fish.Health <= fish.MaxHealth * MIN_HEALTH_MULTIPLIER)
                 GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_algae_are_beneficial_to_health);

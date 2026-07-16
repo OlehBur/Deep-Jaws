@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{5EBE6D09-2225-E6C3-40E6-471EF648F891}</ProjectGuid>
+    <ProjectGuid>{4C5EEEE1-52D9-C7C5-416A-DB6560BD44A7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -48,7 +48,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.26</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.27</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>Legacy</UnityProjectGeneratorStyle>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
@@ -59,83 +59,16 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.9f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.9f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.9f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
-    <Analyzer Include="C:\Users\Admin\Desktop\Programming\Unity Projects\DEV\Deep Jaws\Library\PackageCache\com.unity.project-auditor@6cc18ad506e9\RoslynAnalyzers\Domain_Reload_Analyzer.dll" />
+    <Analyzer Include="D:\UnityProjects\Dev\DeepJaws\Library\PackageCache\com.unity.project-auditor@6cc18ad506e9\RoslynAnalyzers\Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\PlayGamesServices\GPG_PCInputMapping.cs" />
-    <Compile Include="Assets\Scripts\Debug_\AutoScalerToDef.cs" />
-    <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
-    <Compile Include="Assets\Scripts\Managers\HotSpringManager.cs" />
-    <Compile Include="Assets\Scripts\Managers\FishHeartbeatsManager.cs" />
-    <Compile Include="Assets\Scripts\Controllers\СuttlefishController.cs" />
-    <Compile Include="Assets\Scripts\Controllers\SoundtrackController.cs" />
-    <Compile Include="Assets\Scripts\UI\SnowAnimation.cs" />
-    <Compile Include="Assets\Scripts\Managers\Spawn Manager.cs" />
-    <Compile Include="Assets\Scripts\Controllers\ZoneController.cs" />
-    <Compile Include="Assets\Scripts\Managers\GraphicManager.cs" />
-    <Compile Include="Assets\Scripts\Debug_\ModelsAroundView.cs" />
-    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Managers\LicenseValidator.cs" />
-    <Compile Include="Assets\Scripts\Achievements\CantCatchAchieveTrig.cs" />
-    <Compile Include="Assets\Scripts\Managers\FishAdditionalCompManager.cs" />
-    <Compile Include="Assets\Scripts\Managers\GPG_Manager.cs" />
-    <Compile Include="Assets\Scripts\Debug_\TestTriggCollider.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\StunInitiatorEffet.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\BlindnessEffect.cs" />
-    <Compile Include="Assets\Scripts\Core\Joystick.cs" />
-    <Compile Include="Assets\Scripts\Managers\FishAnimManager.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\StunEffect.cs" />
-    <Compile Include="Assets\Scripts\Managers\EffectManager.cs" />
-    <Compile Include="Assets\Scripts\UI\FaderScene.cs" />
-    <Compile Include="Assets\Scripts\UI\JoystickTouchPosition.cs" />
-    <Compile Include="Assets\Scripts\Core\ProgressSaver.cs" />
-    <Compile Include="Assets\Scripts\CameraFollower.cs" />
-    <Compile Include="Assets\Scripts\EnemyDetector.cs" />
-    <Compile Include="Assets\Scripts\Achievements\NoEscapeAchieveTrig.cs" />
-    <Compile Include="Assets\Scripts\Debug_\TestColliderMovement.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\StopTimeEffect.cs" />
-    <Compile Include="Assets\Scripts\Debug_\FishInfoVisualizer.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\PoisonEffect.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\CurrentEffect.cs" />
-    <Compile Include="Assets\Scripts\Core\PlayerActionsInput.cs" />
-    <Compile Include="Assets\Scripts\Managers\GamePurchaseManager.cs" />
-    <Compile Include="Assets\Scripts\UI\PlayerUIController.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\SprintEffect.cs" />
-    <Compile Include="Assets\Scripts\Controllers\PufferfishController.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\EffectArea.cs" />
-    <Compile Include="Assets\Scripts\Controllers\JellyfishController.cs" />
-    <Compile Include="Assets\Scripts\DeadArea.cs" />
-    <Compile Include="Assets\Scripts\Controllers\CaviarController.cs" />
-    <Compile Include="Assets\Scripts\Controllers\StoreAnimator.cs" />
-    <Compile Include="Assets\Scripts\Debug_\LookOnCamera.cs" />
-    <Compile Include="Assets\Scripts\Debug_\FPS_Viewer.cs" />
-    <Compile Include="Assets\Scripts\Debug_\ImageHsvAnim.cs" />
-    <Compile Include="Assets\Scripts\Controllers\HydraController.cs" />
-    <Compile Include="Assets\Scripts\Managers\GameAdsManager.cs" />
-    <Compile Include="Assets\Scripts\UI\PurchaseUIvisualizer.cs" />
-    <Compile Include="Assets\Scripts\Core\Fish.cs" />
-    <Compile Include="Assets\Scripts\Controllers\SlowdownPearlController.cs" />
-    <Compile Include="Assets\Scripts\Controllers\HealerFruitController.cs" />
-    <Compile Include="Assets\Scripts\Core\Effect.cs" />
-    <Compile Include="Assets\Scripts\Managers\MainmenuManager.cs" />
-    <Compile Include="Assets\Scripts\Core\Encryptor.cs" />
-    <Compile Include="Assets\Scripts\Core\GameStaticInfo.cs" />
-    <Compile Include="Assets\Scripts\Fish Effects\ShieldEffect.cs" />
-    <Compile Include="Assets\Scripts\Core\GlobalEventSystem.cs" />
-    <Compile Include="Assets\Scripts\Controllers\FishControl.cs" />
-    <Compile Include="Assets\Scripts\Achievements\PlayerLeaderboardScore.cs" />
-    <Compile Include="Assets\Scripts\Controllers\ShieldBubbleControl.cs" />
-    <Compile Include="Assets\Scripts\PlayGamesServices\GPGSIds.cs" />
-    <Compile Include="Assets\Scripts\Controllers\SonicPulseControl.cs" />
-    <Compile Include="Assets\Scripts\Controllers\EchoaquaController.cs" />
-    <Compile Include="Assets\Scripts\Debug_\ShaderTexuteBaker.cs" />
+    <Compile Include="Assets\Settings\InputSystem_Actions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
@@ -699,7 +632,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.visualscripting@8bed5ad90189\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -1561,59 +1494,63 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Purchasing.SecurityStub.csproj">
-      <Project>{76708A6E-5D2E-1825-2A62-46225F96482C}</Project>
+      <Project>{6F6076F5-774E-CED1-E0AD-8F5052574D51}</Project>
       <Name>Unity.Purchasing.SecurityStub</Name>
     </ProjectReference>
     <ProjectReference Include="Google.Play.Games.Editor.csproj">
-      <Project>{1CE4EFAF-C032-2352-3CDB-22370CA60C89}</Project>
+      <Project>{876AB90B-3E75-46F0-310F-944F4CC63C8D}</Project>
       <Name>Google.Play.Games.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Stores.csproj">
-      <Project>{F007AE29-18EC-CB4B-EDC8-911E17338994}</Project>
+      <Project>{D868F142-9442-7364-694A-0FB3AD98FB8E}</Project>
       <Name>Unity.Purchasing.Stores</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.AdaptivePerformance.Simulator.Google.Extension.Editor.csproj">
-      <Project>{A8983735-34B6-02FC-732F-75E3B073F446}</Project>
+      <Project>{1CEE73B4-25FE-6B39-4890-AB3BB7193B12}</Project>
       <Name>Unity.AdaptivePerformance.Simulator.Google.Extension.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.AdaptivePerformance.Google.Android.Editor.csproj">
-      <Project>{55DA1DB0-CEB4-CE5B-E883-506BE52F28E8}</Project>
+      <Project>{F2954D2F-B869-5A41-C4F5-D1B4FC90CD9D}</Project>
       <Name>Unity.AdaptivePerformance.Google.Android.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="GameAssembly.csproj">
+      <Project>{2B77EC52-F3BA-A8CC-F10E-9540BA2EB16C}</Project>
+      <Name>GameAssembly</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Stores.XboxCloudServices.csproj">
-      <Project>{754D8A1E-4D0B-0DCC-A440-E3C7ACDE708B}</Project>
+      <Project>{440037FC-DCB1-64A9-8CD0-004B560EDBA4}</Project>
       <Name>Unity.Purchasing.Stores.XboxCloudServices</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Codeless.csproj">
-      <Project>{D0100DF2-17AF-A703-7404-CC8F2487B54C}</Project>
+      <Project>{2D29ED1C-17DA-6A07-55D3-7DF3EEAC547E}</Project>
       <Name>Unity.Purchasing.Codeless</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.Purchasing.csproj">
-      <Project>{E252E933-760B-C5A5-CCF3-27756FB72AC9}</Project>
+      <Project>{5D45E859-09E1-F57E-81F9-DAFDCBEB87FF}</Project>
       <Name>UnityEditor.Purchasing</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.csproj">
-      <Project>{D6FDB2BA-9616-3741-F43A-D61A6AEF1CC6}</Project>
+      <Project>{298CAE37-0D5B-F2B3-BB17-E9498AF1DC9D}</Project>
       <Name>Unity.Purchasing</Name>
     </ProjectReference>
     <ProjectReference Include="Google.Play.Games.csproj">
-      <Project>{23B16EE2-9803-D999-1FA4-79E5CC50FD48}</Project>
+      <Project>{4E6D6C83-FDF8-F1CE-DD55-99EEC1214FDB}</Project>
       <Name>Google.Play.Games</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Utilities.csproj">
-      <Project>{A05D7FB7-17E3-CCB5-F2AE-FED10677CC7F}</Project>
+      <Project>{ADD06F75-4FC3-85E7-6BCA-D058B30FC2F9}</Project>
       <Name>Unity.Purchasing.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="Google.Play.InputMapping.csproj">
-      <Project>{2630F734-C2C5-C589-19AF-6E565E6F6474}</Project>
+      <Project>{CDEC674B-7FD6-BD7F-E5C9-E209A37A7BF2}</Project>
       <Name>Google.Play.InputMapping</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.SecurityCore.csproj">
-      <Project>{97C86EE7-3A48-A64E-FBBE-AF3CE96660C5}</Project>
+      <Project>{4F75F654-32F6-E691-A229-7A50E2ECB194}</Project>
       <Name>Unity.Purchasing.SecurityCore</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.AdaptivePerformance.Google.Android.csproj">
-      <Project>{6B4E57C0-35A1-3EE4-E05F-2BECCFDC1B29}</Project>
+      <Project>{4A42E0CF-6457-7D41-604D-0F3EEA68F7B3}</Project>
       <Name>Unity.AdaptivePerformance.Google.Android</Name>
     </ProjectReference>
   </ItemGroup>

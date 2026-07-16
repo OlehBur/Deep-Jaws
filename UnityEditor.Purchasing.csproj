@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{E252E933-760B-C5A5-CCF3-27756FB72AC9}</ProjectGuid>
+    <ProjectGuid>{5D45E859-09E1-F57E-81F9-DAFDCBEB87FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>UnityEditor.Purchasing</AssemblyName>
@@ -48,7 +48,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.26</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.27</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>Legacy</UnityProjectGeneratorStyle>
     <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
@@ -1271,31 +1271,31 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Purchasing.csproj">
-      <Project>{D6FDB2BA-9616-3741-F43A-D61A6AEF1CC6}</Project>
+      <Project>{298CAE37-0D5B-F2B3-BB17-E9498AF1DC9D}</Project>
       <Name>Unity.Purchasing</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.SecurityCore.csproj">
-      <Project>{97C86EE7-3A48-A64E-FBBE-AF3CE96660C5}</Project>
+      <Project>{4F75F654-32F6-E691-A229-7A50E2ECB194}</Project>
       <Name>Unity.Purchasing.SecurityCore</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.SecurityStub.csproj">
-      <Project>{76708A6E-5D2E-1825-2A62-46225F96482C}</Project>
+      <Project>{6F6076F5-774E-CED1-E0AD-8F5052574D51}</Project>
       <Name>Unity.Purchasing.SecurityStub</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Stores.csproj">
-      <Project>{F007AE29-18EC-CB4B-EDC8-911E17338994}</Project>
+      <Project>{D868F142-9442-7364-694A-0FB3AD98FB8E}</Project>
       <Name>Unity.Purchasing.Stores</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Stores.XboxCloudServices.csproj">
-      <Project>{754D8A1E-4D0B-0DCC-A440-E3C7ACDE708B}</Project>
+      <Project>{440037FC-DCB1-64A9-8CD0-004B560EDBA4}</Project>
       <Name>Unity.Purchasing.Stores.XboxCloudServices</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Codeless.csproj">
-      <Project>{D0100DF2-17AF-A703-7404-CC8F2487B54C}</Project>
+      <Project>{2D29ED1C-17DA-6A07-55D3-7DF3EEAC547E}</Project>
       <Name>Unity.Purchasing.Codeless</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.Utilities.csproj">
-      <Project>{A05D7FB7-17E3-CCB5-F2AE-FED10677CC7F}</Project>
+      <Project>{ADD06F75-4FC3-85E7-6BCA-D058B30FC2F9}</Project>
       <Name>Unity.Purchasing.Utilities</Name>
     </ProjectReference>
   </ItemGroup>

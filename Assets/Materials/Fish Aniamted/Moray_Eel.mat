@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mackerel_h
+  m_Name: Moray_Eel
   m_Shader: {fileID: -6465566751694194690, guid: 337dafcd03c826049acf056be987ba98, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -27,15 +27,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 85f1db19139080341bbf809c3cdfb6c8, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleCubemap_b5c25f8cf7ca434b91089fae111d57f7_Cube_1_Cubemap:
-        m_Texture: {fileID: 8900000, guid: 0d84913d01d000e45bd8c5ad5099eb40, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleReflectedCubemap_30005f72fa0e4c5299fbc284c4abfde3_Cube_1_Cubemap:
-        m_Texture: {fileID: 8900000, guid: 5b28a7cc5787b4042a23a54677631d12, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6a2fc875597edd34facc12a7b6fb1734, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleReflectedCubemap_dcf6349f1fe9443f938dae144d4f23e5_Cube_1_Cubemap:
@@ -66,10 +58,6 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Texture2DAsset_fe8f52c9d5ea45479cd4f4a7926e7c42_Out_0_Texture2D:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -89,24 +77,25 @@ Material:
     - _FishMetallic: 0
     - _FishMetallic_Normal: 0
     - _FishSmoothness: 0.35
-    - _FixerOffset: -0.95
-    - _Frequency: 7.51
+    - _FixerOffset: -2.62
+    - _Frequency: 8.75
     - _InvisiblySkin: 0
-    - _IsAshSkin: 0
-    - _MaxRotationValue: 0.26
+    - _MaxRotation: 0
+    - _MaxRotationValue: 0.114
     - _MercuryScale: 3
     - _MercurySkin: 0
-    - _Offset: 0.23
+    - _Offset: 0.46
     - _QueueControl: 1
     - _QueueOffset: 0
     - _RotationRad: 0
-    - _TexureEdgingPower: 0.5
+    - _TexureEdgingPower: 1
     - _UnscaledTime: 0
     - _UnscaledTimeClip: 0.000001
-    - _WaveXamplitude: 0.75
+    - _WaveXamplitude: 0.63
     - _XRMotionVectorsPass: 0
     m_Colors:
-    - _BodySmoothEdge: {r: -4.38, g: 3.01, b: 0, a: 0}
+    - _BodySmoothEdge: {r: -0.67, g: 3.01, b: 0, a: 0}
+    - _Rotation: {r: 0.16, g: -45.44, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2635674992861930167

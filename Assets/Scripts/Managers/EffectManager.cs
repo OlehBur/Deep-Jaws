@@ -25,7 +25,7 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] Vector3 shieldLocalScale;
     [SerializeField] Vector3 whirlLocalPos;
     [SerializeField] Fish fish;
-    [SerializeField] FishAnimManager fishAnim;
+    [SerializeField] FishAnim fishAnim;
 
     public Dictionary<FishEffectType, Effect> activeEffects { get; private set; } = new();
     public event Action<FishEffectType, bool> OnEffectChanges;
