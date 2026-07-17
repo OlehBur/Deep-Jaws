@@ -11,6 +11,7 @@ public class FishControl : MonoBehaviour, IFish {
     [SerializeField] float ³dleTime;
     [SerializeField] float timeToIdle;
     [SerializeField] FishAnim fishAnim;
+    [SerializeField] Transform editableTransform;
 
     private IFish IFish;
     Fish IFish.CurrentTarget { get; set; }
@@ -24,9 +25,12 @@ public class FishControl : MonoBehaviour, IFish {
     public EnemyState State => state;
 
     //movement
-    private Fish fish;
+    /*private*/
+    [SerializeField] Fish fish;
+    public Fish Fish => fish;
+
     private Rigidbody rb;
-    Vector3 direction = Vector3.zero;
+    private Vector3 direction = Vector3.zero;
     private Vector3 targetPosition;
     private Vector3 rotateVelocity = Vector3.zero;
     private bool isTargetSet = false; // flag to check if target is set
@@ -35,10 +39,13 @@ public class FishControl : MonoBehaviour, IFish {
     private const float WALKING_RADIUS_MULTIPLIER = 10f;
     private const float MIN_DISTANCE_TO_TARGET = 0.05f;
     private const float TIME_RECALC_WAY = .2f;
+    private const float DIRECTION_TRIGGER_MAGNITUDE = .001f;
 
     //player movement
     private Vector2 moveInput;
-    private Vector3 moveDir = Vector3.zero;
+    //private Vector3 moveDir = Vector3.zero;
+    //private Vector3 newRotation;
+    private Vector3 currentForward;
     private bool isMoved = false;
     private const float ROTATION_SMOOTH_TIME = .1f;
 
@@ -49,10 +56,10 @@ public class FishControl : MonoBehaviour, IFish {
     private float contactTime = 0f; // time of contact with other fish
 
 
-    public void Init(SpawnManager spawnManager, Fish fish) {
+    public void Init(SpawnManager spawnManager/*, Fish fish*/) {
         this.spawnManager = spawnManager;
         IFish = this;
-        this.fish = fish;
+        //this.fish = fish;
         IFish.CurrentTarget = null; // Reset current target when enabled
 
         rb = (rb == null) ?
@@ -112,15 +119,22 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     void FixedUpdate() {
+        //if (fish.IsActive) {
         if (fish.IsPlayer)
             PlayerMovement();
         else if (IsFishNeedUpdate())
             EnemyMovementBehaviour();
+        //}
     }
+
+    //void LateUpdate() {
+    //    if (fish.IsPlayer) 
+    //        fishAnim.RotateAnimation(currentForward, newRotation, Time.unscaledDeltaTime);
+    //}
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsFishNeedUpdate() {
-        if (spawnManager != null && spawnManager.PlayerFish != null) {
+        if (spawnManager != null && spawnManager.PlayerFish != null && rb != null && spawnManager.PlayerFish.Rb != null) {
             float distanceToPlayer = Vector3.Distance(spawnManager.PlayerFish./*transform*/Rb.position, /*transform.position*/rb.position);
             if (distanceToPlayer > GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY) {
                 if (fish.IsActive)
@@ -143,6 +157,9 @@ public class FishControl : MonoBehaviour, IFish {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void EnemyMovementBehaviour() {
+        if (IFish == null)
+            return;
+
         switch (state) {
             case EnemyState.Walking:
             if (!isTargetSet)
@@ -172,44 +189,28 @@ public class FishControl : MonoBehaviour, IFish {
         if (!isMoved) //parasyte movement detection
             SleepPhysics();
 
-        // rotation in dir of movement
-        moveDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        Vector3 currentForward = rb.rotation * Vector3.forward;
-        Vector3 newRot =
-        //    Vector3.SmoothDamp(
-        //transform.forward, moveDir.normalized, ref rotateVelocity,
-        //    /*fish.RotationSpeed*/ ROTATION_SMOOTH_TIME, Mathf.Infinity, Time.fixedUnscaledDeltaTime);
-        Vector3.RotateTowards(/*transform.forward*/currentForward, moveDir.normalized, (1f / ROTATION_SMOOTH_TIME) * Time.fixedUnscaledDeltaTime, 0f);
-        Quaternion newLook = Quaternion.LookRotation(newRot, Vector3.up);
-
-        if (newRot != Vector3.zero) {
-            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed);
-
-            fishAnim.RotateAnimation(/*transform.forward*/currentForward, newRot, Time.fixedUnscaledDeltaTime/*, .040f*/ /*angleDetect_Smooth*//*ROTATE_ANGLE_ANIMATION_START*/);
-            rb.MoveRotation(newSmoothRot);
-        }
-
-        //movement
-        //Debug.Log(movingScalerByRotation);
-        Vector3 targetPos = moveDir * fish.Speed * GetMovingScalerByRotation(/*transform.rotation*/rb.rotation, newLook, moveDir);
-
-        if (targetPos != Vector3.zero) {//LINEAR VELOCITY USE WITHOUT TIME.DELTA ITS ALREADY IN VELOCITY CALCULATION
-                                        //rb.linearVelocity = targetPos;
-                                        //rb.MovePosition(rb.position + targetPos * Time.fixedUnscaledDeltaTime);
-            targetPos.y = rb.linearVelocity.y;
-            rb.linearVelocity = targetPos;
-        }
+        direction = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+        ApplyPhysicsMovement(fish.Speed, fish.RotationSpeed, Time.fixedUnscaledDeltaTime);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     float GetMovingScalerByRotation(Quaternion currRotation, Quaternion newRotation, Vector3 moveDir) {
+        //if (moveDir == Vector3.zero)
+        //    return 0f;
+
+        //const float STOP_MOVING_ANGLE = 180f;
+
+        //Quaternion newLook = Quaternion.LookRotation(moveDir, Vector3.up);
+        //return Mathf.Clamp01(1.1f - Mathf.Clamp01(Quaternion.Angle(currRotation, newRotation) / STOP_MOVING_ANGLE)); //.1f to 1f  
         if (moveDir == Vector3.zero)
             return 0f;
 
-        const float STOP_MOVING_ANGLE = 50f;
+        float angle = Quaternion.Angle(currRotation, newRotation);
 
-        Quaternion newLook = Quaternion.LookRotation(moveDir, Vector3.up);
-        return Mathf.Clamp01(1.1f - Mathf.Clamp01(Quaternion.Angle(currRotation, newRotation) / STOP_MOVING_ANGLE)); //.1f to 1f  
+        // if andf == 180, ret 0.5 (speed = 50%)
+        // ç Remap: fr 0..180 deg to 1.0..0.5
+        return Mathf.Lerp(1f, .5f, angle / 180f);
+
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -340,29 +341,91 @@ public class FishControl : MonoBehaviour, IFish {
             break;
         }
 
-        // rotation in dir of movement
-        Vector3 currentForward = rb.rotation * Vector3.forward;
-        Vector3 newRot = //Vector3.SmoothDamp(transform.forward, dir.normalized, ref rotateVelocity, ROTATION_SMOOTH_TIME, Mathf.Infinity, Time.fixedDeltaTime);
-        Vector3.RotateTowards(/*transform.forward*/currentForward, dir.normalized, (1f / ROTATION_SMOOTH_TIME) * Time.fixedDeltaTime, 0f);
-        Quaternion newLook = Quaternion.LookRotation(newRot, Vector3.up);
+        direction = dir.normalized;
+        float smoother = Mathf.Clamp01(currentDistanceToTarget * .3f) * .95f + .05f; // from .1f to 1f
+        ApplyPhysicsMovement(fish.Speed, fish.RotationSpeed, Time.fixedDeltaTime, smoother);
+    }
 
-        if (newRot != Vector3.zero) {
-            Quaternion newSmoothRot = Quaternion.Slerp(rb.rotation, newLook, fish.RotationSpeed);
+    ////test without physics
+    //[SerializeField] bool activateTransformRotation = false;
+    //private void Update() {
+    //    if (activateTransformRotation) {
+    //        float angleStep = fish.RotationSpeed * .35f * Time.deltaTime;
+    //        Quaternion stepRotation = Quaternion.Euler(0f, angleStep, 0f);
+    //        Quaternion testRotation = transform.rotation * stepRotation;
 
-            if (fishAnim != null && fishAnim.IsInited)
-                fishAnim.RotateAnimation(/*transform.forward*/currentForward, newRot, Time.fixedDeltaTime);
-            rb.MoveRotation(newSmoothRot);
+    //        if (fishAnim != null && fishAnim.IsInited) {
+    //            Vector3 currentForward = transform.rotation * Vector3.forward;
+    //            Vector3 nextForward = testRotation * Vector3.forward;
+    //            //fishAnim.RotateAnimation(currentForward, nextForward, Time.deltaTime);
+    //        }
+
+    //        transform.rotation = testRotation;
+    //    }
+    //}
+
+    private void LateUpdate() {
+        //if (fish.IsActive) {
+        //if (editableTransform == null) {
+        //    Debug.Log(gameObject.name);
+        //    return;
+        //}
+
+        float delta = (fish.IsPlayer) ? Time.unscaledDeltaTime : Time.deltaTime;
+        Quaternion targetLook;
+
+        if (direction.sqrMagnitude > DIRECTION_TRIGGER_MAGNITUDE) {
+            targetLook = Quaternion.LookRotation(direction, Vector3.up);
+            editableTransform.rotation = Quaternion.RotateTowards(editableTransform.rotation, targetLook, fish.RotationSpeed * delta);
         }
+        else //standing still
+            targetLook = editableTransform.rotation;
 
-        //smooth movement
-        float smoother = Mathf.Clamp01(currentDistanceToTarget * .3f) * .95f + .05f;//from .1f to 1f
-        Vector3 targetPos = dir.normalized * fish.Speed * smoother * GetMovingScalerByRotation(/*transform*/rb.rotation, newLook, dir);
+        if (fishAnim != null && fishAnim.IsInited)
+            fishAnim.RotateAnimation(editableTransform.forward, targetLook * Vector3.forward, delta);
+        //}
+    }
+
+    //[SerializeField] bool activatePhysRotation = true;
+    protected void ApplyPhysicsMovement(float speed, float rotationSpeed, float deltaTime, float speedMultiplier = 1f) {
+        //rotation
+        Quaternion targetLook =
+        (direction.sqrMagnitude > DIRECTION_TRIGGER_MAGNITUDE) ?
+            Quaternion.LookRotation(direction, Vector3.up) :
+            transform.rotation; //if standing
+
+        //Vector3 currentForward = rb.rotation * Vector3.forward;
+        //Vector3 targetForward = targetLook * Vector3.forward;
+
+        //float maxDegreesPerDelta = rotationSpeed * deltaTime;
+        //Quaternion newSmoothRot = Quaternion.RotateTowards(rb.rotation, targetLook, maxDegreesPerDelta);
+
+        //if (fishAnim != null && fishAnim.IsInited)
+        //    fishAnim.RotateAnimation(currentForward, targetForward, deltaTime);
+
+        //rb.MoveRotation(newSmoothRot);
+
+        // movement
+        Vector3 targetPos = direction * speed * speedMultiplier * GetMovingScalerByRotation(rb.rotation, targetLook, direction);
+
         if (targetPos != Vector3.zero) {
-            //rb.linearVelocity = targetPos;
-            //rb.MovePosition(rb.position + targetPos * Time.fixedDeltaTime);
             targetPos.y = rb.linearVelocity.y;
             rb.linearVelocity = targetPos;
         }
+
+        //// === TEST MODE: ignore input> just rotate around ===
+        //if (activatePhysRotation) {
+        //    float angleStep = rotationSpeed * .35f * deltaTime;
+        //    Quaternion stepRotation = Quaternion.Euler(0f, angleStep, 0f);        //"rot angleStep with Y"
+        //    Quaternion testRotation = rb.rotation * stepRotation;
+
+        //    if (fishAnim != null && fishAnim.IsInited) {
+        //        Vector3 currentForward = rb.rotation * Vector3.forward;
+        //        Vector3 nextForward = testRotation * Vector3.forward;
+        //        //fishAnim.RotateAnimation(currentForward, nextForward, deltaTime);
+        //    }
+        //    rb.MoveRotation(testRotation);
+        //}
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -427,7 +490,8 @@ public class FishControl : MonoBehaviour, IFish {
             ) {
 
             if (isStayContact) {
-                contactTime += (fish.IsPlayer) ? Time.unscaledDeltaTime : Time.fixedDeltaTime;
+                contactTime += (fish.IsPlayer) ?
+                    Time.unscaledDeltaTime : Time.fixedDeltaTime;
 
                 if (contactTime >= fish.DeffaultAttackTime) {//damage each second
                     contactTime = 0f;
@@ -453,9 +517,9 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
 
-    private void OnCollisionExit(Collision collision) {
-        SleepPhysics();
-    }
+    //private void OnCollisionExit(Collision collision) {
+    //    SleepPhysics();
+    //}
 
     private void OnTriggerEnter(Collider other) {//some invisible obstacles like player spawn zone (only sphere collider)                                                 
         if (other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD))
@@ -507,7 +571,7 @@ public class FishControl : MonoBehaviour, IFish {
         if (rb != null) {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.Sleep(); // freeze physics calculations
+            //rb.Sleep(); // freeze physics calculations
         }
     }
 

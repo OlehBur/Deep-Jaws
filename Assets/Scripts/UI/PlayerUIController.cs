@@ -142,7 +142,7 @@ public class PlayerUIController : MonoBehaviour {
         zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
         blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
 
-        if (GameManager.IsRunOnPC || Application.isEditor) {
+        if (GameManager.IsRunOnPC) {
             playebleAreaUI.SetActive(false);
             sprintProgressPC.transform.parent.gameObject.SetActive(true);
         }
@@ -198,7 +198,7 @@ public class PlayerUIController : MonoBehaviour {
         //if (isPlayableAreaActive)
         SprintButtonBehaviour();
 
-        if (GameManager.IsRunOnPC || Application.isEditor)
+        if (GameManager.IsRunOnPC)
             WASD_MovingBehaviour();
     }
 
@@ -236,7 +236,7 @@ public class PlayerUIController : MonoBehaviour {
     void SprintButtonBehaviour() {
         if (sprintButton.interactable) {
             //for Googlr Play Games PC
-            if ((GameManager.IsRunOnPC || Application.isEditor) && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
+            if (GameManager.IsRunOnPC && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
                 OnSpintButtonClick();
 
             return;

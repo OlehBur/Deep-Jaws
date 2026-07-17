@@ -392,7 +392,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 84
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &2657620157071051659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,6 +452,8 @@ MonoBehaviour:
   "\u0456dleTime": 0.12
   timeToIdle: 4.2
   fishAnim: {fileID: 0}
+  editableTransform: {fileID: 4084185988788917315}
+  fish: {fileID: 2657620157071051659}
 --- !u!114 &8500345913912895586
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public static float CurrentDefaultGameTime { get; private set; }
     public static readonly float DEFAULT_GAME_TIME = 1f;
-    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC();
+    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor;
     private const float FIXED_DELTA_TINE_LOW = .05f;
     private const float FIXED_DELTA_TINE_HIGH = .02f;
     public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;

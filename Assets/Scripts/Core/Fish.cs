@@ -62,7 +62,7 @@ public class Fish : MonoBehaviour {
     private float SpeedMultiplierThird { get; set; } = 1;
     private float SpeedMultiplierFourth { get; set; } = 1;
 
-    private const float ROTATION_SPEED_MULTIPLIER = .07f; // multiplier for rotation speed
+    private const float ROTATION_SPEED_MULTIPLIER = 40f; // multiplier for rotation speed
     private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
     private const float MIN_PROGRESS_GAIN_MULTIPLIER = 11f;
     private const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
@@ -209,7 +209,7 @@ public class Fish : MonoBehaviour {
     public bool IsLegitimateTarget(Fish other, bool withChance = false) {
         bool smallerLvl = other.Level < Level;//other - weaker 
         bool sameLevelLegimate = other.Level == Level && other.Progress <= Progress; // same level and <= progress
-        bool allowSmLvlPlyrAtck = GameStaticInfo.Gamemode == GameMode.Hard;
+        bool allowSameLvlPlayerAtack = GameStaticInfo.Gamemode == GameMode.Hard;
         bool isShark = Level >= GameStaticInfo.SHARK_INDEX_BARRIER;
 
         if (IsPlayer)
@@ -220,13 +220,13 @@ public class Fish : MonoBehaviour {
             if (other.Level <= GameStaticInfo.UNBEATABLE_FISH_LVL)//immortal fish that can't get harm (only by player) 
                 return false;
 
-            if (withChance)
+            if (withChance && !other.IsPlayer)// chance only for enemies, not for player (enemy always attack player if same level and progress)
                 return smallerLvl ||
                     (sameLevelLegimate && (UnityEngine.Random.value <= SAME_LVL_ATACK_CHANCE && //but not player and ran chance, or player or others if enemy fish is shark or hard mode
-                            (!other.IsPlayer || isShark || allowSmLvlPlyrAtck)));
+                            (!other.IsPlayer || isShark || allowSameLvlPlayerAtack)));
             else
                 return smallerLvl ||
-                    (sameLevelLegimate && (!other.IsPlayer || isShark || allowSmLvlPlyrAtck));
+                    (sameLevelLegimate && (!other.IsPlayer || isShark || allowSameLvlPlayerAtack));
         }
     }
 }

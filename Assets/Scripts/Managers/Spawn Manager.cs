@@ -135,7 +135,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         for (int playerInd = 0, prefabInd = 1; playerInd < PlayerPoolSize; playerInd++, prefabInd++) {
 
             GameObject playerPrefab = Instantiate(prefabs[prefabInd], fishPoolParent);
-            Fish newPlayerFish = playerPrefab.GetComponent<Fish>();
+            FishControl fishControl = playerPrefab.GetComponent<FishControl>();
+            Fish newPlayerFish = fishControl.Fish;//playerPrefab.GetComponent<Fish>();
             //if (newPlayerFish == null) {
             //    Debug.LogWarning("Player prefabs havent fish componend: " + playerPrefab.name);
             //    return;
@@ -143,7 +144,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             newPlayerFish.IsPlayer = true;
             newPlayerFish.OnFishDie += FishDieAct;
             newPlayerFish.OnFishLvlUp += PlayerLvlUpAct;
-            playerPrefab.GetComponent<FishControl>().Init(this, newPlayerFish);
+            fishControl.Init(this/*, newPlayerFish*/);
 
             playerPool_Objects[playerInd] = playerPrefab;
             playerPool_FishComponents[playerInd] = newPlayerFish;
@@ -200,7 +201,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void PrefabNamingTaging(GameObject prefab, FishLevel level, bool isPlayer = false) {
-        string name = isPlayer ? GameStaticInfo.NAME_PLAYER: GameStaticInfo.NAME_ENEMY;
+        string name = isPlayer ? GameStaticInfo.NAME_PLAYER : GameStaticInfo.NAME_ENEMY;
         string tag = isPlayer ? GameStaticInfo.TAG_PLAYER : GameStaticInfo.TAG_ENTITY;
 
         prefab.name = name + level.ToString();
@@ -426,10 +427,12 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         enemyPrefab = GetFishFromPool(visible_poolFishObjects[visPoolIndex], lvl, out int globalIndex);//Instantiate(prefabs[lvl], GetRandSpawnPosition(lvl, isRandomPos), Quaternion.identity);
         enemyPrefab.transform.position = GetRandSpawnPosition(lvl, isRandomPos);
 
+        FishControl enemyControl = enemyPrefab.GetComponent<FishControl>();
         Fish enemyFish = globalPool_Components[lvl, globalIndex];//enemyPrefab.GetComponent<Fish>();
         enemyFish.IsPlayer = false;
-        enemyPrefab.GetComponent<FishControl>().Init(this, enemyFish);
+        /*enemyPrefab.GetComponent<FishControl>()*/
         enemyFish.SetRandomProgress(); //change progress every respawn
+        enemyControl.Init(this/*, enemyFish*/);
 
         PrefabNamingTaging(enemyPrefab, enemyFish.Level);
 
@@ -446,7 +449,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private void DeactivatePrefab(GameObject prefab, FishLevel level, bool isPlayer, bool isDie = true) {
         int visIndex = 0;
         //if (isPlayer)
-            //Debug.LogWarning("Player died on level: " + level);
+        //Debug.LogWarning("Player died on level: " + level);
 
         switch (level) {
             case FishLevel.Pufferfish:
@@ -564,15 +567,15 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         while (currentInd < maxCnt) {
             if (Vector3.Distance(PlayerFish.transform.position, spPoints.GetChild(spawnPointIndex).position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {
                 GameObject prefabInst = pool[currentInd] = Instantiate(prefab, spPoints.GetChild(spawnPointIndex).position /*+ RandomXZOffset()*/, Quaternion.identity, fishPoolParent);
-                Fish fishPermament = prefabInst.GetComponent<Fish>();
                 FishControl enemyPermControl = prefabInst.GetComponent<FishControl>();
+                Fish fishPermament = enemyPermControl.Fish; //prefabInst.GetComponent<Fish>();
 
                 if (prefabInst.TryGetComponent(out PufferfishController pufferController))
                     pufferController.Init(audioManager);
                 else if (prefabInst.TryGetComponent(out ÑuttlefishController cuttleController))
                     cuttleController.Init(audioManager, fishAdditionalComponentManager);
 
-                enemyPermControl.Init(this, fishPermament);
+                enemyPermControl.Init(this/*, fishPermament*/);
                 fishPermament.SetRandomProgress();
                 fishPermament.OnFishDie += FishDieAct;
                 fishCompPool[currentInd] = fishPermament;

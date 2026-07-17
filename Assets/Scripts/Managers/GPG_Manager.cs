@@ -118,7 +118,7 @@ public class GPG_Manager : MonoBehaviour {
 
                 if (prop != null) {
                     DateTime achievementDate = (DateTime)prop.GetValue(achievement, null);
-                    DateTime releaseDate = new DateTime(2026, 7, 18, 0, 0, 0, DateTimeKind.Utc);
+                    DateTime releaseDate = new DateTime(2026, 7, 19, 0, 0, 0, DateTimeKind.Utc);
                     Debug.LogWarning(achievementDate);
 
                     if (achievementDate < releaseDate) {
