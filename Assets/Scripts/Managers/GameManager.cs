@@ -28,18 +28,16 @@ public class GameManager : MonoBehaviour {
 
     //game init
     void Awake() {
-        //AudioListener.volume = 0f;
+        //Debug.LogWarning("Run On ANDROID Enanbled");
+
         gameCanvas.SetActive(false);
         GameSetPause(true);//wait until the spawn manager finishes creating pools
         spawnManager.Init();
-        //foreach (JellyfishController jellyManager in jellyfishControllerArray)
-        //    jellyManager.InitMovementArrays();
         cameraFollower.Init(spawnManager); // initialize the camera follower with the spawn manager
         fishHeartbeatsManager.Init(spawnManager);
         playerEffectsUI.Init(spawnManager);
         playerLeaderboardScore.Init(spawnManager);
         CurrentDefaultGameTime = DEFAULT_GAME_TIME;
-        //spawnManager.OnFinishPoolCreation += PreSceneActivate;
 
         SetFPSSettings();
         GameSetPause(false);

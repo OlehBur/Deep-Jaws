@@ -317,9 +317,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.Save(saveData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.Lionfish;
+        //playerLvl = (int)FishLevel.WhiteShark;
         //playerProgress = .9f;
         //Debug.LogWarning(playerLvl);
+
         int playerIndex = playerLvl - 1;
 
         if (GameStaticInfo.Gamemode == GameMode.Hard && isDie) {            //playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL;
@@ -378,7 +379,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         for (int i = 0; i < POOL_SIZE; i++)
             if (visible_poolFishObjects[i].activeInHierarchy && visible_poolFishComponents[i].Level > playerFishLVL) {
                 visible_poolFishComponents[i].Die();
-                Debug.LogWarning("Respawn entity: " + visible_poolFishComponents[i]);
+                //Debug.LogWarning("Respawn entity: " + visible_poolFishComponents[i]);
             }
     }
 
