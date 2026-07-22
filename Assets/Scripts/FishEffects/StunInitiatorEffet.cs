@@ -11,7 +11,7 @@ public class StunInitiatorEffet : Effect {
         collidedObjCnt = Physics.OverlapSphereNonAlloc(target.transform.position,
             GameStaticInfo.STUN_SONAR_RADIUS,
             collideObjects,
-            GameStaticInfo.ENTITY_LAYER_MASK,
+            GameStaticInfo.LAYER_MASK_ENTITY,
             QueryTriggerInteraction.Ignore);
 
         for (int i = 0; i < collidedObjCnt; i++) {

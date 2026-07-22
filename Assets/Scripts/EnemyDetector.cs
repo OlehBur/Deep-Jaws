@@ -18,7 +18,7 @@ public class EnemyDetector : MonoBehaviour {
 
     void Update() {
         if (playerFish != null) {
-            int cnt = Physics.OverlapSphereNonAlloc(playerFish.transform.position, DETECTOR_RADIUS, colliders, GameStaticInfo.ENTITY_LAYER_MASK);
+            int cnt = Physics.OverlapSphereNonAlloc(playerFish.transform.position, DETECTOR_RADIUS, colliders, GameStaticInfo.LAYER_MASK_ENTITY);
             if (cnt > 0) {
                 float minDistance = DETECTOR_RADIUS + 1;
                 Vector3 closestEnemyPos = Vector3.zero;

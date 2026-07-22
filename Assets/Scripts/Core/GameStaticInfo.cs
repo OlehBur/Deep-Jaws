@@ -84,13 +84,20 @@ public static class GameStaticInfo {
     public const int PEACEFUL_FISH_LVL = 0;//barrier level for peaceful fish (crab and below)
     public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Cuttlefish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
 
-    private const string ENTITY_LAYER_STR = "Entity"; //layer for entities, where fish are located
-    public static int ENTITY_LAYER_MASK => LayerMask.GetMask(ENTITY_LAYER_STR);//layer id for entities
+    private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
+    public const string LAYER_OBSTACLE = "Obstacle";
+    public const string LAYER_CAMERA_AVOID_COLLIDERS = "AvoidDynamicCameraColliders"; 
 
+    public static int LAYER_MASK_ENTITY => LayerMask.GetMask(LAYER_ENTITY);//layer id for entities
+
+
+    public const string TAG_SPAWN_ZONE = "SpawnZone";
     public const string TAG_BUBBLESHIELD = "Shield";
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENTITY = "Entity";
     public const string TAG_MAP_PREV = "MapReview";
+    public const string TAG_POISON_TRIGGER = "PoisonTrigger";
+    public const string TAG_OBSTACLE = "Obstacle";
 
     public const string NAME_PLAYER = "Player ";
     public const string NAME_ENEMY = "Enemy ";

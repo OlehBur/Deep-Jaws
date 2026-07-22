@@ -703,7 +703,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         return spawnPoints.GetChild(index).position + RandomXZOffset();
     }
 
-    Vector3 RandomXZOffset(float maxOffset = 10) {
+    Vector3 RandomXZOffset(float maxOffset = 6) {
         float offsetMultiplierX = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
         float offsetMultiplierZ = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
 
