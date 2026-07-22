@@ -21,3 +21,13 @@
 -keep class com.google.android.gms.common.data.DataBufferUtils { *; }
 -keep class com.google.android.gms.games.quest.** { *; }
 -keep class com.google.android.gms.nearby.** { *; }
+
+# Захист для AndroidX WorkManager, Startup та їхніх баз даних
+-keep class androidx.work.** { *; }
+-keep class androidx.startup.** { *; }
+-keep class androidx.room.** { *; }
+-keep class androidx.sqlite.** { *; }
+
+# Загальні правила для збереження анотацій (для багатьох плагінів)
+-keepattributes *Annotation*
+-keepattributes Signature
