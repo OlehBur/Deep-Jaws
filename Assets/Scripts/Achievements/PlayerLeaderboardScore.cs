@@ -18,13 +18,16 @@ public class PlayerLeaderboardScore : MonoBehaviour {
     }
 
     void PlayerReconnect(Fish player, bool isDie) {
-        if (this.player != null && this.player != player)
-            this.player.OnFishEat -= OnScoreAdd;
-        this.player = player;
         //else
         //Debug.LogWarning("Player ref: "+player);
 
         if (isDie) {
+            if (/*this.player != null &&*/ this.player != player) {//not same fish & not first init (is die never = true on first init)
+                this.player.OnFishEat -= OnScoreAdd;
+                this.player = player;
+                this.player.OnFishEat += OnScoreAdd;
+            }
+
             if (GameStaticInfo.Gamemode == GameMode.Easy) {
                 EasyDeaths++;
                 GPG_Manager.Instance?.OnSavePlayerDeathsToLeaderBoard(EasyDeaths);
@@ -35,8 +38,17 @@ public class PlayerLeaderboardScore : MonoBehaviour {
                            //Debug.Log("LeadBoardScore PlayerReconnect");
             }
         }
-        else if (player != null)
-            player.OnFishEat += OnScoreAdd;
+        else {
+            if (this.player == null) {//first init 
+                this.player = player;
+                this.player.OnFishEat += OnScoreAdd;
+            }
+            else {//new fish (lvl up)   this.player != null
+                this.player.OnFishEat -= OnScoreAdd;
+                this.player = player;
+                this.player.OnFishEat += OnScoreAdd;
+            }
+        }
     }
 
     public static void LoadSavedData() =>

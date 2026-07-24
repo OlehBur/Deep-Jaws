@@ -25,7 +25,7 @@ public abstract class Effect /*: MonoBehaviour*/ {
     //protected bool isStartDeactivate = false;
 
     public float LeftTime { get; private set; } // remaining time of the effect
-    protected Fish target;
+    protected Fish targetFish;
     public event Action<FishEffectType> OnEffeñtExpire;
     protected const float NORMAL_SPEED_MULTIPLIER = 1f;
     //private bool enabled = true;
@@ -42,7 +42,7 @@ public abstract class Effect /*: MonoBehaviour*/ {
 
 
     public void Init(Fish target, float duration) {
-        this.target = target;
+        this.targetFish = target;
         Duration = duration;
         LeftTime = duration;
 

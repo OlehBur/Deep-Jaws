@@ -111,8 +111,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1771ee0ffcb74554996891290cb32f88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 671929042931889152}
   m_SourcePrefab: {fileID: 100100000, guid: 1771ee0ffcb74554996891290cb32f88, type: 3}
+--- !u!1 &435150284133895280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1771ee0ffcb74554996891290cb32f88, type: 3}
+  m_PrefabInstance: {fileID: 777045970029064481}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &671929042931889152
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435150284133895280}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5929e18772770674db5d35e73b4649c2, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &955368179470063306 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1771ee0ffcb74554996891290cb32f88, type: 3}
@@ -144,12 +174,16 @@ PrefabInstance:
       value: 38
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: growProgress
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: responseRadius
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: jawForwardOffset
-      value: 2.43
+      value: 2.89
       objectReference: {fileID: 0}
     - target: {fileID: 133755904755991818, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Height
@@ -167,6 +201,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: -0.74122286
       objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 671929042931889152}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishMesh
       value: 
@@ -219,6 +257,14 @@ PrefabInstance:
       propertyPath: fishSkinnedRenderer
       value: 
       objectReference: {fileID: 4667258590292322611}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Center.z
+      value: 2.89
+      objectReference: {fileID: 0}
     - target: {fileID: 3090889525494790858, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 3
@@ -230,6 +276,18 @@ PrefabInstance:
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: timeToIdle
       value: 8.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: previewCollider
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultHeight
+      value: 7.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultRadius
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 3766895010739556756, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
@@ -386,6 +444,18 @@ PrefabInstance:
     - target: {fileID: 8937414190267927894, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Height
+      value: 5.0820003
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Center.z
+      value: -0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

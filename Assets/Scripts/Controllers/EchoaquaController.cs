@@ -51,8 +51,12 @@ public class EchoaquaController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        //Debug.Log(other.transform.parent);
-        if (!other.isTrigger && other.transform.parent != null && other.transform.parent.CompareTag(GameStaticInfo.TAG_PLAYER)) {
+        if (other.attachedRigidbody == null)
+            return;
+
+        Transform fishParent = other.attachedRigidbody.transform;
+
+        if (!other.isTrigger && /*fishParent != null &&*/ fishParent.CompareTag(GameStaticInfo.TAG_PLAYER)) {
             echoaquaShader.SetFloat("_Progress", 0f);//reset previous 
             vibrissaeColliders.SetActive(false);
             lightsVibrissaeParent.SetActive(false);

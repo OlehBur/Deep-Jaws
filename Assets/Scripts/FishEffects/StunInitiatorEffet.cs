@@ -8,7 +8,7 @@ public class StunInitiatorEffet : Effect {
     protected override void OnApply() {
         type = FishEffectType.StunInitiator;
 
-        collidedObjCnt = Physics.OverlapSphereNonAlloc(target.transform.position,
+        collidedObjCnt = Physics.OverlapSphereNonAlloc(targetFish.transform.position,
             GameStaticInfo.STUN_SONAR_RADIUS,
             collideObjects,
             GameStaticInfo.LAYER_MASK_ENTITY,
@@ -18,12 +18,12 @@ public class StunInitiatorEffet : Effect {
             Rigidbody victimRb = collideObjects[i].attachedRigidbody;
 
             if (collideObjects[i] != null && victimRb != null 
-                && victimRb.gameObject != target.gameObject) {
+                && victimRb.gameObject != targetFish.gameObject) {
                 if (victimRb.TryGetComponent(out EffectManager effectManager))
                     effectManager.ApplyEffect(FishEffectType.Stun, /*Duration*/GameStaticInfo.STUN_DEFAULT_DURATION);
 
                 if (GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish victimFish)
-                   && target.IsPlayer && victimFish.Level == FishLevel.Pufferfish)
+                   && targetFish.IsPlayer && victimFish.Level == FishLevel.Pufferfish)
                     GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_am_inevitability);
             }
         }

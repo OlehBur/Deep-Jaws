@@ -35,6 +35,9 @@ public class FishAnim : MonoBehaviour {
         this.audioManager = audioManager;
         this.effectManager = effectManager;
         this.fishAddCompMngr = fishAddCompMngr;
+        if (fish.IsPlayer)
+            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+
         IsInited = true;
     }
 

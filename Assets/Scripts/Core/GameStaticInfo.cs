@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using UnityEngine;
 
 public enum FishLevel {
@@ -37,6 +36,13 @@ public struct AccountTitles {
     public string NoAdPrice;
     public string PremiumPrice;
     public string SupportDevPrice;
+    //public bool NoAdHasDiscount;
+    //public bool PremiumHasDiscount;
+    //public bool SupportDevHasDiscount;
+    //public string NoAdBadgeTxt;
+    //public string PremiumBadgeTxt;
+    //public string SupportDevBadgeTxt;
+
     public string GetPrice(AccountPurchase ap) =>
     ap switch {
         AccountPurchase.SupportDev => SupportDevPrice,
@@ -61,6 +67,13 @@ public struct PurchasedSkins {
     public string ChameleonPrice;
     public string AshflowPrice;
     public Skin Selected;
+    //public bool MercuryHasDiscount;
+    //public bool ChameleonHasDiscount;
+    //public bool AshflowHasDiscount;
+    //public string MercuryBadgeTxt;
+    //public string ChameleonBadgeTxt;
+    //public string AshflowBadgeTxt;
+
     public string GetPrice(Skin s) =>
         s switch {
             Skin.Chameleon => ChameleonPrice,

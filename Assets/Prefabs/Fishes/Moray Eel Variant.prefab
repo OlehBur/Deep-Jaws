@@ -105,6 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 32053449896444978}
   - component: {fileID: 6301102139016976827}
+  - component: {fileID: 4116536779032127111}
   m_Layer: 6
   m_Name: model
   m_TagString: Untagged
@@ -191,6 +192,28 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0, z: 0.0000042915344}
     m_Extent: {x: 0.46698856, y: 0.7861705, z: 4.6842628}
   m_DirtyAABB: 0
+--- !u!95 &4116536779032127111
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6925744836804254636}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 40e1f0bc98492b249bd2d3ca19eecbe6, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &986962013876825697
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -212,13 +235,21 @@ PrefabInstance:
       value: 22
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: growProgress
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: responseRadius
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: jawForwardOffset
-      value: 3.9
+      value: 4.4
       objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 4116536779032127111}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishMesh
       value: 
@@ -275,6 +306,14 @@ PrefabInstance:
       propertyPath: fishSkinnedRenderer
       value: 
       objectReference: {fileID: 6301102139016976827}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Center.z
+      value: 4.4
+      objectReference: {fileID: 0}
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: "\u0456dleTime"
       value: 5.18
@@ -282,6 +321,18 @@ PrefabInstance:
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: timeToIdle
       value: 5.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: previewCollider
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultHeight
+      value: 9.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultRadius
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 3480434657691319697, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -319,6 +370,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 3.9
       objectReference: {fileID: 0}
+    - target: {fileID: 4975605382687861859, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5177881148920251676, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -345,7 +400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6
+      value: 0.66
       objectReference: {fileID: 0}
     - target: {fileID: 7831987417261332925, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Height
@@ -426,6 +481,14 @@ PrefabInstance:
     - target: {fileID: 8937414190267927894, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Height
+      value: 6.237
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

@@ -19,7 +19,8 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] GameObject poisonIcon;
     [SerializeField] Rigidbody rb;
     [SerializeField] SkinnedMeshRenderer fishSkinnedRenderer;
-    [SerializeField] Transform editableTransform;
+    //[SerializeField] Transform editableTransform;
+    [SerializeField] Transform rotationTransform;
     [SerializeField] public bool IsHaveShield = true;
     [SerializeField] Vector3 shieldLocalPos;
     [SerializeField] Vector3 shieldLocalScale;
@@ -158,7 +159,7 @@ public class EffectManager : MonoBehaviour {
 
             if (type == FishEffectType.Shield) {//import after Init (shield obj added in apply meth in init)
                 ShieldEffect shieldEffect = newEffect as ShieldEffect;
-                ShieldObj = shieldEffect.ShieldObj;
+                ShieldObj = shieldEffect.ShieldWrap.obj;
             }
 
             //if (type == FishEffectType.StunInitiator)
@@ -270,7 +271,7 @@ public class EffectManager : MonoBehaviour {
 
         ShieldEffect shieldEffect = new(audioManager,
             fishAdditionalComponentManager,
-            editableTransform,
+            /*editableTransform*/rotationTransform,
             shieldLocalPos,
             shieldLocalScale);
 
@@ -278,7 +279,7 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateCurrentEffect() {
-        CurrentEffect speedEffect = new(fishAdditionalComponentManager, transform, whirlLocalPos);
+        CurrentEffect speedEffect = new(fishAdditionalComponentManager, /*transform*/rotationTransform, whirlLocalPos);
 
         if (speedEffectSource != null)//not null only for player
             speedEffectSource.enabled = true;
@@ -287,7 +288,7 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateSprintEffect() {
-        SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, editableTransform, whirlLocalPos);
+        SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, /*editableTransform*/rotationTransform, whirlLocalPos);
 
         if (speedEffectSource != null)
             speedEffectSource.enabled = true;

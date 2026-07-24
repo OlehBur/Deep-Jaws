@@ -42,7 +42,7 @@ public class GameAdsManager : MonoBehaviour {
     private const string USER_ID_KEY = "userId";
     private const string REWARDED_LIMIT_KEY = "DailyRewardedCount";
     private const string LAST_AD_DATE_KEY = "LastAdDate";
-    private const int MAX_DAILY_REWARDED = 22;
+    private const int MAX_DAILY_REWARDED = 10;
     private const float INTERSTETIAL_TIME_INTERVAL = 2 * 60;//m*s (m)
     private const float INTERSETIAL_DELAY_RELOAD = 10f;
 

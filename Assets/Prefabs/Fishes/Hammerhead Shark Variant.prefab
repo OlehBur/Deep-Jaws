@@ -25,6 +25,10 @@ PrefabInstance:
       value: 35
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: growProgress
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: responseRadius
       value: 14
       objectReference: {fileID: 0}
@@ -56,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: -0.032640457
       objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1855743422904248949}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishMesh
       value: 
@@ -112,6 +120,14 @@ PrefabInstance:
       propertyPath: fishSkinnedRenderer
       value: 
       objectReference: {fileID: 1503625095468643840}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 1.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Center.z
+      value: 3.42
+      objectReference: {fileID: 0}
     - target: {fileID: 3090889525494790858, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z
       value: 2
@@ -127,6 +143,18 @@ PrefabInstance:
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: timeToIdle
       value: 7.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: previewCollider
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultHeight
+      value: 8.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultRadius
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 3766895010739556756, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
@@ -308,6 +336,14 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Height
+      value: 5.5572004
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.95
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6766006204318863272, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
@@ -410,13 +446,43 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1855743422904248949}
   m_SourcePrefab: {fileID: 100100000, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
 --- !u!137 &1503625095468643840 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3887185075125053422, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
   m_PrefabInstance: {fileID: 6831963702371937810}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5913625553083093827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
+  m_PrefabInstance: {fileID: 6831963702371937810}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1855743422904248949
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5913625553083093827}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b3898eadc296f56408c6a74a94d5afef, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &6438665013015120377 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}

@@ -33,7 +33,7 @@ public class StopTimeEffect : Effect {
         //Debug.Log($"{target.name} has applied StopTime Effect for {Duration} s.");
         GameManager.ChangeGameTime(STOP_TIME_SCALE);
         GameManager.SetFixedDeltaTime(false, GameManager.CurrentFixedDeltaTime * STOP_TIME_SCALE);
-        target.ChangeSpeedMultiplier(STOPTIME_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);//for smoothest animation of objects
+        targetFish.ChangeSpeedMultiplier(STOPTIME_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);//for smoothest animation of objects
         currentTime = Time.time;
         fishAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
 
@@ -41,7 +41,7 @@ public class StopTimeEffect : Effect {
 
     protected override void OnExpire() {
         //Debug.Log($"{target.name} has expired StopTime Effect after {Duration} s.");
-        target.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);
+        targetFish.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);
         FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, STOP_VALUE_FOR_SHADER/*fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")*/);
         //fishRenderer.sharedMaterial.SetFloat("_UnscaledTime", STOP_VALUE_FOR_SHADER); /*wfwf*/
         GameManager.SetFixedDeltaTime(true);

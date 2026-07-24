@@ -29,7 +29,10 @@ public class SlowdownPearlController : MonoBehaviour {
     }
 
     private void OnTriggerStay(Collider other) {
-        Transform parentFish = other.transform.parent;
+        if (other.attachedRigidbody == null)
+            return;
+
+        Transform parentFish = other.attachedRigidbody.transform;
 
         if (parentFish.CompareTag("Player") && !other.isTrigger && parentFish.TryGetComponent(out FishAnim fam)) {
             fam.ActivateBiteAnimation(false);

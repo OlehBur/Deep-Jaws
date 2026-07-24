@@ -37,7 +37,10 @@ public class CaviarController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        Transform parentFish = other.transform.parent;
+        if (other.attachedRigidbody == null)
+            return;
+
+        Transform parentFish = other.attachedRigidbody.transform;
 
         if (caviarModel.activeInHierarchy && other.isTrigger//only mouth (trigger collider)
             && parentFish.CompareTag("Player")

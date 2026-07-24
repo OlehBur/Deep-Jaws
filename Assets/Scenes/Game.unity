@@ -42136,7 +42136,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 757225617}
-  m_Father: {fileID: 1370288369}
+  m_Father: {fileID: 365168271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -43683,6 +43683,7 @@ RectTransform:
   m_Children:
   - {fileID: 1370288369}
   - {fileID: 1425016739}
+  - {fileID: 350788565}
   - {fileID: 642225131}
   - {fileID: 1843475859}
   - {fileID: 541455428}
@@ -91367,7 +91368,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -136981,7 +136982,7 @@ GameObject:
   - component: {fileID: 1165562011}
   - component: {fileID: 1165562012}
   m_Layer: 0
-  m_Name: PlayerEffectUIController
+  m_Name: PlayerUIController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160319,7 +160320,6 @@ RectTransform:
   m_Children:
   - {fileID: 2056905654}
   - {fileID: 1883499774}
-  - {fileID: 350788565}
   - {fileID: 854331509}
   - {fileID: 921194178}
   - {fileID: 1264878704}

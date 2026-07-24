@@ -47,7 +47,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -81,7 +81,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
   m_PositionCurves:
   - curve:
       serializedVersion: 2
@@ -116,7 +116,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: editableTransform/model/body
+    path: body
   m_ScaleCurves:
   - curve:
       serializedVersion: 2
@@ -151,7 +151,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
   m_FloatCurves: []
   m_PPtrCurves: []
   m_SampleRate: 60
@@ -254,7 +254,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.x
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -293,7 +293,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.y
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -332,7 +332,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.z
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -371,7 +371,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.x
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -410,7 +410,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.y
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -449,7 +449,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.z
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -488,7 +488,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -527,7 +527,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -566,7 +566,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -605,7 +605,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: editableTransform/model/body
+    path: body
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -644,7 +644,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: editableTransform/model/body
+    path: body
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -683,7 +683,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: editableTransform/model/body
+    path: body
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -696,7 +696,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -708,7 +708,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -720,7 +720,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: editableTransform/model/body/jawDown
+    path: body/jawDown
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -732,7 +732,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -744,7 +744,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -756,7 +756,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: editableTransform/model/body/jawUp
+    path: body/jawUp
     classID: 4
     script: {fileID: 0}
     flags: 0

@@ -21,7 +21,10 @@ public class ShieldBubbleControl : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other) {
-        if (!other.isTrigger && other.transform.parent.TryGetComponent(out EffectManager fem)) 
+        if (other.attachedRigidbody == null)
+            return;
+
+        if (!other.isTrigger && other.attachedRigidbody.transform.TryGetComponent(out EffectManager fem)) 
             gameObject.SetActive(false);
     }
 }

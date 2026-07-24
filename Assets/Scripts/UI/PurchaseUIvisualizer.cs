@@ -14,6 +14,15 @@ public class AccountsButtons {
     public TextMeshProUGUI noAdTxt;//from price to bought and interactable false
     public TextMeshProUGUI premiumTxt;
     public TextMeshProUGUI supportDevTxt;
+
+    //[Header("Discount Badges")]
+    //public GameObject premiumDiscountObj;
+    //public TextMeshProUGUI premiumDiscountTxt;
+    //public GameObject noAdDiscountObj;
+    //public TextMeshProUGUI noAdDiscountTxt;
+    //public GameObject supportDevDiscountObj;
+    //public TextMeshProUGUI supportDevDiscountTxt;
+
     public static readonly AccountPurchase[] ACCOUNT_PURCH_ITERATORS = (AccountPurchase[])Enum.GetValues(typeof(AccountPurchase)); //Enum.GetValues(typeof(AccountPurchase))                    .Cast<AccountPurchase>()                    .ToArray();
 
     public Button GetButton(AccountPurchase s) =>
@@ -31,6 +40,22 @@ public class AccountsButtons {
             AccountPurchase.SupportDev => supportDevTxt,
             _ => null
         };
+
+    //public GameObject GetDiscountObj(AccountPurchase s) =>
+    //    s switch {
+    //        AccountPurchase.Premium => premiumDiscountObj,
+    //        AccountPurchase.NoAd => noAdDiscountObj,
+    //        AccountPurchase.SupportDev => supportDevDiscountObj,
+    //        _ => null
+    //    };
+
+    //public TextMeshProUGUI GetDiscountTxt(AccountPurchase s) =>
+    //    s switch {
+    //        AccountPurchase.Premium => premiumDiscountTxt,
+    //        AccountPurchase.NoAd => noAdDiscountTxt,
+    //        AccountPurchase.SupportDev => supportDevDiscountTxt,
+    //        _ => null
+    //    };
 }
 
 [Serializable]
@@ -47,6 +72,15 @@ public class SkinsButtons {
     public Button selectAshflow;
     public TextMeshProUGUI ashflowPriceTxt;
     public TextMeshProUGUI ashflowSelectTxt;
+
+    //[Header("Discount Badges")]
+    //public GameObject mercuryDiscountObj;
+    //public TextMeshProUGUI mercuryDiscountTxt;
+    //public GameObject chameleonDiscountObj;
+    //public TextMeshProUGUI chameleonDiscountTxt;
+    //public GameObject ashflowDiscountObj;
+    //public TextMeshProUGUI ashflowDiscountTxt;
+
     public static readonly Skin[] SKINS_ITERATORS = Enum.GetValues(typeof(Skin))
                     .Cast<Skin>()
                     .Skip(1)//without default
@@ -89,6 +123,22 @@ public class SkinsButtons {
             Skin.Ashflow => ashflowPriceTxt,
             _ => null
         };
+
+    //public GameObject GetDiscountObj(Skin s) =>
+    //    s switch {
+    //        Skin.Chameleon => chameleonDiscountObj,
+    //        Skin.Mercury => mercuryDiscountObj,
+    //        Skin.Ashflow => ashflowDiscountObj,
+    //        _ => null
+    //    };
+
+    //public TextMeshProUGUI GetDiscountTxt(Skin s) =>
+    //    s switch {
+    //        Skin.Chameleon => chameleonDiscountTxt,
+    //        Skin.Mercury => mercuryDiscountTxt,
+    //        Skin.Ashflow => ashflowDiscountTxt,
+    //        _ => null
+    //    };
 }
 
 
@@ -295,7 +345,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             ProgressSaver.Load() : new SaveData();
 
         if (currentData != null && !currentData.confirmedLoyalty) {
-            loyaltyRewardedWnd.SetActive(true);            
+            loyaltyRewardedWnd.SetActive(true);
             currentData.confirmedLoyalty = true;
 
             ProgressSaver.Save(currentData);

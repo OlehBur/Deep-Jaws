@@ -19,9 +19,12 @@ public class HydraController : MonoBehaviour {
     //}
 
     private void OnTriggerEnter(Collider other) {
-        Transform parentFish = other.transform.parent;
+        if (other.attachedRigidbody == null)
+            return;
 
-        if (!other.isTrigger/*isAllowTrigger &&*/ && parentFish != null && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)//parentFish.TryGetComponent<Fish>(out Fish fish)
+        Transform parentFish = other.attachedRigidbody.transform;
+
+        if (!other.isTrigger/*isAllowTrigger &&*/ /*&& parentFish != null*/ && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)//parentFish.TryGetComponent<Fish>(out Fish fish)
             && fish.IsVisible) {
             //StartCoroutine(TriggerScale());            //InvokeRepeating("", 0f, 2f);
             //isAllowTrigger = false;

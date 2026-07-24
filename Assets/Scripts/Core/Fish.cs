@@ -22,6 +22,7 @@ public class Fish : MonoBehaviour {
     [SerializeField] float jawForwardOffset;
     [SerializeField] Rigidbody rb;
 
+    public Vector3 VisualTransformScale => prefabVisualTransform.localScale;
     public Rigidbody Rb => rb;
     public FishLevel Level => level;
     public int Health { get { return health; } protected set { health = value; } }
@@ -48,6 +49,7 @@ public class Fish : MonoBehaviour {
     [HideInInspector] public Vector3 ScaleModifier => new Vector3(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
     public float JawForwardOffset => jawForwardOffset;
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
+    public event Action<Vector3> OnFishUpdateSize;
     public event Action<GameObject> OnFishLvlUp;
     public event Action<GameObject, FishLevel, bool> OnFishDie;
     /// <summary>
@@ -65,7 +67,7 @@ public class Fish : MonoBehaviour {
     private const float ROTATION_SPEED_MULTIPLIER = 40f; // multiplier for rotation speed
     private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
     private const float MIN_PROGRESS_GAIN_MULTIPLIER = 11f;
-    private const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
+    public const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
     private const float ATTACK_INTERVAL_COEFFICIENT = 3f;
     private const float MAX_ATTACK_INTERVAL = 1.1f; // maximum attack interval while fish stay collision with the victim
     private const float KING_ABYSS_PROGRESS = 1.5f; // progress for king abyss achievement
@@ -84,6 +86,16 @@ public class Fish : MonoBehaviour {
         OnInfoStatsChanged?.Invoke();
         UpdateGrowSize();
     }
+
+    //[SerializeField] FishControl fc;
+    //[SerializeField][Range(0f, 1f)] float growProgress = 0;
+    //private void OnValidate() {
+    //    if (fc == null)
+    //        return;
+    //    prefabVisualTransform.localScale = new Vector3(1f, 1f, .66f + Mathf.Clamp01(growProgress) * .34f) * (1 + Mathf.Clamp01(growProgress) * GROWTH_MULTIPLIER);
+    //    fc.OnUpdateCollider();
+    //}
+
     public void CopyData(int health, float progress) {
         Health = health;
         Progress = progress;
@@ -119,7 +131,7 @@ public class Fish : MonoBehaviour {
     /// return true if fish is alive, false if fish is dead
     /// </summary>
     /// <param name="victim"></param>
-    public bool Eat(Fish victim) {
+    public void Eat(Fish victim, out bool isStillAlive) {
         float entityCeiling = (float)GameStaticInfo.MAX_FISH_LEVEL - Mathf.Abs((float)victim.Level);
         float levelSpeedProgressing = (float)level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
@@ -144,7 +156,7 @@ public class Fish : MonoBehaviour {
         UpdateGrowSize();
         OnInfoStatsChanged?.Invoke();
 
-        return victim.TakeDamage(damage);
+        /*return*/isStillAlive = victim.TakeDamage(damage);
     }
 
     public void FeedCaviar(/*float foodNutrition*/) {
@@ -193,6 +205,7 @@ public class Fish : MonoBehaviour {
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_king_of_the_abyss);
 
         prefabVisualTransform.localScale = ScaleModifier * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER);
+        OnFishUpdateSize?.Invoke(prefabVisualTransform.localScale);
     }
 
     /// <summary>
@@ -251,7 +264,7 @@ public interface IFish {
     //the fish relative to which the reaction occurs
     Fish CurrentTarget { get; set; }
 
-    void FishProximity(Fish player);
+    void FishProximity(Fish otherFish);
     /// <summary>
     /// returns non normalize direction vector for movement
     /// </summary>

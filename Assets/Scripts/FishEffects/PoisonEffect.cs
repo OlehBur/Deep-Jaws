@@ -7,13 +7,13 @@ public class PoisonEffect : Effect {
     const float PLAYER_SPEED_MULTIPLIER = .5f;
 
     protected override void OnApply() {
-        target.ChangeSpeedMultiplier(PLAYER_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
+        targetFish.ChangeSpeedMultiplier(PLAYER_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
         //if (target.IsPlayer)
         //    Debug.LogWarning("Player has poison effect");
     }
 
     protected override void OnExpire() {
-        target.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
+        targetFish.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
     }
 
     public override void UpdateTimer() {
@@ -23,9 +23,9 @@ public class PoisonEffect : Effect {
         if (currentTime >= DAMAGE_INTERVAL && !GameManager.IsGamePaused) {
             currentTime = 0f;
 
-            target.TakeDamage(DAMAGE_AMOUNT);
+            targetFish.TakeDamage(DAMAGE_AMOUNT);
 
-            if (target.Health <= 0)
+            if (targetFish.Health <= 0)
                 Enabled = false;
             //DeactivateEffect();
             //Destroy(this);

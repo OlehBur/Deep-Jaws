@@ -20,7 +20,7 @@ public class SprintEffect : Effect {
     protected override void OnApply() {
         //trailObj.SetActive(true);
         trailObj = fishAddComp.ActivateObjectFromPool(FishComponentType.PlayerSprintLine, trailParent, trailLocalPos, Vector3.one, Quaternion.identity);
-        target.ChangeSpeedMultiplier(SPRINT_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
+        targetFish.ChangeSpeedMultiplier(SPRINT_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
         //Debug.Log($"{target.name} has applied Speed Effect for {duration} s.");
         fishAnim?.SprintAnimation(); // enable sprint animation boost
     }
@@ -29,7 +29,7 @@ public class SprintEffect : Effect {
         const float NORMAL_SPEED_MULTIPLIER = 1f;
 
         trailObj.SetActive(false);
-        target.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
+        targetFish.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
         //Debug.Log($"{target.name} has expired Speed Effect after {duration} s.");
         fishAnim?.SprintAnimation(false); // disable sprint animation speed
     }

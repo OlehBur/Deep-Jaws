@@ -18,11 +18,13 @@ public class PufferfishController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        //Transform parent = other.transform.parent;
-        Rigidbody victimRb = other.attachedRigidbody;
+        if (other.attachedRigidbody == null)
+            return;
+
+        GameObject victimObj = other.attachedRigidbody.gameObject;
 
         //Debug.Log(spawnManager);
-        if (victimRb != null && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish fish)//other.transform.parent.TryGetComponent(out Fish fish)
+        if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
             && fish.IsVisible && fish.Level != FishLevel.Pufferfish && !startedAnimation /*&& !audioSource.isPlaying*/) {
 
             animator.Play(PUFFERFISH_BLOW_ANIMATION);
@@ -33,10 +35,12 @@ public class PufferfishController : MonoBehaviour {
     }
 
     private void OnTriggerExit(Collider other) {
-        //Transform parent = other.transform.parent;
-        Rigidbody victimRb = other.attachedRigidbody;
+        if (other.attachedRigidbody == null)
+            return;
 
-        if (victimRb != null && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish fish)//parent.TryGetComponent<Fish>(out Fish fish)
+        GameObject victimObj = other.attachedRigidbody.gameObject;
+
+        if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
             && fish.IsVisible && fish.Level != FishLevel.Pufferfish && startedAnimation) {
             startedAnimation = false;
             animator.Play(PUFFERFISH_REVERSE_BLOW_ANIMATION);
@@ -44,19 +48,22 @@ public class PufferfishController : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        //Transform parent = collision.collider.transform.parent;
-        Rigidbody victimRb = collision.collider.attachedRigidbody;
+        if (collision.collider.attachedRigidbody == null)
+            return;
 
-        if (!collision.collider.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) && victimRb != null && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish fish)//parent.TryGetComponent<Fish>(out Fish fish) 
+        GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
+        if (!collision.collider.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) 
+            /*&& victimObj != null */&& GameStaticInfo.TryGetFish(victimObj, out Fish fish)
             && fish.Level != FishLevel.Pufferfish)
             fish.TakeDamage(DAMAGE_CNT);
     }
 
     private void OnCollisionStay(Collision collision) {
-        //Transform parent = collision.collider.transform.parent;
-        Rigidbody victimRb = collision.collider.attachedRigidbody;
+        if (collision.collider.attachedRigidbody == null)
+            return;
 
-        if (victimRb != null && GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish fish)// parent.TryGetComponent<Fish>(out Fish fish) 
+        GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
+        if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
             && fish.Level != FishLevel.Pufferfish) {
             currentTimeCollision += Time.fixedDeltaTime;
 

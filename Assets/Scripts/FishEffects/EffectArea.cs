@@ -5,22 +5,27 @@ public class EffectArea : MonoBehaviour {
     public float duration;
 
     private void OnTriggerEnter(Collider other) {
-        //Transform parent = other.transform.parent;
-        Rigidbody victimRb = other.attachedRigidbody;
+        if (other.attachedRigidbody == null)
+            return;
 
-        if (!other.isTrigger && victimRb != null && !other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) && victimRb.TryGetComponent(out EffectManager fem)) { //if component on fish exists - apply effect
-            fem.ApplyEffect(effectType, duration);//transform.parent. because collider is child of fish prefab
+        GameObject victimObj = other.attachedRigidbody.gameObject;
 
-            if (/*other.transform.parent*/victimRb.CompareTag(GameStaticInfo.TAG_PLAYER)) //if player fish, check for achievements
+        if (!other.isTrigger/* && victimObj != null*/ && !other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) && victimObj.TryGetComponent(out EffectManager fem)) { //if component on fish exists - apply effect
+            fem.ApplyEffect(effectType, duration);
+
+            if (victimObj.CompareTag(GameStaticInfo.TAG_PLAYER)) //if player fish, check for achievements
                 CheckPlayerEffectAchievents(effectType);
         }
     }
 
     private void OnTriggerStay(Collider other) {
-        //Transform parent = other.transform.parent;
-        Rigidbody victimRb = other.attachedRigidbody;
+        if (other.attachedRigidbody == null)
+            return;
 
-        if (!GameManager.IsGamePaused && !other.isTrigger && victimRb != null && !other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) && victimRb.TryGetComponent(out EffectManager fem)) {
+        GameObject victimObj = other.attachedRigidbody.gameObject;
+
+        if (!GameManager.IsGamePaused && !other.isTrigger/* && victimObj != null */
+            && !other.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) && victimObj.TryGetComponent(out EffectManager fem)) {
             fem.ApplyEffect(effectType, duration);
         }
     }

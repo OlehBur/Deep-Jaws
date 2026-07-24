@@ -13,6 +13,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: fi
+      value: 
+      objectReference: {fileID: 6390374920320682044}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: level
       value: 5
       objectReference: {fileID: 0}
@@ -23,6 +27,10 @@ PrefabInstance:
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: health
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: growProgress
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1864179227958482298, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: responseRadius
@@ -55,7 +63,7 @@ PrefabInstance:
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 8022956405569076829}
+      objectReference: {fileID: 4287952337874280804}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishMesh
       value: 
@@ -83,6 +91,14 @@ PrefabInstance:
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: biteParticleLocPos.z
       value: 2.863
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultHeight
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultRadius
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1645455762981966139, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
@@ -128,6 +144,10 @@ PrefabInstance:
       propertyPath: fishSkinnedRenderer
       value: 
       objectReference: {fileID: 2674553586638986771}
+    - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Center.z
+      value: 2.12
+      objectReference: {fileID: 0}
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: fishAnim
       value: 
@@ -139,6 +159,18 @@ PrefabInstance:
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: timeToIdle
       value: 11.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: previewCollider
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultHeight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: colliderDefaultRadius
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3766895010739556756, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
@@ -210,7 +242,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.96
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7375219886958239492, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalScale.x
@@ -231,6 +267,14 @@ PrefabInstance:
     - target: {fileID: 7375219886958239492, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643199879378419169, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Height
+      value: 3.6465
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643199879378419169, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.525
       objectReference: {fileID: 0}
     - target: {fileID: 7831987417261332925, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Height
@@ -312,8 +356,17 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Height
+      value: 3.3000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207479891914793701, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
+    - {fileID: 3870166449409053846, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6766006204318863272, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     - {fileID: 8090470247865239688, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
@@ -354,11 +407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07ca41e02c2aaf4495fedcfe690bc1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &8022956405569076829 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 3870166449409053846, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-  m_PrefabInstance: {fileID: 6549029589418175179}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8002929067460756993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -478,13 +526,43 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1f1ea9bbc85c77c45b84df670c371c65, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4287952337874280804}
   m_SourcePrefab: {fileID: 100100000, guid: 1f1ea9bbc85c77c45b84df670c371c65, type: 3}
 --- !u!137 &2674553586638986771 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3887185075125053422, guid: 1f1ea9bbc85c77c45b84df670c371c65, type: 3}
   m_PrefabInstance: {fileID: 8002929067460756993}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7192657915305048912 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1f1ea9bbc85c77c45b84df670c371c65, type: 3}
+  m_PrefabInstance: {fileID: 8002929067460756993}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &4287952337874280804
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7192657915305048912}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e02d3311b5496164ea1075fe2bd2de68, type: 2}
+  m_CullingMode: 2
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &7537518245282636266 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1f1ea9bbc85c77c45b84df670c371c65, type: 3}
