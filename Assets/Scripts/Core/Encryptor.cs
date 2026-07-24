@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 using System.Text;
 
 public static class Encryptor {
-    private static readonly string key = "dEePjAwS_cOdeEnctyrptoeicsmd@4e%"; // 32 символи для AES-256
-    private static readonly string iv = "hwkgm;w8e4@#($cs"; // 16 символів для AES
+    private static readonly string key = "dEePjAwS_cOdeEnctyrptoeicsmd@4e%"; // 32 sym for AES-256
+    private static readonly string iv = "hwkgm;w8e4@#($cs"; // 16 sym for AES
 
     public static string Encrypt(string plainText) {
         using var aes = Aes.Create();

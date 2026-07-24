@@ -46,7 +46,7 @@ public class Fish : MonoBehaviour {
     /// </summary>
     public bool IsAlreadySelected { get; set; } = false;
 
-    [HideInInspector] public Vector3 ScaleModifier => new Vector3(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
+    [HideInInspector] public Vector3 ScaleModifier => new(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
     public float JawForwardOffset => jawForwardOffset;
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
     public event Action<Vector3> OnFishUpdateSize;

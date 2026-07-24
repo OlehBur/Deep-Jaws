@@ -49,9 +49,9 @@ public class AudioManager : MonoBehaviour {
 
 
     //save audio data
-    private const string MASTER_KEY = "audio_master";
-    private const string MUSIC_KEY = "audio_music";
-    private const string SFX_KEY = "audio_sfx";
+    //private const string MASTER_KEY = "audio_master";
+    //private const string MUSIC_KEY = "audio_music";
+    //private const string SFX_KEY = "audio_sfx";
 
     public void PlayVFX(VFX_clip clipType) {
         AudioClip audioClip = clipType switch {
@@ -115,18 +115,27 @@ public class AudioManager : MonoBehaviour {
     //save audio data in normalize format
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveAudioData() {
-        PlayerPrefs.SetFloat(MASTER_KEY, masterSlider.value);
-        PlayerPrefs.SetFloat(MUSIC_KEY, musicSlider.value);
-        PlayerPrefs.SetFloat(SFX_KEY, sfxSlider.value);
+        SettingsData settingsData = ProgressSaver.IsSettingsDataExist() ?
+            ProgressSaver.LoadSettingsData() : new SettingsData();
+
+        settingsData.volume_master = masterSlider.value;
+        settingsData.volume_music = musicSlider.value;
+        settingsData.volume_sfx = sfxSlider.value;
+
+        //PlayerPrefs.SetFloat(MASTER_KEY, masterSlider.value);
+        //PlayerPrefs.SetFloat(MUSIC_KEY, musicSlider.value);
+        //PlayerPrefs.SetFloat(SFX_KEY, sfxSlider.value);
+        ProgressSaver.SaveData(settingsData);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void LoadAudoData() {
-        masterSlider.value = PlayerPrefs.GetFloat(MASTER_KEY, 1f);
-        musicSlider.value = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
-        sfxSlider.value = PlayerPrefs.GetFloat(SFX_KEY, 1f);
+        SettingsData settingsData = ProgressSaver.IsSettingsDataExist() ?
+            ProgressSaver.LoadSettingsData() : new SettingsData();
 
-        //UpdateVolumesBySliders();
+        masterSlider.value = settingsData.volume_master;//PlayerPrefs.GetFloat(MASTER_KEY, 1f);
+        musicSlider.value = settingsData.volume_music; //PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
+        sfxSlider.value = settingsData.volume_sfx; //PlayerPrefs.GetFloat(SFX_KEY, 1f);
     }
 
     //load audio data on start

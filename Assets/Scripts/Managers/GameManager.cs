@@ -14,17 +14,28 @@ public class GameManager : MonoBehaviour {
     /// <summary>
     /// позначає час який має бути встановлено під час виходу з паузи (може бути як стандартний 1, так і змінений певними ефектами)
     /// </summary>
+
+    public static int ScreenMaxFramerate {
+        get {
+            int screenMaxFramerate = 0;
+            screenMaxFramerate = Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
+            if (screenMaxFramerate <= 0)
+                screenMaxFramerate = GameStaticInfo.DEFAULT_SCREEN_FRAMERATE;
+
+            return screenMaxFramerate;
+        }
+    }
     public static float CurrentDefaultGameTime { get; private set; }
     public static readonly float DEFAULT_GAME_TIME = 1f;
     public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor;
-    private const float FIXED_DELTA_TINE_LOW = .05f;
-    private const float FIXED_DELTA_TINE_HIGH = .02f;
     public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
     public static bool IsGamePaused => Time.timeScale == 0f;
     public static bool IsSceneReady { get; private set; } = false;
 
     private const float CANVAS_ACTIVATE_DELAY = .5f;
     private const float SCENE_ACTIVATE_DELAY = .1f;
+    private const float FIXED_DELTA_TINE_HIGH = .02f;
+    private const float FIXED_DELTA_TINE_LOW = .05f;
 
     //game init
     void Awake() {
@@ -39,7 +50,7 @@ public class GameManager : MonoBehaviour {
         playerLeaderboardScore.Init(spawnManager);
         CurrentDefaultGameTime = DEFAULT_GAME_TIME;
 
-        SetFPSSettings();
+        SetFixedDelta();
         GameSetPause(false);
         Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
         Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);
@@ -54,13 +65,13 @@ public class GameManager : MonoBehaviour {
         gameCanvas.SetActive(true);
     }
 
-    void SetFPSSettings() {
+    void SetFixedDelta() {
         if (SystemInfo.processorCount < 5) {
-            Application.targetFrameRate = 30;
+            //Application.targetFrameRate = 30;
             CurrentFixedDeltaTime = Time.fixedDeltaTime = FIXED_DELTA_TINE_LOW;
         }
         else {
-            Application.targetFrameRate = 60;
+            //Application.targetFrameRate = 60;
             CurrentFixedDeltaTime = Time.fixedDeltaTime = FIXED_DELTA_TINE_HIGH;
         }
     }

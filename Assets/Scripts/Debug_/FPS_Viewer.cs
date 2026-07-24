@@ -15,7 +15,7 @@ public class FPS_Viewer : MonoBehaviour {
     private float timeLeft;
     private float updateTxtInterval = .5f;
 
-    private const int DEFAULT_SCREEN_FRAMERATE = 60;
+    //private const int DEFAULT_SCREEN_FRAMERATE = 60;
 
     //void OnEnable() {
     //    StartCoroutine(LogPerformance());
@@ -48,15 +48,15 @@ public class FPS_Viewer : MonoBehaviour {
     //}
 
 
-    void Awake() {
-        QualitySettings.vSyncCount = 0;
-        //Application.targetFrameRate = 60;
+    //void Awake() {
+    //    QualitySettings.vSyncCount = 0;
+    //    //Application.targetFrameRate = 60;
 
-        int screenHz = Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
-        if (screenHz <= 0) 
-            screenHz = DEFAULT_SCREEN_FRAMERATE;
-        Application.targetFrameRate = screenHz;
-    }
+    //    int screenHz = Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
+    //    if (screenHz <= 0) 
+    //        screenHz = DEFAULT_SCREEN_FRAMERATE;
+    //    Application.targetFrameRate = screenHz;
+    //}
 
     void Start() {
         timeLeft = updateTxtInterval;

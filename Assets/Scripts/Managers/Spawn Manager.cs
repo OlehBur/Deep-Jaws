@@ -63,7 +63,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     private Vector3 playerPos;
     private Quaternion playerRot;
     private float playerProg;
-    private SaveData saveData;
+    private WorldData savedWorldData;
     /// <summary>
     /// тільки для новооновлених гравців які можливо перебувають в недозволеній зоні відповідно до рівня
     /// only for newly updated players who may be in an unauthorized zone according to their level
@@ -87,8 +87,6 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
 
     public void Init() {
-        LoadSaveInfo();
-
         fishAdditionalComponentManager.Init(SHIELDS_POOL_CNT,
             DEAD_BUBBLES_POOL_CNT,
             BITE_PARTICLES_POOL_CNT,
@@ -96,7 +94,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             WHIRLE_POOL_CNT,
             INK_PARTICLES_POOL_CNT);
 
-        saveData = ProgressSaver.Load();//load save data if exists
+        savedWorldData = ProgressSaver.LoadWorldData();// ProgressSaver.IsWorldDataExist() ?             ProgressSaver.LoadWorldData() : new WorldData();//load save data if exists
         PlayerInitSpawnPos = Vector3.up * (weakFishSpawnPointsParent.position.y /*+ SPAWN_HEIGHT*/);//in center map
 
         InitPool();//init global enemy fishes pool
@@ -112,19 +110,6 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
         if (GameStaticInfo.Gamemode == GameMode.Hard)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_the_hard_way);
-    }
-
-    public void LoadSaveInfo() {
-        if (ProgressSaver.IsDataExist()) {
-            SaveData currentData = ProgressSaver.Load();
-
-            if (currentData != null) {
-                PurchasedSkins purchasedSkins = new();
-                purchasedSkins.Mercury = currentData.hasMercurySkin;
-                purchasedSkins.Chameleon = currentData.hasChameleon;
-                purchasedSkins.Ashflow = currentData.hasAshflowSkin;
-            }
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -161,8 +146,9 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     void InitPlayerSkins(Fish fish, FishAnim fishAnim) {
         //load selected skin
         Skin selectedSkin;
-        SaveData currentData = ProgressSaver.IsDataExist() ?
-            ProgressSaver.Load() : new SaveData();
+        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+            ProgressSaver.LoadAccountData() : new AccountData();
+
         if (currentData != null && currentData.selectedSkin != Skin.Default)
             selectedSkin = currentData.selectedSkin;
         else
@@ -306,15 +292,15 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SavePlayerData() {
-        SaveData saveData = ProgressSaver.IsDataExist() ? ProgressSaver.Load() : new SaveData();
+        WorldData worldPlayerData = ProgressSaver.IsWorldDataExist() ? ProgressSaver.LoadWorldData() : new WorldData();
 
-        saveData.playerPosition = PlayerFish.transform.position;
-        saveData.playerRotation = PlayerFish.transform.rotation;
-        saveData.playerHealth = PlayerFish.Health;
-        saveData.playerLevel = (int)PlayerFish.Level;
-        saveData.playerProgress = PlayerFish.Progress;
+        worldPlayerData.playerPosition = PlayerFish.transform.position;
+        worldPlayerData.playerRotation = PlayerFish.transform.rotation;
+        worldPlayerData.playerHealth = PlayerFish.Health;
+        worldPlayerData.playerLevel = PlayerFish.Level;
+        worldPlayerData.playerProgress = PlayerFish.Progress;
 
-        ProgressSaver.Save(saveData);
+        ProgressSaver.SaveData(worldPlayerData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
         //playerLvl = (int)FishLevel.WhiteShark;
@@ -352,7 +338,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
         else {
             if (isLoadFromSave)
-                playerFishBuffer.CopyData(saveData.playerHealth, saveData.playerProgress);//copy data like health and progress from save
+                playerFishBuffer.CopyData(savedWorldData.playerHealth, savedWorldData.playerProgress);//copy data like health and progress from save
             else
                 CheckPlayerLvlAchievements((FishLevel)playerLvl);//if current player respawn not called from save, check achievements maybe new lvl reached 
         }
@@ -540,9 +526,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         int currnentRandLvl = 0;
 
         //spawn player from save
-        if (saveData != null && saveData.IsGameDataValid) {
-            PlayerFish = SpawnPlayerFish(saveData.playerPosition, saveData.playerRotation, true, saveData.playerLevel, saveData.playerProgress);
-        }
+        if (savedWorldData != null)
+            PlayerFish = SpawnPlayerFish(savedWorldData.playerPosition, savedWorldData.playerRotation, true, (int)savedWorldData.playerLevel, savedWorldData.playerProgress);
         else//for begin
             PlayerFish = SpawnPlayerFish(PlayerInitSpawnPos, Quaternion.identity, false);
 
@@ -550,7 +535,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
         for (int i = 0; i < POOL_SIZE; i++) {
             currnentRandLvl = GetRandSpawnLevel();
-            SpawnEnemyFish(i, currnentRandLvl, saveData == null);
+            SpawnEnemyFish(i, currnentRandLvl, savedWorldData == null);
         }
 
         //spawn Pufferfish

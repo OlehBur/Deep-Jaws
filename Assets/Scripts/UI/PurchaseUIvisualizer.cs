@@ -234,12 +234,12 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     void SetDefaultSkin() {
         purchasedSkins.Selected = Skin.Default;
 
-        SaveData currentData = ProgressSaver.IsDataExist() ?
-            ProgressSaver.Load() : new SaveData();
+        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+            ProgressSaver.LoadAccountData() : new AccountData();
 
         //if (currentData != null) {
         currentData.selectedSkin = purchasedSkins.Selected;
-        ProgressSaver.Save(currentData);        //}
+        ProgressSaver.SaveData(currentData);        //}
 
         UpdateSkinsSection(purchasedSkins);
     }
@@ -287,12 +287,12 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     void SaveSelectedSkinToProgress(Skin skin) {
-        if (ProgressSaver.IsDataExist()) {
-            SaveData currentData = ProgressSaver.Load();
+        if (ProgressSaver.IsAccountDataExist()) {
+            AccountData currentData = ProgressSaver.LoadAccountData();
 
             if (currentData != null) {
                 currentData.selectedSkin = skin;
-                ProgressSaver.Save(currentData);
+                ProgressSaver.SaveData(currentData);
             }
         }
     }
@@ -341,14 +341,14 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     void OpenLoyaltyRewardedWnd() {
-        SaveData currentData = ProgressSaver.IsDataExist() ?
-            ProgressSaver.Load() : new SaveData();
+        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+            ProgressSaver.LoadAccountData() : new AccountData();
 
         if (currentData != null && !currentData.confirmedLoyalty) {
             loyaltyRewardedWnd.SetActive(true);
             currentData.confirmedLoyalty = true;
 
-            ProgressSaver.Save(currentData);
+            ProgressSaver.SaveData(currentData);
         }
     }
 

@@ -4,7 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
-using System; //  for Uri.EscapeDataString
+using System;
+using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine.Localization; //  for Uri.EscapeDataString
 
 
 /// <summary>
@@ -24,8 +27,10 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
+    [SerializeField] TMP_Dropdown framerateDropdown;
     [SerializeField] Image gameModeWndBackground;
     [SerializeField] Image signInIcon;
+    //[SerializeField] LocalizedString settingsMaxFpsLocalized;
 
     [Header("Game Scene")]
     /// <summary>
@@ -42,8 +47,15 @@ public class MainmenuManager : MonoBehaviour {
     public static readonly string LOADING_SCENE_NAME = "LoadScene";
 
     private int previousLocaleIndex = 0;
+    private Framerate currentFramerateIndex;
+    private enum Framerate {
+        Max,
+        F30,
+        F60,
+        F120
+    }
     private bool isGMneedAnimation = true;
-    private bool isExistGameData = false;
+    private bool isWorldDataExist = false;
     private Color targetGMwndColor;
     private Color targetLightGMcolor;
     private GPG_Manager gpg_manager;
@@ -58,7 +70,8 @@ public class MainmenuManager : MonoBehaviour {
     private readonly Color failedSignInColor = new Color(1f, 0.4764151f, 0.4863637f, 1f);
     private readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
 
-    private const string LOCALE_PREF_KEY = "LocaleIndex";
+    //private const string LOCALE_PREF_KEY = "LocaleIndex";
+    //private const string FPS_KEY = "FPS";
     private const string GM_KEY = "GameMode";
     private const int RESPAWN_TIME = 5;
     private const string REPORT_EMAIL = "bovv.company@gmail.com";
@@ -70,15 +83,16 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void Start() {
-        isExistGameData = ProgressSaver.IsGameDataExist();
+        isWorldDataExist = ProgressSaver.IsWorldDataExist();
 
         if (faderScene != null)        // Ensure the fader scene is not destroyed on load
             faderScene?.gameObject.SetActive(true);
 
         if (continueButton != null)// Initialize the continue button visibility based on saved data
-            continueButton?.SetActive(isExistGameData);
+            continueButton?.SetActive(isWorldDataExist);
 
         LanguageInit();
+        FramerateInit();
 
         if (spawnManager != null)
             spawnManager.OnPlayerDied += ActivateRespawnWnd;
@@ -114,7 +128,7 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     public void ResetAndReloadGame_Hard() {
-        ResetGameData();
+        ResetWorldData();
         PlayerPrefs.SetInt(GM_KEY, (int)GameMode.Hard);
         faderScene.ChangeLoadScene(SceneType.Game);
         faderScene.gameObject.SetActive(true);
@@ -122,18 +136,77 @@ public class MainmenuManager : MonoBehaviour {
 
     async void LanguageInit() {
         await LocalizationSettings.InitializationOperation.Task; // wait readiness
-        previousLocaleIndex = PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
+        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+        previousLocaleIndex = savedSettings == null ?
+            (int)GameStaticInfo.LocalizationID.English : savedSettings.language;
+        //PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
 
         if (previousLocaleIndex < 0 || previousLocaleIndex >= LocalizationSettings.AvailableLocales.Locales.Count)
             previousLocaleIndex = 0;
 
         if (LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex];
-        if (languageDropdown != null) {
-            languageDropdown.value = previousLocaleIndex;
-            languageDropdown.onValueChanged.RemoveAllListeners();
-            languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
+
+        languageDropdown.value = previousLocaleIndex;
+        languageDropdown.onValueChanged.RemoveAllListeners();
+        languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
+    }
+
+    void FramerateInit() {
+        List<string> fpsListing = new();
+        QualitySettings.vSyncCount = 0;
+        int screenMaxFramerate = GameManager.ScreenMaxFramerate;
+        //framerateDropdown.ClearOptions();
+        //Debug.LogWarning("DROPDOWN ALWAYS CLEANING UP");
+
+        //Load and set Def val
+        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+        currentFramerateIndex = savedSettings == null ? Framerate.Max : (Framerate)savedSettings.framerate;
+        //currentFramerateIndex = (Framerate)PlayerPrefs.GetInt(FPS_KEY, 0);
+        Application.targetFrameRate = currentFramerateIndex switch {
+            Framerate.Max => screenMaxFramerate,
+            Framerate.F30 => GameStaticInfo.FRAMERATE_30,
+            Framerate.F60 => GameStaticInfo.FRAMERATE_60,
+            Framerate.F120 => GameStaticInfo.FRAMERATE_120,
+            _ => GameStaticInfo.FRAMERATE_30
+        };
+
+        //init dropdown
+        if (framerateDropdown.options.Count == 0) {
+            fpsListing.Add(/*settingsMaxFpsLocalized.GetLocalizedString() +*/ $"{screenMaxFramerate} Hz");//max
+            //Debug.LogWarning(screenMaxFramerate);
+            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_30)
+                fpsListing.Add(GameStaticInfo.FRAMERATE_30.ToString() + " Hz");
+            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_60)
+                fpsListing.Add(GameStaticInfo.FRAMERATE_60.ToString() + " Hz");
+            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_120)
+                fpsListing.Add(GameStaticInfo.FRAMERATE_120.ToString() + " Hz");
+
+            framerateDropdown.AddOptions(fpsListing);
         }
+
+        framerateDropdown.SetValueWithoutNotify((int)currentFramerateIndex);
+        framerateDropdown.onValueChanged.RemoveAllListeners();
+        framerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
+    }
+
+    private void OnFramerateChanged(int index) {
+        currentFramerateIndex = (Framerate)index;
+        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+        if (savedSettings == null)
+            savedSettings = new SettingsData();
+        savedSettings.framerate = index;
+
+        ProgressSaver.SaveData(savedSettings);
+        //PlayerPrefs.SetInt(FPS_KEY, index);
+
+        Application.targetFrameRate = currentFramerateIndex switch {
+            Framerate.Max => GameManager.ScreenMaxFramerate,
+            Framerate.F30 => 30,
+            Framerate.F60 => 60,
+            Framerate.F120 => 120,
+            _ => 30
+        };
     }
 
 
@@ -169,7 +242,13 @@ public class MainmenuManager : MonoBehaviour {
 
     private void OnLanguageChanged(int index) {
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
-        PlayerPrefs.SetInt(LOCALE_PREF_KEY, index); // Save the selected locale index
+        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+        if (savedSettings == null)
+            savedSettings = new SettingsData();
+        savedSettings.language = index;
+
+        ProgressSaver.SaveData(savedSettings);
+        //PlayerPrefs.SetInt(LOCALE_PREF_KEY, index); // Save the selected locale index
 
         if (previousLocaleIndex != index)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_dont_understand);
@@ -227,7 +306,7 @@ public class MainmenuManager : MonoBehaviour {
 
     //open ar u sur wnd if player already has saved game data
     public void OnNewGameClick() {
-        if (isExistGameData)
+        if (isWorldDataExist)
             areUSureWnd?.SetActive(true);
         else
             guideBookWnd?.SetActive(true);
@@ -252,24 +331,24 @@ public class MainmenuManager : MonoBehaviour {
         UnityEngine.SceneManagement.SceneManager.LoadScene(LOADING_SCENE_NAME);
     }
 
-    public void ResetGameData() {
+    public void ResetWorldData() {
         PlayerLeaderboardScore.LoadSavedData();
         PlayerPrefs.DeleteAll();//delete all player prefs data 
-        PlayerPrefs.SetInt(LOCALE_PREF_KEY, LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)); //except settings data 
+        //PlayerPrefs.SetInt(LOCALE_PREF_KEY, LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)); //except settings data 
         audioManager.SaveAudioData(); // Save current audio settings
         graphicManager.SaveGraphicsData(); // Save current graphic settings
         PlayerLeaderboardScore.SaveLoadedData();
         //ProgressSaver.Delete();
-        ProgressSaver.DeleteOnlyGameData();
+        ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();
     }
 
     public void OnSkipGuide() {
-        if (!isExistGameData)
+        if (!isWorldDataExist)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_are_you_serious);
     }
 
     public void OnCompleteGuide() {
-        if (isExistGameData)
+        if (isWorldDataExist)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_you_have_my_respect);
     }
 

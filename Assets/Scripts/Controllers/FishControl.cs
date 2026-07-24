@@ -55,14 +55,14 @@ public class FishControl : MonoBehaviour, IFish {
     //private const float ROTATION_SMOOTH_TIME = .1f;
 
     //reaction to other fish
-    private Collider[] overlapResults = new Collider[5];
+    private readonly Collider[] overlapResults = new Collider[5];
     //private float ResponseRadius = /*enemy.Speed*1.4f*/12f;
-    public SpawnManager spawnManager { get; private set; }
+    public SpawnManager SpawnManager { get; private set; }
     private float contactTime = 0f; // time of contact with other fish
 
 
     public void Init(SpawnManager spawnManager/*, Fish fish*/) {
-        this.spawnManager = spawnManager;
+        SpawnManager = spawnManager;
         IFish = this;
         //this.fish = fish;
         IFish.CurrentTarget = null; // Reset current target when enabled
@@ -166,8 +166,8 @@ public class FishControl : MonoBehaviour, IFish {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsFishNeedUpdate() {
-        if (spawnManager != null && spawnManager.PlayerFish != null && rb != null && spawnManager.PlayerFish.Rb != null) {
-            float distanceToPlayer = Vector3.Distance(spawnManager.PlayerFish./*transform*/Rb.position, /*transform.position*/rb.position);
+        if (SpawnManager != null && SpawnManager.PlayerFish != null && rb != null && SpawnManager.PlayerFish.Rb != null) {
+            float distanceToPlayer = Vector3.Distance(SpawnManager.PlayerFish./*transform*/Rb.position, /*transform.position*/rb.position);
             if (distanceToPlayer > GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY) {
                 if (fish.IsActive)
                     fish.IsActive = false;
@@ -222,7 +222,7 @@ public class FishControl : MonoBehaviour, IFish {
             SleepPhysics();
 
         direction = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        ApplyPhysicsMovement(fish.Speed, fish.RotationSpeed, Time.fixedUnscaledDeltaTime);
+        ApplyPhysicsMovement(fish.Speed);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -367,7 +367,7 @@ public class FishControl : MonoBehaviour, IFish {
 
         direction = dir.normalized;
         float smoother = Mathf.Clamp01(currentDistanceToTarget * .3f) * .95f + .05f; // from .1f to 1f
-        ApplyPhysicsMovement(fish.Speed, fish.RotationSpeed, Time.fixedDeltaTime, smoother);
+        ApplyPhysicsMovement(fish.Speed);
     }
 
     private void LateUpdate() {
@@ -393,7 +393,7 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
     //[SerializeField] bool activatePhysRotation = true;
-    protected void ApplyPhysicsMovement(float speed, float rotationSpeed, float deltaTime, float speedMultiplier = 1f) {
+    protected void ApplyPhysicsMovement(float speed, float speedMultiplier = 1f) {
         // movement
         Vector3 targetPos = direction * speed * speedMultiplier * GetMovingScalerByRotation(rotationTransform.rotation, direction);
 

@@ -148,15 +148,15 @@ public class GPG_Manager : MonoBehaviour {
 
                 CheckFounderStatus((isFounder) => {
                     if (isFounder) {
-                        SaveData currentData = ProgressSaver.IsDataExist() ?
-                        ProgressSaver.Load() : new SaveData();
+                        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+                        ProgressSaver.LoadAccountData() : new AccountData();
 
                         currentData.isFounder = true;//only upd data in save
                         currentData.isPremiumUser = true;
                         currentData.isNoAD = true;
 
                         OnAddToFoundersLeaderboard();
-                        ProgressSaver.Save(currentData);
+                        ProgressSaver.SaveData(currentData);
 
                         purchaseManager.RefreshUI();
                     }
@@ -175,9 +175,8 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     private void UpdateMainMenuUI() {
-        if (mainmenu == null) {
+        if (mainmenu == null) 
             mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
-        }
 
         if (mainmenu != null) {
             mainmenu.InitGPGServices(this);

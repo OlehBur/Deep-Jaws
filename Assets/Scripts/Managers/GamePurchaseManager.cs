@@ -114,8 +114,8 @@ public class GamePurchaseManager : MonoBehaviour {
     }
 
     private void CheckPurchasesLocally() {
-        if (ProgressSaver.IsDataExist()) {
-            SaveData currentData = ProgressSaver.Load();
+        if (ProgressSaver.IsAccountDataExist()) {
+            AccountData currentData = ProgressSaver.LoadAccountData();
             if (currentData != null) {
                 AccountTitles accountTitles = new();
                 PurchasedSkins purchasedSkins = new();
@@ -170,8 +170,8 @@ public class GamePurchaseManager : MonoBehaviour {
                 purchasedSkins.Chameleon = true;
         }
 
-        if (ProgressSaver.IsDataExist())//load local sekected skuin
-            purchasedSkins.Selected = ProgressSaver.Load().selectedSkin;
+        if (ProgressSaver.IsAccountDataExist())//load local sekected skuin
+            purchasedSkins.Selected = ProgressSaver.LoadAccountData().selectedSkin;
 
         UpdatePremiumInSaveFile(accountTitles, purchasedSkins);
         RefreshUI();
@@ -196,8 +196,8 @@ public class GamePurchaseManager : MonoBehaviour {
 
     // save purchase to ProgressSaver
     private void UpdatePremiumInSaveFile(AccountTitles accountTitles, PurchasedSkins purchasedSkins) {
-        SaveData currentData = ProgressSaver.IsDataExist() ?
-            ProgressSaver.Load() : new SaveData();
+        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+            ProgressSaver.LoadAccountData() : new AccountData();
 
         //if (currentData != null) {
         currentData.isPremiumUser = accountTitles.HasPremium;
@@ -209,7 +209,7 @@ public class GamePurchaseManager : MonoBehaviour {
         currentData.hasAshflowSkin = purchasedSkins.Ashflow;
         //currentData.selectedSkin = purchasedSkins.Selected;
 
-        ProgressSaver.Save(currentData);//Debug.Log($"IAP v5: Purchase status has been successfully synced with Google Play and saved! Premium: {accountTitles.HasPremium}");
+        ProgressSaver.SaveData(currentData);//Debug.Log($"IAP v5: Purchase status has been successfully synced with Google Play and saved! Premium: {accountTitles.HasPremium}");
         ApplyNoAdsLogic(accountTitles.HasPremium || accountTitles.HasNoAd);//enab\disab ad in case
         //}
     }
@@ -220,8 +220,8 @@ public class GamePurchaseManager : MonoBehaviour {
     public AccountTitles GetCurrentAccountTitles() {
         AccountTitles at = new AccountTitles();
 
-        if (ProgressSaver.IsDataExist()) {
-            SaveData currentData = ProgressSaver.Load();
+        if (ProgressSaver.IsAccountDataExist()) {
+            AccountData currentData = ProgressSaver.LoadAccountData();
             if (currentData != null) {
                 at.HasNoAd = currentData.isNoAD;
                 at.HasPremium = currentData.isPremiumUser;
@@ -247,8 +247,8 @@ public class GamePurchaseManager : MonoBehaviour {
     public PurchasedSkins GetCurrentPurchasedSkins() {
         PurchasedSkins ps = new PurchasedSkins();
 
-        if (ProgressSaver.IsDataExist()) {
-            SaveData data = ProgressSaver.Load();
+        if (ProgressSaver.IsAccountDataExist()) {
+            AccountData data = ProgressSaver.LoadAccountData();
             ps.Mercury = data.hasMercurySkin;
             ps.Chameleon = data.hasChameleon;
             ps.Ashflow = data.hasAshflowSkin;
@@ -288,8 +288,8 @@ public class GamePurchaseManager : MonoBehaviour {
             string productId = pendingOrder.Info.PurchasedProductInfo[0].productId;
             Debug.Log($"IAP v5: Transaction processing for a product: {productId}");
 
-            SaveData currentData = ProgressSaver.IsDataExist() ?
-                ProgressSaver.Load() : new SaveData();
+            AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+                ProgressSaver.LoadAccountData() : new AccountData();
 
             //if (currentData != null) {
             bool shouldConfirm = false;
@@ -318,7 +318,7 @@ public class GamePurchaseManager : MonoBehaviour {
                 shouldConfirm = true;    //for donut just confirm without flags in saave
 
             if (shouldConfirm) {
-                ProgressSaver.Save(currentData);
+                ProgressSaver.SaveData(currentData);
                 ApplyNoAdsLogic(currentData.isPremiumUser || currentData.isNoAD);
 
                 // confirm purch in Google Play

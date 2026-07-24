@@ -85,6 +85,24 @@ public struct PurchasedSkins {
 
 
 public static class GameStaticInfo {
+    public const int DEFAULT_SCREEN_FRAMERATE = 60;
+    public const int FRAMERATE_30 = 30;
+    public const int FRAMERATE_60 = 60;
+    public const int FRAMERATE_120 = 120;
+
+    public const float SETTINGS_AUDIO_DEFAULT_VOLUME = 1f;
+    public const float SETTINGS_SHADOW_DIST_MULTIPLIER = 100f;
+    public const float SETTINGS_DEFAULT_SHADOW_DIST = .5f;
+    public const float SETTINGS_DEFAYLT_GAME_RESOLUTION = .8f;
+    public const int SETTINGS_DEFAULT_GAME_RESOLUTION_INDEX = 2;
+    public const float SETTINGS_SHADOW_FIX_MULTIPLIER = 10f;
+    public const float SETTINGS_DEFAULT_SHADOW_FIX = .1f;
+    public const int SETTINGS_SHADOWMAP_RESOLUTION_0 = 256;
+    public const int SETTINGS_SHADOWMAP_RESOLUTION_1 = 512;
+    public const int SETTINGS_SHADOWMAP_RESOLUTION_2 = 1024;
+    public const int SETTINGS_SHADOWMAP_RESOLUTION_3 = 2048;
+    public const int SETTINGS_DEFAULT_LANGUAGE = 0;
+
     public static GameMode Gamemode { get; set; } = GameMode.Easy;
     public const int GAMEMODES_COUNT = 3;
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish
@@ -99,7 +117,7 @@ public static class GameStaticInfo {
 
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
     public const string LAYER_OBSTACLE = "Obstacle";
-    public const string LAYER_CAMERA_AVOID_COLLIDERS = "AvoidDynamicCameraColliders"; 
+    public const string LAYER_CAMERA_AVOID_COLLIDERS = "AvoidDynamicCameraColliders";
 
     public static int LAYER_MASK_ENTITY => LayerMask.GetMask(LAYER_ENTITY);//layer id for entities
 
@@ -119,6 +137,7 @@ public static class GameStaticInfo {
     /// RigidbodyConstraints for all fish ( rot: freze X and Z  pos: freeze Y )
     /// </summary>
     public const RigidbodyConstraints DEFAULT_FISH_CONSTRAINS_RIQIDBODY = RigidbodyConstraints.FreezeRotationX
+    | RigidbodyConstraints.FreezeRotationY
     | RigidbodyConstraints.FreezeRotationZ
     | RigidbodyConstraints.FreezePositionY;
 

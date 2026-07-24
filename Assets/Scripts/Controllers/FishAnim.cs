@@ -59,6 +59,11 @@ public class FishAnim : MonoBehaviour {
 
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
+
+        if (animator != null) {
+            animator.Rebind();  // reset all to def stage (fix open mouth death)
+            animator.Update(0f);//force apply fisrt keyframe of anim
+        }
     }
 
     private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {
