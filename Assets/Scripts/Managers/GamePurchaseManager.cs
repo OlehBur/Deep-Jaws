@@ -19,14 +19,20 @@ public class GamePurchaseManager : MonoBehaviour {
     [SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
 
     private StoreController m_StoreController;
+    
     private const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
     private const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
     private const string SUPPORT_DEV_ID = "com.deepjaws.support_developer";
     private const string ASHFLOW_PRODUCT_ID = "com.deepjaws.ashflow";
+    private const string ASHFLOW_DISCOUNT_PRODUCT_ID = "com.deepjaws.ashflow_discount";
     private const string CHAMELEON_PRODUCT_ID = "com.deepjaws.chameleon";
     private const string MERCURY_PRODUCT_ID = "com.deepjaws.mercury";
     private const string OWNED_PRODUCT = "Owned";
     private const string ERROR_PRICE = "---";
+
+    private static readonly DateTime ASHFLOW_DISCOUNT_END_DATE = new DateTime(2026, 8, 14, 1, 0, 0, DateTimeKind.Utc);
+    private static readonly DateTime DATE_NOW = DateTime.UtcNow;
+    private static readonly bool IS_ASHFLOW_ON_SALE = DATE_NOW <= ASHFLOW_DISCOUNT_END_DATE;
 
 
     private void Awake() {
@@ -83,6 +89,7 @@ public class GamePurchaseManager : MonoBehaviour {
                 new(NOADD_PRODUCT_ID, ProductType.NonConsumable),
                 new(SUPPORT_DEV_ID, ProductType.Consumable),
                 new(ASHFLOW_PRODUCT_ID, ProductType.NonConsumable),
+                new(ASHFLOW_DISCOUNT_PRODUCT_ID, ProductType.NonConsumable),
                 new(CHAMELEON_PRODUCT_ID, ProductType.NonConsumable),
                 new(MERCURY_PRODUCT_ID, ProductType.NonConsumable)
             };
@@ -186,9 +193,9 @@ public class GamePurchaseManager : MonoBehaviour {
             prod.metadata.localizedPriceString : ERROR_PRICE;
     }
 
+
     bool IsHasProduct(Orders orders, string PRODUCT_ID/*, out string realPrice*/) {
         //realPrice = GetProductLocalPrice(PREMIUM_PRODUCT_ID);
-
         return orders.ConfirmedOrders.Any(order => order.Info != null &&
                                                      order.Info.PurchasedProductInfo != null &&
                                                      order.Info.PurchasedProductInfo.Any(p => p.productId == PRODUCT_ID));
@@ -261,11 +268,24 @@ public class GamePurchaseManager : MonoBehaviour {
         ps.ChameleonPrice = ps.Chameleon ?
             OWNED_PRODUCT : (m_StoreController != null ?
                 GetProductLocalPrice(CHAMELEON_PRODUCT_ID) : ERROR_PRICE);
-        ps.AshflowPrice = ps.Ashflow ?
-            OWNED_PRODUCT : (m_StoreController != null ?
-                GetProductLocalPrice(ASHFLOW_PRODUCT_ID) : ERROR_PRICE);
+
+        //ps.AshflowPrice = ps.Ashflow ?
+        //OWNED_PRODUCT : (m_StoreController != null ?
+        //GetProductLocalPrice(ASHFLOW_PRODUCT_ID) : ERROR_PRICE);
+        if (ps.Ashflow)
+            ps.AshflowPrice = OWNED_PRODUCT;
+        else if (IS_ASHFLOW_ON_SALE && m_StoreController != null) {
+            string oldPrice = GetProductLocalPrice(ASHFLOW_PRODUCT_ID);          // "269.99 UAH"
+            string newPrice = GetProductLocalPrice(ASHFLOW_DISCOUNT_PRODUCT_ID); // "81.00 UAH"
+
+            ps.AshflowPrice = $"<s><color=#A0A0A0>{oldPrice}</color></s> {newPrice}";
+        }
+        else
+            ps.AshflowPrice = GetProductLocalPrice(ASHFLOW_PRODUCT_ID);
 
         return ps;
+
+        //return ps;
     }
 
     private void OnProductsFetched(List<Product> products) {
@@ -310,7 +330,12 @@ public class GamePurchaseManager : MonoBehaviour {
                 currentData.hasChameleon = true;
                 shouldConfirm = true;
             }
-            else if (string.Equals(productId, ASHFLOW_PRODUCT_ID, StringComparison.Ordinal)) {
+            //else if (string.Equals(productId, ASHFLOW_PRODUCT_ID, StringComparison.Ordinal)) {
+            //    currentData.hasAshflowSkin = true;
+            //    shouldConfirm = true;
+            //}
+            else if (string.Equals(productId, ASHFLOW_PRODUCT_ID, StringComparison.Ordinal) ||
+                    string.Equals(productId, ASHFLOW_DISCOUNT_PRODUCT_ID, StringComparison.Ordinal)) {
                 currentData.hasAshflowSkin = true;
                 shouldConfirm = true;
             }
@@ -371,5 +396,5 @@ public class GamePurchaseManager : MonoBehaviour {
     public void OnBuy_SupportDev() => BuyProduct(SUPPORT_DEV_ID);
     public void OnBuy_MercurySkin() => BuyProduct(MERCURY_PRODUCT_ID);
     public void OnBuy_ChameleonSkin() => BuyProduct(CHAMELEON_PRODUCT_ID);
-    public void OnBuy_AshflowSkin() => BuyProduct(ASHFLOW_PRODUCT_ID);
+    public void OnBuy_AshflowSkin() => BuyProduct(IS_ASHFLOW_ON_SALE ? ASHFLOW_DISCOUNT_PRODUCT_ID : ASHFLOW_PRODUCT_ID);
 }

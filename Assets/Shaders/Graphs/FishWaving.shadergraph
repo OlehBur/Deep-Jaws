@@ -500,6 +500,9 @@
         },
         {
             "m_Id": "4d06390f20c54d5d9f6c7b60ef194576"
+        },
+        {
+            "m_Id": "7690d8fa876d47358e19c0dbaf62c1e4"
         }
     ],
     "m_GroupDatas": [
@@ -899,9 +902,9 @@
             },
             "m_InputSlot": {
                 "m_Node": {
-                    "m_Id": "39b905c595ed48e2841b754378460429"
+                    "m_Id": "7690d8fa876d47358e19c0dbaf62c1e4"
                 },
-                "m_SlotId": 1
+                "m_SlotId": 0
             }
         },
         {
@@ -1938,6 +1941,20 @@
                     "m_Id": "3e722885c1c4467d84adf519a9b91972"
                 },
                 "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "ac30f1507f6c4fa7b0cf6f84fe3175d2"
+                },
+                "m_SlotId": 2
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "39b905c595ed48e2841b754378460429"
+                },
+                "m_SlotId": 1
             }
         },
         {
@@ -3965,7 +3982,7 @@
     "m_Title": "Texture Edging",
     "m_Position": {
         "x": -331.0,
-        "y": 1077.9998779296875
+        "y": 1078.0
     }
 }
 
@@ -5528,6 +5545,31 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_ObjectId": "2a69a386cd70455fb3ef83ad5ecc73ec",
+    "m_Id": 1,
+    "m_DisplayName": "",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "2ae815efadf24d7da671d600f19577f5",
     "m_Id": 2,
     "m_DisplayName": "T",
@@ -5621,6 +5663,31 @@
         "z": 1.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_ObjectId": "2dff82275a114b1abdfc870215d479f9",
+    "m_Id": 0,
+    "m_DisplayName": "",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_LiteralMode": false
 }
 
 {
@@ -5912,8 +5979,8 @@
     "m_ObjectId": "339ab6cadb1344dd9003c7ae797ef750",
     "m_Title": "Alpha",
     "m_Position": {
-        "x": 708.0001220703125,
-        "y": 1559.9998779296875
+        "x": 708.0,
+        "y": 1560.0
     }
 }
 
@@ -6041,7 +6108,7 @@
     "m_Title": "Clamp rotation min-max",
     "m_Position": {
         "x": -2662.0,
-        "y": 600.9998779296875
+        "y": 601.0
     }
 }
 
@@ -9750,7 +9817,7 @@
     "m_Title": "body mask",
     "m_Position": {
         "x": -2166.0,
-        "y": -815.0001220703125
+        "y": -815.0
     }
 }
 
@@ -10366,6 +10433,42 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.RedirectNodeData",
+    "m_ObjectId": "7690d8fa876d47358e19c0dbaf62c1e4",
+    "m_Group": {
+        "m_Id": "b2782bbd41ec4d19bf9d9a514f416738"
+    },
+    "m_Name": "Redirect Node",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -1383.0,
+            "y": -67.0000228881836,
+            "width": 56.0,
+            "height": 24.000022888183595
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "2dff82275a114b1abdfc870215d479f9"
+        },
+        {
+            "m_Id": "2a69a386cd70455fb3ef83ad5ecc73ec"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.OneMinusNode",
     "m_ObjectId": "76ae792c630b4e16aa9145c87ba58a26",
     "m_Group": {
@@ -10647,7 +10750,7 @@
     "m_Title": "Smoothness",
     "m_Position": {
         "x": 691.0,
-        "y": 839.9998779296875
+        "y": 840.0
     }
 }
 
@@ -10800,8 +10903,8 @@
     "m_ObjectId": "7cbe584d44b5417f98988be5443a16d0",
     "m_Title": "Base Color",
     "m_Position": {
-        "x": 751.9999389648438,
-        "y": 390.9999084472656
+        "x": 752.0,
+        "y": 391.0
     }
 }
 
@@ -11660,8 +11763,8 @@
     "m_ObjectId": "8998e660c6d345a59045991d94fd1188",
     "m_Title": "0-1 rotate progress",
     "m_Position": {
-        "x": -913.9999389648438,
-        "y": 62.99988555908203
+        "x": -914.0,
+        "y": 63.0
     }
 }
 
@@ -11787,7 +11890,7 @@
     "m_ObjectId": "8ace570c94704de5bec6e90245a66d4f",
     "m_Title": "Alpha Clip",
     "m_Position": {
-        "x": 907.0000610351563,
+        "x": 907.0,
         "y": 1564.0
     }
 }
@@ -12080,7 +12183,7 @@
     "m_Title": "Skins",
     "m_Position": {
         "x": 277.0,
-        "y": 509.9999694824219
+        "y": 510.0
     }
 }
 
@@ -12848,7 +12951,7 @@
     "m_Title": "FixeRotatipmArtefacts",
     "m_Position": {
         "x": -1865.0,
-        "y": 1013.9998779296875
+        "y": 1014.0
     }
 }
 
@@ -14698,7 +14801,7 @@
     "m_ObjectId": "bd726aea669e4ac280235f71d5ee2752",
     "m_Title": "Albedo",
     "m_Position": {
-        "x": -304.0001220703125,
+        "x": -304.0,
         "y": 696.0
     }
 }
@@ -15546,8 +15649,8 @@
     "m_ObjectId": "c74b5a7edca3485484d0a4caf2404445",
     "m_Title": "Normal",
     "m_Position": {
-        "x": 1305.0001220703125,
-        "y": 468.9999694824219
+        "x": 1305.0,
+        "y": 469.0
     }
 }
 
@@ -17053,7 +17156,7 @@
     "m_ObjectId": "dbabe69e664f42c8b2e928edf8fd8fb0",
     "m_Title": "Metallic",
     "m_Position": {
-        "x": 930.0001831054688,
+        "x": 930.0,
         "y": 905.0
     }
 }

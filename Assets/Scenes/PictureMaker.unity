@@ -464,6 +464,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dartfish
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1257,6 +1261,7 @@ Transform:
   m_Children:
   - {fileID: 809808767}
   - {fileID: 2141195433}
+  - {fileID: 446590255}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &359967488
@@ -1370,6 +1375,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2d57850021860fc43b2f6232ce2fcf3f, type: 3}
   m_PrefabInstance: {fileID: 1251522339}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &446590254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 446590255}
+  - component: {fileID: 446590256}
+  m_Layer: 0
+  m_Name: textures
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &446590255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446590254}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 331142990}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &446590256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446590254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334f59943d5b46d4a9e36a8015313427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureName: SonicPulse
+  shaderMat: {fileID: -876546973899608171, guid: 33f765e12ec786647be6e6ac88c159c3, type: 3}
+  textureSize: {x: 1024, y: 1024}
+  tapToBake: 0
 --- !u!4 &462514283 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1432576040030573395, guid: b42b068f8ca9d6d438ea6feebe8f15e2, type: 3}
@@ -2289,10 +2342,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334f59943d5b46d4a9e36a8015313427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureName: Dartfish
+  textureName: WakeUp
   shaderMat: {fileID: -876546973899608171, guid: 703b11460a7abfc42b02c87b780582b2, type: 3}
   textureSize: {x: 1080, y: 1080}
-  tapToBake: 1
+  tapToBake: 0
 --- !u!4 &809808767
 Transform:
   m_ObjectHideFlags: 0
@@ -4653,6 +4706,72 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962992006}
   m_Mesh: {fileID: -2739802242899363902, guid: 410d3aabea6c6fe40a2766d8a1128269, type: 3}
+--- !u!1001 &1964410929
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7294222976810290527}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.869
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.247
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.34
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.83944917
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.19142379
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.50441676
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.065159574
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -14.812
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 64.393
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -18.235
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_Name
+      value: Dartfish (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+--- !u!4 &1964410930 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d7cc4daef27edbd488ef145e1e1453bc, type: 3}
+  m_PrefabInstance: {fileID: 1964410929}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1964762819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5440,6 +5559,7 @@ Transform:
   - {fileID: 803867338}
   - {fileID: 1246050976}
   - {fileID: 67303924}
+  - {fileID: 1964410930}
   - {fileID: 303956824}
   - {fileID: 325875156}
   - {fileID: 2009063346}

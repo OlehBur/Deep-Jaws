@@ -153,6 +153,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     [SerializeField] Animator titleFounder;
     [SerializeField] GameObject NoInternetConnectionWnd;
 
+    [SerializeField] GameObject skinsPreviewWnd;
     [SerializeField] Transform skinsPreview;
     [SerializeField] SkinnedMeshRenderer chameleonRenderer;
     [SerializeField] SkinnedMeshRenderer mercuryRenderer;
@@ -160,6 +161,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     private MaterialPropertyBlock propBlock;
     private PurchasedSkins purchasedSkins;//buffer only for click listeners
+    private int selectedSkinsOnPreview = 0;
 
     //private const string PREF_LOYALTYCONFIRMED_KEY = "loyaltyWndConfirm";
     private const bool SELECT_BUTTON_TEXT_ID = true;
@@ -184,6 +186,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         InitButtonsListeners();
         GamePurchaseManager.Instance?.RefreshUI();
     }
+
 
     void InitPreviewSkins() {
         propBlock = new MaterialPropertyBlock();
@@ -211,6 +214,32 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     private void Update() {
         if (skinsPreview.gameObject.activeInHierarchy)
             skinsPreview.Rotate(Vector3.up, Time.deltaTime * SKINS_PREVIEW_ROTATION_SPEED);
+    }
+
+    public void OnOpen_ScinsPreviewWnd() {
+        skinsPreview.gameObject.SetActive(true);
+        skinsPreviewWnd.SetActive(true);
+
+        foreach(Transform t in skinsPreview.transform)
+            t.gameObject.SetActive(false);
+
+        skinsPreview.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public void OnClose_ScinsPreviewWnd() {
+        skinsPreview.gameObject.SetActive(false);
+        skinsPreviewWnd.SetActive(false);
+    }
+
+    public void OnNextSkinPreview() {
+        skinsPreview.GetChild(selectedSkinsOnPreview).gameObject.SetActive(false);
+        ++selectedSkinsOnPreview;
+
+        selectedSkinsOnPreview = skinsPreview.childCount > selectedSkinsOnPreview ?
+            selectedSkinsOnPreview :
+            0;
+
+        skinsPreview.GetChild(selectedSkinsOnPreview).gameObject.SetActive(true);
     }
 
     public void SetActiveNoInternetWnd(bool isActivate) {

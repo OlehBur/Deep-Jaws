@@ -26,6 +26,7 @@ public static class GPGSIds
 {
         public const string achievement_former_threat_current_snack = "CgkI0PmEnbsFEAIQCw"; // <GPGSID>
         public const string achievement_so_thats_how_it_is = "CgkI0PmEnbsFEAIQCQ"; // <GPGSID>
+        public const string leaderboard_deadly_maelstrom_appetite = "CgkI0PmEnbsFEAIQHw"; // <GPGSID>
         public const string achievement_youre_my_friend_now = "CgkI0PmEnbsFEAIQAg"; // <GPGSID>
         public const string achievement_just_how_big_must_that_gum_have_been = "CgkI0PmEnbsFEAIQEg"; // <GPGSID>
         public const string achievement_they_cant_reach_me_here = "CgkI0PmEnbsFEAIQCg"; // <GPGSID>
@@ -38,7 +39,7 @@ public static class GPGSIds
         public const string leaderboard_harbor_breeze_appetite = "CgkI0PmEnbsFEAIQHg"; // <GPGSID>
         public const string achievement_but_its_gray = "CgkI0PmEnbsFEAIQFQ"; // <GPGSID>
         public const string achievement_thats_impossible_seriously = "CgkI0PmEnbsFEAIQCA"; // <GPGSID>
-        public const string leaderboard_deadly_maelstrom_appetite = "CgkI0PmEnbsFEAIQHw"; // <GPGSID>
+        public const string achievement_its_time_to_wake_up = "CgkI0PmEnbsFEAIQIg"; // <GPGSID>
         public const string achievement_hey_give_it_back = "CgkI0PmEnbsFEAIQAw"; // <GPGSID>
         public const string achievement_i_dont_understand = "CgkI0PmEnbsFEAIQAQ"; // <GPGSID>
         public const string achievement_a_fragile_beauty_in_a_sea_of_decay = "CgkI0PmEnbsFEAIQGw"; // <GPGSID>

@@ -20,6 +20,8 @@ public class GPG_Manager : MonoBehaviour {
 
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
 
+    private const float WAKKE_UP_ACHIEVEMENT_TIME = 180 * 60f;
+
     private bool isAuthenticated = false;
 
 
@@ -30,6 +32,7 @@ public class GPG_Manager : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
+            Invoke(nameof(OnTriggerWakeUpAchi), WAKKE_UP_ACHIEVEMENT_TIME);
         }
         else
             Destroy(gameObject);
@@ -140,7 +143,7 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     private void UpdateMainMenuUI() {
-        if (mainmenu == null) 
+        if (mainmenu == null)
             mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
 
         if (mainmenu != null) {
@@ -230,6 +233,11 @@ public class GPG_Manager : MonoBehaviour {
                 Debug.Log($"Nickname not found, player {userId} ");//with {score}
             }
         });
+    }
+
+    void OnTriggerWakeUpAchi() {
+        OnTriggerAchievement(GPGSIds.achievement_its_time_to_wake_up);
+        //Debug.LogWarning(GPGSIds.achievement_its_time_to_wake_up);
     }
 
     public static void OnTriggerAchievement(string achievementKey) =>

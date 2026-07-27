@@ -31,11 +31,12 @@ public class GraphicManager : MonoBehaviour {
 
     void Start() {
         bloomTog.onValueChanged.AddListener(value => {
-            if (mainVolume.profile.TryGet(out Bloom bloom))
+            if (mainVolume.sharedProfile.TryGet(out Bloom bloom))
                 bloom.active = value;
+            //Debug.LogWarning("Volume bloom trigger");
         });
         vignetteTog.onValueChanged.AddListener(value => {
-            if (mainVolume.profile.TryGet(out Vignette vignette))
+            if (mainVolume.sharedProfile.TryGet(out Vignette vignette))
                 vignette.active = value;
         });
         shadowCastTog.onValueChanged.AddListener(value => {

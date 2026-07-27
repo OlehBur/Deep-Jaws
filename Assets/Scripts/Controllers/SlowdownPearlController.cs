@@ -5,13 +5,14 @@ public class SlowdownPearlController : MonoBehaviour {
     [SerializeField] Animator floawerAnimator;
     [SerializeField] AudioManager audioManager;
     [SerializeField] Collider pearlCollider;
+    //[SerializeField] Collider flowerCollider;
     [SerializeField] MeshRenderer pearlMeshRenderer;
     [SerializeField] Light pearlLight;
     [SerializeField] GameObject freezeTimeParticles;
 
     private const string FLOWER_ANIM_NAME = "Nymphae_Flower";
     private const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
-    private const float MAX_RESPAWN_TIME = 120; //2 minutes
+    private const float MAX_RESPAWN_TIME = 120f; //2 minutes
     private const float MAX_AXIS_ANGLE_DIR = 45f;
 
     private Vector3 randomRotateDir;
@@ -20,19 +21,23 @@ public class SlowdownPearlController : MonoBehaviour {
     private static bool IsActivationInvokeStarted = false;
 
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void Init() {
+        IsActivationInvokeStarted = false; //auto restart every start
+        OnPearlActivate = null;
+        OnPearlDeactivate = null;
+    }
+
     void Start() {
         //Debug.LogWarning("Changed flower time");
         pearlCollider.enabled = false;
 
         if (!IsActivationInvokeStarted) {
             Invoke(nameof(ActivatePearlEvent), MAX_RESPAWN_TIME);
+            //Debug.LogWarning("ACTivate fast slowPearl inoke" + Time.time);
             IsActivationInvokeStarted = true;
         }
-
-        OnPearlActivate += ActivatePearl;
-        OnPearlDeactivate += DeactivatePearl;
-
-        //gameObject.SetActive(false);
+        //flowerCollider.enabled = true;
         pearlMeshRenderer.enabled = false;
         pearlLight.enabled = false;
     }
@@ -62,14 +67,16 @@ public class SlowdownPearlController : MonoBehaviour {
     }
 
     private void DeactivatePearl() {
+        //Debug.LogWarning("DeacTivate pearl " + gameObject.name);
+        //flowerCollider.enabled = true;
         pearlCollider.enabled = false;
-        //gameObject.SetActive(false);
         pearlMeshRenderer.enabled = false;
         pearlLight.enabled = false;
         freezeTimeParticles.SetActive(true);
 
         if (IsActivationInvokeStarted) {
             Invoke(nameof(ActivatePearlEvent), MAX_RESPAWN_TIME);
+            //Debug.LogWarning("ACTivate  slowPearl inoke" + Time.time);
             IsActivationInvokeStarted = false;
         }
 
@@ -77,15 +84,33 @@ public class SlowdownPearlController : MonoBehaviour {
     }
 
     private void ActivatePearl() {
-        //floawerAnimator.speed = 1f;
+        if (gameObject == null)
+            return;
+        //Debug.LogWarning("ACTivate pearl " + gameObject.name);
         floawerAnimator.Play(FLOWER_ANIM_NAME);
         randomRotateDir = new Vector3(
-            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR), 
-            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR), 
+            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR),
+            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR),
             UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR));
-        //gameObject.SetActive(true);
+        //flowerCollider.enabled = false;
         pearlMeshRenderer.enabled = true;
         pearlCollider.enabled = true;
         pearlLight.enabled = true;
+    }
+
+    void OnDestroy() {
+        IsActivationInvokeStarted = false;
+        OnPearlActivate -= ActivatePearl;
+        OnPearlDeactivate -= DeactivatePearl;
+    }
+
+    private void OnEnable() {
+        OnPearlActivate += ActivatePearl;
+        OnPearlDeactivate += DeactivatePearl;
+    }
+
+    private void OnDisable() {
+        OnPearlActivate -= ActivatePearl;
+        OnPearlDeactivate -= DeactivatePearl;
     }
 }

@@ -80,6 +80,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 4659197164190804994}
     m_Modifications:
     - target: {fileID: 2777452514086867737, guid: 9afbc94b2b006064bb4e4f24ef9427c7, type: 3}
+      propertyPath: flowerCollider
+      value: 
+      objectReference: {fileID: 4923164691746747077}
+    - target: {fileID: 2777452514086867737, guid: 9afbc94b2b006064bb4e4f24ef9427c7, type: 3}
       propertyPath: floawerAnimator
       value: 
       objectReference: {fileID: 5272351027078701877}
@@ -262,6 +266,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0efaf1a8cb3d2814cb5167883aae7138, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5272351027078701877}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0efaf1a8cb3d2814cb5167883aae7138, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4923164691746747077}
   m_SourcePrefab: {fileID: 100100000, guid: 0efaf1a8cb3d2814cb5167883aae7138, type: 3}
 --- !u!4 &4659197164190804994 stripped
 Transform:
@@ -295,3 +302,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &4923164691746747077
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5468244670274991800}
+  m_Material: {fileID: 13400000, guid: 3e1933bb0c049a745a09f2b3e03dfabc, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.86
+  m_Height: 54.51
+  m_Direction: 1
+  m_Center: {x: 0.11684835, y: 27.35026, z: -0.023145318}
