@@ -6,16 +6,17 @@ public class FishAnim : MonoBehaviour {
     [SerializeField] Fish fish;
     [SerializeField] float smoothRotateSpeed = 5f;
     [SerializeField] float angleRotDetect = 12f;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Animator animator; // animator for fish animations (crab has no animator)
-    [SerializeField] SkinnedMeshRenderer fishSkinnedMesh; //To get Mesh material
+    //[SerializeField] Rigidbody rb;
+    [SerializeField] Animator animator; // animator for fish animations (crab has no animator and dartfish)
+    //[SerializeField] AnimationClip idleClip;
+    [SerializeField] Renderer fishSkinnedMesh; //To get Mesh material
     [SerializeField] Transform editableTransform;
     [SerializeField] Vector3 biteParticleLocPos;
     [SerializeField] float bubbleMaxXoffset = 0; //change the width of the bubble in the rotation (to make the ends of the tail out)
     [SerializeField] bool isUseRotatingShader = false;
 
     public Animator FishAnimator { get { return animator; } private set { animator = value; } }
-    public SkinnedMeshRenderer FishSkinnedMesh => fishSkinnedMesh;
+    public Renderer FishSkinnedMesh => fishSkinnedMesh;
     public bool IsInited { get; private set; } = false;
 
     private FishAdditionalCompManager fishAddCompMngr;
@@ -43,7 +44,6 @@ public class FishAnim : MonoBehaviour {
 
     void OnEnable() {
         //init set prop block
-
         if (fishSkinnedMesh == null) {
             matDefSprintSpeed = 1f;
         }
@@ -61,19 +61,27 @@ public class FishAnim : MonoBehaviour {
             0f : SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
 
         if (animator != null) {
+            animator.ResetTrigger(BITE_TRIGGER_NAME);
             animator.Rebind();  // reset all to def stage (fix open mouth death)
+
+            ////forse attath data from first keyframe to bones
+            //if (idleClip != null)
+            //    idleClip.SampleAnimation(gameObject, 0f);
+
+            // restart animator            
+            animator.Play("Idle", 0, 0f);
             animator.Update(0f);//force apply fisrt keyframe of anim
         }
     }
 
-    private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref SkinnedMeshRenderer skinnedMesh) {
+    private static void InitPropBlock(ref MaterialPropertyBlock matPropBlock, ref Renderer skinnedMesh) {
         matPropBlock = new MaterialPropertyBlock();
         SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_Frequency", false, skinnedMesh.sharedMaterial.GetFloat("_Frequency"));
         SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_MaxRotationValue", false, skinnedMesh.sharedMaterial.GetFloat("_MaxRotationValue"));
         SetGetMaterialWithPropBlock(ref skinnedMesh, ref matPropBlock, "_RotationRad", false, skinnedMesh.sharedMaterial.GetFloat("_RotationRad"));
     }
 
-    public static float SetGetMaterialWithPropBlock(ref SkinnedMeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, bool isGet, float value = 0) {
+    public static float SetGetMaterialWithPropBlock(ref Renderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, bool isGet, float value = 0) {
         //Debug.LogWarning(renderer + " " + mapBlock);
         renderer.GetPropertyBlock(mapBlock);
 
@@ -147,18 +155,19 @@ public class FishAnim : MonoBehaviour {
     }
 
     public void ActivateBiteAnimation(bool isNeedParticles = true) {
-        FishAnimator?.SetTrigger(BITE_TRIGGER_NAME); // play bite animation
+        if (fish.IsVisible) {
+            if (animator != null)
+                animator.SetTrigger(BITE_TRIGGER_NAME); // play bite animation
 
-        if (isNeedParticles && fish.IsVisible) {//for optimization
+            if (isNeedParticles) //for optimization
+                fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
+                    editableTransform,
+                    biteParticleLocPos,
+                    Vector3.one,
+                    Quaternion.identity);
+
             if (fish.IsPlayer)//only player
                 audioManager.PlayVFX(VFX_clip.Bite);
-
-            fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
-                editableTransform,
-                biteParticleLocPos,
-                Vector3.one,
-                Quaternion.identity);
-
         }
     }
 

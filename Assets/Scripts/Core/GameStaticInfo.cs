@@ -4,6 +4,7 @@ using UnityEngine;
 public enum FishLevel {
     Pufferfish = -5,
     Cuttlefish = -4,
+    Dartfish = -1,
     Crab = 0,
     SeaBass,
     Mackarel,
@@ -113,7 +114,7 @@ public static class GameStaticInfo {
     public const FishLevel SHARK_INDEX_BARRIER = FishLevel.HammerShark;
     public const FishLevel MAX_FISH_LEVEL = FishLevel.WhiteShark;
     public const int PEACEFUL_FISH_LVL = 0;//barrier level for peaceful fish (crab and below)
-    public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Cuttlefish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
+    public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Dartfish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
 
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
     public const string LAYER_OBSTACLE = "Obstacle";
@@ -170,8 +171,9 @@ public static class GameStaticInfo {
         //Debug.LogWarning("Player inviolability Activated!");
         return TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
             TryGetFishFromPool(fishObject, SpawnManager.visible_poolFishObjects, SpawnManager.visible_poolFishComponents, out fish) ||//default enemies
-        TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager.cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
-        TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish);//pufferfishes
+            TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager.cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
+            TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish) || //dartfish
+            TryGetFishFromPool(fishObject, SpawnManager.dartfishPool_Objects, SpawnManager.dartfishPool_FishComponents, out fish);
     }
 
     static bool TryGetFishFromPool(GameObject fishObject, GameObject[] pool, Fish[] fishPool, out Fish fish) {

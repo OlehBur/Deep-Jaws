@@ -57,6 +57,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: idleClip
+      value: 
+      objectReference: {fileID: 7400000, guid: d57aff854c8027343810fbfccfa5350d, type: 2}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: bubbleShield
       value: 
       objectReference: {fileID: 0}
@@ -520,7 +524,7 @@ Animator:
   m_GameObject: {fileID: 6558023892779049000}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b3898eadc296f56408c6a74a94d5afef, type: 2}
+  m_Controller: {fileID: 9100000, guid: dcc9a315a2e65674fa6ca399e12e92b6, type: 2}
   m_CullingMode: 2
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

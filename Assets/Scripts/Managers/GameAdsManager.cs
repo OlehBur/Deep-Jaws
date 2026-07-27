@@ -253,10 +253,10 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     void RewardedLimitRecalc() {
-        int currentCount = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, 1);
-        PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, currentCount + 1);
+        int loadedAttemptsCnt = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, 1);
+        PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, loadedAttemptsCnt + 1);
         PlayerPrefs.Save();
-        SetLimitAdAmountTxt(MAX_DAILY_REWARDED - currentCount - 1);
+        SetLimitAdAmountTxt(MAX_DAILY_REWARDED - loadedAttemptsCnt - 1);
     }
 
     void SetLimitAdAmountTxt(int currentCnt) {
@@ -264,11 +264,18 @@ public class GameAdsManager : MonoBehaviour {
             t.text = currentCnt + "/" + MAX_DAILY_REWARDED;
     }
 
+    public void UpdateDailyRevivesTxt() {
+        int attemptsLeft = MAX_DAILY_REWARDED - PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, MAX_DAILY_REWARDED) - 1;
+
+        foreach (TextMeshProUGUI t in limitTxtUI)
+            t.text = attemptsLeft + "/" + MAX_DAILY_REWARDED;
+    }
+
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
         //if (isRewardEarned) {
-            ProcessEarnedReward();
-            //RewardedRewardBeh();
-            //isRewardEarned = false;
+        ProcessEarnedReward();
+        //RewardedRewardBeh();
+        //isRewardEarned = false;
         //}
 
         rewardedAd.LoadAd();

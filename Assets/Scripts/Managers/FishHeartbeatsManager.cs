@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,8 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
     private const int TEXTURE_SIZE_DIVIDER = 4; //â big texture resolution is expensive for mobile devices
     private const float HERTBEAT_PARTICLES_UPDATE_INTERVAL = 0.05f;
+    private readonly WaitForSecondsRealtime waitForParticleUpd = new WaitForSecondsRealtime(HERTBEAT_PARTICLES_UPDATE_INTERVAL);
+    private Coroutine heartBeatParticleCorutine = null;
 
 
     public void Init(SpawnManager spawnManager) {
@@ -49,7 +52,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
     void ReInitPool() {
         if (fishHeartbeatsParticlesPool == null)
-            fishHeartbeatsParticlesPool = new ParticleSystem[SpawnManager.POOL_SIZE + SpawnManager.PUFFERFISH_SPAWN_COUNT + SpawnManager.CUTTLEFISH_SPAWN_COUNT + spawnManager.PlayerPoolSize];
+            fishHeartbeatsParticlesPool = new ParticleSystem[SpawnManager.POOL_SIZE + SpawnManager.PUFFERFISH_SPAWN_COUNT + SpawnManager.CUTTLEFISH_SPAWN_COUNT + SpawnManager.DARTFISH_SPAWN_COUNT + spawnManager.PlayerPoolSize];
         FishLevel playerLevel = spawnManager.PlayerFish.Level;
         ParticleSystem.MainModule particleMainModule;
 
@@ -65,6 +68,9 @@ public class FishHeartbeatsManager : MonoBehaviour {
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
         foreach (Fish fish in SpawnManager.playerPool_FishComponents)
+            InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
+
+        foreach (Fish fish in SpawnManager.dartfishPool_FishComponents)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
     }
 
@@ -101,16 +107,26 @@ public class FishHeartbeatsManager : MonoBehaviour {
     }
 
     public void SetActivateShaderPreparation(bool isActivate) {
-        if (isActivate)
-            InvokeRepeating(nameof(ReInitPool), 0f, HERTBEAT_PARTICLES_UPDATE_INTERVAL);
+        if (isActivate && heartBeatParticleCorutine == null) {
+            heartBeatParticleCorutine = StartCoroutine(HeartBeatParticles());
+            //InvokeRepeating(nameof(ReInitPool), 0f, HERTBEAT_PARTICLES_UPDATE_INTERVAL);
+        }
         else
-            CancelInvoke(nameof(ReInitPool));
+            StopCoroutine(HeartBeatParticles());
+        //CancelInvoke(nameof(ReInitPool));
 
         heartbeatParent.gameObject.SetActive(isActivate);
         shaderCamerasParent.SetActive(isActivate);
         uiShaderVisualize.enabled = isActivate;
 
         RemoveEntityFromCamera(isActivate);
+    }
+
+    IEnumerator HeartBeatParticles() {
+        while (true) {
+            ReInitPool();
+            yield return waitForParticleUpd;
+        }
     }
 
     void RemoveEntityFromCamera(bool isRemove) {

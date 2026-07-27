@@ -221,8 +221,11 @@ public class PlayerUIController : MonoBehaviour {
 
     void UpdatePlayerInfo() {
         int lvlProgress = (int)(playerFish.Progress * 100);
+        float health = playerFish.Health;
+        if (health < 0)
+            health = 0f;
 
-        healthProgresCurr_txt.text = playerFish.Health.ToString();
+        healthProgresCurr_txt.text = health.ToString();
         healthProgresMax_txt.text = playerFish.MaxHealth.ToString();
         lvlProgres_txt.text = lvlProgress.ToString();
         healthBar.fillAmount = (float)playerFish.Health / playerFish.MaxHealth;

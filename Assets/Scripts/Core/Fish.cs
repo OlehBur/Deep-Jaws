@@ -66,7 +66,7 @@ public class Fish : MonoBehaviour {
 
     private const float ROTATION_SPEED_MULTIPLIER = 40f; // multiplier for rotation speed
     private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
-    private const float MIN_PROGRESS_GAIN_MULTIPLIER = 11f;
+    private const float MIN_PROGRESS_GAIN_MULTIPLIER = 15f;
     public const float GROWTH_MULTIPLIER = 0.4f; // multiplier for fish scale growth
     private const float ATTACK_INTERVAL_COEFFICIENT = 3f;
     private const float MAX_ATTACK_INTERVAL = 1.1f; // maximum attack interval while fish stay collision with the victim
@@ -93,7 +93,7 @@ public class Fish : MonoBehaviour {
     //    if (fc == null)
     //        return;
     //    prefabVisualTransform.localScale = new Vector3(1f, 1f, .66f + Mathf.Clamp01(growProgress) * .34f) * (1 + Mathf.Clamp01(growProgress) * GROWTH_MULTIPLIER);
-    //    fc.OnUpdateCollider();
+    //    fc.OnUpdateCollider(prefabVisualTransform.localScale);
     //}
 
     public void CopyData(int health, float progress) {

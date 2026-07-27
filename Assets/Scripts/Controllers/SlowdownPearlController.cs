@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SlowdownPearlController : MonoBehaviour {
@@ -7,20 +8,36 @@ public class SlowdownPearlController : MonoBehaviour {
     [SerializeField] MeshRenderer pearlMeshRenderer;
     [SerializeField] Light pearlLight;
     [SerializeField] GameObject freezeTimeParticles;
-    const string FLOWER_ANIM_NAME = "Nymphae_Flower";
-    const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
+
+    private const string FLOWER_ANIM_NAME = "Nymphae_Flower";
+    private const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
     private const float MAX_RESPAWN_TIME = 120; //2 minutes
-    const float MAX_AXIS_ANGLE_DIR = 45f;
+    private const float MAX_AXIS_ANGLE_DIR = 45f;
+
     private Vector3 randomRotateDir;
+    private static event Action OnPearlActivate;
+    private static event Action OnPearlDeactivate;
+    private static bool IsActivationInvokeStarted = false;
+
 
     void Start() {
         //Debug.LogWarning("Changed flower time");
         pearlCollider.enabled = false;
-        Invoke(nameof(ActivatePearl), MAX_RESPAWN_TIME);
+
+        if (!IsActivationInvokeStarted) {
+            Invoke(nameof(ActivatePearlEvent), MAX_RESPAWN_TIME);
+            IsActivationInvokeStarted = true;
+        }
+
+        OnPearlActivate += ActivatePearl;
+        OnPearlDeactivate += DeactivatePearl;
+
         //gameObject.SetActive(false);
         pearlMeshRenderer.enabled = false;
         pearlLight.enabled = false;
     }
+
+    void ActivatePearlEvent() => OnPearlActivate?.Invoke();
 
     // Update is called once per frame
     void Update() {
@@ -37,23 +54,35 @@ public class SlowdownPearlController : MonoBehaviour {
         if (parentFish.CompareTag("Player") && !other.isTrigger && parentFish.TryGetComponent(out FishAnim fam)) {
             fam.ActivateBiteAnimation(false);
             audioManager.PlayVFX(VFX_clip.FreezeTime);
-            //pearlAudioSource.PlayOneShot(pearlSoundClip);
-            pearlCollider.enabled = false;
-            //gameObject.SetActive(false);
-            pearlMeshRenderer.enabled = false;
-            pearlLight.enabled = false;
-            freezeTimeParticles.SetActive(true);
-            Invoke(nameof(ActivatePearl), MAX_RESPAWN_TIME);
-            floawerAnimator.Play(FLOWER_REVERSE_ANIM_NAME);
+            //pearlAudioSource.PlayOneShot(pearlSoundClip);        
+            OnPearlDeactivate?.Invoke();
 
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_a_fragile_beauty_in_a_sea_of_decay);
         }
     }
 
+    private void DeactivatePearl() {
+        pearlCollider.enabled = false;
+        //gameObject.SetActive(false);
+        pearlMeshRenderer.enabled = false;
+        pearlLight.enabled = false;
+        freezeTimeParticles.SetActive(true);
+
+        if (IsActivationInvokeStarted) {
+            Invoke(nameof(ActivatePearlEvent), MAX_RESPAWN_TIME);
+            IsActivationInvokeStarted = false;
+        }
+
+        floawerAnimator.Play(FLOWER_REVERSE_ANIM_NAME);
+    }
+
     private void ActivatePearl() {
         //floawerAnimator.speed = 1f;
         floawerAnimator.Play(FLOWER_ANIM_NAME);
-        randomRotateDir = new Vector3(Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR), Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR), Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR));
+        randomRotateDir = new Vector3(
+            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR), 
+            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR), 
+            UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR));
         //gameObject.SetActive(true);
         pearlMeshRenderer.enabled = true;
         pearlCollider.enabled = true;

@@ -36,10 +36,13 @@ public class ShieldEffect : Effect {
         if (fishAddComp != null)
             ShieldWrap = fishAddComp.ActivateShieldFromPool(/*FishComponentType.ShieldBubble,*/ shieldParent, shieldLocalPos/*, shieldLocalScale, Quaternion.identity*/);
 
-        UpdateShieldSize(targetFish.VisualTransformScale);
-        targetFish.OnFishUpdateSize += UpdateShieldSize;
+        if (ShieldWrap != null) {
+            UpdateShieldSize(targetFish.VisualTransformScale);
+            targetFish.OnFishUpdateSize += UpdateShieldSize;
+        }
 
-        audioManager?.PlayVFX(VFX_clip.BubblePop);
+        if (audioManager != null)
+            audioManager.PlayVFX(VFX_clip.BubblePop);
         //Debug.Log($"{target.name} has applied Shield Effect for {duration} s.");
     }
 
@@ -47,7 +50,7 @@ public class ShieldEffect : Effect {
         //Debug.Log($"{target.name} has expired Shield Effect after {duration} s.");
         audioManager?.PlayVFX(VFX_clip.BubblePop);
         if (ShieldWrap != null)
-            ShieldWrap?.obj.SetActive(false);
+            ShieldWrap.obj.SetActive(false);
 
         targetFish.OnFishUpdateSize -= UpdateShieldSize;
     }

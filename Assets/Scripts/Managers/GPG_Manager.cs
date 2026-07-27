@@ -6,56 +6,21 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
-
-
-
-//public enum AchievementKey {
-//    EnglishPlease,
-//    FriendNow,
-//    GiveItBack,
-//    AreYouSerious,
-//    Respect,
-//    FlashSpeed,
-//    Cannibalism,
-//    Impossible,
-//    SoThatsHow,
-//    CantReachMe,
-//    ThreatSnack,
-//    HereWeGo,
-//    Danger,
-//    NoEscape,
-//    MackerelAgain,
-//    DotDash,
-//    TrueSpeed,
-//    BigGum,
-//    BringNails,
-//    GrrrMeow,
-//    ButItsGray,
-//    KingAbyss,
-//    Inevitability,
-//    MarineMedicine,
-//    Beauty,
-//    Gourmet,
-//    HardWay
-//}
-
-//public enum LederboardKey {
-//    EasyModeScore,
-//    MediumModeScore,
-//    HardModeScore,
-//    //DeadInEasyModeScore
-//}
+using UnityEngine.SocialPlatforms;//?!
 
 /// <summary>
 /// Google Play Games Manager
 /// </summary>
 public class GPG_Manager : MonoBehaviour {
     public static GPG_Manager Instance { get; private set; }
+    public event Action<string> OnLoadKingOfDeeps;
+
     [SerializeField] MainmenuManager mainmenu;
     [SerializeField] GamePurchaseManager purchaseManager;
-    private bool isAuthenticated = false;
 
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
+
+    private bool isAuthenticated = false;
 
 
     void Awake() {
@@ -144,7 +109,7 @@ public class GPG_Manager : MonoBehaviour {
             if (result == SignInStatus.Success) {
                 //Debug.Log("Authentication SUCCESS");
                 isAuthenticated = true;
-                mainmenu.ChangeSignInColor(true);
+                GetTop1Player();
 
                 CheckFounderStatus((isFounder) => {
                     if (isFounder) {
@@ -220,7 +185,51 @@ public class GPG_Manager : MonoBehaviour {
             else
                 Debug.LogWarning("Foundersreport failed.");
         });
+    }
 
+    public void GetTop1Player() {
+        if (!isAuthenticated) {
+            Debug.LogWarning("Cannot show top player, you are not authenticated.");
+            return;
+        }
+
+        //load first entry (rowCount = 1), starts fr TopScores
+        PlayGamesPlatform.Instance.LoadScores(
+            GPGSIds.leaderboard_deadly_maelstrom_appetite,
+            LeaderboardStart.TopScores,
+            1,                          // cnt of results
+            LeaderboardCollection.Public,// Public board onl (social for friends - not interested))
+            LeaderboardTimeSpan.AllTime,
+            OnTopScoreLoaded
+        );
+    }
+
+    private void OnTopScoreLoaded(LeaderboardScoreData scoreData) {
+        if (scoreData.Valid && scoreData.Scores.Length > 0) {
+            IScore topScore = scoreData.Scores[0];
+            long scoreValue = topScore.value;
+            //int rank = topScore.rank;                // must be 1
+            string userId = topScore.userID;         // uniq ID fr Google Play
+            Debug.Log($"Top-1 player has {scoreValue} pnts! Rank: -, UserID: {userId}");//            { rank}
+
+            //load user profile to get nickname
+            GetPlayerName(userId/*, scoreValue*/);
+        }
+        else
+            Debug.LogError("Failed to load <Top-1 player> or leaderboard is empty.");
+    }
+
+    private void GetPlayerName(string userId/*, long score*/) {
+        Social.LoadUsers(new string[] { userId }, (IUserProfile[] profiles) => {
+            if (profiles != null && profiles.Length > 0) {
+                string userName = profiles[0].userName;
+                //Texture2D avatar = profiles[0].image;   
+                OnLoadKingOfDeeps?.Invoke(userName);
+            }
+            else {
+                Debug.Log($"Nickname not found, player {userId} ");//with {score}
+            }
+        });
     }
 
     public static void OnTriggerAchievement(string achievementKey) =>
@@ -230,4 +239,3 @@ public class GPG_Manager : MonoBehaviour {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
-

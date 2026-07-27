@@ -2,12 +2,12 @@
 using UnityEngine;
 
 public class StopTimeEffect : Effect {
-    SkinnedMeshRenderer fishRenderer;
+    Renderer fishRenderer;
     MaterialPropertyBlock fishMatProp;
     Animator fishAnimator;//for freeze fish animation
     float currentTime = 0f;
     const float STOP_TIME_SCALE = .2f;
-    const float STOPTIME_SPEED_MULTIPLIER = 5.4f;
+    const float STOPTIME_SPEED_MULTIPLIER = 1f / STOP_TIME_SCALE;
     /// <summary>
     /// значення при якому шейдер починає знову брати значення скаледТайм замість нашого з ефекту 
     /// value we set when shader starts to take scaledTime value instead of our from effect
@@ -15,7 +15,7 @@ public class StopTimeEffect : Effect {
     const float STOP_VALUE_FOR_SHADER = 0f;
     //private bool isStartedDiactivation = false;
 
-    public StopTimeEffect(SkinnedMeshRenderer fishWaveMat, Animator fishAnimator) {
+    public StopTimeEffect(Renderer fishWaveMat, Animator fishAnimator) {
         fishRenderer = fishWaveMat;
         this.fishAnimator = fishAnimator;
         type = FishEffectType.FreezeTime;

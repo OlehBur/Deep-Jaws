@@ -30,6 +30,10 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] TMP_Dropdown framerateDropdown;
     [SerializeField] Image gameModeWndBackground;
     [SerializeField] Image signInIcon;
+    [SerializeField] GameObject kingOfDeepsObj;
+    [SerializeField] TextMeshProUGUI kingOfDeepsTxt;
+    [SerializeField] LocalizedString kingOfDeepsLocalized;
+    [SerializeField] Animator kingOfDeepsAnimator;
     //[SerializeField] LocalizedString settingsMaxFpsLocalized;
 
     [Header("Game Scene")]
@@ -96,6 +100,17 @@ public class MainmenuManager : MonoBehaviour {
 
         if (spawnManager != null)
             spawnManager.OnPlayerDied += ActivateRespawnWnd;
+
+        if (kingOfDeepsObj != null) {
+            kingOfDeepsObj.SetActive(false);
+            kingOfDeepsAnimator.enabled = false;
+        }
+    }
+
+    void KingOfDeepsUpdate(string playerNick) {
+        kingOfDeepsObj.SetActive(true);
+        kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
+        kingOfDeepsAnimator.enabled = true;
     }
 
     void ActivateRespawnWnd() {
@@ -104,6 +119,7 @@ public class MainmenuManager : MonoBehaviour {
             return;
         }
 
+        GameAdsManager.Instance.UpdateDailyRevivesTxt();
         respawnWnd.SetActive(true);
         respawnTime = RESPAWN_TIME;
 
@@ -288,6 +304,9 @@ public class MainmenuManager : MonoBehaviour {
 
     public void InitGPGServices(GPG_Manager gpg_manager) {
         this.gpg_manager = gpg_manager;
+
+        if (gpg_manager != null && kingOfDeepsObj != null)
+            gpg_manager.OnLoadKingOfDeeps += KingOfDeepsUpdate;
     }
 
     public void OnServicesButton(int buttonIndex) {

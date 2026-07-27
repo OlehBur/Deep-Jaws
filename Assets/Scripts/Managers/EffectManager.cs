@@ -18,7 +18,7 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] GameObject currentIcon;
     [SerializeField] GameObject poisonIcon;
     [SerializeField] Rigidbody rb;
-    [SerializeField] SkinnedMeshRenderer fishSkinnedRenderer;
+    [SerializeField] Renderer fishSkinnedRenderer;
     //[SerializeField] Transform editableTransform;
     [SerializeField] Transform rotationTransform;
     [SerializeField] public bool IsHaveShield = true;
@@ -159,7 +159,8 @@ public class EffectManager : MonoBehaviour {
 
             if (type == FishEffectType.Shield) {//import after Init (shield obj added in apply meth in init)
                 ShieldEffect shieldEffect = newEffect as ShieldEffect;
-                ShieldObj = shieldEffect.ShieldWrap.obj;
+                if (shieldEffect.ShieldWrap != null)
+                    ShieldObj = shieldEffect.ShieldWrap.obj;
             }
 
             //if (type == FishEffectType.StunInitiator)

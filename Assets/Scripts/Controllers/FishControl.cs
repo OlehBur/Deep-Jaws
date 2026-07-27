@@ -87,7 +87,7 @@ public class FishControl : MonoBehaviour, IFish {
         SleepPhysics();
     }
 
-    private void OnUpdateCollider(Vector3 localScale) {
+    /*public*/private void OnUpdateCollider(Vector3 localScale) {
         if (/*previewCollider &&*/ bodyCollider != null) {
             if (fish.Level == FishLevel.Crab) {//X height capsule
                 bodyCollider.height = colliderDefaultHeight * localScale.x;
@@ -103,7 +103,7 @@ public class FishControl : MonoBehaviour, IFish {
     //[SerializeField] Transform sizeTransform;
     //[SerializeField] bool previewCollider;
     //private void OnValidate() {
-    //    if (previewCollider || bodyCollider==null)
+    //    if (previewCollider || bodyCollider == null)
     //        return;
     //    if (fish.Level == FishLevel.Crab) {//X height capsule
     //        bodyCollider.height = colliderDefaultHeight / Fish.GROWTH_MULTIPLIER * sizeTransform.localScale.x;
@@ -423,7 +423,7 @@ public class FishControl : MonoBehaviour, IFish {
     void IFish.FishProximity(Fish otherFish) {
         if (fish.Level < otherFish.Level)
             state = EnemyState.Escape;
-        else if (fish.IsLegitimateTarget(otherFish, true) && fish.Level != GameStaticInfo.PEACEFUL_FISH_LVL) //u not crab
+        else if (fish.IsLegitimateTarget(otherFish, true) && fish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) //u not crab
             state = EnemyState.Attack;
         else
             state = EnemyState.Walking; //If the player attacks the fish the same level, only then it will start attacking

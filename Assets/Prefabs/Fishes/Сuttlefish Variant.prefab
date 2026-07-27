@@ -152,6 +152,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3327187198886112689}
     - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: idleClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: biteAudioSource
       value: 
       objectReference: {fileID: 0}
@@ -166,6 +170,10 @@ PrefabInstance:
     - target: {fileID: 1999017465357431205, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: fishAnim
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: whirlLocalPos.z
@@ -191,6 +199,10 @@ PrefabInstance:
       propertyPath: shieldLocalScale.z
       value: 6.158996
       objectReference: {fileID: 0}
+    - target: {fileID: 2241224056577220843, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: fishSkinnedRenderer
+      value: 
+      objectReference: {fileID: 3327187198886112689}
     - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Radius
       value: 9.399865
@@ -198,6 +210,10 @@ PrefabInstance:
     - target: {fileID: 2915054916816702317, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Center.z
       value: -6.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: fishAnim
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3402444889329153434, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_Enabled
@@ -367,6 +383,7 @@ PrefabInstance:
     - {fileID: 3729317000979565778, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     - {fileID: 4975605382687861859, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     - {fileID: -3177560010438178451, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+    - {fileID: 166069787427693303, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6766006204318863272, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
     m_AddedGameObjects:
