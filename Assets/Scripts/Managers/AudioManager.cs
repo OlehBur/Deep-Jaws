@@ -115,7 +115,7 @@ public class AudioManager : MonoBehaviour {
     //save audio data in normalize format
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveAudioData() {
-        SettingsData settingsData = ProgressSaver.IsSettingsDataExist() ?
+        SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 
         settingsData.volume_master = masterSlider.value;
@@ -130,7 +130,7 @@ public class AudioManager : MonoBehaviour {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void LoadAudoData() {
-        SettingsData settingsData = ProgressSaver.IsSettingsDataExist() ?
+        SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 
         masterSlider.value = settingsData.volume_master;//PlayerPrefs.GetFloat(MASTER_KEY, 1f);

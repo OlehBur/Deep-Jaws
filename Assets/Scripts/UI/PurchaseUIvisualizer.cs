@@ -263,7 +263,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     void SetDefaultSkin() {
         purchasedSkins.Selected = Skin.Default;
 
-        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+        AccountData currentData = ProgressSaver.IsAccountDataExist ?
             ProgressSaver.LoadAccountData() : new AccountData();
 
         //if (currentData != null) {
@@ -316,7 +316,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     void SaveSelectedSkinToProgress(Skin skin) {
-        if (ProgressSaver.IsAccountDataExist()) {
+        if (ProgressSaver.IsAccountDataExist) {
             AccountData currentData = ProgressSaver.LoadAccountData();
 
             if (currentData != null) {
@@ -370,7 +370,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     void OpenLoyaltyRewardedWnd() {
-        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+        AccountData currentData = ProgressSaver.IsAccountDataExist ?
             ProgressSaver.LoadAccountData() : new AccountData();
 
         if (currentData != null && !currentData.confirmedLoyalty) {

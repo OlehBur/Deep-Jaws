@@ -150,7 +150,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     void InitPlayerSkins(Fish fish, FishAnim fishAnim) {
         //load selected skin
         Skin selectedSkin;
-        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+        AccountData currentData = ProgressSaver.IsAccountDataExist ?
             ProgressSaver.LoadAccountData() : new AccountData();
 
         if (currentData != null && currentData.selectedSkin != Skin.Default)
@@ -297,7 +297,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SavePlayerData() {
-        WorldData worldPlayerData = ProgressSaver.IsWorldDataExist() ? ProgressSaver.LoadWorldData() : new WorldData();
+        WorldData worldPlayerData = ProgressSaver.IsWorldDataExist ?
+            ProgressSaver.LoadWorldData() : new WorldData();
 
         worldPlayerData.playerPosition = PlayerFish.transform.position;
         worldPlayerData.playerRotation = PlayerFish.transform.rotation;

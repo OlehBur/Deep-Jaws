@@ -10,25 +10,19 @@ using UnityEngine;
 public class СuttlefishController : MonoBehaviour {
     [SerializeField] Fish fish;
     [SerializeField] MeshRenderer mesh;
+    [SerializeField] Transform rotationTransform;
+
     private MaterialPropertyBlock matPropBlock;
-    //[SerializeField] AudioSource audioSource;
     private AudioManager audioManager;
-    //private Material shaderMat;
-    private const float SHADER_UPDATE_INTERVAL = .1f;
-    private const float OVERLAP_RADIUS = 20f;
     private int OVERLAP_LAYER_MASK;
     private Collider[] hitObjects = new Collider[10];
     private Color prev_targetColor = Color.black;
     private Color targetColor = Color.black;
     private bool isAllowOverlapping = true;
-    //private bool isNewColor = true;
-    //private bool isReverseProgress = false;
     private bool isNeedReverseProgress = false;
-
-    //[SerializeField] GameObject poisonInkPrefab;
     private FishAdditionalCompManager fishAddComp;
-    private const float POISON_COOLDOWN = 10f;
     private float curentPoisonCooldown = 0f;
+
     private static readonly WaitForSeconds SHADER_UPD_WAIT = new WaitForSeconds(SHADER_UPDATE_INTERVAL);
 
     private static readonly Dictionary<string, Color> tagColors = new() {
@@ -41,7 +35,11 @@ public class СuttlefishController : MonoBehaviour {
     { "Blue", Color.blue },
     { "Turquoise", new Color(0f, 1f, .9052942f, 1f) },
     { "Violete", new Color(.4672455f, 0f, 1f, 1f) }
-};
+    };
+
+    private const float SHADER_UPDATE_INTERVAL = .1f;
+    private const float OVERLAP_RADIUS = 20f;
+    private const float POISON_COOLDOWN = 10f;
 
 
     public void Init(AudioManager audioManager, FishAdditionalCompManager fishAddComp) {
@@ -106,14 +104,12 @@ public class СuttlefishController : MonoBehaviour {
 
         GameObject parentFishObj = other.attachedRigidbody.gameObject;
 
-        if (curentPoisonCooldown == 0 && fish.IsVisible && /*parentFishObj != null &&*/ GameStaticInfo.TryGetFish(parentFishObj, out Fish enemyFish)
-    && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL/*enemyFish.IsLegitimateTarget(fish)*/) {
+        if (curentPoisonCooldown == 0 && fish.IsVisible && GameStaticInfo.TryGetFish(parentFishObj, out Fish enemyFish)
+    && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) {
             audioManager.PlayVFX(VFX_clip.Cuttlefish);
-            //audioSource.PlayOneShot(audioSource.clip);
             curentPoisonCooldown = POISON_COOLDOWN;
 
-            fishAddComp.ActivateObjectFromPool(FishComponentType.InkParticles, transform.parent, transform.localPosition, Vector3.one, transform.rotation);
-            //Instantiate(poisonInkPrefab, transform.position, transform.rotation);
+            fishAddComp.ActivateObjectFromPool(FishComponentType.InkParticles, transform.parent, transform.localPosition, Vector3.one, rotationTransform.rotation/*, transform.rotation*/);
         }
     }
 
@@ -165,7 +161,6 @@ public class СuttlefishController : MonoBehaviour {
             //    isReverseProgress = true;
 
             StartCoroutine(CamouflageProgress(isNeedReverseProgress, targetColor == Color.black));
-            //InvokeRepeating(nameof(CamouflageProgress), 0f, SHADER_UPDATE_INTERVAL);
             isAllowOverlapping = false;
             //isNewColor = true;
         }
@@ -183,7 +178,7 @@ public class СuttlefishController : MonoBehaviour {
             if (progress <= 0f)
                 break;
 
-            yield return SHADER_UPD_WAIT/*new WaitForSeconds(SHADER_UPDATE_INTERVAL)*/;
+            yield return SHADER_UPD_WAIT;
         }
 
         if (isJustReset) {

@@ -34,9 +34,9 @@ public static class ProgressSaver {
 
     public static bool IsDataExist(IData data) =>
         File.Exists(data.SavePath);
-    public static bool IsWorldDataExist() => IsDataExist(new WorldData());
-    public static bool IsAccountDataExist() => IsDataExist(new AccountData());
-    public static bool IsSettingsDataExist() => IsDataExist(new SettingsData());
+    public static bool IsWorldDataExist => IsDataExist(new WorldData());
+    public static bool IsAccountDataExist => IsDataExist(new AccountData());
+    public static bool IsSettingsDataExist => IsDataExist(new SettingsData());
 
     public static T LoadData<T>(T data) where T : IData {
         if (!data.IsDataExist())
@@ -63,7 +63,7 @@ public static class ProgressSaver {
     /// </summary>
     /// <returns></returns>
     public static (bool premium, bool noAds) IsPlayerHasAdImmunitet() {
-        if (IsAccountDataExist()) {
+        if (IsAccountDataExist) {
             AccountData data = LoadAccountData();
             if (data != null)
                 return (data.isPremiumUser, data.isNoAD);
@@ -135,5 +135,6 @@ public class AccountData : IData {
     public Skin selectedSkin;
 
     public bool confirmedLoyalty = false;
+    public bool isConfirmedNoInternetDisadvantages = false;//in case user first open app without internet connection
     public bool isLicensed = false;
 }

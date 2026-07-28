@@ -9,7 +9,7 @@ public class StunInitiatorEffet : Effect {
         type = FishEffectType.StunInitiator;
 
         collidedObjCnt = Physics.OverlapSphereNonAlloc(targetFish.transform.position,
-            GameStaticInfo.STUN_SONAR_RADIUS,
+            GameStaticInfo.STUN_SONAR_MAX_SCALE,
             collideObjects,
             GameStaticInfo.LAYER_MASK_ENTITY,
             QueryTriggerInteraction.Ignore);

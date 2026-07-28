@@ -17,7 +17,6 @@ public class GameAdsManager : MonoBehaviour {
 
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
-    [SerializeField] GameObject noInternetConnectionWnd;
     //[SerializeField] GameObject loadingPanel;
     [SerializeField] List<TextMeshProUGUI> limitTxtUI = null;
     [Header("Revive Buttons (Rewarded)")]
@@ -49,7 +48,7 @@ public class GameAdsManager : MonoBehaviour {
 
     private void Awake() {
         if (Instance != null && Instance != this) {
-            Instance.ReInitGameUI(spawnManager, gui, /*loadingPanel,*/ noInternetConnectionWnd, reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
+            Instance.ReInitGameUI(spawnManager, gui, /*loadingPanel,*/ /*noInternetConnectionWnd,*/ reviveButtons, restartButtons, simpleAdButtons, limitTxtUI);
             Destroy(gameObject);
             return;
         }
@@ -58,11 +57,11 @@ public class GameAdsManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui, /*GameObject loadingPanel,*/ GameObject noInternetConnectionWnd, List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
+    void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui, /*GameObject loadingPanel,*//* GameObject noInternetConnectionWnd,*/ List<Button> reviveButtons, List<Button> restartButtons, List<Button> simpleAdButtons, List<TextMeshProUGUI> limitTxtUI) {
         this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
         this.gui = this.gui == null ? gui : this.gui;
         //this.loadingPanel = this.loadingPanel == null ? loadingPanel : this.loadingPanel;
-        this.noInternetConnectionWnd = this.noInternetConnectionWnd == null ? noInternetConnectionWnd : this.noInternetConnectionWnd;
+        //this.noInternetConnectionWnd = this.noInternetConnectionWnd == null ? noInternetConnectionWnd : this.noInternetConnectionWnd;
 
         this.limitTxtUI = IsListNeedToCopy(this.limitTxtUI, limitTxtUI) ?
             new List<TextMeshProUGUI>(limitTxtUI) : this.limitTxtUI;
@@ -152,7 +151,7 @@ public class GameAdsManager : MonoBehaviour {
         adTarget = AdTarget.ExtraLife;
         IsAdStartShow = true;
         //loadingPanel.SetActive(true);
-        gui.loadingPanel.SetActive(true);
+        gui.ActivateLoadingPanelWnd(true);
         SetButtonsInteractable(false);
 
         // check premium\founders
@@ -164,9 +163,10 @@ public class GameAdsManager : MonoBehaviour {
             return;
         }
 
-        if (Application.internetReachability == NetworkReachability.NotReachable) {
-            if (noInternetConnectionWnd != null)
-                noInternetConnectionWnd.gameObject.SetActive(true);
+        if (GameManager.IsInternetAvailable) {
+            //if (noInternetConnectionWnd != null)
+            //    noInternetConnectionWnd.gameObject.SetActive(true);
+            gui.ActivateNoInternetConnectionWnd(true);
             ResetState();
             return;
         }
@@ -202,7 +202,7 @@ public class GameAdsManager : MonoBehaviour {
         IsAdStartShow = false;
         adTarget = AdTarget.None;
         //loadingPanel.SetActive(false);
-        gui.loadingPanel.SetActive(false);
+        gui.ActivateLoadingPanelWnd(false);
         SetButtonsInteractable(true);
     }
 
@@ -224,7 +224,7 @@ public class GameAdsManager : MonoBehaviour {
 
         IsAdStartShow = true;
         if (interstitialAd != null && interstitialAd.IsAdReady()) {
-            gui.loadingPanel.SetActive(true);
+            gui.ActivateLoadingPanelWnd(true);
             interstitialAd.ShowAd();
             return true;
         }
@@ -296,7 +296,7 @@ public class GameAdsManager : MonoBehaviour {
             return;
         }
 
-        gui.loadingPanel.SetActive(true);
+        gui.ActivateLoadingPanelWnd(true);
         SetButtonsInteractable(false);
 
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();

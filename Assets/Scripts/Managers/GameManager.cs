@@ -104,6 +104,9 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = time;
     }
 
+    public static bool IsInternetAvailable =>
+        Application.internetReachability != NetworkReachability.NotReachable;
+
     private void OnDestroy() {
         Time.timeScale = DEFAULT_GAME_TIME;
         SetFixedDeltaTime(true);

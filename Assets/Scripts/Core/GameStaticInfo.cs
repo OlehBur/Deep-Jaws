@@ -144,7 +144,8 @@ public static class GameStaticInfo {
 
     public const float PLAYER_MAX_DISTANCE_VIEW = 25f; //to avoid spawn too close to player OR unseen animations etc. 
     public const float PLAYER_MAX_DISTANCE_ACTIVITY = 100f; //only fishes in that radius - active
-    public const float STUN_SONAR_RADIUS = 100f; //radius of stun effect
+    public const float STUN_SONAR_MAX_SCALE = 35f; //radius of stun effect
+    public const float STUN_SONAR_SPEED = 16f;
 
     public const float STUN_DEFAULT_DURATION = 15f; //default stun duration
 

@@ -36,6 +36,8 @@ public class GPG_Manager : MonoBehaviour {
         }
         else
             Destroy(gameObject);
+
+        UpdateMainMenuUI();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) => OnSign();
@@ -49,6 +51,7 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public void OnShowAchievements() {
+        ShowNoConnectionIfNeed();
         //Social.ShowAchievementsUI();
         if (!isAuthenticated) {
             Debug.LogWarning("Cannot show achievements, not authenticated.");
@@ -56,16 +59,39 @@ public class GPG_Manager : MonoBehaviour {
         }
         //Debug.LogWarning("OnShowAchievements called");
 
-        PlayGamesPlatform.Instance.ShowAchievementsUI();
+        if (mainmenu != null)
+            mainmenu.ActivateLoadingPanelWnd(true);
+        //PlayGamesPlatform.Instance.ShowAchievementsUI();
+        PlayGamesPlatform.Instance.ShowAchievementsUI(OnLeaderboardAchiClosed);
+
     }
 
     public void OnShowLeaderboard() {
+        ShowNoConnectionIfNeed();
         if (!isAuthenticated) {
             Debug.LogWarning("Cannot show leaderboard, not authenticated.");
             return;
         }
         //Debug.LogWarning("OnShowLeaderboard called");
-        PlayGamesPlatform.Instance.ShowLeaderboardUI();
+
+        if (mainmenu != null)
+            mainmenu.ActivateLoadingPanelWnd(true);
+        //PlayGamesPlatform.Instance.ShowLeaderboardUI();
+        PlayGamesPlatform.Instance.ShowLeaderboardUI(
+            null,
+            LeaderboardTimeSpan.AllTime,
+            OnLeaderboardAchiClosed
+        );
+    }
+
+    private void OnLeaderboardAchiClosed(UIStatus status) {
+        Debug.Log($"Leaderboard or Achievement UI closed with status: {status}");
+
+        if (mainmenu != null)
+            mainmenu.ActivateLoadingPanelWnd(false);
+
+        if (status != UIStatus.Valid)
+            Debug.LogWarning($"Failed to open Leaderboards | achievements UI. Status: {status}");
     }
 
     public void CheckFounderStatus(System.Action<bool> onComplete) {
@@ -101,22 +127,24 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     IEnumerator TryAuthenticateWithDelay() {
+        if (mainmenu != null)
+            mainmenu.ActivateLoadingPanelWnd(true);
+
         yield return SECOND_WAIT; // Delay for Google Play init
         if (this == null)//in case fast open game scene
             StopAllCoroutines();
 
-        if (mainmenu != null)
-            mainmenu.loadingPanel.SetActive(true);
         //Debug.Log("Trying to authenticate...");
         PlayGamesPlatform.Instance.Authenticate((result) => {
             if (result == SignInStatus.Success) {
                 //Debug.Log("Authentication SUCCESS");
                 isAuthenticated = true;
+                mainmenu.ChangeSignInColor(true);//DON`T DELETE  - working Hack 
                 GetTop1Player();
 
                 CheckFounderStatus((isFounder) => {
                     if (isFounder) {
-                        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+                        AccountData currentData = ProgressSaver.IsAccountDataExist ?
                         ProgressSaver.LoadAccountData() : new AccountData();
 
                         currentData.isFounder = true;//only upd data in save
@@ -136,7 +164,7 @@ public class GPG_Manager : MonoBehaviour {
             }
 
             if (mainmenu != null)
-                mainmenu.loadingPanel.SetActive(false);
+                mainmenu.ActivateLoadingPanelWnd(false);
         });
 
         UpdateMainMenuUI();
@@ -153,14 +181,25 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public void OnSign() {
-        PlayGamesPlatform.DebugLogEnabled = true;
+        ShowNoConnectionIfNeed();
 
+        PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
         StartCoroutine(TryAuthenticateWithDelay());
         //Debug.Log("Attempting authentication...");
     }
 
+    void ShowNoConnectionIfNeed() {
+        if (Application.internetReachability == NetworkReachability.NotReachable) 
+            mainmenu.ActivateNoInternetConnectionWnd(true);
+    }
+
     public void OnSavePlayerScoreToLeaderBoard(string leaderboard, long score) {
+        if (GameManager.IsInternetAvailable) {
+            Debug.LogWarning("lederboard Score report failed: there is no internet!");
+            return;
+        }
+
         PlayGamesPlatform.Instance.ReportScore(score, leaderboard, success => {
             Debug.Log("Reporting score: " + score);
             if (success)
@@ -171,6 +210,11 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public void OnSavePlayerDeathsToLeaderBoard(int deaths) {
+        if (GameManager.IsInternetAvailable) {
+            Debug.LogWarning("lederboard Score report failed: there is no internet!");
+            return;
+        }
+
         PlayGamesPlatform.Instance.ReportScore(deaths, GPGSIds.leaderboard_easiest_mode__hardest, success => {
             Debug.Log("Reporting deaths: " + deaths);
             if (success)
@@ -240,8 +284,14 @@ public class GPG_Manager : MonoBehaviour {
         //Debug.LogWarning(GPGSIds.achievement_its_time_to_wake_up);
     }
 
-    public static void OnTriggerAchievement(string achievementKey) =>
+    public static void OnTriggerAchievement(string achievementKey) {
+        if (GameManager.IsInternetAvailable) {
+            Debug.LogWarning("achievement is not included: there is no internet!");
+            return;
+        }
+
         PlayGamesPlatform.Instance.UnlockAchievement(achievementKey);
+    }
 
     private void OnDestroy() {
         SceneManager.sceneLoaded -= OnSceneLoaded;

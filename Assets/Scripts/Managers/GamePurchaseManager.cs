@@ -121,7 +121,7 @@ public class GamePurchaseManager : MonoBehaviour {
     }
 
     private void CheckPurchasesLocally() {
-        if (ProgressSaver.IsAccountDataExist()) {
+        if (ProgressSaver.IsAccountDataExist) {
             AccountData currentData = ProgressSaver.LoadAccountData();
             if (currentData != null) {
                 AccountTitles accountTitles = new();
@@ -177,7 +177,7 @@ public class GamePurchaseManager : MonoBehaviour {
                 purchasedSkins.Chameleon = true;
         }
 
-        if (ProgressSaver.IsAccountDataExist())//load local sekected skuin
+        if (ProgressSaver.IsAccountDataExist)//load local sekected skuin
             purchasedSkins.Selected = ProgressSaver.LoadAccountData().selectedSkin;
 
         UpdatePremiumInSaveFile(accountTitles, purchasedSkins);
@@ -203,7 +203,7 @@ public class GamePurchaseManager : MonoBehaviour {
 
     // save purchase to ProgressSaver
     private void UpdatePremiumInSaveFile(AccountTitles accountTitles, PurchasedSkins purchasedSkins) {
-        AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+        AccountData currentData = ProgressSaver.IsAccountDataExist ?
             ProgressSaver.LoadAccountData() : new AccountData();
 
         //if (currentData != null) {
@@ -227,7 +227,7 @@ public class GamePurchaseManager : MonoBehaviour {
     public AccountTitles GetCurrentAccountTitles() {
         AccountTitles at = new AccountTitles();
 
-        if (ProgressSaver.IsAccountDataExist()) {
+        if (ProgressSaver.IsAccountDataExist) {
             AccountData currentData = ProgressSaver.LoadAccountData();
             if (currentData != null) {
                 at.HasNoAd = currentData.isNoAD;
@@ -254,7 +254,7 @@ public class GamePurchaseManager : MonoBehaviour {
     public PurchasedSkins GetCurrentPurchasedSkins() {
         PurchasedSkins ps = new PurchasedSkins();
 
-        if (ProgressSaver.IsAccountDataExist()) {
+        if (ProgressSaver.IsAccountDataExist) {
             AccountData data = ProgressSaver.LoadAccountData();
             ps.Mercury = data.hasMercurySkin;
             ps.Chameleon = data.hasChameleon;
@@ -308,7 +308,7 @@ public class GamePurchaseManager : MonoBehaviour {
             string productId = pendingOrder.Info.PurchasedProductInfo[0].productId;
             Debug.Log($"IAP v5: Transaction processing for a product: {productId}");
 
-            AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+            AccountData currentData = ProgressSaver.IsAccountDataExist ?
                 ProgressSaver.LoadAccountData() : new AccountData();
 
             //if (currentData != null) {

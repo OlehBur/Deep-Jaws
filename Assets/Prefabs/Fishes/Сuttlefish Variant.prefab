@@ -329,15 +329,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8551743603606410520, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 31.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8551743603606410520, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.78
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8551743603606410520, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 35.23
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8551743603606410520, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -365,6 +365,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8551743603606410520, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551743603606410520, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8937414190267927894, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
@@ -395,6 +399,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3291501936164326570}
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+--- !u!4 &799210778117755948 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5410962182413031247, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+  m_PrefabInstance: {fileID: 4611902176977109859}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1912158170256893060 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6523918303924561895, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
@@ -414,6 +423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fish: {fileID: 2747721640477272549}
   mesh: {fileID: 3327187198886112689}
+  rotationTransform: {fileID: 799210778117755948}
 --- !u!224 &2511943388083478867 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7123836628690870832, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}

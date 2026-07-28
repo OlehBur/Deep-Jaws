@@ -10,7 +10,7 @@ public class SonicPulseControl : MonoBehaviour {
     [SerializeField] Collider triggerCollider;
     [SerializeField] SpawnManager spawnManager;
     //private const float MAX_SCALE = 200;
-    private const float PULSE_SCALE_MULTIPLIER = 2f;
+    //private const float PULSE_SCALE_MULTIPLIER = 2f;
     private float curentRechargeTime = 0f; // current recharge time for pulse
     private const float PULSE_RECHARGE_TIME = 30f; // time to recharge the pulse
     private bool playAnim = false;
@@ -31,9 +31,9 @@ public class SonicPulseControl : MonoBehaviour {
     }
 
     void PulseScalingAnim() {
-        pulseTransform.localScale = pulseTransform.localScale + Vector3.one * Time.deltaTime * GameStaticInfo.STUN_SONAR_RADIUS;
+        pulseTransform.localScale = pulseTransform.localScale + Vector3.one * GameStaticInfo.STUN_SONAR_SPEED * Time.deltaTime;
 
-        if (pulseTransform.localScale.x >= GameStaticInfo.STUN_SONAR_RADIUS * PULSE_SCALE_MULTIPLIER/*MAX_SCALE*/) {
+        if (pulseTransform.localScale.x >= GameStaticInfo.STUN_SONAR_MAX_SCALE) {
             playAnim = false;
             pulseTransform.localScale = Vector3.zero;
         }

@@ -20,7 +20,7 @@ public class LicenseValidator : MonoBehaviour {
         //firstInitLicensePanel.SetActive(false);
         licenseFailedPanel.SetActive(false);
 
-        if (ProgressSaver.IsAccountDataExist()) {
+        if (ProgressSaver.IsAccountDataExist) {
             AccountData data = ProgressSaver.LoadAccountData();
             if (data != null && data.isLicensed) {
                 Debug.Log("License already verified in save file.");
@@ -62,7 +62,7 @@ public class LicenseValidator : MonoBehaviour {
 
     private void GrantLicense(bool isNeedSaveData = false) {
         if (isNeedSaveData) {
-            AccountData currentData = ProgressSaver.IsAccountDataExist() ?
+            AccountData currentData = ProgressSaver.IsAccountDataExist ?
                 ProgressSaver.LoadAccountData() : new AccountData();
 
             currentData.isLicensed = true;

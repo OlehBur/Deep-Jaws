@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using System;
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine.Localization; //  for Uri.EscapeDataString
 
@@ -17,9 +16,10 @@ using UnityEngine.Localization; //  for Uri.EscapeDataString
 public class MainmenuManager : MonoBehaviour {
     [SerializeField] AudioManager audioManager;
     [SerializeField] GraphicManager graphicManager;
-    [SerializeField] public GameObject loadingPanel;
+    [SerializeField] GameObject loadingPanel;
 
     [Header("MainMenu Scene")]
+    [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] Light mainMenuLight;
     [SerializeField] Animator gmWndAnimator;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
@@ -87,7 +87,7 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void Start() {
-        isWorldDataExist = ProgressSaver.IsWorldDataExist();
+        isWorldDataExist = ProgressSaver.IsWorldDataExist;
 
         if (faderScene != null)        // Ensure the fader scene is not destroyed on load
             faderScene?.gameObject.SetActive(true);
@@ -95,11 +95,12 @@ public class MainmenuManager : MonoBehaviour {
         if (continueButton != null)// Initialize the continue button visibility based on saved data
             continueButton?.SetActive(isWorldDataExist);
 
-        LanguageInit();
-        FramerateInit();
+        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+        LanguageInit(savedSettings);
+        FramerateInit(savedSettings);
 
-        if (spawnManager != null)
-            spawnManager.OnPlayerDied += ActivateRespawnWnd;
+        if (!GameManager.IsInternetAvailable)
+            FirstNoConnectionOpen();
 
         if (kingOfDeepsObj != null) {
             kingOfDeepsObj.SetActive(false);
@@ -107,11 +108,26 @@ public class MainmenuManager : MonoBehaviour {
         }
     }
 
+    private void OnEnable() {
+        if (spawnManager != null)
+            spawnManager.OnPlayerDied += ActivateRespawnWnd;
+    }
+
+    private void OnDisable() {
+        if (spawnManager != null)
+            spawnManager.OnPlayerDied -= ActivateRespawnWnd;
+    }
+
     void KingOfDeepsUpdate(string playerNick) {
         kingOfDeepsObj.SetActive(true);
         kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
         kingOfDeepsAnimator.enabled = true;
     }
+
+    public void ActivateNoInternetConnectionWnd(bool isActive) =>
+        noInternetConnectionWnd.SetActive(isActive);
+    public void ActivateLoadingPanelWnd(bool isActive) =>
+        loadingPanel.SetActive(isActive);
 
     void ActivateRespawnWnd() {
         if (GameStaticInfo.Gamemode == GameMode.Hard) {
@@ -150,9 +166,9 @@ public class MainmenuManager : MonoBehaviour {
         faderScene.gameObject.SetActive(true);
     }
 
-    async void LanguageInit() {
+    async void LanguageInit(SettingsData savedSettings) {
         await LocalizationSettings.InitializationOperation.Task; // wait readiness
-        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+
         previousLocaleIndex = savedSettings == null ?
             (int)GameStaticInfo.LocalizationID.English : savedSettings.language;
         //PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
@@ -168,7 +184,7 @@ public class MainmenuManager : MonoBehaviour {
         languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
     }
 
-    void FramerateInit() {
+    void FramerateInit(SettingsData savedSettings) {
         List<string> fpsListing = new();
         QualitySettings.vSyncCount = 0;
         int screenMaxFramerate = GameManager.ScreenMaxFramerate;
@@ -176,7 +192,6 @@ public class MainmenuManager : MonoBehaviour {
         //Debug.LogWarning("DROPDOWN ALWAYS CLEANING UP");
 
         //Load and set Def val
-        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
         currentFramerateIndex = savedSettings == null ? Framerate.Max : (Framerate)savedSettings.framerate;
         //currentFramerateIndex = (Framerate)PlayerPrefs.GetInt(FPS_KEY, 0);
         Application.targetFrameRate = currentFramerateIndex switch {
@@ -204,6 +219,18 @@ public class MainmenuManager : MonoBehaviour {
         framerateDropdown.SetValueWithoutNotify((int)currentFramerateIndex);
         framerateDropdown.onValueChanged.RemoveAllListeners();
         framerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
+    }
+
+    void FirstNoConnectionOpen() {
+        AccountData accountData = ProgressSaver.IsAccountDataExist ?
+            ProgressSaver.LoadAccountData() : new AccountData();
+
+        if (accountData.isConfirmedNoInternetDisadvantages)
+            return;
+
+        ActivateNoInternetConnectionWnd(true);
+        accountData.isConfirmedNoInternetDisadvantages = true;
+        ProgressSaver.SaveData(accountData);
     }
 
     private void OnFramerateChanged(int index) {

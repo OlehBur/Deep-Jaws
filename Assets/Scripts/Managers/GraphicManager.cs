@@ -76,7 +76,7 @@ public class GraphicManager : MonoBehaviour {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void LoadGraphicsData() {
-        SettingsData settingsData = ProgressSaver.IsSettingsDataExist() ?
+        SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 
         bloomTog.isOn = settingsData.bloom;//(PlayerPrefs.GetInt(BLOOM_KEY, 1) == 1) ? true : false;
@@ -96,7 +96,7 @@ public class GraphicManager : MonoBehaviour {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveGraphicsData() {
-        SettingsData settingsData = ProgressSaver.IsSettingsDataExist() ?
+        SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 
         settingsData.bloom = bloomTog.isOn;
