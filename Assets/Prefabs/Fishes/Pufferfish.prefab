@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 4518439686828584595}
   - component: {fileID: 6908207522873932233}
   - component: {fileID: -4461730735691493857}
+  - component: {fileID: 1387742805520783057}
   m_Layer: 6
   m_Name: Pufferfish
   m_TagString: Entity
@@ -260,12 +261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: -5
-  health: 20
-  speed: 6.4
-  responseRadius: 16
+  fishInfo: {fileID: 11400000, guid: 7a9aa61daf32921418a85e15778b1ce9, type: 2}
   prefabVisualTransform: {fileID: 546935209704408683}
-  jawForwardOffset: 0
   rb: {fileID: 2705480347905968493}
 --- !u!114 &4909867401857565867
 MonoBehaviour:
@@ -279,13 +276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93749be508a6e0843a3bfb1402387336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\u0456dleTime": 2
-  timeToIdle: 8
-  fishAnim: {fileID: 0}
+  fishAnim: {fileID: 1387742805520783057}
   rotationTransform: {fileID: 8561795354648246479}
   bodyCollider: {fileID: 445176668984419115}
-  colliderDefaultHeight: 3.3
-  colliderDefaultRadius: 0.85
   fish: {fileID: 6053105405841848851}
 --- !u!114 &4518439686828584595
 MonoBehaviour:
@@ -306,12 +299,8 @@ MonoBehaviour:
   rb: {fileID: 2705480347905968493}
   fishSkinnedRenderer: {fileID: 4452673087440383594}
   rotationTransform: {fileID: 8561795354648246479}
-  IsHaveShield: 1
-  shieldLocalPos: {x: 0, y: 0, z: 0.12}
-  shieldLocalScale: {x: 2.008915, y: 2.008915, z: 4.4}
-  whirlLocalPos: {x: 0, y: -0.08, z: -1.458}
   fish: {fileID: 6053105405841848851}
-  fishAnim: {fileID: 0}
+  fishAnim: {fileID: 1387742805520783057}
 --- !u!114 &6908207522873932233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +326,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8b6629888d70b4680d06e0daf78cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoScalerToDef
+--- !u!114 &1387742805520783057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4408029418071078942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07ca41e02c2aaf4495fedcfe690bc1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::FishAnim
+  fish: {fileID: 6053105405841848851}
+  animator: {fileID: 6007665722100540981}
+  fishSkinnedMesh: {fileID: 4452673087440383594}
+  editableTransform: {fileID: 546935209704408683}
 --- !u!1 &4629963179374065663
 GameObject:
   m_ObjectHideFlags: 0

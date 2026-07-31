@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19966f6049b4a3b4794e392f56874975, type: 3}
+  m_Name: Lionfish
+  m_EditorClassIdentifier: Assembly-CSharp::FishInfo
+  <Level>k__BackingField: 4
+  <Tittle>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e58118bc42aab4984a3ff4ed822ca5
+    m_TableEntryReference:
+      m_KeyId: 5926238580736
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <MaxHealth>k__BackingField: 20
+  <Speed>k__BackingField: 7.36
+  <ResponseRadius>k__BackingField: 10
+  <BiteDamage>k__BackingField: 12
+  <JawFwdOffset>k__BackingField: 0.74
+  <ColliderDefaultHeight>k__BackingField: 2.05
+  <ColliderDefaultRadius>k__BackingField: 0.55
+  <IsUseRotShader>k__BackingField: 1
+  <SmoothRotSpeed>k__BackingField: 5
+  <AngRotDetect>k__BackingField: 12
+  <MaxShaderFrequencyVal>k__BackingField: 4.57
+  <MaxShaderRotationVal>k__BackingField: 0.412
+  <IsHaveShield>k__BackingField: 1
+  <BubbleXoffset>k__BackingField: 0
+  <BiteParticleLocPos>k__BackingField: {x: 0, y: -0.134, z: 1.182}
+  <ShieldLocPos>k__BackingField: {x: 0, y: 0, z: 0}
+  <ShieldVisualScale>k__BackingField: {x: 1.86, y: 1.86, z: 3.26}
+  <WhirlLocPos>k__BackingField: {x: 0, y: 0, z: -0.417}
+  references:
+    version: 2
+    RefIds: []

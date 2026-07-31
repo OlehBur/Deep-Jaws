@@ -8,7 +8,7 @@ using UnityEngine;
 public class EnemyDetector : MonoBehaviour {
     [SerializeField] GameObject pointer;
     private const float DETECTOR_RADIUS_MULTIPLIER = 1.8f; // multiplier for the detector radius to give the player a little advantage
-    private float DETECTOR_RADIUS => (playerFish != null) ? 18f : playerFish.ResponseRadius * DETECTOR_RADIUS_MULTIPLIER;//a value larger than the maximum response radius in the some fishes (12), to give the player a little advantage)))
+    private float DETECTOR_RADIUS => (playerFish != null) ? 18f : playerFish.DefaultInfo.ResponseRadius * DETECTOR_RADIUS_MULTIPLIER;//a value larger than the maximum response radius in the some fishes (12), to give the player a little advantage)))
     private Collider[] colliders = new Collider[5];
     private Fish playerFish;
 

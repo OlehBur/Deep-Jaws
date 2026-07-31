@@ -67,12 +67,12 @@ public class HealerFruitController : MonoBehaviour {
         if (other.isTrigger && parentFish.CompareTag("Player") && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
             && parentFish.TryGetComponent(out FishAnim animManager)) {
 
-            if (fish.Health <= fish.MaxHealth * MIN_HEALTH_MULTIPLIER)
+            if (fish.Health <= fish./*MaxHealth*/DefaultInfo.MaxHealth * MIN_HEALTH_MULTIPLIER)
                 GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_algae_are_beneficial_to_health);
 
             audioManager.PlayVFX(VFX_clip.Heal);
             //audioSource.PlayOneShot(healClip);
-            fish.Heal(fish.MaxHealth / HEAL_DIVIDER);
+            fish.Heal(fish.DefaultInfo.MaxHealth / HEAL_DIVIDER);
             ReGrowth();
             animManager.ActivateBiteAnimation(false); // activate bite animation on fish
 

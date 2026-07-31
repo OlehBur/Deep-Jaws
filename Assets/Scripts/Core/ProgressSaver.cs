@@ -32,13 +32,14 @@ public static class ProgressSaver {
     //public static void SaveAccountData() => SaveData(new AccountData());
     //public static void SaveSettingsData() => SaveData(new SettingsData());
 
-    public static bool IsDataExist(IData data) =>
+    private static bool IsDataExist(IData data) =>
         File.Exists(data.SavePath);
     public static bool IsWorldDataExist => IsDataExist(new WorldData());
     public static bool IsAccountDataExist => IsDataExist(new AccountData());
     public static bool IsSettingsDataExist => IsDataExist(new SettingsData());
+    public static bool IsSanctuaryDataExist => IsDataExist(new SanctuaryData());
 
-    public static T LoadData<T>(T data) where T : IData {
+    private static T LoadData<T>(T data) where T : IData {
         if (!data.IsDataExist())
             return default;
 
@@ -50,12 +51,14 @@ public static class ProgressSaver {
     public static WorldData LoadWorldData() => LoadData(new WorldData());
     public static AccountData LoadAccountData() => LoadData(new AccountData());
     public static SettingsData LoadSettingsData() => LoadData(new SettingsData());
+    public static SanctuaryData LoadSanctuaryData() => LoadData(new SanctuaryData());
 
-    public static void DeleteData(IData data) =>
+    private static void DeleteData(IData data) =>
         data.DeleteData();
     public static void DeleteWorldData() => DeleteData(new WorldData());
     public static void DeleteAccountData() => DeleteData(new AccountData());
     public static void DeleteSettingsData() => DeleteData(new SettingsData());
+    public static void DeleteSanctuaryData() => DeleteData(new SanctuaryData());
 
 
     /// <summary>
@@ -104,20 +107,6 @@ public class WorldData : IData {
     public float playerProgress = 0;
     public FishLevel playerLevel = 0;
     public int playerHealth = 0;
-
-    //public bool IsWorldDataValid =>
-    //(playerPosition != Vector3.zero && playerRotation != Quaternion.identity
-    //&& playerLevel != IData.INVALID_VAL && playerHealth != IData.INVALID_VAL
-    //&& playerProgress != IData.INVALID_VAL);
-
-    //public void ResetData() {
-    //    playerPosition = Vector3.zero;
-    //    Quaternion playerRotation = Quaternion.identity;
-
-    //    playerProgress = IData.INVALID_VAL;
-    //    playerLevel = IData.INVALID_VAL;
-    //    playerHealth = IData.INVALID_VAL;
-    //}
 }
 
 [Serializable]
@@ -137,4 +126,22 @@ public class AccountData : IData {
     public bool confirmedLoyalty = false;
     public bool isConfirmedNoInternetDisadvantages = false;//in case user first open app without internet connection
     public bool isLicensed = false;
+}
+
+[Serializable]
+public class SanctuaryData : IData {
+    public const int NON_UPGRADE_TIME = -1;
+    public string SavePath => Path.Combine(Application.persistentDataPath, "sanctuary.json");
+
+    public int shellsCnt = 0;
+
+    public int coralReef_Lvl = 0;
+    public int cliffsSeaweed_Lvl = 0;
+    public int pelagial_Lvl = 0;
+    public int oceanicAbyss_Lvl = 0;
+
+    public int coralReef_SecondsToUpgrade = NON_UPGRADE_TIME;
+    public int cliffsSeaweed_SecondsToUpgrade = NON_UPGRADE_TIME;
+    public int pelagial_SecondsToUpgrade = NON_UPGRADE_TIME;
+    public int oceanicAbyss_SecondsToUpgrade = NON_UPGRADE_TIME;
 }

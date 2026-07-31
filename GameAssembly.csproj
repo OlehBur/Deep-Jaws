@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\Debug_\TestTriggCollider.cs" />
     <Compile Include="Assets\Scripts\Core\Joystick.cs" />
     <Compile Include="Assets\Scripts\Managers\EffectManager.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\ProgressBar.cs" />
     <Compile Include="Assets\Scripts\UI\FaderScene.cs" />
     <Compile Include="Assets\Scripts\UI\JoystickTouchPosition.cs" />
     <Compile Include="Assets\Scripts\Core\ProgressSaver.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Assets\Scripts\Core\BubbleShieldWrapper.cs" />
     <Compile Include="Assets\Scripts\FishEffects\CurrentEffect.cs" />
     <Compile Include="Assets\Scripts\Debug_\FishInfoVisualizer.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\BiomeInfo.cs" />
     <Compile Include="Assets\Scripts\FishEffects\EffectArea.cs" />
     <Compile Include="Assets\Scripts\FishEffects\StopTimeEffect.cs" />
     <Compile Include="Assets\Scripts\Core\PlayerActionsInput.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Assets\Scripts\DeadArea.cs" />
     <Compile Include="Assets\Scripts\Controllers\CaviarController.cs" />
     <Compile Include="Assets\Scripts\Controllers\StoreAnimator.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishInfo.cs" />
     <Compile Include="Assets\Scripts\Debug_\LookOnCamera.cs" />
     <Compile Include="Assets\Scripts\Debug_\FPS_Viewer.cs" />
     <Compile Include="Assets\Scripts\Debug_\ImageHsvAnim.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="Assets\Scripts\Controllers\SlowdownPearlController.cs" />
     <Compile Include="Assets\Scripts\FishEffects\SprintEffect.cs" />
     <Compile Include="Assets\Scripts\Controllers\HealerFruitController.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\SanctuariesManager.cs" />
     <Compile Include="Assets\Scripts\Core\Effect.cs" />
     <Compile Include="Assets\Scripts\FishEffects\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Managers\MainmenuManager.cs" />
@@ -700,10 +704,6 @@
     </Reference>
     <Reference Include="Google.VersionHandlerImpl">
       <HintPath>Assets\ExternalDependencyManager\Editor\1.2.182\Google.VersionHandlerImpl.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="XblPCSandbox">
-      <HintPath>Library\PackageCache\com.unity.microsoft.gdk.tools@5ae7d42b911f\Tools\SandboxSwitcher\XblPCSandbox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Plastic.Antlr3.Runtime">

@@ -158,6 +158,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     [SerializeField] SkinnedMeshRenderer chameleonRenderer;
     [SerializeField] SkinnedMeshRenderer mercuryRenderer;
     [SerializeField] SkinnedMeshRenderer ashflowRenderer;
+    [SerializeField] SkinnedMeshRenderer zebraRenderer;
 
     private MaterialPropertyBlock propBlock;
     private PurchasedSkins purchasedSkins;//buffer only for click listeners
@@ -209,6 +210,13 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
         propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
         ashflowRenderer.SetPropertyBlock(propBlock);
+
+        zebraRenderer.GetPropertyBlock(propBlock);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ZEBRA_PROP, 1);
+        zebraRenderer.SetPropertyBlock(propBlock);
     }
 
     private void Update() {

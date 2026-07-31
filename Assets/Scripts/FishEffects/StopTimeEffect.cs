@@ -13,7 +13,6 @@ public class StopTimeEffect : Effect {
     /// value we set when shader starts to take scaledTime value instead of our from effect
     /// </summary>
     const float STOP_VALUE_FOR_SHADER = 0f;
-    //private bool isStartedDiactivation = false;
 
     public StopTimeEffect(Renderer fishWaveMat, Animator fishAnimator) {
         fishRenderer = fishWaveMat;
@@ -26,7 +25,7 @@ public class StopTimeEffect : Effect {
 
     private void InitPropBlock() {
         fishMatProp = new MaterialPropertyBlock();
-        FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")/*STOP_VALUE_FOR_SHADER*/);
+        FishAnim.SetMaterialProp(ref fishRenderer, ref fishMatProp, /*"_UnscaledTime"*/GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, fishRenderer.sharedMaterial.GetFloat(GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP));
     }
 
     protected override void OnApply() {
@@ -42,24 +41,17 @@ public class StopTimeEffect : Effect {
     protected override void OnExpire() {
         //Debug.Log($"{target.name} has expired StopTime Effect after {Duration} s.");
         targetFish.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.StopTime);
-        FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, STOP_VALUE_FOR_SHADER/*fishRenderer.sharedMaterial.GetFloat("_UnscaledTime")*/);
+        FishAnim.SetMaterialProp(ref fishRenderer, ref fishMatProp, /*"_UnscaledTime"*/GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, STOP_VALUE_FOR_SHADER);
         //fishRenderer.sharedMaterial.SetFloat("_UnscaledTime", STOP_VALUE_FOR_SHADER); /*wfwf*/
         GameManager.SetFixedDeltaTime(true);
         GameManager.ChangeGameTime(GameManager.DEFAULT_GAME_TIME);
         fishAnimator.updateMode = AnimatorUpdateMode.Fixed;
-
-        //isStartedDiactivation = true;
     }
 
     public override void UpdateTimer() {
-        //if(isStartedDiactivation)
-        //    return;
         currentTime += Time.unscaledDeltaTime;
-        FishAnim.SetGetMaterialWithPropBlock(ref fishRenderer, ref fishMatProp, "_UnscaledTime", false, /*isStartDeactivate ? STOP_VALUE_FOR_SHADER :*/ currentTime);
+        FishAnim.SetMaterialProp(ref fishRenderer, ref fishMatProp, GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, currentTime);
 
         base.UpdateTimer();
-
-        //fishRenderer.sharedMaterial.SetFloat("_UnscaledTime", (isStartedDiactivation) ?//for avoid parasyte lasts frame update (called after OnExpire)
-        //    STOP_VALUE_FOR_SHADER : currentTime);
     }
 }

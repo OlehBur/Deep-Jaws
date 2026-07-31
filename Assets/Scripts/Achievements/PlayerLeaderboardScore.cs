@@ -70,7 +70,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
     public void OnResetScore() => Score = 0;
 
-    private void OnApplicationQuit() {
+    private void OnDisable/*OnApplicationQuit*/() {
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
         Score = 0; // Reset score when the player is disabled
         //Debug.Log("OnApplicationQuit");

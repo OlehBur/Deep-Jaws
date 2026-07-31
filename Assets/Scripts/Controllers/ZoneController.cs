@@ -20,9 +20,6 @@ public class ZoneController : MonoBehaviour {
     [SerializeField] LocalizedString hammerheadWarnLocalizedString;
     private static bool isBarrierAnimationActive { get; set; } = false;
     private const float BARRIER_TOUCH_ANIMATION_INTERVAL = 1.6f;
-
-
-
     private string fishLvlRequirMsg;
 
     void OnEnable() {
@@ -54,7 +51,7 @@ public class ZoneController : MonoBehaviour {
         Locale currentLocale = LocalizationSettings.SelectedLocale;
         OnLanguageChanged(currentLocale);
 
-        zoneBarrierMat.SetFloat("_Progress", 0);//resert previous mat
+        zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, 0);//resert previous mat
     }
 
     void ZoneByLvlBehaviour(Fish fish, bool isDie) {
@@ -82,25 +79,25 @@ public class ZoneController : MonoBehaviour {
             playerUIController.ActivateZoneOverlay(fishLvlRequirMsg);
             if (!isBarrierAnimationActive) {
                 StartCoroutine(BarrierTouchAnimation());
-                zoneBarrierMat.SetVector("_TouchPosition", collision.GetContact(0).point);
+                zoneBarrierMat.SetVector(GameStaticInfo.ZONE_TOUCH_POS_PROP, collision.GetContact(0).point);
             }
         }
     }
 
     IEnumerator BarrierTouchAnimation() {
         isBarrierAnimationActive = true;
-        float currProg = zoneBarrierMat.GetFloat("_Progress");
+        float currProg = zoneBarrierMat.GetFloat(GameStaticInfo.ZONE_PROGRESS_PROP);
 
         while (currProg < 1f) {
             currProg = Mathf.Clamp01(currProg + Time.deltaTime * BARRIER_TOUCH_ANIMATION_INTERVAL);
-            zoneBarrierMat.SetFloat("_Progress", currProg);
-            currProg = zoneBarrierMat.GetFloat("_Progress");
+            zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, currProg);
+            currProg = zoneBarrierMat.GetFloat(GameStaticInfo.ZONE_PROGRESS_PROP);
             yield return null;
         }
         while (currProg > 0f) {
             currProg = Mathf.Clamp01(currProg - Time.deltaTime * BARRIER_TOUCH_ANIMATION_INTERVAL * 2);//double speed
-            zoneBarrierMat.SetFloat("_Progress", currProg);
-            currProg = zoneBarrierMat.GetFloat("_Progress");
+            zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, currProg);
+            currProg = zoneBarrierMat.GetFloat(GameStaticInfo.ZONE_PROGRESS_PROP);
             yield return null;
         }
 

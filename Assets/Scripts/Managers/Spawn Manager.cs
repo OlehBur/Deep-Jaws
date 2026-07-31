@@ -275,7 +275,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     }
 
     //save data
-    private void OnApplicationQuit() {
+    private void /*OnApplicationQuit*/OnDisable() {
         SavePlayerData();
 
         PlayerFish.OnFishDie -= FishDieAct;
@@ -327,7 +327,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         playerPrefab.transform.rotation = rotation;
 
         Fish playerFishBuffer = playerPool_FishComponents[playerIndex];
-        playerFishBuffer.CopyData(playerFishBuffer.MaxHealth, playerProgress);
+        playerFishBuffer.CopyData(playerFishBuffer.DefaultInfo.MaxHealth/*MaxHealth*/, playerProgress);
 
         enemyDetector.transform.SetParent(playerPrefab.transform);
         enemyDetector.transform.localPosition = Vector3.zero;
@@ -670,7 +670,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, fish.transform.localPosition, Vector3.one, Quaternion.identity);
         }
 
-        fish.Heal(fish.MaxHealth);//restore init parameters 
+        fish.Heal(fish./*MaxHealth*/DefaultInfo.MaxHealth);//restore init parameters 
         fish.SetRandomProgress();
         prefabInst.SetActive(true);
 

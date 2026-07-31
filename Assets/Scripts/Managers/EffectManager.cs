@@ -21,10 +21,10 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] Renderer fishSkinnedRenderer;
     //[SerializeField] Transform editableTransform;
     [SerializeField] Transform rotationTransform;
-    [SerializeField] public bool IsHaveShield = true;
-    [SerializeField] Vector3 shieldLocalPos;
-    [SerializeField] Vector3 shieldLocalScale;
-    [SerializeField] Vector3 whirlLocalPos;
+    //[SerializeField] public bool IsHaveShield = true;
+    //[SerializeField] Vector3 shieldLocalPos;
+    //[SerializeField] Vector3 shieldLocalScale;
+    //[SerializeField] Vector3 whirlLocalPos;
     [SerializeField] Fish fish;
     [SerializeField] FishAnim fishAnim;
 
@@ -61,7 +61,7 @@ public class EffectManager : MonoBehaviour {
     }
     private void OnEnable() {
         if (fishSkinnedRenderer != null)//if respawn afret freezetime effect activation
-            fishSkinnedRenderer.sharedMaterial.SetFloat("_UnscaledTime", 0f);
+            fishSkinnedRenderer.sharedMaterial.SetFloat(/*"_UnscaledTime"*/GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, 0f);
 
         activeEffects.Clear();
     }
@@ -267,20 +267,20 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateShieldEffect() {
-        if (!IsHaveShield)
+        if (!/*IsHaveShield*/fish.DefaultInfo.IsHaveShield)
             return null;
 
         ShieldEffect shieldEffect = new(audioManager,
             fishAdditionalComponentManager,
             /*editableTransform*/rotationTransform,
-            shieldLocalPos,
-            shieldLocalScale);
+            /*shieldLocalPos*/fish.DefaultInfo.ShieldLocPos,
+            /*shieldLocalScale*/fish.DefaultInfo.ShieldVisualScale);
 
         return shieldEffect;
     }
 
     private Effect CreateCurrentEffect() {
-        CurrentEffect speedEffect = new(fishAdditionalComponentManager, /*transform*/rotationTransform, whirlLocalPos);
+        CurrentEffect speedEffect = new(fishAdditionalComponentManager, /*transform*/rotationTransform, /*whirlLocalPos*/fish.DefaultInfo.WhirlLocPos);
 
         if (speedEffectSource != null)//not null only for player
             speedEffectSource.enabled = true;
@@ -289,7 +289,7 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateSprintEffect() {
-        SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, /*editableTransform*/rotationTransform, whirlLocalPos);
+        SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, rotationTransform, fish.DefaultInfo.WhirlLocPos);
 
         if (speedEffectSource != null)
             speedEffectSource.enabled = true;

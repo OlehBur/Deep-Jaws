@@ -118,9 +118,9 @@ public class GraphicManager : MonoBehaviour {
     }
 
     //save gr data on exit
-    private void OnApplicationQuit() {
-        SaveGraphicsData();
-    }
+    //private void OnApplicationQuit() {
+    //    SaveGraphicsData();
+    //}
     private void OnDisable() {
         SaveGraphicsData();
     }

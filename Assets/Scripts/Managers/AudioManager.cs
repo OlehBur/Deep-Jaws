@@ -77,31 +77,31 @@ public class AudioManager : MonoBehaviour {
 
     public float MasterVolume {
         get {
-            audioMixer.GetFloat("MasterVol", out float value);
+            audioMixer.GetFloat(GameStaticInfo.AUDIO_MASTER_VOLUME_PARAM, out float value);
             return value;
         }
         private set {
-            audioMixer.SetFloat("MasterVol", value);
+            audioMixer.SetFloat(GameStaticInfo.AUDIO_MASTER_VOLUME_PARAM, value);
         }
     }
 
     public float MusicVolume {
         get {
-            audioMixer.GetFloat("MusicVol", out float value);
+            audioMixer.GetFloat(GameStaticInfo.AUDIO_MUSIC_VOLUME_PARAM, out float value);
             return value;
         }
         private set {
-            audioMixer.SetFloat("MusicVol", value);
+            audioMixer.SetFloat(GameStaticInfo.AUDIO_MUSIC_VOLUME_PARAM, value);
         }
     }
 
     public float SFXVolume {
         get {
-            audioMixer.GetFloat("SFXVol", out float value);
+            audioMixer.GetFloat(GameStaticInfo.AUDIO_VFX_VOLUME_PARAM, out float value);
             return value;
         }
         private set {
-            audioMixer.SetFloat("SFXVol", value);
+            audioMixer.SetFloat(GameStaticInfo.AUDIO_VFX_VOLUME_PARAM, value);
         }
     }
 
@@ -163,9 +163,9 @@ public class AudioManager : MonoBehaviour {
 
 
     //save audio data on exit
-    private void OnApplicationQuit() {
-        SaveAudioData();
-    }
+    //private void OnApplicationQuit() {
+    //    SaveAudioData();
+    //}
     private void OnDisable() {
         SaveAudioData();
     }

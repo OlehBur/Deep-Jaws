@@ -14,7 +14,7 @@ public class СuttlefishController : MonoBehaviour {
 
     private MaterialPropertyBlock matPropBlock;
     private AudioManager audioManager;
-    private int OVERLAP_LAYER_MASK;
+    //private int OVERLAP_LAYER_MASK;
     private Collider[] hitObjects = new Collider[10];
     private Color prev_targetColor = Color.black;
     private Color targetColor = Color.black;
@@ -51,33 +51,33 @@ public class СuttlefishController : MonoBehaviour {
         //shaderMat = mesh.material;
         InitPropBlock(ref mesh, ref matPropBlock);
         //shaderMat.SetFloat("_Progress", 0);
-        OVERLAP_LAYER_MASK = LayerMask.GetMask("Default", "Obstacle");
+        //OVERLAP_LAYER_MASK = LayerMask.GetMask("Default", "Obstacle");wfw
     }
 
     static void InitPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock matBlock) {
         matBlock = new MaterialPropertyBlock();
-        SetMatPropBlock(ref renderer, ref matBlock, "_Progress", 0);
-        SetMatPropBlock(ref renderer, ref matBlock, "_Color", Color.black);
+        SetMatPropBlock(ref renderer, ref matBlock, GameStaticInfo.CUTTLEFISH_PROGRESS_PROP, 0);
+        SetMatPropBlock(ref renderer, ref matBlock, GameStaticInfo.CUTTLEFISH_COLOR_PROP, Color.black);
         //fishSkinnedMesh.material.SetFloat("_RotationRad", 0f);// test
     }
 
-    static float GetMatPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName) {
+    static float GetMatPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock mapBlock, int paramId) {
         renderer.GetPropertyBlock(mapBlock);
-        return mapBlock.GetFloat(paramName);
+        return mapBlock.GetFloat(paramId);
     }
 
-    static void SetMatPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, float value = 0) {
+    static void SetMatPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock mapBlock, int paramId, float value = 0) {
         renderer.GetPropertyBlock(mapBlock);
 
         //return mapBlock.GetFloat(paramName);
-        mapBlock.SetFloat(paramName, value);
+        mapBlock.SetFloat(paramId, value);
         renderer.SetPropertyBlock(mapBlock);
     }
 
-    static void SetMatPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock mapBlock, string paramName, Color color) {
+    static void SetMatPropBlock(ref MeshRenderer renderer, ref MaterialPropertyBlock mapBlock, int paramId, Color color) {
         renderer.GetPropertyBlock(mapBlock);
 
-        mapBlock.SetColor(paramName, color);
+        mapBlock.SetColor(paramId, color);
         renderer.SetPropertyBlock(mapBlock);
     }
 
@@ -114,7 +114,7 @@ public class СuttlefishController : MonoBehaviour {
     }
 
     void Overlapping() {
-        int count = Physics.OverlapSphereNonAlloc(transform.position, OVERLAP_RADIUS, hitObjects, OVERLAP_LAYER_MASK);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, OVERLAP_RADIUS, hitObjects, /*OVERLAP_LAYER_MASK*/GameStaticInfo.CUTTLEFISH_OVERLAP_LAYER_MASK);
 
         Collider nearest = null;
         float minDist = float.MaxValue;
@@ -157,7 +157,7 @@ public class СuttlefishController : MonoBehaviour {
 
         if (prev_targetColor != targetColor) {
             //Debug.Log("Color: " + nearest.tag);
-            isNeedReverseProgress = GetMatPropBlock(ref mesh, ref matPropBlock, "_Progress") >= 1; //shaderMat.GetFloat("_Progress") >= 1;
+            isNeedReverseProgress = GetMatPropBlock(ref mesh, ref matPropBlock, GameStaticInfo.CUTTLEFISH_PROGRESS_PROP) >= 1; //shaderMat.GetFloat("_Progress") >= 1;
             //    isReverseProgress = true;
 
             StartCoroutine(CamouflageProgress(isNeedReverseProgress, targetColor == Color.black));
@@ -169,12 +169,12 @@ public class СuttlefishController : MonoBehaviour {
     }
 
     IEnumerator CamouflageProgress(bool isNeedReverse, bool isJustReset) {
-        float progress = GetMatPropBlock(ref mesh, ref matPropBlock, "_Progress");//shaderMat.GetFloat("_Progress");
+        float progress = GetMatPropBlock(ref mesh, ref matPropBlock, GameStaticInfo.CUTTLEFISH_PROGRESS_PROP);//shaderMat.GetFloat("_Progress");
 
         while (isNeedReverse) {
-            SetMatPropBlock(ref mesh, ref matPropBlock, "_Progress", Mathf.Clamp01(progress - SHADER_UPDATE_INTERVAL));
+            SetMatPropBlock(ref mesh, ref matPropBlock, GameStaticInfo.CUTTLEFISH_PROGRESS_PROP, Mathf.Clamp01(progress - SHADER_UPDATE_INTERVAL));
             //shaderMat.SetFloat("_Progress", Mathf.Clamp01(progress - SHADER_UPDATE_INTERVAL));
-            progress = GetMatPropBlock(ref mesh, ref matPropBlock, "_Progress");// shaderMat.GetFloat("_Progress");
+            progress = GetMatPropBlock(ref mesh, ref matPropBlock, /*"_Progress"*/GameStaticInfo.CUTTLEFISH_PROGRESS_PROP);// shaderMat.GetFloat("_Progress");
             if (progress <= 0f)
                 break;
 
@@ -186,12 +186,12 @@ public class СuttlefishController : MonoBehaviour {
             yield break;
         }
 
-        SetMatPropBlock(ref mesh, ref matPropBlock, "_Color", targetColor);
+        SetMatPropBlock(ref mesh, ref matPropBlock, GameStaticInfo.CUTTLEFISH_COLOR_PROP, targetColor);
         //shaderMat.SetColor("_Color", targetColor);
         while (progress < 1f) {
-            SetMatPropBlock(ref mesh, ref matPropBlock, "_Progress", Mathf.Clamp01(progress + SHADER_UPDATE_INTERVAL));
+            SetMatPropBlock(ref mesh, ref matPropBlock, GameStaticInfo.CUTTLEFISH_PROGRESS_PROP, Mathf.Clamp01(progress + SHADER_UPDATE_INTERVAL));
             //shaderMat.SetFloat("_Progress", Mathf.Clamp01(progress + SHADER_UPDATE_INTERVAL));
-            progress = GetMatPropBlock(ref mesh, ref matPropBlock, "_Progress");//shaderMat.GetFloat("_Progress");
+            progress = GetMatPropBlock(ref mesh, ref matPropBlock, GameStaticInfo.CUTTLEFISH_PROGRESS_PROP);//shaderMat.GetFloat("_Progress");
             yield return SHADER_UPD_WAIT/*new WaitForSeconds(SHADER_UPDATE_INTERVAL)*/;
         }
 

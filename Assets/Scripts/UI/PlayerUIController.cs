@@ -45,8 +45,9 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] Image lvlBar; // image to display player level bar
     [SerializeField] Transform playerProgressIconsParent;
     [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
-    //[SerializeField] Image sprintProgressPC;
-    [SerializeField] Image sprintProgressPC;
+    [SerializeField] Image sprintProgressImage;
+    [SerializeField] RectTransform sprintProgressPC;
+    [SerializeField] RectTransform sprintPC_Parent;
 
     public static readonly Vector2[] iconsPositionsMultipliers1 = new Vector2[1] { new Vector2(.5f, .7f) };
     public static readonly Vector2[] iconsPositionsMultipliers2 = new Vector2[2]{
@@ -117,7 +118,7 @@ public class PlayerUIController : MonoBehaviour {
     private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
     private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
     private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
-    private const float SPRINT_PROGRESS_PC_LOADING_ALPHA = 0.5f;
+    private const float SPRINT_PROGRESS_PC_LOADING_ALPHA = 0.3f;
 
 
     public void Init(SpawnManager sp) {
@@ -226,9 +227,9 @@ public class PlayerUIController : MonoBehaviour {
             health = 0f;
 
         healthProgresCurr_txt.text = health.ToString();
-        healthProgresMax_txt.text = playerFish.MaxHealth.ToString();
+        healthProgresMax_txt.text = playerFish./*MaxHealth*/DefaultInfo.MaxHealth.ToString();
         lvlProgres_txt.text = lvlProgress.ToString();
-        healthBar.fillAmount = (float)playerFish.Health / playerFish.MaxHealth;
+        healthBar.fillAmount = (float)playerFish.Health / playerFish.DefaultInfo.MaxHealth;
 
         lvl_txt.text = ((int)playerFish.Level).ToString();
         lvlBar.fillAmount = playerFish.Progress;
@@ -249,15 +250,29 @@ public class PlayerUIController : MonoBehaviour {
             sprintButton.interactable = true;
             currentSprintCooldownTime = 0f;
             sprintButton.image.fillAmount = 1f; // reset the button fill amount
-            sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
-            sprintProgressPC.color = new Color(sprintProgressPC.color.r, sprintProgressPC.color.g, sprintProgressPC.color.b, 1f);
+            //sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
+            SetSprintProgressPC(1f);
+
+            sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, 1f);
         }
         else {
             sprintButton.image.fillAmount = currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
-            sprintProgressPC.transform.localScale = Vector3.right * sprintButton.image.fillAmount + SPRINT_BAR_SCALE_MULTIPLIER;//fillAmount = sprintButton.image.fillAmount;
-            sprintProgressPC.color = new Color(sprintProgressPC.color.r, sprintProgressPC.color.g, sprintProgressPC.color.b, SPRINT_PROGRESS_PC_LOADING_ALPHA);
+            //sprintProgressPC.transform.localScale = Vector3.right * sprintButton.image.fillAmount + SPRINT_BAR_SCALE_MULTIPLIER;//fillAmount = sprintButton.image.fillAmount;
+            SetSprintProgressPC(sprintButton.image.fillAmount);
+            sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, SPRINT_PROGRESS_PC_LOADING_ALPHA);
             currentSprintCooldownTime += Time.deltaTime;
         }
+    }
+
+    void SetSprintProgressPC(float fillAmount) {
+        const float OFFSET_AMOUNT = 20f;
+        fillAmount = Mathf.Clamp01(fillAmount);
+
+        float parentWidth = sprintPC_Parent.rect.width;
+        float targetHalf = Mathf.Lerp(parentWidth - OFFSET_AMOUNT, 0f, fillAmount) / 2f;
+
+        sprintProgressPC.offsetMin = new Vector2(targetHalf, sprintProgressPC.offsetMax.y);//left
+        sprintProgressPC.offsetMax = new Vector2(-targetHalf, sprintProgressPC.offsetMax.y);//right
     }
 
     /// <summary>
@@ -383,7 +398,8 @@ public class PlayerUIController : MonoBehaviour {
             playerEffectManager.OnEffectChanges -= EffectsBehaviour;
         }
 
-        if (spawnManager == null || spawnManager.PlayerFish == null)//for debug
+        if (/*spawnManager == null || spawnManager.PlayerFish == null ||*/
+            fish == null || sprintProgressPC == null || sprintButton == null)//for debug
             return;
 
         playerFish = fish;
@@ -397,7 +413,7 @@ public class PlayerUIController : MonoBehaviour {
         sprintButton.interactable = true;
         sprintButton.image.fillAmount = 1f; // reset the button fill amount
         sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
-        sprintProgressPC.color = new Color(sprintProgressPC.color.r, sprintProgressPC.color.g, sprintProgressPC.color.b, 1f);
+        sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, 1f);
         currentSprintCooldownTime = 0f;
 
         DisactivateDefaultIcons();

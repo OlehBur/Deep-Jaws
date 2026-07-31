@@ -461,12 +461,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 0
-  health: 0
-  speed: 0
-  responseRadius: 0
+  fishInfo: {fileID: 11400000, guid: 242d52ce7a2e9f94da4f7b0a69dffc12, type: 2}
   prefabVisualTransform: {fileID: 7123836628690870832}
-  jawForwardOffset: 0
   rb: {fileID: 8937414190267927894}
 --- !u!114 &2241224056577220843
 MonoBehaviour:
@@ -487,10 +483,6 @@ MonoBehaviour:
   rb: {fileID: 8937414190267927894}
   fishSkinnedRenderer: {fileID: 1835362657365722603}
   rotationTransform: {fileID: 5410962182413031247}
-  IsHaveShield: 1
-  shieldLocalPos: {x: 0, y: 0, z: 0}
-  shieldLocalScale: {x: 0, y: 0, z: 0}
-  whirlLocalPos: {x: 0, y: 0, z: 0}
   fish: {fileID: -1864179227958482298}
   fishAnim: {fileID: 166069787427693303}
 --- !u!114 &166069787427693303
@@ -506,14 +498,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fish: {fileID: -1864179227958482298}
-  smoothRotateSpeed: 5
-  angleRotDetect: 12
   animator: {fileID: 6106165180808132057}
   fishSkinnedMesh: {fileID: 1835362657365722603}
   editableTransform: {fileID: 7123836628690870832}
-  biteParticleLocPos: {x: 0, y: 0, z: 0}
-  bubbleMaxXoffset: 0
-  isUseRotatingShader: 1
 --- !u!114 &3402444889329153434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -526,13 +513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93749be508a6e0843a3bfb1402387336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\u0456dleTime": 0
-  timeToIdle: 0
   fishAnim: {fileID: 166069787427693303}
   rotationTransform: {fileID: 5410962182413031247}
   bodyCollider: {fileID: 9207479891914793701}
-  colliderDefaultHeight: 1.6
-  colliderDefaultRadius: 0.85
   fish: {fileID: -1864179227958482298}
 --- !u!114 &7784849236836182843
 MonoBehaviour:

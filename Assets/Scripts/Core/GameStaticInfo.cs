@@ -116,12 +116,14 @@ public static class GameStaticInfo {
     public const int PEACEFUL_FISH_LVL = 0;//barrier level for peaceful fish (crab and below)
     public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Dartfish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
 
+
+    //world
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
     public const string LAYER_OBSTACLE = "Obstacle";
     public const string LAYER_CAMERA_AVOID_COLLIDERS = "AvoidDynamicCameraColliders";
 
     public static int LAYER_MASK_ENTITY => LayerMask.GetMask(LAYER_ENTITY);//layer id for entities
-
+    public static int CUTTLEFISH_OVERLAP_LAYER_MASK => LayerMask.GetMask("Default", "Obstacle");
 
     public const string TAG_SPAWN_ZONE = "SpawnZone";
     public const string TAG_BUBBLESHIELD = "Shield";
@@ -151,10 +153,32 @@ public static class GameStaticInfo {
 
     public static bool IS_ENEMY_DETECTOR_ENABLED { get; set; } = false;
 
-    public static readonly int FISH_WAVING_MERCURY_PROP = Shader.PropertyToID("_MercurySkin");
+
+    //settings
+    public const string AUDIO_MASTER_VOLUME_PARAM = "MasterVol";
+    public const string AUDIO_MUSIC_VOLUME_PARAM = "MusicVol";
+    public const string AUDIO_VFX_VOLUME_PARAM = "SFXVol";
+
+
+    //animators
+    public static readonly int FISH_ANIMATOR_IDLE_STATE = Animator.StringToHash("Idle");
+    public static readonly int BITE_ANIMATOR_TRIGGER = Animator.StringToHash("bite"); // name of the trigger for bite animation
+
+
+    //shaders
+    public static readonly int FISH_WAVING_UNSCAL_TIME_PROP = Shader.PropertyToID("_UnscaledTime");
+    public static readonly int FISH_WAVING_FREQUENCY_PROP = Shader.PropertyToID("_Frequency");
+    public static readonly int FISH_WAVING_MAX_ROT_PROP = Shader.PropertyToID("_MaxRotationValue");
+    public static readonly int FISH_WAVING_ROT_PROP = Shader.PropertyToID("_RotationRad");
     public static readonly int FISH_WAVING_CHAMELEON_PROP = Shader.PropertyToID("_ChameleonSkin");
+    public static readonly int FISH_WAVING_MERCURY_PROP = Shader.PropertyToID("_MercurySkin");
     public static readonly int FISH_WAVING_MERCURYSCALE_PROP = Shader.PropertyToID("_MercuryScale");
     public static readonly int FISH_WAVING_ASHFLOW_PROP = Shader.PropertyToID("_AshflowSkin");
+    public static readonly int FISH_WAVING_ZEBRA_PROP = Shader.PropertyToID("_ZebraSkin");
+    public static readonly int CUTTLEFISH_PROGRESS_PROP = Shader.PropertyToID("_Progress");
+    public static readonly int CUTTLEFISH_COLOR_PROP = Shader.PropertyToID("_Color");
+    public static readonly int ZONE_PROGRESS_PROP = Shader.PropertyToID("_Progress");
+    public static readonly int ZONE_TOUCH_POS_PROP = Shader.PropertyToID("_TouchPosition");
     public const int MERCURY_SKIN_BASE_SCALE = 3;
 
     public enum LocalizationID {

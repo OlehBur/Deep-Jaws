@@ -357,7 +357,7 @@ namespace GooglePlayGames.Editor
             string currentId;
 #if UNITY_5_6_OR_NEWER
             currentId = PlayerSettings.GetApplicationIdentifier(
-                BuildTargetGroup.Android);
+                UnityEditor.Build.NamedBuildTarget.Android);
 #else
             currentId = PlayerSettings.bundleIdentifier;
 #endif
@@ -368,7 +368,7 @@ namespace GooglePlayGames.Editor
                 {
 #if UNITY_5_6_OR_NEWER
                     PlayerSettings.SetApplicationIdentifier(
-                        BuildTargetGroup.Android, packageName);
+                        UnityEditor.Build.NamedBuildTarget.Android, packageName);
 #else
                     PlayerSettings.bundleIdentifier = packageName;
 #endif
@@ -386,7 +386,7 @@ namespace GooglePlayGames.Editor
                     {
 #if UNITY_5_6_OR_NEWER
                         PlayerSettings.SetApplicationIdentifier(
-                            BuildTargetGroup.Android, packageName);
+                            UnityEditor.Build.NamedBuildTarget.Android, packageName);
 #else
                         PlayerSettings.bundleIdentifier = packageName;
 #endif

@@ -14,22 +14,26 @@ public enum FishSpeedModifierType {
 /// Class for the player and enemy fish (base component for fish prefab)
 /// </summary>
 public class Fish : MonoBehaviour {
-    [SerializeField] FishLevel level;
-    [SerializeField] int health;
-    [SerializeField] float speed;
-    [SerializeField] int responseRadius;
+    [SerializeField]
+    FishInfo fishInfo;
+    //[SerializeField] FishLevel level;
+    /*[SerializeField]*/
+    private int health;
+    //[SerializeField] float speed;
+    //[SerializeField] int responseRadius;
     [SerializeField] Transform prefabVisualTransform; //for grow animation
-    [SerializeField] float jawForwardOffset;
+    //[SerializeField] float jawForwardOffset;
     [SerializeField] Rigidbody rb;
 
+    public FishInfo DefaultInfo => fishInfo;
     public Vector3 VisualTransformScale => prefabVisualTransform.localScale;
     public Rigidbody Rb => rb;
-    public FishLevel Level => level;
+    public FishLevel Level => /*level*/fishInfo.Level;
     public int Health { get { return health; } protected set { health = value; } }
-    public int MaxHealth { get; private set; }
-    public float Speed { get { return speed * SpeedMultiplier * SpeedMultiplierSecond * SpeedMultiplierThird * SpeedMultiplierFourth; } protected set { speed = value; } }
-    public int ResponseRadius => responseRadius;
-    public float RotationSpeed => speed * ROTATION_SPEED_MULTIPLIER;
+    //public int MaxHealth { get; private set; }
+    public float Speed { get { return /*speed*/fishInfo.Speed * SpeedMultiplier * SpeedMultiplierSecond * SpeedMultiplierThird * SpeedMultiplierFourth; }/* protected set { speed = value; }*/ }
+    //public int ResponseRadius => responseRadius;
+    public float RotationSpeed => /*speed*/fishInfo.Speed * ROTATION_SPEED_MULTIPLIER;
     /// <summary>
     /// Random value in enemies during sparing
     /// </summary>
@@ -46,8 +50,8 @@ public class Fish : MonoBehaviour {
     /// </summary>
     public bool IsAlreadySelected { get; set; } = false;
 
-    [HideInInspector] public Vector3 ScaleModifier => new(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
-    public float JawForwardOffset => jawForwardOffset;
+    /*[HideInInspector]*/ public Vector3 ScaleModifier => new(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
+    //public float JawForwardOffset => jawForwardOffset;
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
     public event Action<Vector3> OnFishUpdateSize;
     public event Action<GameObject> OnFishLvlUp;
@@ -74,7 +78,8 @@ public class Fish : MonoBehaviour {
 
 
     private void Awake() {
-        MaxHealth = health; // store the initial health as max health
+        //MaxHealth = health; // store the initial health as max health
+        health = fishInfo.MaxHealth;
     }
 
     private void OnEnable() {
@@ -133,7 +138,7 @@ public class Fish : MonoBehaviour {
     /// <param name="victim"></param>
     public void Eat(Fish victim, out bool isStillAlive) {
         float entityCeiling = (float)GameStaticInfo.MAX_FISH_LEVEL - Mathf.Abs((float)victim.Level);
-        float levelSpeedProgressing = (float)level * LEVEL_EAT_DEPEND_MULTIPLIER;
+        float levelSpeedProgressing = (float)/*level*/fishInfo.Level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
         float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
         enemyProgressMultiplier = GameStaticInfo.Gamemode != GameMode.Easy ? 1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
@@ -149,18 +154,19 @@ public class Fish : MonoBehaviour {
             Progress = 1f;
 
         int playerDamageMultiplier = victim.IsPlayer && GameStaticInfo.Gamemode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
-        int damage = (int)level * playerDamageMultiplier;
+        int damage = (int)/*level*/fishInfo.Level * playerDamageMultiplier;
         OnFishEat?.Invoke(damage);
         //Debug.Log($"{gameObject.name} ({Progress}) eats {victim.name} ({victim.Progress}).");
 
         UpdateGrowSize();
         OnInfoStatsChanged?.Invoke();
 
-        /*return*/isStillAlive = victim.TakeDamage(damage);
+        /*return*/
+        isStillAlive = victim.TakeDamage(damage);
     }
 
     public void FeedCaviar(/*float foodNutrition*/) {
-        Progress += 1 / (MIN_PROGRESS_GAIN_MULTIPLIER + (float)level * MIN_PROGRESS_GAIN_MULTIPLIER);
+        Progress += 1 / (MIN_PROGRESS_GAIN_MULTIPLIER + (float)fishInfo.Level * MIN_PROGRESS_GAIN_MULTIPLIER);
         OnFishEat?.Invoke(1);
         UpdateGrowSize();
         OnInfoStatsChanged?.Invoke();
@@ -185,13 +191,13 @@ public class Fish : MonoBehaviour {
     }
 
     public void Heal(int amount) {
-        Health = Mathf.Min(Health + amount, MaxHealth);
+        Health = Mathf.Min(Health + amount, /*MaxHealth*/fishInfo.MaxHealth);
         OnInfoStatsChanged?.Invoke();
     }
 
     public void Die() {
         //Debug.Log($"{this.GetType().Name} has died.");
-        Health = MaxHealth;
+        Health = /*MaxHealth*/fishInfo.MaxHealth;
         gameObject.SetActive(false);
         IsAlreadySelected = false;
 
@@ -255,11 +261,11 @@ public interface IFish {
     /// <summary>
     /// Time spent in idle state
     /// </summary>
-    float IdleTime { get; }
+    //float IdleTime { get; }
     /// <summary>
     /// Time after which fish can stop
     /// </summary>
-    float TimeToIdle { get; }
+    //float TimeToIdle { get; }
     EnemyState State { get; }
     //the fish relative to which the reaction occurs
     Fish CurrentTarget { get; set; }

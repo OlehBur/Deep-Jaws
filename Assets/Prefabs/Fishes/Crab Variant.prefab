@@ -381,12 +381,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 0
-  health: 10
-  speed: 2
-  responseRadius: 10
+  fishInfo: {fileID: 11400000, guid: e945b82f95b5e1f40bfe5e3e62bb84a1, type: 2}
   prefabVisualTransform: {fileID: 4084185988788917315}
-  jawForwardOffset: 0
   rb: {fileID: 448909511287582052}
 --- !u!114 &1337541968216851565
 MonoBehaviour:
@@ -407,10 +403,6 @@ MonoBehaviour:
   rb: {fileID: 448909511287582052}
   fishSkinnedRenderer: {fileID: 0}
   rotationTransform: {fileID: 0}
-  IsHaveShield: 1
-  shieldLocalPos: {x: 0, y: 0, z: 0}
-  shieldLocalScale: {x: 3.116048, y: 1.832324, z: 4.056315}
-  whirlLocalPos: {x: 0, y: 0, z: -0.23}
   fish: {fileID: 2657620157071051659}
   fishAnim: {fileID: 0}
 --- !u!114 &8497921627181931671
@@ -425,13 +417,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93749be508a6e0843a3bfb1402387336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\u0456dleTime": 0.12
-  timeToIdle: 5.57
   fishAnim: {fileID: 0}
   rotationTransform: {fileID: 7214837483399567855}
   bodyCollider: {fileID: 5694674408033938348}
-  colliderDefaultHeight: 2.175
-  colliderDefaultRadius: 1.025
   fish: {fileID: 2657620157071051659}
 --- !u!114 &8500345913912895586
 MonoBehaviour:

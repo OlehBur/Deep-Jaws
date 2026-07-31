@@ -12,7 +12,7 @@ using UnityEngine.SocialPlatforms;//?!
 /// Google Play Games Manager
 /// </summary>
 public class GPG_Manager : MonoBehaviour {
-    public static GPG_Manager Instance { get; private set; }
+    public static GPG_Manager Instance { get; private set; } = null;
     public event Action<string> OnLoadKingOfDeeps;
 
     [SerializeField] MainmenuManager mainmenu;
@@ -28,14 +28,15 @@ public class GPG_Manager : MonoBehaviour {
     void Awake() {
         if (Instance == null) {
             Instance = this;
-            Instance.ReInit(mainmenu, purchaseManager);
             DontDestroyOnLoad(gameObject);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
             Invoke(nameof(OnTriggerWakeUpAchi), WAKKE_UP_ACHIEVEMENT_TIME);
         }
-        else
+        else {
+            Instance.ReInit(mainmenu, purchaseManager);
             Destroy(gameObject);
+        }
 
         UpdateMainMenuUI();
     }
@@ -251,6 +252,7 @@ public class GPG_Manager : MonoBehaviour {
         );
     }
 
+#pragma warning disable 0618
     private void OnTopScoreLoaded(LeaderboardScoreData scoreData) {
         if (scoreData.Valid && scoreData.Scores.Length > 0) {
             IScore topScore = scoreData.Scores[0];
@@ -267,7 +269,8 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     private void GetPlayerName(string userId/*, long score*/) {
-        Social.LoadUsers(new string[] { userId }, (IUserProfile[] profiles) => {
+        /*Social.LoadUsers*/
+        PlayGamesPlatform.Instance.LoadUsers(new string[] { userId }, (IUserProfile[] profiles) => {
             if (profiles != null && profiles.Length > 0) {
                 string userName = profiles[0].userName;
                 //Texture2D avatar = profiles[0].image;   
@@ -278,6 +281,7 @@ public class GPG_Manager : MonoBehaviour {
             }
         });
     }
+#pragma warning restore 0618
 
     void OnTriggerWakeUpAchi() {
         OnTriggerAchievement(GPGSIds.achievement_its_time_to_wake_up);

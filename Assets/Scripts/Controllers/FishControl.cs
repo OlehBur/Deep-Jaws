@@ -8,18 +8,18 @@ public class FishControl : MonoBehaviour, IFish {
     /// variables made through the inspector but only 
     /// available through the enemy interface fields
     /// </summary>
-    [SerializeField] float ³dleTime;
-    [SerializeField] float timeToIdle;
+    //[SerializeField] float ³dleTime;
+    //[SerializeField] float timeToIdle;
     [SerializeField] FishAnim fishAnim;
     [SerializeField] Transform rotationTransform;
     [SerializeField] CapsuleCollider bodyCollider;
-    [SerializeField] float colliderDefaultHeight = 1f;
-    [SerializeField] float colliderDefaultRadius = 0.5f;
+    //[SerializeField] float colliderDefaultHeight = 1f;
+    //[SerializeField] float colliderDefaultRadius = 0.5f;
 
     private IFish IFish;
     Fish IFish.CurrentTarget { get; set; }
-    float IFish.IdleTime => ³dleTime;
-    float IFish.TimeToIdle => timeToIdle;
+    //float IFish.IdleTime => ³dleTime;
+    //float IFish.TimeToIdle => timeToIdle;
 
     private EnemyState state = EnemyState.Walking;
     /// <summary>
@@ -28,14 +28,12 @@ public class FishControl : MonoBehaviour, IFish {
     public EnemyState State => state;
 
     //movement
-    /*private*/
     [SerializeField] Fish fish;
     public Fish Fish => fish;
 
     private Rigidbody rb;
     private Vector3 direction = Vector3.zero;
     private Vector3 targetPosition;
-    //private Vector3 rotateVelocity = Vector3.zero;
     private bool isTargetSet = false; // flag to check if target is set
     private const float TIME_CHANGE_ESCAPE_DIR = 3f;
     private float currentEscapeTime = 0f;
@@ -48,20 +46,15 @@ public class FishControl : MonoBehaviour, IFish {
 
     //player movement
     private Vector2 moveInput;
-    //private Vector3 moveDir = Vector3.zero;
-    //private Vector3 newRotation;
-    //private Vector3 currentForward;
     private bool isMoved = false;
-    //private const float ROTATION_SMOOTH_TIME = .1f;
 
     //reaction to other fish
     private readonly Collider[] overlapResults = new Collider[5];
-    //private float ResponseRadius = /*enemy.Speed*1.4f*/12f;
     public SpawnManager SpawnManager { get; private set; }
     private float contactTime = 0f; // time of contact with other fish
 
 
-    public void Init(SpawnManager spawnManager/*, Fish fish*/) {
+    public void Init(SpawnManager spawnManager) {
         SpawnManager = spawnManager;
         IFish = this;
         //this.fish = fish;
@@ -87,15 +80,16 @@ public class FishControl : MonoBehaviour, IFish {
         SleepPhysics();
     }
 
-    /*public*/private void OnUpdateCollider(Vector3 localScale) {
+    /*public*/
+    private void OnUpdateCollider(Vector3 localScale) {
         if (/*previewCollider &&*/ bodyCollider != null) {
             if (fish.Level == FishLevel.Crab) {//X height capsule
-                bodyCollider.height = colliderDefaultHeight * localScale.x;
-                bodyCollider.radius = colliderDefaultRadius * localScale.z;
+                bodyCollider.height = /*colliderDefaultHeight*/fish.DefaultInfo.ColliderDefaultHeight * localScale.x;
+                bodyCollider.radius = /*colliderDefaultRadius */fish.DefaultInfo.ColliderDefaultRadius * localScale.z;
             }
             else {//Z height capsule
-                bodyCollider.height = colliderDefaultHeight * localScale.z;
-                bodyCollider.radius = colliderDefaultRadius * localScale.y;
+                bodyCollider.height = fish.DefaultInfo.ColliderDefaultHeight * localScale.z;
+                bodyCollider.radius = fish.DefaultInfo.ColliderDefaultRadius * localScale.y;
             }
         }
     }
@@ -241,11 +235,11 @@ public class FishControl : MonoBehaviour, IFish {
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void ReactionToOtherFish() {
-        int count = Physics.OverlapSphereNonAlloc(rb.position, fish.ResponseRadius, overlapResults, GameStaticInfo.LAYER_MASK_ENTITY);
+        int count = Physics.OverlapSphereNonAlloc(rb.position, fish./*ResponseRadius*/DefaultInfo.ResponseRadius, overlapResults, GameStaticInfo.LAYER_MASK_ENTITY);
         Fish closestFish = null;
-        float dist = fish.ResponseRadius;
+        float dist = fish.DefaultInfo.ResponseRadius;
         for (int i = 0; i < count; i++) {
-            if(overlapResults[i].attachedRigidbody==null || overlapResults[i].attachedRigidbody.gameObject == gameObject)
+            if (overlapResults[i].attachedRigidbody == null || overlapResults[i].attachedRigidbody.gameObject == gameObject)
                 continue;
 
             GameObject collideObj = overlapResults[i].attachedRigidbody.gameObject;
@@ -277,7 +271,7 @@ public class FishControl : MonoBehaviour, IFish {
         Vector3 randomDirection = Random.insideUnitSphere * RandomTargetPosMultiplier();
         randomDirection += rb.position;//near pos obj
 
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, WALKING_RADIUS_MULTIPLIER * fish.ResponseRadius, NavMesh.AllAreas)) { //if point on surf
+        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, WALKING_RADIUS_MULTIPLIER * fish.DefaultInfo.ResponseRadius, NavMesh.AllAreas)) { //if point on surf
             targetPosition = hit.position;
             targetPosition.y = rb.position.y; // keep the same height as the fish
             isTargetSet = true;
@@ -322,7 +316,7 @@ public class FishControl : MonoBehaviour, IFish {
 
     float RandomTargetPosMultiplier() {
         const float MIN_RANGE = .3f;
-        return Random.Range(MIN_RANGE, 1f) * fish.ResponseRadius * WALKING_RADIUS_MULTIPLIER;
+        return Random.Range(MIN_RANGE, 1f) * fish.DefaultInfo.ResponseRadius * WALKING_RADIUS_MULTIPLIER;
     }
 
     Vector3 IFish.Attack() {
@@ -340,14 +334,14 @@ public class FishControl : MonoBehaviour, IFish {
         dir.y = 0; // only horizontal movement
 
         float currentDistanceToTarget = dir.magnitude;
-        currentDistanceToTarget = (currentDistanceToTarget < (fish.ScaleModifier.z + 1) * fish.JawForwardOffset) ?
+        currentDistanceToTarget = (currentDistanceToTarget < (fish.ScaleModifier.z + 1) * fish.DefaultInfo.JawFwdOffset) ?
             0 : currentDistanceToTarget;//stop moving if enouch close for bite
 
         switch (state) {
             case EnemyState.Attack:
             if (IFish.CurrentTarget == null
                 || !IFish.CurrentTarget.gameObject.activeInHierarchy
-                || currentDistanceToTarget > fish.ResponseRadius
+                || currentDistanceToTarget > fish.DefaultInfo.ResponseRadius
                 || !fish.IsLegitimateTarget(IFish.CurrentTarget)
                ) {//if the target is lost
                 SetDefaultState();
@@ -496,7 +490,7 @@ public class FishControl : MonoBehaviour, IFish {
             TryContactWithBehaviour(other, isStayTrigger);
     }
 
-    Vector3 GetPosiblyCollisionPoint() => rb.position + rotationTransform.rotation * Vector3.forward * fish.JawForwardOffset;
+    //Vector3 GetPosiblyCollisionPoint() => rb.position + rotationTransform.rotation * Vector3.forward * fish.JawForwardOffset;
 
     //obstacles etc.
     private void OnCollisionEnter(Collision collision) {
@@ -568,11 +562,11 @@ public class FishControl : MonoBehaviour, IFish {
             return;
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(rb.position, fish.ResponseRadius);
+        Gizmos.DrawWireSphere(rb.position, fish.DefaultInfo.ResponseRadius);
 
         if (fish.IsPlayer) {//for player
             Gizmos.color = Color.orange;
-            Gizmos.DrawWireSphere(rb.position, fish.ResponseRadius);
+            Gizmos.DrawWireSphere(rb.position, fish.DefaultInfo.ResponseRadius);
             return;
         }
 
