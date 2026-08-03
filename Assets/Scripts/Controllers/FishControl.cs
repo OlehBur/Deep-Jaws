@@ -521,7 +521,7 @@ public class FishControl : MonoBehaviour, IFish {
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_youre_my_friend_now);
         else if (victimLvl == fish.Level)//same lvl
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_cannibalism);
-        else if (victimLvl == FishLevel.Mackarel && fish.Level == FishLevel.Moray)
+        else if (victimLvl == FishLevel.Mackerel && fish.Level == FishLevel.Moray)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_former_threat_current_snack);
 
         return true;

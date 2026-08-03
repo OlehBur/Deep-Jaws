@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Sanctuary Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Sanctuary
+  m_TableCollectionNameGuidString: c2a1570a099069345a503921a382ed0d
+  m_Entries:
+  - m_Id: 35955175424
+    m_Key: coral_reef
+    m_Metadata:
+      m_Items: []
+  - m_Id: 249118093312
+    m_Key: cliffs_seaweed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 391657320448
+    m_Key: pelagial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 773737443328
+    m_Key: oceanic_abyss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87373850898432
+    m_Key: minutes_short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 394336325365760
+    m_Key: hours_short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 394339861164032
+    m_Key: research_progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 409948187553792
+    m_Key: research_requir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 416355779637248
+    m_Key: neutralize
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648062252380160
+    m_Key: stat_health
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648830116196352
+    m_Key: stat_speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648903298412544
+    m_Key: stat_response
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648962282909696
+    m_Key: stat_bite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649093866614784
+    m_Key: stat_shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649204814344192
+    m_Key: stat_poison
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649644339654656
+    m_Key: stat_aggress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 652004738756608
+    m_Key: stat_meters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 652046442721280
+    m_Key: stat_meters-per-sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 652095302168576
+    m_Key: stat_units
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661301455515648
+    m_Key: desc_dartfish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661422603792384
+    m_Key: desc_crab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661465922564096
+    m_Key: desc_seabass
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661505349021696
+    m_Key: desc_mackerel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661536483340288
+    m_Key: desc_moray
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661567122731008
+    m_Key: desc_lionfish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661598261243904
+    m_Key: desc_barracuda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661625301921792
+    m_Key: desc_tuna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661637779976192
+    m_Key: desc_hammerhead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661729958195200
+    m_Key: desc_tiger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661748178251776
+    m_Key: desc_white
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661763097391104
+    m_Key: desc_puffer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 661777437716480
+    m_Key: desc_cuttle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 683583313833984
+    m_Key: button_research_biome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 684106687475712
+    m_Key: button_boost
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7978145025202323755
+  references:
+    version: 2
+    RefIds:
+    - rid: 7978145025202323755
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1785601180992

@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Managers\FishHeartbeatsManager.cs" />
     <Compile Include="Assets\Scripts\Controllers\СuttlefishController.cs" />
     <Compile Include="Assets\Scripts\Controllers\SoundtrackController.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\SanctuaryVisualizeUI.cs" />
     <Compile Include="Assets\Scripts\UI\SnowAnimation.cs" />
     <Compile Include="Assets\Scripts\Managers\Spawn Manager.cs" />
     <Compile Include="Assets\Scripts\Controllers\ZoneController.cs" />
@@ -76,10 +77,13 @@
     <Compile Include="Assets\Scripts\Debug_\ModelsAroundView.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\LicenseValidator.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishLocalized.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\SanctuaryCameraChanger.cs" />
     <Compile Include="Assets\Scripts\Achievements\CantCatchAchieveTrig.cs" />
     <Compile Include="Assets\Scripts\Managers\FishAdditionalCompManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GPG_Manager.cs" />
     <Compile Include="Assets\Scripts\Debug_\TestTriggCollider.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\FishAlmanacVisualizeUI.cs" />
     <Compile Include="Assets\Scripts\Core\Joystick.cs" />
     <Compile Include="Assets\Scripts\Managers\EffectManager.cs" />
     <Compile Include="Assets\Scripts\Sancturary\ProgressBar.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="Assets\Scripts\Managers\GamePurchaseManager.cs" />
     <Compile Include="Assets\Scripts\UI\PlayerUIController.cs" />
     <Compile Include="Assets\Scripts\Controllers\FishAnim.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\BiomesVisualize.cs" />
     <Compile Include="Assets\Scripts\Controllers\PufferfishController.cs" />
     <Compile Include="Assets\Scripts\FishEffects\StunEffect.cs" />
     <Compile Include="Assets\Scripts\Controllers\JellyfishController.cs" />
@@ -112,6 +117,7 @@
     <Compile Include="Assets\Scripts\Debug_\ImageHsvAnim.cs" />
     <Compile Include="Assets\Scripts\FishEffects\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Controllers\HydraController.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishInfoManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameAdsManager.cs" />
     <Compile Include="Assets\Scripts\UI\PurchaseUIvisualizer.cs" />
     <Compile Include="Assets\Scripts\Core\Fish.cs" />

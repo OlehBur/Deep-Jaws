@@ -3,8 +3,15 @@ using UnityEngine;
 
 public class SanctuariesManager : MonoBehaviour {
     public static SanctuariesManager Instance { get; private set; } = null;
-    public event Action<int> OnWheatAmountChanged;
-    public event Action<BiomeWrapper> OnBiomeResearched;
+    public event Action<int> OnShellsAmountChanged;
+    /// <summary>
+    /// int - time to upgrade
+    /// </summary>
+    public event Action<BiomeType, int> OnResearchUpdated;
+    /// <summary>
+    /// int - lvl
+    /// </summary>
+    public event Action<BiomeType, int> OnBiomeResearched;
     public int ShellsCnt { get; private set; }
 
     [SerializeField] BiomeInfo coralReefInfo;
@@ -13,10 +20,10 @@ public class SanctuariesManager : MonoBehaviour {
     [SerializeField] BiomeInfo oceanicAbyssInfo;
 
     private float timer;
-    private BiomeWrapper coralReef;
-    private BiomeWrapper cliffsSeaweed;
-    private BiomeWrapper pelagial;
-    private BiomeWrapper oceanicAbyss;
+    public BiomeWrapper coralReef { get; private set; }
+    public BiomeWrapper cliffsSeaweed { get; private set; }
+    public BiomeWrapper pelagial { get; private set; }
+    public BiomeWrapper oceanicAbyss { get; private set; }
 
     private const float PRODUCTION_INTERVAL = 1f;//every sec
     //private const float RESEARCH_INTERVAL_TRIGGER = 1f;//every sec
@@ -37,6 +44,15 @@ public class SanctuariesManager : MonoBehaviour {
         SanctuariesBehaviour();
     }
 
+    public BiomeWrapper GetBiomeWrapper(BiomeType type) =>
+        type switch {
+            BiomeType.CoralReef => coralReef,
+            BiomeType.CliffsSeaweed => cliffsSeaweed,
+            BiomeType.Pelagial => pelagial,
+            BiomeType.OceanicAbyss => oceanicAbyss,
+            _ => null
+        };
+
     void SanctuariesBehaviour() {
         timer += Time.unscaledDeltaTime;
         if (timer >= PRODUCTION_INTERVAL) {
@@ -46,8 +62,8 @@ public class SanctuariesManager : MonoBehaviour {
             ProduceResourceProgress(cliffsSeaweed);
             ProduceResourceProgress(pelagial);
             ProduceResourceProgress(oceanicAbyss);
+            OnShellsAmountChanged?.Invoke(ShellsCnt);
 
-            OnWheatAmountChanged?.Invoke(ShellsCnt);
             //upgrading
             ResearchBiomeProgress(coralReef);
             ResearchBiomeProgress(cliffsSeaweed);
@@ -60,14 +76,16 @@ public class SanctuariesManager : MonoBehaviour {
         ShellsCnt += shellsCnt;
 
     void ResearchBiomeProgress(BiomeWrapper biome) {
-        if (biome.IsBiomeUpgrading) {
+        if (biome.IsUpgrading) {
             biome.TimeToUpgrade--;
 
-            if (biome.TimeToUpgrade == 0) {
+            if (biome.TimeToUpgrade <= 0) {
                 biome.Level++;
                 biome.TimeToUpgrade = SanctuaryData.NON_UPGRADE_TIME;
-                OnBiomeResearched?.Invoke(biome);
+                OnBiomeResearched?.Invoke(biome.Info.Type, biome.Level);
             }
+
+            OnResearchUpdated?.Invoke(biome.Info.Type, biome.TimeToUpgrade);//           if biome is upgrd call for update UI
         }
     }
 
@@ -125,13 +143,59 @@ public class BiomeWrapper {
         }
     }
     public int TimeToUpgrade { get; set; } = SanctuaryData.NON_UPGRADE_TIME;
-    public bool IsBiomeUpgrading => TimeToUpgrade != SanctuaryData.NON_UPGRADE_TIME;
+    public bool IsUpgrading => TimeToUpgrade != SanctuaryData.NON_UPGRADE_TIME;
+    public bool NotReserched => Level == 0;
     public int ProductionCnt => Level * (int)Info.Type;
+    public int GetProductionPerMinute() => ProductionCnt * 60;
+    public int GetPriceToUpgrade() {
+        if (level >= Info.MaxLevel)
+            return 0;
+
+        return Info.LevelPrices[level];
+    }
     public float ResearchTimer { get; set; }
+
+    private const float SECONDS_IN_HOUR = 3600f;
+
 
     public BiomeWrapper(BiomeInfo info, int level, int timeToUpgrade) {
         Info = info;
         Level = level;
         TimeToUpgrade = timeToUpgrade;
+    }
+
+    public bool IsRequirementMet(SanctuaryData data) {
+        if (level >= Info.MaxLevel)
+            return false;
+
+        FishLevel currentReqFish = Info.Requirements[level];
+        return data[currentReqFish];
+    }
+
+    public bool IsEnoughShellsToUpgrade(int currentShellsCnt) {
+        if (level >= Info.MaxLevel)
+            return false;
+
+        int price = Info.LevelPrices[level];
+        return currentShellsCnt >= price;
+    }
+
+    public void OnStartUpgrade() {
+        if (level >= Info.MaxLevel)
+            return;
+
+        TimeToUpgrade = (int)(Info.UpgradeTimeByLevel_Hours[level] * SECONDS_IN_HOUR);
+        //TimeToUpgrade = (int)(TimeToUpgrade * .01f);
+        //Debug.LogWarning("Activate fast research");
+        //Level++;
+    }
+
+    public void BoostResearch() {
+        if (TimeToUpgrade == SanctuaryData.NON_UPGRADE_TIME)
+            return;
+
+        TimeToUpgrade -= 60*60;
+        if(TimeToUpgrade < 0)
+            TimeToUpgrade = 0;
     }
 }

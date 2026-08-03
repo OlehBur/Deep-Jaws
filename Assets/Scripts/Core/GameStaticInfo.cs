@@ -7,7 +7,7 @@ public enum FishLevel {
     Dartfish = -1,
     Crab = 0,
     SeaBass,
-    Mackarel,
+    Mackerel,
     Moray,
     Lionfish,
     Barracuda,
@@ -86,6 +86,9 @@ public struct PurchasedSkins {
 
 
 public static class GameStaticInfo {
+    public const int SECONDS_IN_HOUR = 3600;
+    public const int SECONDS_IN_MINUTE = 60;
+
     public const int DEFAULT_SCREEN_FRAMERATE = 60;
     public const int FRAMERATE_30 = 30;
     public const int FRAMERATE_60 = 60;
@@ -106,6 +109,7 @@ public static class GameStaticInfo {
 
     public static GameMode Gamemode { get; set; } = GameMode.Easy;
     public const int GAMEMODES_COUNT = 3;
+
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish
     /// <summary>
     /// use for separating sharks from other fish, where index 6 is the barrier fish, and 
@@ -115,7 +119,8 @@ public static class GameStaticInfo {
     public const FishLevel MAX_FISH_LEVEL = FishLevel.WhiteShark;
     public const int PEACEFUL_FISH_LVL = 0;//barrier level for peaceful fish (crab and below)
     public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Dartfish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
-
+    public const FishLevel POISON_IMMUNE_FISH_TRIGGER = FishLevel.Cuttlefish;
+    public static readonly FishLevel[] AllFishLevels = (FishLevel[])Enum.GetValues(typeof(FishLevel));
 
     //world
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located

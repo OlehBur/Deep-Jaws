@@ -388,7 +388,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     void CheckPlayerLvlAchievements(FishLevel playerLvl) {
         switch (playerLvl) {
-            case FishLevel.Mackarel:
+            case FishLevel.Mackerel:
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_so_thats_how_it_is);
             break;
             //case FishLevel.Moray://not 
@@ -565,7 +565,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         Transform spawnPoints;
         switch (playerLvl) {
             case FishLevel.SeaBass:
-            case FishLevel.Mackarel:
+            case FishLevel.Mackerel:
             spawnPoints = weakFishSpawnPointsParent;
             break;
             case FishLevel.Moray:

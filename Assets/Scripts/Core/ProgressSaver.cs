@@ -144,4 +144,71 @@ public class SanctuaryData : IData {
     public int cliffsSeaweed_SecondsToUpgrade = NON_UPGRADE_TIME;
     public int pelagial_SecondsToUpgrade = NON_UPGRADE_TIME;
     public int oceanicAbyss_SecondsToUpgrade = NON_UPGRADE_TIME;
+
+    public bool isDartfishNeutralized = false;
+    public bool isCrabNeutralized = false;
+    public bool isSeabassNeutralized = false;
+    public bool isMackarelNeutralized = false;
+    public bool isMorayNeutralized = false;
+    public bool isLionfishNeutralized = false;
+    public bool isBarracudaNeutralized = false;
+    public bool isTunaNeutralized = false;
+    public bool isHammerheadNeutralized = false;
+    public bool isTigerNeutralized = false;
+    public bool isWhiteNeutralized = false;
+    public bool this[FishLevel level] {
+        get {
+            return level switch {
+                FishLevel.Dartfish => isDartfishNeutralized,
+                FishLevel.Crab => isCrabNeutralized,
+                FishLevel.SeaBass => isSeabassNeutralized,
+                FishLevel.Mackerel => isMackarelNeutralized,
+                FishLevel.Moray => isMorayNeutralized,
+                FishLevel.Lionfish => isLionfishNeutralized,
+                FishLevel.Barracuda => isBarracudaNeutralized,
+                FishLevel.Tuna => isTunaNeutralized,
+                FishLevel.HammerShark => isHammerheadNeutralized,
+                FishLevel.TigerShark => isTigerNeutralized,
+                FishLevel.WhiteShark => isWhiteNeutralized,
+                _ => false
+            };
+        }
+        set {
+            switch (level) {
+                case FishLevel.Dartfish:
+                isDartfishNeutralized = value;
+                break;
+                case FishLevel.Crab:
+                isCrabNeutralized = value;
+                break;
+                case FishLevel.SeaBass:
+                isSeabassNeutralized = value;
+                break;
+                case FishLevel.Mackerel:
+                isMackarelNeutralized = value;
+                break;
+                case FishLevel.Moray:
+                isMorayNeutralized = value;
+                break;
+                case FishLevel.Lionfish:
+                isLionfishNeutralized = value;
+                break;
+                case FishLevel.Barracuda:
+                isBarracudaNeutralized = value;
+                break;
+                case FishLevel.Tuna:
+                isTunaNeutralized = value;
+                break;
+                case FishLevel.HammerShark:
+                isHammerheadNeutralized = value;
+                break;
+                case FishLevel.TigerShark:
+                isTigerNeutralized = value;
+                break;
+                case FishLevel.WhiteShark:
+                isWhiteNeutralized = value;
+                break;
+            }
+        }
+    }
 }

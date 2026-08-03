@@ -8,7 +8,7 @@ public class SoundtrackController : MonoBehaviour {
     [SerializeField] AudioClip algaeForestSound;
     [SerializeField] AudioClip deepCoralsSound;
 
-    private Coroutine fadeVolumeChangeSoundCoroutine;
+    private Coroutine fadeVolumeChangeSoundCoroutine = null;
     //private AudioClip targetClip;
 
     private const FishLevel ALGAE_FOREST_TRIGGER = FishLevel.Moray;
@@ -39,7 +39,7 @@ public class SoundtrackController : MonoBehaviour {
         if (fadeVolumeChangeSoundCoroutine != null)
             StopCoroutine(fadeVolumeChangeSoundCoroutine);
 
-        StartCoroutine(SmoothSoundChange(target));
+        fadeVolumeChangeSoundCoroutine = StartCoroutine(SmoothSoundChange(target));
     }
 
     IEnumerator SmoothSoundChange(AudioClip target) {

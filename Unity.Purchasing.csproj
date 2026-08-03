@@ -368,8 +368,8 @@
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Product\Interfaces\IProductServiceExtension.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Extension\Interfaces\IPurchaseCache.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Stores\AppStore.cs" />
-    <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Telemetry\Diagnostics\Interfaces\ITelemetryDiagnostics.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Exceptions\StoreCreationException.cs" />
+    <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Telemetry\Diagnostics\Interfaces\ITelemetryDiagnostics.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Stores\Helpers\SelectedAndroidStoreHelper.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Stores\StoreSpecificPurchaseErrorCode.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\CartValidation\StoreCartValidator.cs" />
@@ -379,8 +379,8 @@
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Telemetry\Metrics\TelemetryMetricEvent.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Stores\Android\GooglePlay\Models\GoogleFetchProductsFailureReason.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Legacy\Configurations\StoreConfiguration.cs" />
-    <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Legacy\PurchaseEventArgs.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Store\AppleAppStore\Extensions\UseCases\ClearAppleTransactionLogsUseCase.cs" />
+    <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Legacy\PurchaseEventArgs.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\CoreServices\Environment\CoreServicesEnvironmentSubject.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\ProductType.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Retries\RetryPolicies\ExponentialBackOffRetryPolicy.cs" />
