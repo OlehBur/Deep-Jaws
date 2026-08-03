@@ -23,7 +23,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] Light mainMenuLight;
     [SerializeField] Animator gmWndAnimator;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
-    [SerializeField] FaderScene faderScene;
+    [SerializeField] SceneLoader faderScene;
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
@@ -45,10 +45,6 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject respawnWnd;
     [SerializeField] TextMeshProUGUI respawnTimer;
-
-    public static readonly string GAME_SCENE_NAME = "Game";
-    public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
-    public static readonly string LOADING_SCENE_NAME = "LoadScene";
 
     private int previousLocaleIndex = 0;
     private Framerate currentFramerateIndex;
@@ -99,7 +95,7 @@ public class MainmenuManager : MonoBehaviour {
         LanguageInit(savedSettings);
         FramerateInit(savedSettings);
 
-        if (!GameManager.IsInternetAvailable)
+        if (GameManager.IsInternetNotAvailable)
             FirstNoConnectionOpen();
 
         if (kingOfDeepsObj != null) {
@@ -162,8 +158,7 @@ public class MainmenuManager : MonoBehaviour {
     public void ResetAndReloadGame_Hard() {
         ResetWorldData();
         PlayerPrefs.SetInt(GM_KEY, (int)GameMode.Hard);
-        faderScene.ChangeLoadScene(SceneType.Game);
-        faderScene.gameObject.SetActive(true);
+        faderScene.OnLoad_GameScene();
     }
 
     async void LanguageInit(SettingsData savedSettings) {
@@ -364,18 +359,18 @@ public class MainmenuManager : MonoBehaviour {
                 successSignInColor : failedSignInColor;
     }
 
-    public static void OnGameSceneLoad() {
-        // Load the game scene
-        UnityEngine.SceneManagement.SceneManager.LoadScene(GAME_SCENE_NAME);
-    }
+    //public static void OnGameSceneLoad() {
+    //    // Load the game scene
+    //    UnityEngine.SceneManagement.SceneManager.LoadScene(GameStaticInfo.GAME_SCENE_NAME);
+    //}
 
-    public static void OnMainMenuLoad() {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(MAINMENU_SCENE_NAME);
-    }
+    //public static void OnMainMenuLoad() {
+    //    UnityEngine.SceneManagement.SceneManager.LoadScene(GameStaticInfo.MAINMENU_SCENE_NAME);
+    //}
 
-    public static void OnLoadingSceneLoad() {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(LOADING_SCENE_NAME);
-    }
+    //public static void OnLoadingSceneLoad() {
+    //    UnityEngine.SceneManagement.SceneManager.LoadScene(GameStaticInfo.LOADING_SCENE_NAME);
+    //}
 
     public void ResetWorldData() {
         PlayerLeaderboardScore.LoadSavedData();

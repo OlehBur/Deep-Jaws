@@ -10,12 +10,12 @@ public class ProgressBar : MonoBehaviour {
     private const float MIN_PROGRESSS_FILL = 30f;
 
 
-    private void OnValidate() {
-        if (fillRect == null || parentRect == null)
-            return;
+    //private void OnValidate() {
+    //    if (fillRect == null || parentRect == null)
+    //        return;
 
-        SetFillAmount(progress);
-    }
+    //    SetFillAmount(progress);
+    //}
 
     public void SetFillAmount(float fillAmount) {
         fillAmount = Mathf.Clamp01(fillAmount);

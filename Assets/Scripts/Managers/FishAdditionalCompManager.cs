@@ -131,6 +131,7 @@ public class FishAdditionalCompManager : MonoBehaviour {
         }
 
         Debug.LogWarning("No inactive objects in pool of type: " + pool[0].ToString());
+        pool[0].SetActive(false);
         obj = pool[0];
     }
 

@@ -163,7 +163,7 @@ public class GameAdsManager : MonoBehaviour {
             return;
         }
 
-        if (GameManager.IsInternetAvailable) {
+        if (GameManager.IsInternetNotAvailable) {
             //if (noInternetConnectionWnd != null)
             //    noInternetConnectionWnd.gameObject.SetActive(true);
             gui.ActivateNoInternetConnectionWnd(true);

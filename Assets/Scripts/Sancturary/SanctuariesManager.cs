@@ -19,14 +19,20 @@ public class SanctuariesManager : MonoBehaviour {
     [SerializeField] BiomeInfo pelagialInfo;
     [SerializeField] BiomeInfo oceanicAbyssInfo;
 
-    private float timer;
+    //private float secondTimer;
+    private float minuteTimer;
     public BiomeWrapper coralReef { get; private set; }
     public BiomeWrapper cliffsSeaweed { get; private set; }
     public BiomeWrapper pelagial { get; private set; }
     public BiomeWrapper oceanicAbyss { get; private set; }
 
-    private const float PRODUCTION_INTERVAL = 1f;//every sec
+    private const float PRODUCTION_UPDATE_INTERVAL = 60f;//every min
     //private const float RESEARCH_INTERVAL_TRIGGER = 1f;//every sec
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void ResetStatics() {
+        Instance = null;
+    }
 
     private void Awake() {
         if (Instance != null && Instance != this) {
@@ -38,6 +44,12 @@ public class SanctuariesManager : MonoBehaviour {
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start() {
+        //init update
+        OnShellsAmountChanged?.Invoke(ShellsCnt);
+        OnResearchUpdated?.Invoke(BiomeType.CoralReef, coralReef.TimeToUpgrade);
     }
 
     private void Update() {
@@ -54,9 +66,9 @@ public class SanctuariesManager : MonoBehaviour {
         };
 
     void SanctuariesBehaviour() {
-        timer += Time.unscaledDeltaTime;
-        if (timer >= PRODUCTION_INTERVAL) {
-            timer = 0f;
+        minuteTimer += Time.unscaledDeltaTime;
+        if (minuteTimer >= PRODUCTION_UPDATE_INTERVAL) {
+            minuteTimer = 0f;
             //Production
             ProduceResourceProgress(coralReef);
             ProduceResourceProgress(cliffsSeaweed);
@@ -79,14 +91,23 @@ public class SanctuariesManager : MonoBehaviour {
         if (biome.IsUpgrading) {
             biome.TimeToUpgrade--;
 
-            if (biome.TimeToUpgrade <= 0) {
-                biome.Level++;
-                biome.TimeToUpgrade = SanctuaryData.NON_UPGRADE_TIME;
-                OnBiomeResearched?.Invoke(biome.Info.Type, biome.Level);
-            }
-
-            OnResearchUpdated?.Invoke(biome.Info.Type, biome.TimeToUpgrade);//           if biome is upgrd call for update UI
+            UpgradeBiomeLevel(biome);
         }
+    }
+
+    void UpgradeBiomeLevel(BiomeWrapper biome) {
+        if (biome.TimeToUpgrade <= 0) {
+            biome.Level++;
+            biome.TimeToUpgrade = SanctuaryData.NON_UPGRADE_TIME;
+
+            //research immed prize
+            ShellsCnt += biome.GetProductionPerMinute();
+            OnShellsAmountChanged?.Invoke(ShellsCnt);
+
+            OnBiomeResearched?.Invoke(biome.Info.Type, biome.Level);
+        }
+
+        OnResearchUpdated?.Invoke(biome.Info.Type, biome.TimeToUpgrade);//           if biome is upgrd call for update UI
     }
 
     private void ProduceResourceProgress(BiomeWrapper biome) {
@@ -106,30 +127,43 @@ public class SanctuariesManager : MonoBehaviour {
         cliffsSeaweed = new(cliffsSeaweedInfo, sancturariesData.cliffsSeaweed_Lvl, sancturariesData.cliffsSeaweed_SecondsToUpgrade);
         pelagial = new(pelagialInfo, sancturariesData.pelagial_Lvl, sancturariesData.pelagial_SecondsToUpgrade);
         oceanicAbyss = new(oceanicAbyssInfo, sancturariesData.oceanicAbyss_Lvl, sancturariesData.oceanicAbyss_SecondsToUpgrade);
+
+        coralReef.OnBoostedProgress += UpgradeBiomeLevel;
+        cliffsSeaweed.OnBoostedProgress += UpgradeBiomeLevel;
+        pelagial.OnBoostedProgress += UpgradeBiomeLevel;
+        oceanicAbyss.OnBoostedProgress += UpgradeBiomeLevel;
     }
 
     private void OnDisable() {
-        //save data
-        SanctuaryData sancturariesData = ProgressSaver.IsSanctuaryDataExist ?
+        if (Instance == this) {
+            //save data
+            SanctuaryData sancturariesData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-        sancturariesData.shellsCnt = ShellsCnt;
-        sancturariesData.coralReef_Lvl = coralReef.Level;
-        sancturariesData.coralReef_SecondsToUpgrade = coralReef.TimeToUpgrade;
+            sancturariesData.shellsCnt = ShellsCnt;
+            sancturariesData.coralReef_Lvl = coralReef.Level;
+            sancturariesData.coralReef_SecondsToUpgrade = coralReef.TimeToUpgrade;
 
-        sancturariesData.cliffsSeaweed_Lvl = cliffsSeaweed.Level;
-        sancturariesData.cliffsSeaweed_SecondsToUpgrade = cliffsSeaweed.TimeToUpgrade;
+            sancturariesData.cliffsSeaweed_Lvl = cliffsSeaweed.Level;
+            sancturariesData.cliffsSeaweed_SecondsToUpgrade = cliffsSeaweed.TimeToUpgrade;
 
-        sancturariesData.pelagial_Lvl = pelagial.Level;
-        sancturariesData.pelagial_SecondsToUpgrade = pelagial.TimeToUpgrade;
+            sancturariesData.pelagial_Lvl = pelagial.Level;
+            sancturariesData.pelagial_SecondsToUpgrade = pelagial.TimeToUpgrade;
 
-        sancturariesData.oceanicAbyss_Lvl = oceanicAbyss.Level;
-        sancturariesData.oceanicAbyss_SecondsToUpgrade = oceanicAbyss.TimeToUpgrade;
+            sancturariesData.oceanicAbyss_Lvl = oceanicAbyss.Level;
+            sancturariesData.oceanicAbyss_SecondsToUpgrade = oceanicAbyss.TimeToUpgrade;
+            ProgressSaver.SaveData(sancturariesData);
+            Instance = null;
 
-        ProgressSaver.SaveData(sancturariesData);
+            coralReef.OnBoostedProgress -= UpgradeBiomeLevel;
+            cliffsSeaweed.OnBoostedProgress -= UpgradeBiomeLevel;
+            pelagial.OnBoostedProgress -= UpgradeBiomeLevel;
+            oceanicAbyss.OnBoostedProgress -= UpgradeBiomeLevel;
+        }
     }
 }
 
 public class BiomeWrapper {
+    public event Action<BiomeWrapper> OnBoostedProgress;
     public BiomeInfo Info { get; private set; }
     private int level = 0;
     public int Level {
@@ -146,7 +180,7 @@ public class BiomeWrapper {
     public bool IsUpgrading => TimeToUpgrade != SanctuaryData.NON_UPGRADE_TIME;
     public bool NotReserched => Level == 0;
     public int ProductionCnt => Level * (int)Info.Type;
-    public int GetProductionPerMinute() => ProductionCnt * 60;
+    public int GetProductionPerMinute() => ProductionCnt;
     public int GetPriceToUpgrade() {
         if (level >= Info.MaxLevel)
             return 0;
@@ -194,8 +228,10 @@ public class BiomeWrapper {
         if (TimeToUpgrade == SanctuaryData.NON_UPGRADE_TIME)
             return;
 
-        TimeToUpgrade -= 60*60;
-        if(TimeToUpgrade < 0)
+        TimeToUpgrade -= 60 * 60;
+        if (TimeToUpgrade < 0)
             TimeToUpgrade = 0;
+
+        OnBoostedProgress?.Invoke(this);
     }
 }

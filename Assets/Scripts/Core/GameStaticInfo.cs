@@ -89,6 +89,11 @@ public static class GameStaticInfo {
     public const int SECONDS_IN_HOUR = 3600;
     public const int SECONDS_IN_MINUTE = 60;
 
+    public static readonly string GAME_SCENE_NAME = "Game";
+    public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
+    public static readonly string LOADING_SCENE_NAME = "LoadScene";
+    public static readonly string SANCTUARY_SCENE_NAME = "Sanctuary";
+
     public const int DEFAULT_SCREEN_FRAMERATE = 60;
     public const int FRAMERATE_30 = 30;
     public const int FRAMERATE_60 = 60;

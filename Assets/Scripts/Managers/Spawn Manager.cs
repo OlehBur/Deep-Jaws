@@ -83,10 +83,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     private const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
     private const int SHIELDS_POOL_CNT = 30; // POOL_SIZE/4
-    private const int WHIRLE_POOL_CNT = 16;
-    private const int BITE_PARTICLES_POOL_CNT = 12;
-    private const int SKELETON_PARTICLE_POOL_CNT = 8;
-    private const int DEAD_BUBBLES_POOL_CNT = 8;
+    private const int WHIRLE_POOL_CNT = 18;
+    private const int BITE_PARTICLES_POOL_CNT = 25;
+    private const int SKELETON_PARTICLE_POOL_CNT = 12;
+    private const int DEAD_BUBBLES_POOL_CNT = 12;
     private const int INK_PARTICLES_POOL_CNT = 5;//CUTTLEFISH_SPAWN_COUNT / 6
 
 
@@ -270,13 +270,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         return null;
     }
 
-    public void OnSceneExit() {
-        SavePlayerData();
-    }
-
     //save data
     private void /*OnApplicationQuit*/OnDisable() {
-        SavePlayerData();
+        if (GameStaticInfo.Gamemode != GameMode.Hard)//in case of death & automatic scene reload
+            SavePlayerData();
 
         PlayerFish.OnFishDie -= FishDieAct;
         PlayerFish.OnFishLvlUp -= PlayerLvlUpAct;
@@ -295,8 +292,15 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             pool[i].OnFishDie -= FishDieAct;
     }
 
+    public void OnSceneExit() {
+        SavePlayerData();
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SavePlayerData() {
+        if (PlayerFish == null)
+            return;
+
         WorldData worldPlayerData = ProgressSaver.IsWorldDataExist ?
             ProgressSaver.LoadWorldData() : new WorldData();
 
@@ -316,7 +320,6 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         int playerIndex = playerLvl - 1;
 
         if (GameStaticInfo.Gamemode == GameMode.Hard && isDie) {            //playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL;
-            OnSceneExit();
             mainmenuManager.ResetAndReloadGame_Hard();
             enabled = false;
             return null;

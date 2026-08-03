@@ -59,7 +59,7 @@ public class FishAnim : MonoBehaviour {
         maxShapeRotationVal = (fishSkinnedMesh == null) ?
             0f : fish.DefaultInfo.MaxShaderRotationVal;//SetGetMaterialWithPropBlock(ref fishSkinnedMesh, ref matPropBlock, "_MaxRotationValue", true);
 
-        if (animator != null) {
+        if (animator != null && fish.Level!= FishLevel.Pufferfish) {
             animator.ResetTrigger(GameStaticInfo.BITE_ANIMATOR_TRIGGER);
             animator.Rebind();  // reset all to def stage (fix open mouth death)
 

@@ -60,8 +60,10 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         biomesUI.SetActive(true);
         almanacUI.SetActive(false);
 
-        UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
-        UpdateSelectedBiomeUI(currentBiomeType);
+        if (SanctuariesManager.Instance != null) {
+            UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
+            UpdateSelectedBiomeUI(currentBiomeType);
+        }
     }
 
     private void OnEnable() {
@@ -146,44 +148,44 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     private void UpdateSelectedBiomeUI(BiomeType currentBiomeType) {
-        if (SanctuariesManager.Instance != null) {
-            if (currentBiomeType < BiomeType.CoralReef)//infinity scroll
-                currentBiomeType = BiomeType.OceanicAbyss;
-            if (currentBiomeType > BiomeType.OceanicAbyss)
-                currentBiomeType = BiomeType.CoralReef;
+        //if (SanctuariesManager.Instance != null) {
+        if (currentBiomeType < BiomeType.CoralReef)//infinity scroll
+            currentBiomeType = BiomeType.OceanicAbyss;
+        if (currentBiomeType > BiomeType.OceanicAbyss)
+            currentBiomeType = BiomeType.CoralReef;
 
-            if (this.currentBiomeType != currentBiomeType)
-                cameraChanger.OnChangeBiomeCamera(currentBiomeType);
+        if (this.currentBiomeType != currentBiomeType)
+            cameraChanger.OnChangeBiomeCamera(currentBiomeType);
 
-            this.currentBiomeType = currentBiomeType;
-            selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
+        this.currentBiomeType = currentBiomeType;
+        selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
 
-            biomeTittle.text = selectedBiome.Info.Tittle.GetLocalizedString();
-            researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
+        biomeTittle.text = selectedBiome.Info.Tittle.GetLocalizedString();
+        researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
 
-            if (selectedBiome.NotReserched) {
-                foreach (GameObject obj in biomeHideLockObjects)
-                    obj.SetActive(false);
+        if (selectedBiome.NotReserched) {
+            foreach (GameObject obj in biomeHideLockObjects)
+                obj.SetActive(false);
 
-                UpdateResearchProgress(currentBiomeType, selectedBiome.TimeToUpgrade);
-                foreach(Button button in residentsButtons)//disable residents buttons
-                    button.gameObject.SetActive(false);
-            }
-            else {
-                foreach (GameObject obj in biomeHideLockObjects)
-                    obj.SetActive(true);
+            UpdateResearchProgress(currentBiomeType, selectedBiome.TimeToUpgrade);
+            foreach (Button button in residentsButtons)//disable residents buttons
+                button.gameObject.SetActive(false);
+        }
+        else {
+            foreach (GameObject obj in biomeHideLockObjects)
+                obj.SetActive(true);
 
-                UpdateBiomeNonStatInfo();
-                UpdateResidentImagesPreview();
+            UpdateBiomeNonStatInfo();
+            UpdateResidentImagesPreview();
 
-                if (selectedBiome.Level == selectedBiome.Info.MaxLevel) {
-                    reseachButton.gameObject.SetActive(false);
-                    boostResearchButton.gameObject.SetActive(false);
-                    researchProgressBar.gameObject.SetActive(false);
-                    requirement.SetActive(false);
-                }
+            if (selectedBiome.Level == selectedBiome.Info.MaxLevel) {
+                reseachButton.gameObject.SetActive(false);
+                boostResearchButton.gameObject.SetActive(false);
+                researchProgressBar.gameObject.SetActive(false);
+                requirement.SetActive(false);
             }
         }
+        //}
     }
 
     void SetRequirement() {
@@ -198,8 +200,15 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
     public void OnNextBiome() => UpdateSelectedBiomeUI(currentBiomeType + 1);
     public void OnPreviousBiome() => UpdateSelectedBiomeUI(currentBiomeType - 1);
-    void OnResearchCurrentBiome() => selectedBiome.OnStartUpgrade();
-    void OnBoostResearch() => selectedBiome.BoostResearch();
+
+    void OnResearchCurrentBiome() {
+        selectedBiome.OnStartUpgrade();
+        UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
+    }
+    void OnBoostResearch() {
+        selectedBiome.BoostResearch();
+        UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
+    }
 
     void UpdateBiomeNonStatInfo() {
         UpdateStars(selectedBiome.Level, selectedBiome.Info.MaxLevel);
@@ -234,6 +243,9 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     void UpdateResearchProgress(BiomeType biomeType, int timeToUpgrade) {
+        if (selectedBiome == null)
+            selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
+
         if (biomeType == currentBiomeType) {
             if (selectedBiome.IsUpgrading) {
                 reseachButton.gameObject.SetActive(false);

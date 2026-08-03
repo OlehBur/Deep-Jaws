@@ -191,12 +191,12 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     void ShowNoConnectionIfNeed() {
-        if (Application.internetReachability == NetworkReachability.NotReachable) 
+        if (Application.internetReachability == NetworkReachability.NotReachable)
             mainmenu.ActivateNoInternetConnectionWnd(true);
     }
 
     public void OnSavePlayerScoreToLeaderBoard(string leaderboard, long score) {
-        if (GameManager.IsInternetAvailable) {
+        if (GameManager.IsInternetNotAvailable) {
             Debug.LogWarning("lederboard Score report failed: there is no internet!");
             return;
         }
@@ -211,7 +211,7 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public void OnSavePlayerDeathsToLeaderBoard(int deaths) {
-        if (GameManager.IsInternetAvailable) {
+        if (GameManager.IsInternetNotAvailable) {
             Debug.LogWarning("lederboard Score report failed: there is no internet!");
             return;
         }
@@ -289,7 +289,7 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public static void OnTriggerAchievement(string achievementKey) {
-        if (GameManager.IsInternetAvailable) {
+        if (GameManager.IsInternetNotAvailable) {
             Debug.LogWarning("achievement is not included: there is no internet!");
             return;
         }
