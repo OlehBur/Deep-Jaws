@@ -50,7 +50,8 @@ public class Fish : MonoBehaviour {
     /// </summary>
     public bool IsAlreadySelected { get; set; } = false;
 
-    /*[HideInInspector]*/ public Vector3 ScaleModifier => new(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
+    /*[HideInInspector]*/
+    public Vector3 ScaleModifier => new(1f, 1f, .66f + Mathf.Clamp01(Progress) * .34f); // scale modifier for fish, in start - fish looks like baby
     //public float JawForwardOffset => jawForwardOffset;
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
     public event Action<Vector3> OnFishUpdateSize;
@@ -163,6 +164,58 @@ public class Fish : MonoBehaviour {
 
         /*return*/
         isStillAlive = victim.TakeDamage(damage);
+        if (IsPlayer && GameStaticInfo.Gamemode != GameMode.Easy && !isStillAlive)//die 
+            SaveSanctuaryData(victim.Level);
+    }
+
+    void SaveSanctuaryData(FishLevel fish) {
+        if (SanctuariesManager.Instance != null) {
+            SanctuaryData sd = SanctuariesManager.Instance.SanctuaryData;
+
+            switch (fish) {
+                case FishLevel.Dartfish:
+                sd.isDartfishNeutralized = true;
+                break;
+                case FishLevel.Crab:
+                sd.isCrabNeutralized = true;
+                break;
+                case FishLevel.SeaBass:
+                sd.isSeabassNeutralized = true;
+                break;
+                case FishLevel.Mackerel:
+                sd.isMackarelNeutralized = true;
+                break;
+                case FishLevel.Moray:
+                sd.isMorayNeutralized = true;
+                break;
+                case FishLevel.Lionfish:
+                sd.isLionfishNeutralized = true;
+                break;
+                case FishLevel.Barracuda:
+                sd.isBarracudaNeutralized = true;
+                break;
+                case FishLevel.Tuna:
+                sd.isTunaNeutralized = true;
+                break;
+                case FishLevel.HammerShark:
+                sd.isHammerheadNeutralized = true;
+                break;
+                case FishLevel.TigerShark:
+                sd.isTigerNeutralized = true;
+                break;
+                case FishLevel.WhiteShark:
+                sd.isWhiteNeutralized = true;
+                break;
+                case FishLevel.Pufferfish:
+                sd.isPufferNeutralized = true;
+                break;
+                case FishLevel.Cuttlefish:
+                sd.isCuttleNeutralized = true;
+                break;
+            }
+            //Debug.LogWarning("Player neutralized: " + fish);
+            ProgressSaver.SaveData(sd);
+        }
     }
 
     public void FeedCaviar(/*float foodNutrition*/) {

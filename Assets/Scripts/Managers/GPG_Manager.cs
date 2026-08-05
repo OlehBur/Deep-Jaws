@@ -137,6 +137,7 @@ public class GPG_Manager : MonoBehaviour {
 
         //Debug.Log("Trying to authenticate...");
         PlayGamesPlatform.Instance.Authenticate((result) => {
+            //OnLoadKingOfDeeps?.Invoke("test user");
             if (result == SignInStatus.Success) {
                 //Debug.Log("Authentication SUCCESS");
                 isAuthenticated = true;
@@ -176,7 +177,7 @@ public class GPG_Manager : MonoBehaviour {
             mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
 
         if (mainmenu != null) {
-            mainmenu.InitGPGServices(this);
+            //mainmenu.InitGPGServices(this);
             mainmenu.ChangeSignInColor(isAuthenticated);
         }
     }

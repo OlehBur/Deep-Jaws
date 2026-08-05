@@ -112,9 +112,14 @@ public static class GameStaticInfo {
     public const int SETTINGS_SHADOWMAP_RESOLUTION_3 = 2048;
     public const int SETTINGS_DEFAULT_LANGUAGE = 0;
 
+    //gamemode
     public static GameMode Gamemode { get; set; } = GameMode.Easy;
     public const int GAMEMODES_COUNT = 3;
+    public const float EASY_MODE_SHELLS_MULTIPLIER = 1f;
+    public const float MEDIUM_MODE_SHELLS_MULTIPLIER = 1.2f;
+    public const float HARD_MODE_SHELLS_MULTIPLIER = 1.5f;
 
+    //fish
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish
     /// <summary>
     /// use for separating sharks from other fish, where index 6 is the barrier fish, and 
@@ -131,10 +136,8 @@ public static class GameStaticInfo {
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
     public const string LAYER_OBSTACLE = "Obstacle";
     public const string LAYER_CAMERA_AVOID_COLLIDERS = "AvoidDynamicCameraColliders";
-
     public static int LAYER_MASK_ENTITY => LayerMask.GetMask(LAYER_ENTITY);//layer id for entities
     public static int CUTTLEFISH_OVERLAP_LAYER_MASK => LayerMask.GetMask("Default", "Obstacle");
-
     public const string TAG_SPAWN_ZONE = "SpawnZone";
     public const string TAG_BUBBLESHIELD = "Shield";
     public const string TAG_PLAYER = "Player";
@@ -142,7 +145,6 @@ public static class GameStaticInfo {
     public const string TAG_MAP_PREV = "MapReview";
     public const string TAG_POISON_TRIGGER = "PoisonTrigger";
     public const string TAG_OBSTACLE = "Obstacle";
-
     public const string NAME_PLAYER = "Player ";
     public const string NAME_ENEMY = "Enemy ";
 
@@ -168,7 +170,10 @@ public static class GameStaticInfo {
     public const string AUDIO_MASTER_VOLUME_PARAM = "MasterVol";
     public const string AUDIO_MUSIC_VOLUME_PARAM = "MusicVol";
     public const string AUDIO_VFX_VOLUME_PARAM = "SFXVol";
-
+    public enum LocalizationID {
+        English = 0,
+        Ukrainian = 1
+    }
 
     //animators
     public static readonly int FISH_ANIMATOR_IDLE_STATE = Animator.StringToHash("Idle");
@@ -191,10 +196,7 @@ public static class GameStaticInfo {
     public static readonly int ZONE_TOUCH_POS_PROP = Shader.PropertyToID("_TouchPosition");
     public const int MERCURY_SKIN_BASE_SCALE = 3;
 
-    public enum LocalizationID {
-        English = 0,
-        Ukrainian = 1
-    }
+    public const int BIOME_RESEARCH_BOOST_TIME = 15 * 60;//15 MIN
 
     public static Vector2 WorldToNormalizeScreenPos(Vector3 pos) {
         Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);

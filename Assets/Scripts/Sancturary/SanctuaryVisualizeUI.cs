@@ -48,7 +48,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
     private void Start() {
         reseachButton.onClick.AddListener(OnResearchCurrentBiome);
-        boostResearchButton.onClick.AddListener(OnBoostResearch);
+        //boostResearchButton.onClick.AddListener(OnBoostResearch);
 
         //init residents buttons
         for (int i = 0; i < residentsButtons.Length; i++) {
@@ -64,6 +64,9 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
             UpdateSelectedBiomeUI(currentBiomeType);
         }
+        boostResearchButton.onClick.RemoveAllListeners();
+        if (GameAdsManager.Instance != null)
+            boostResearchButton.onClick.AddListener(() => GameAdsManager.Instance.OnBoostClicked(currentBiomeType));
     }
 
     private void OnEnable() {
@@ -75,12 +78,13 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
         sanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-        sanctuaryData.isDartfishNeutralized = true;
-        sanctuaryData.isCrabNeutralized = true;
-        sanctuaryData.isSeabassNeutralized = true;
-        sanctuaryData.isMackarelNeutralized = true;
-        sanctuaryData.isHammerheadNeutralized = true;
-        Debug.LogWarning("Activate sone neutralization for testing");
+
+        //sanctuaryData.isDartfishNeutralized = true;
+        //sanctuaryData.isCrabNeutralized = true;
+        //sanctuaryData.isSeabassNeutralized = true;
+        //sanctuaryData.isMackarelNeutralized = true;
+        //sanctuaryData.isHammerheadNeutralized = true;
+        //Debug.LogWarning("Activate sone neutralization for testing");
     }
     private void OnDisable() {
         if (SanctuariesManager.Instance != null) {
@@ -162,6 +166,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
         biomeTittle.text = selectedBiome.Info.Tittle.GetLocalizedString();
         researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
+        reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
 
         if (selectedBiome.NotReserched) {
             foreach (GameObject obj in biomeHideLockObjects)
@@ -202,18 +207,20 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     public void OnPreviousBiome() => UpdateSelectedBiomeUI(currentBiomeType - 1);
 
     void OnResearchCurrentBiome() {
+        SanctuariesManager.Instance.OnAddShells(-selectedBiome.GetPriceToUpgrade());
         selectedBiome.OnStartUpgrade();
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
-    void OnBoostResearch() {
-        selectedBiome.BoostResearch();
-        UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
-    }
+    //void OnBoostResearch() {
+    //    selectedBiome.BoostResearch();
+    //    UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
+    //}
 
     void UpdateBiomeNonStatInfo() {
         UpdateStars(selectedBiome.Level, selectedBiome.Info.MaxLevel);
         productionPerMinuteTxt.text = selectedBiome.GetProductionPerMinute().ToString() + "/" + minuteShort.GetLocalizedString();
         researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
+        reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
@@ -257,7 +264,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                 //requirement check
                 if (selectedBiome.IsRequirementMet(sanctuaryData)) {
                     requirement.SetActive(false);
-                    reseachButton.interactable = true;
+                    reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
                 }
                 else {
                     SetRequirement();

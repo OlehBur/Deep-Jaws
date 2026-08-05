@@ -57,6 +57,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     public static Fish[] dartfishPool_FishComponents { get; } = new Fish[DARTFISH_SPAWN_COUNT];
     public int PlayerPoolSize => prefabs.Length - 1;//crab is uncounted
 
+    private float SpawnFishHeight => weakFishSpawnPointsParent.position.y;
     private Vector3 PlayerInitSpawnPos;
     private static readonly float[] SPAWN_WEIGHTS_EASY = { .5f, .35f, .15f };
     private static readonly float[] SPAWN_WEIGHTS_EASY_START = { .65f, .33f, .02f };
@@ -326,6 +327,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
 
         GameObject playerPrefab = playerPool_Objects[playerIndex];
+        coords.y = SpawnFishHeight;
         playerPrefab.transform.position = coords;
         playerPrefab.transform.rotation = rotation;
 

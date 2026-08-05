@@ -25,6 +25,8 @@ public class SanctuariesManager : MonoBehaviour {
     public BiomeWrapper cliffsSeaweed { get; private set; }
     public BiomeWrapper pelagial { get; private set; }
     public BiomeWrapper oceanicAbyss { get; private set; }
+    public SanctuaryData SanctuaryData { get; private set; }
+
 
     private const float PRODUCTION_UPDATE_INTERVAL = 60f;//every min
     //private const float RESEARCH_INTERVAL_TRIGGER = 1f;//every sec
@@ -40,7 +42,8 @@ public class SanctuariesManager : MonoBehaviour {
             return;
         }
 
-        ProgressSaver.LoadSanctuaryData();
+        SanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
+            ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
@@ -54,6 +57,11 @@ public class SanctuariesManager : MonoBehaviour {
 
     private void Update() {
         SanctuariesBehaviour();
+    }
+
+    public void BoostResearch(BiomeType type) {
+        BiomeWrapper biome = GetBiomeWrapper(type);
+        biome.BoostResearch();
     }
 
     public BiomeWrapper GetBiomeWrapper(BiomeType type) =>
@@ -84,8 +92,10 @@ public class SanctuariesManager : MonoBehaviour {
         }
     }
 
-    public void OnAddShells(int shellsCnt) =>
+    public void OnAddShells(int shellsCnt) {
         ShellsCnt += shellsCnt;
+        OnShellsAmountChanged?.Invoke(ShellsCnt);
+    }
 
     void ResearchBiomeProgress(BiomeWrapper biome) {
         if (biome.IsUpgrading) {
@@ -228,7 +238,7 @@ public class BiomeWrapper {
         if (TimeToUpgrade == SanctuaryData.NON_UPGRADE_TIME)
             return;
 
-        TimeToUpgrade -= 60 * 60;
+        TimeToUpgrade -= GameStaticInfo.BIOME_RESEARCH_BOOST_TIME;
         if (TimeToUpgrade < 0)
             TimeToUpgrade = 0;
 

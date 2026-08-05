@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: GameUI Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: GameUI
+  m_TableCollectionNameGuidString: 0d925aa322d8fed43be1de8ef083ae97
+  m_Entries:
+  - m_Id: 7786229760
+    m_Key: results_tit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 99553406976
+    m_Key: results_points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 337722765312
+    m_Key: result_mult
+    m_Metadata:
+      m_Items: []
+  - m_Id: 632095797248
+    m_Key: result_fin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 851860549632
+    m_Key: result_double
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1009138561024
+    m_Key: result_collect
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 6664731590874890344
+  references:
+    version: 2
+    RefIds:
+    - rid: 6664731590874890344
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1785855124089

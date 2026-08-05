@@ -24,6 +24,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] Animator gmWndAnimator;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] SceneLoader faderScene;
+    [SerializeField] GameResultWnd gameResult;
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
@@ -58,7 +59,7 @@ public class MainmenuManager : MonoBehaviour {
     private bool isWorldDataExist = false;
     private Color targetGMwndColor;
     private Color targetLightGMcolor;
-    private GPG_Manager gpg_manager;
+    //private GPG_Manager gpg_manager;
     private int respawnTime = 0;
 
     private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
@@ -91,9 +92,11 @@ public class MainmenuManager : MonoBehaviour {
         if (continueButton != null)// Initialize the continue button visibility based on saved data
             continueButton?.SetActive(isWorldDataExist);
 
-        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
-        LanguageInit(savedSettings);
-        FramerateInit(savedSettings);
+        if (framerateDropdown != null) {//if any settings field setted
+            SettingsData savedSettings = ProgressSaver.LoadSettingsData();
+            LanguageInit(savedSettings);
+            FramerateInit(savedSettings);
+        }
 
         if (GameManager.IsInternetNotAvailable)
             FirstNoConnectionOpen();
@@ -107,14 +110,24 @@ public class MainmenuManager : MonoBehaviour {
     private void OnEnable() {
         if (spawnManager != null)
             spawnManager.OnPlayerDied += ActivateRespawnWnd;
+
+
+        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
+            GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
     }
 
     private void OnDisable() {
         if (spawnManager != null)
             spawnManager.OnPlayerDied -= ActivateRespawnWnd;
+
+        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
+            GPG_Manager.Instance.OnLoadKingOfDeeps -= KingOfDeepsUpdate;
     }
 
     void KingOfDeepsUpdate(string playerNick) {
+        if (kingOfDeepsObj == null)
+            return;
+
         kingOfDeepsObj.SetActive(true);
         kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
         kingOfDeepsAnimator.enabled = true;
@@ -158,6 +171,7 @@ public class MainmenuManager : MonoBehaviour {
     public void ResetAndReloadGame_Hard() {
         ResetWorldData();
         PlayerPrefs.SetInt(GM_KEY, (int)GameMode.Hard);
+        gameResult.AddShellsWithoutWnd();
         faderScene.OnLoad_GameScene();
     }
 
@@ -324,25 +338,27 @@ public class MainmenuManager : MonoBehaviour {
         }
     }
 
-    public void InitGPGServices(GPG_Manager gpg_manager) {
-        this.gpg_manager = gpg_manager;
+    //public void InitGPGServices(GPG_Manager gpg_manager) {
+    //    this.gpg_manager = gpg_manager;
 
-        if (gpg_manager != null && kingOfDeepsObj != null)
-            gpg_manager.OnLoadKingOfDeeps += KingOfDeepsUpdate;
-    }
+    //    if (gpg_manager != null && kingOfDeepsObj != null)
+    //        gpg_manager.OnLoadKingOfDeeps += KingOfDeepsUpdate;
+    //}
 
     public void OnServicesButton(int buttonIndex) {
-        switch (buttonIndex) {
-            case 0:
-            gpg_manager.OnShowLeaderboard();
-            break;
-            case 1:
-            gpg_manager.OnShowAchievements();
-            break;
-            case 2:
-            gpg_manager.OnSign();
-            break;
-        }
+        if (GPG_Manager.Instance != null)
+            switch (buttonIndex) {
+                case 0:
+                /*gpg_manager*/
+                GPG_Manager.Instance.OnShowLeaderboard();
+                break;
+                case 1:
+                GPG_Manager.Instance.OnShowAchievements();
+                break;
+                case 2:
+                GPG_Manager.Instance.OnSign();
+                break;
+            }
     }
 
     //open ar u sur wnd if player already has saved game data

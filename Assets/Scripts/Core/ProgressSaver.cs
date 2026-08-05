@@ -156,6 +156,9 @@ public class SanctuaryData : IData {
     public bool isHammerheadNeutralized = false;
     public bool isTigerNeutralized = false;
     public bool isWhiteNeutralized = false;
+    public bool isCuttleNeutralized = false;
+    public bool isPufferNeutralized = false;
+
     public bool this[FishLevel level] {
         get {
             return level switch {
@@ -170,6 +173,8 @@ public class SanctuaryData : IData {
                 FishLevel.HammerShark => isHammerheadNeutralized,
                 FishLevel.TigerShark => isTigerNeutralized,
                 FishLevel.WhiteShark => isWhiteNeutralized,
+                FishLevel.Cuttlefish => isCuttleNeutralized,
+                FishLevel.Pufferfish => isPufferNeutralized,
                 _ => false
             };
         }
@@ -207,6 +212,12 @@ public class SanctuaryData : IData {
                 break;
                 case FishLevel.WhiteShark:
                 isWhiteNeutralized = value;
+                break;
+                case FishLevel.Cuttlefish:
+                isCuttleNeutralized = value;
+                break;
+                case FishLevel.Pufferfish:
+                isPufferNeutralized = value;
                 break;
             }
         }
