@@ -16,9 +16,26 @@ public class GameResultWnd : MonoBehaviour {
         InitWnd();
 
         if (GameAdsManager.Instance != null) {
+            GameAdsManager.Instance.OnAdButtonsInteractable += AdInteractable;
             GameAdsManager.Instance.OnDoubleShellsRewarded += OnDoubleShellsReceive;
             doubleShellsB.onClick.AddListener(() => GameAdsManager.Instance.OnDoubleShellsClicked());
         }
+    }
+    private void OnDisable() {
+        doubleShellsB.onClick.RemoveAllListeners();
+        receivedShells = 0;
+
+        if (GameAdsManager.Instance != null) {
+            GameAdsManager.Instance.OnDoubleShellsRewarded -= OnDoubleShellsReceive;
+            GameAdsManager.Instance.OnAdButtonsInteractable -= AdInteractable;
+        }
+    }
+
+    void AdInteractable(bool interactable) {
+        if (receivedShells > 0)
+            doubleShellsB.interactable = interactable;
+        else
+            doubleShellsB.interactable = false;
     }
 
     public void AddShellsWithoutWnd() {
@@ -33,14 +50,6 @@ public class GameResultWnd : MonoBehaviour {
 
         if (SanctuariesManager.Instance != null)//default shells cnt
             SanctuariesManager.Instance.OnAddShells(receivedShells);
-    }
-
-    private void OnDisable() {
-        doubleShellsB.onClick.RemoveAllListeners();
-        receivedShells = 0;
-
-        if (GameAdsManager.Instance != null)
-            GameAdsManager.Instance.OnDoubleShellsRewarded -= OnDoubleShellsReceive;
     }
 
     void InitWnd() {

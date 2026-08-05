@@ -44,8 +44,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject[] gamemodePauseTitles;
     [SerializeField] GameObject pauseWnd;
     [SerializeField] SpawnManager spawnManager;
-    [SerializeField] GameObject respawnWnd;
-    [SerializeField] TextMeshProUGUI respawnTimer;
+    [SerializeField] RespawnWnd respawnWnd;
 
     private int previousLocaleIndex = 0;
     private Framerate currentFramerateIndex;
@@ -60,7 +59,7 @@ public class MainmenuManager : MonoBehaviour {
     private Color targetGMwndColor;
     private Color targetLightGMcolor;
     //private GPG_Manager gpg_manager;
-    private int respawnTime = 0;
+    
 
     private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
     private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
@@ -74,7 +73,6 @@ public class MainmenuManager : MonoBehaviour {
     //private const string LOCALE_PREF_KEY = "LocaleIndex";
     //private const string FPS_KEY = "FPS";
     private const string GM_KEY = "GameMode";
-    private const int RESPAWN_TIME = 5;
     private const string REPORT_EMAIL = "bovv.company@gmail.com";
     private const string REPORT_SUBJECT = "Bug Report: Deep Jaws";
 
@@ -139,29 +137,14 @@ public class MainmenuManager : MonoBehaviour {
         loadingPanel.SetActive(isActive);
 
     void ActivateRespawnWnd() {
-        if (GameStaticInfo.Gamemode == GameMode.Hard) {
+        if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
             spawnManager.RespawnPlayer(true, false);
             return;
         }
 
-        GameAdsManager.Instance.UpdateDailyRevivesTxt();
-        respawnWnd.SetActive(true);
-        respawnTime = RESPAWN_TIME;
+        //GameAdsManager.Instance.UpdateDailyRevivesTxt();
+        respawnWnd.gameObject.SetActive(true);
 
-        InvokeRepeating(nameof(RespawnWndTimer), 0f, 1f);
-    }
-
-    void RespawnWndTimer() {
-        respawnTimer.text = respawnTime.ToString();
-        --respawnTime;
-
-        if (GameAdsManager.Instance.IsAdStartShow || !respawnWnd.activeInHierarchy) {
-            CancelInvoke(nameof(RespawnWndTimer));
-            return;
-        }
-
-        if (respawnTime < 0)
-            GameAdsManager.Instance.OnRetryClicked();
     }
 
     public void ActivatePauseWnd(bool isActivate) {
@@ -432,6 +415,6 @@ public class MainmenuManager : MonoBehaviour {
         Debug.Log("Open Mail Client...");
     }
 
-    public void DeactivateRespawnWnd() => respawnWnd.SetActive(false);
+    public void DeactivateRespawnWnd() => respawnWnd.gameObject.SetActive(false);
     public void OnExitButtonClicked() => Application.Quit();
 }

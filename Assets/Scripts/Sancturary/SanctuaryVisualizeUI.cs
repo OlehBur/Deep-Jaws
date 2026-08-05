@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -48,7 +47,6 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
     private void Start() {
         reseachButton.onClick.AddListener(OnResearchCurrentBiome);
-        //boostResearchButton.onClick.AddListener(OnBoostResearch);
 
         //init residents buttons
         for (int i = 0; i < residentsButtons.Length; i++) {
@@ -64,7 +62,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
             UpdateSelectedBiomeUI(currentBiomeType);
         }
-        boostResearchButton.onClick.RemoveAllListeners();
+
         if (GameAdsManager.Instance != null)
             boostResearchButton.onClick.AddListener(() => GameAdsManager.Instance.OnBoostClicked(currentBiomeType));
     }
@@ -74,6 +72,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
             SanctuariesManager.Instance.OnResearchUpdated += UpdateResearchProgress;
             SanctuariesManager.Instance.OnBiomeResearched += UpdateUIafterResearch;
+            GameAdsManager.Instance.OnAdButtonsInteractable += BoostInteractable;
         }
 
         sanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
@@ -91,7 +90,17 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
             SanctuariesManager.Instance.OnResearchUpdated -= UpdateResearchProgress;
             SanctuariesManager.Instance.OnBiomeResearched -= UpdateUIafterResearch;
+            GameAdsManager.Instance.OnAdButtonsInteractable -= BoostInteractable;
         }
+        reseachButton.onClick.RemoveAllListeners();
+        boostResearchButton.onClick.RemoveAllListeners();
+    }
+
+    void BoostInteractable(bool interactable) {
+        if (selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt)
+            reseachButton.interactable = interactable;
+        else
+            reseachButton.interactable = false;
     }
 
     private void OnOpenAlmanacUI(int index) {
@@ -152,8 +161,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     private void UpdateSelectedBiomeUI(BiomeType currentBiomeType) {
-        //if (SanctuariesManager.Instance != null) {
-        if (currentBiomeType < BiomeType.CoralReef)//infinity scroll
+        if (SanctuariesManager.Instance != null) {
+            if (currentBiomeType < BiomeType.CoralReef)//infinity scroll
             currentBiomeType = BiomeType.OceanicAbyss;
         if (currentBiomeType > BiomeType.OceanicAbyss)
             currentBiomeType = BiomeType.CoralReef;
@@ -190,7 +199,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                 requirement.SetActive(false);
             }
         }
-        //}
+        }
     }
 
     void SetRequirement() {

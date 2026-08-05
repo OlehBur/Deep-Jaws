@@ -53,6 +53,7 @@ public class SanctuariesManager : MonoBehaviour {
         //init update
         OnShellsAmountChanged?.Invoke(ShellsCnt);
         OnResearchUpdated?.Invoke(BiomeType.CoralReef, coralReef.TimeToUpgrade);
+        OnAddShells(500);
     }
 
     private void Update() {

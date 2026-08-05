@@ -107,6 +107,9 @@ public class WorldData : IData {
     public float playerProgress = 0;
     public FishLevel playerLevel = 0;
     public int playerHealth = 0;
+
+    public string rewardedLimitDate = "";
+    public int revivesLeft = GameStaticInfo.MAX_DAILY_REVIVALS;
 }
 
 [Serializable]

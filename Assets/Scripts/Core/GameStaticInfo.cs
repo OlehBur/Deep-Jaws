@@ -118,6 +118,8 @@ public static class GameStaticInfo {
     public const float EASY_MODE_SHELLS_MULTIPLIER = 1f;
     public const float MEDIUM_MODE_SHELLS_MULTIPLIER = 1.2f;
     public const float HARD_MODE_SHELLS_MULTIPLIER = 1.5f;
+    public const int MAX_DAILY_REVIVALS = 10;
+    public const int AUTO_RESPAWN_TIME = 5;
 
     //fish
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish
