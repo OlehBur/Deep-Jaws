@@ -20,7 +20,6 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     [SerializeField] Button reseachButton;
     [SerializeField] TextMeshProUGUI researchButtonTxt;
     [SerializeField] Button boostResearchButton;
-    //[SerializeField] TextMeshProUGUI boostResearchButtonTxt;
     [SerializeField] ProgressBar researchProgressBar;
     [SerializeField] TextMeshProUGUI requirementVictim;
     [SerializeField] GameObject requirement;
@@ -96,12 +95,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         boostResearchButton.onClick.RemoveAllListeners();
     }
 
-    void BoostInteractable(bool interactable) {
-        if (selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt)
-            reseachButton.interactable = interactable;
-        else
-            reseachButton.interactable = false;
-    }
+    void BoostInteractable(bool interactable) =>
+        boostResearchButton.interactable = interactable;
 
     private void OnOpenAlmanacUI(int index) {
         FishLevel fishLevel = GetFishResidentByIndex(index);
@@ -163,42 +158,45 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     private void UpdateSelectedBiomeUI(BiomeType currentBiomeType) {
         if (SanctuariesManager.Instance != null) {
             if (currentBiomeType < BiomeType.CoralReef)//infinity scroll
-            currentBiomeType = BiomeType.OceanicAbyss;
-        if (currentBiomeType > BiomeType.OceanicAbyss)
-            currentBiomeType = BiomeType.CoralReef;
+                currentBiomeType = BiomeType.OceanicAbyss;
+            if (currentBiomeType > BiomeType.OceanicAbyss)
+                currentBiomeType = BiomeType.CoralReef;
 
-        if (this.currentBiomeType != currentBiomeType)
-            cameraChanger.OnChangeBiomeCamera(currentBiomeType);
+            if (this.currentBiomeType != currentBiomeType)
+                cameraChanger.OnChangeBiomeCamera(currentBiomeType);
 
-        this.currentBiomeType = currentBiomeType;
-        selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
+            this.currentBiomeType = currentBiomeType;
+            selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
 
-        biomeTittle.text = selectedBiome.Info.Tittle.GetLocalizedString();
-        researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
-        reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
+            biomeTittle.text = selectedBiome.Info.Tittle.GetLocalizedString();
+            researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
+            reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
 
-        if (selectedBiome.NotReserched) {
-            foreach (GameObject obj in biomeHideLockObjects)
-                obj.SetActive(false);
+            reseachButton.interactable = true;
+            Debug.LogWarning("Research always free");
 
-            UpdateResearchProgress(currentBiomeType, selectedBiome.TimeToUpgrade);
-            foreach (Button button in residentsButtons)//disable residents buttons
-                button.gameObject.SetActive(false);
-        }
-        else {
-            foreach (GameObject obj in biomeHideLockObjects)
-                obj.SetActive(true);
+            if (selectedBiome.NotReserched) {
+                foreach (GameObject obj in biomeHideLockObjects)
+                    obj.SetActive(false);
 
-            UpdateBiomeNonStatInfo();
-            UpdateResidentImagesPreview();
-
-            if (selectedBiome.Level == selectedBiome.Info.MaxLevel) {
-                reseachButton.gameObject.SetActive(false);
-                boostResearchButton.gameObject.SetActive(false);
-                researchProgressBar.gameObject.SetActive(false);
-                requirement.SetActive(false);
+                UpdateResearchProgress(currentBiomeType, selectedBiome.TimeToUpgrade);
+                foreach (Button button in residentsButtons)//disable residents buttons
+                    button.gameObject.SetActive(false);
             }
-        }
+            else {
+                foreach (GameObject obj in biomeHideLockObjects)
+                    obj.SetActive(true);
+
+                UpdateBiomeNonStatInfo();
+                UpdateResidentImagesPreview();
+
+                if (selectedBiome.Level >= selectedBiome.Info.MaxLevel) {
+                    reseachButton.gameObject.SetActive(false);
+                    boostResearchButton.gameObject.SetActive(false);
+                    researchProgressBar.gameObject.SetActive(false);
+                    requirement.SetActive(false);
+                }
+            }
         }
     }
 
@@ -218,6 +216,10 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     void OnResearchCurrentBiome() {
         SanctuariesManager.Instance.OnAddShells(-selectedBiome.GetPriceToUpgrade());
         selectedBiome.OnStartUpgrade();
+
+        selectedBiome.BoostResearch();
+        Debug.LogWarning("ACtivate one click research");
+
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
     //void OnBoostResearch() {
@@ -230,6 +232,9 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         productionPerMinuteTxt.text = selectedBiome.GetProductionPerMinute().ToString() + "/" + minuteShort.GetLocalizedString();
         researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
         reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
+
+        reseachButton.interactable = true;
+        Debug.LogWarning("Research always free");
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
@@ -280,6 +285,9 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                     requirement.SetActive(true);
                     reseachButton.interactable = false;
                 }
+
+                reseachButton.interactable = true;
+                Debug.LogWarning("Research always free");
 
                 //progress bar and boost button hide
                 researchProgressBar.gameObject.SetActive(false);

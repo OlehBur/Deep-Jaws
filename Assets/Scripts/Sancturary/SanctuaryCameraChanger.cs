@@ -11,7 +11,13 @@ public class SanctuaryCameraChanger : MonoBehaviour {
     private Camera previosCamera;
 
     private void Awake() {
+        almanac.enabled = false;
+        cliffsSeaweed.enabled = false;
+        pelagial.enabled = false;
+        oceanicAbyss.enabled = false;
+
         currentCamera = coralReef;
+        currentCamera.enabled = true;
     }
 
     public void OnChangeBiomeCamera(BiomeType biomeType) {
