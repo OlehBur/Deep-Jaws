@@ -8,6 +8,7 @@ public class EntityWalking : MonoBehaviour {
 
     //[SerializeField] private float smoothTime = 1.74f;
     [SerializeField] bool isHasFishShader;
+    [SerializeField] bool isOnlyHorizontalRotation = false;
     [SerializeField] Renderer fishRenderer;
 
     //private Vector3 currentVelocity;
@@ -44,7 +45,7 @@ public class EntityWalking : MonoBehaviour {
 
         //dir to targ
         directionToTarget = targetPoint - transform.position;
-        if (!isHasFishShader)
+        if (isOnlyHorizontalRotation)
             directionToTarget.y = 0f;//onl horiz
 
         Movement();
