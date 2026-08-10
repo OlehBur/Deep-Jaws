@@ -18,7 +18,7 @@ public class GameResultWnd : MonoBehaviour {
         if (GameAdsManager.Instance != null) {
             GameAdsManager.Instance.OnAdButtonsInteractable += AdInteractable;
             GameAdsManager.Instance.OnDoubleShellsRewarded += OnDoubleShellsReceive;
-            doubleShellsB.onClick.AddListener(() => GameAdsManager.Instance.OnDoubleShellsClicked());
+            doubleShellsB.onClick.AddListener(() => GameAdsManager.Instance.OnDoubleShellsClick());
         }
     }
     private void OnDisable() {

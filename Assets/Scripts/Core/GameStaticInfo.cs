@@ -57,7 +57,8 @@ public enum Skin {
     Default,
     Mercury,
     Chameleon,
-    Ashflow
+    Ashflow,
+    Zebra
 }
 
 public struct PurchasedSkins {
@@ -187,16 +188,21 @@ public static class GameStaticInfo {
     public static readonly int FISH_WAVING_FREQUENCY_PROP = Shader.PropertyToID("_Frequency");
     public static readonly int FISH_WAVING_MAX_ROT_PROP = Shader.PropertyToID("_MaxRotationValue");
     public static readonly int FISH_WAVING_ROT_PROP = Shader.PropertyToID("_RotationRad");
-    public static readonly int FISH_WAVING_CHAMELEON_PROP = Shader.PropertyToID("_ChameleonSkin");
-    public static readonly int FISH_WAVING_MERCURY_PROP = Shader.PropertyToID("_MercurySkin");
+    //public static readonly int FISH_WAVING_CHAMELEON_PROP = Shader.PropertyToID("_ChameleonSkin");
+    //public static readonly int FISH_WAVING_MERCURY_PROP = Shader.PropertyToID("_MercurySkin");
     public static readonly int FISH_WAVING_MERCURYSCALE_PROP = Shader.PropertyToID("_MercuryScale");
-    public static readonly int FISH_WAVING_ASHFLOW_PROP = Shader.PropertyToID("_AshflowSkin");
-    public static readonly int FISH_WAVING_ZEBRA_PROP = Shader.PropertyToID("_ZebraSkin");
+    //public static readonly int FISH_WAVING_ASHFLOW_PROP = Shader.PropertyToID("_AshflowSkin");
+    //public static readonly int FISH_WAVING_ZEBRA_PROP = Shader.PropertyToID("_ZebraSkin");
     public static readonly int CUTTLEFISH_PROGRESS_PROP = Shader.PropertyToID("_Progress");
     public static readonly int CUTTLEFISH_COLOR_PROP = Shader.PropertyToID("_Color");
     public static readonly int ZONE_PROGRESS_PROP = Shader.PropertyToID("_Progress");
     public static readonly int ZONE_TOUCH_POS_PROP = Shader.PropertyToID("_TouchPosition");
     public const int MERCURY_SKIN_BASE_SCALE = 3;
+
+
+    //rewards
+    public const int EXTRA_SHELLS_CNT = 100;
+
 
     public const int BIOME_RESEARCH_BOOST_TIME = 15 * 60;//15 MIN
 

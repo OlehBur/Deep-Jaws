@@ -1,0 +1,49 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ShellsBarVIsualize : MonoBehaviour {
+    [SerializeField] TextMeshProUGUI shellsCnt;
+    [SerializeField] Button claimB;
+
+    private bool isInteracted = false;
+
+
+    void Start() {
+        if (SanctuariesManager.Instance != null)
+            UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
+    }
+
+    void UpdateShellsCnt(int cnt) {
+        shellsCnt.text = cnt.ToString();
+    }
+
+    private void OnEnable() {
+        if (SanctuariesManager.Instance != null) {
+            SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
+        }
+
+        if (GameAdsManager.Instance != null) {
+            GameAdsManager.Instance.OnAdButtonsInteractable += ClaimInteractable;
+            claimB.onClick.AddListener(() => {
+                GameAdsManager.Instance.OnClaimExtraShellsClick();
+                isInteracted = true;
+            });
+        }
+    }
+
+    void ClaimInteractable(bool interactable) {
+        if (!isInteracted)
+            claimB.interactable = interactable;
+        else
+            claimB.interactable = false;
+    }
+
+    private void OnDisable() {
+        if (SanctuariesManager.Instance != null)
+            SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
+
+        claimB.onClick.RemoveAllListeners();
+    }
+
+}

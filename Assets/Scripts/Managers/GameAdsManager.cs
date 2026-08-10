@@ -130,8 +130,13 @@ public class GameAdsManager : MonoBehaviour {
         RewardedCheckAndShow();
     }
 
-    public void OnDoubleShellsClicked() {//rewarded
+    public void OnDoubleShellsClick() {//rewarded
         adTarget = AdTarget.DoubleShells;
+        RewardedCheckAndShow();
+    }
+
+    public void OnClaimExtraShellsClick() {
+        adTarget = AdTarget.ExtraShells;
         RewardedCheckAndShow();
     }
 
@@ -317,9 +322,15 @@ public class GameAdsManager : MonoBehaviour {
         }
         else if (adTarget == AdTarget.DoubleShells)
             OnDoubleShellsRewarded?.Invoke();
-        else if (adTarget == AdTarget.BoostResearch)
+
+        else if (adTarget == AdTarget.ExtraShells) {
+            if (SanctuariesManager.Instance != null)
+                SanctuariesManager.Instance.OnAddShells(GameStaticInfo.EXTRA_SHELLS_CNT);
+        }
+        else if (adTarget == AdTarget.BoostResearch) {
             if (SanctuariesManager.Instance != null)
                 SanctuariesManager.Instance.BoostResearch(boostResearch);
+        }
 
         adTarget = AdTarget.None;
     }

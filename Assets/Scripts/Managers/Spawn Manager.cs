@@ -148,6 +148,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
     }
 
+
     void InitPlayerSkins(Fish fish, FishAnim fishAnim) {
         //load selected skin
         Skin selectedSkin;
@@ -159,35 +160,43 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         else
             return;
 
-        MaterialPropertyBlock propBlock = new MaterialPropertyBlock();
+        //MaterialPropertyBlock propBlock = new MaterialPropertyBlock();
         Renderer renderer = fishAnim.FishSkinnedMesh;
+        FishSkinShader fishSkin = new(renderer);
+        fishSkin.ActivateSkinByType(selectedSkin);
+        //switch (selectedSkin) {
+        //    case Skin.Chameleon:
+        //    fishSkin.SetChameleonSkin();
+        //    //renderer.GetPropertyBlock(propBlock);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        //    //renderer.SetPropertyBlock(propBlock);
+        //    break;
 
-        switch (selectedSkin) {
-            case Skin.Chameleon:
-            renderer.GetPropertyBlock(propBlock);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-            renderer.SetPropertyBlock(propBlock);
-            break;
+        //    case Skin.Mercury:
+        //    fishSkin.SetMercurySkin();
+        //    //renderer.GetPropertyBlock(propBlock);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)fish.Level + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        //    //renderer.SetPropertyBlock(propBlock);
+        //    break;
 
-            case Skin.Mercury:
-            renderer.GetPropertyBlock(propBlock);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)fish.Level + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-            renderer.SetPropertyBlock(propBlock);
-            break;
+        //    case Skin.Ashflow:
+        //    fishSkin.SetAshflowSkin();
+        //    //renderer.GetPropertyBlock(propBlock);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        //    //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        //    //renderer.SetPropertyBlock(propBlock);
+        //    break;
 
-            case Skin.Ashflow:
-            renderer.GetPropertyBlock(propBlock);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-            propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-            renderer.SetPropertyBlock(propBlock);
-            break;
-        }
+        //    case Skin.Zebra:
+        //    fishSkin.SetZebraSkin();
+        //    break;
+        //}
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

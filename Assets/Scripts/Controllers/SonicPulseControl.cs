@@ -17,7 +17,7 @@ public class SonicPulseControl : MonoBehaviour {
 
 
     private void Update() {
-        if (!triggerCollider.enabled) {
+        if (triggerCollider != null && !triggerCollider.enabled) {
             curentRechargeTime = curentRechargeTime - Time.deltaTime; // decrease recharge time
 
             if (curentRechargeTime <= 0f)

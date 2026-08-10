@@ -1,32 +1,16 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class StoreAnimator : MonoBehaviour {
     [SerializeField] Transform[] transforms;
-    [SerializeField] TextMeshProUGUI shellsCnt;
-
+   
     private BlinkAnim[] blinkAnims;
 
 
     void Start() {
         InitBlinks();
-
-        if (SanctuariesManager.Instance != null)
-            UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
-    }
-
-    void UpdateShellsCnt(int cnt) {
-        shellsCnt.text = cnt.ToString();
-    }
-
-    private void OnEnable() {
-        if (SanctuariesManager.Instance != null)
-            SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
-    }
-    private void OnDisable() {
-        if (SanctuariesManager.Instance != null)
-            SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
     }
 
     private void Update() {

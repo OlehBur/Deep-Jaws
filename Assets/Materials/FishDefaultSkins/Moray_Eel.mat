@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Moray_Eel
+  m_Shader: {fileID: -6465566751694194690, guid: 337dafcd03c826049acf056be987ba98, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _SKIN_DEFAULT
+  m_InvalidKeywords:
+  - _EMISSION
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2000
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  - XRMotionVectors
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 6a2fc875597edd34facc12a7b6fb1734, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleReflectedCubemap_dcf6349f1fe9443f938dae144d4f23e5_Cube_1_Cubemap:
+        m_Texture: {fileID: 8900000, guid: 0b440116bb9d82c43bb96d38a7948d20, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0a62e89f186d4d6784dc41b5adf3592f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_274de14cd3654efd9bf13cc7e14524cb_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_3ac04fa91e044d2a97459243e52aaff8_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: f3926198b2b7dec42940dc33b12e8151, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_443da9bb584a45ba819e31fbd8f67305_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_46832690f6854786b83d10b54ee457a0_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_6acb90cfa92a45c3a413467c4b98817e_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_a8c5c7ba2a814780a2c6ced4275804de_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7cc45c82bcf8d2149a0733403501cf22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AshflowSkin: 0
+    - _ChameleonSkin: 0
+    - _FishMetallic: 0
+    - _FishMetallic_Normal: 0
+    - _FishSmoothness: 0.35
+    - _FixerOffset: -2.62
+    - _Frequency: 8.75
+    - _HeightWaveMult: 0.2
+    - _InvisiblySkin: 0
+    - _MaxRotation: 0
+    - _MaxRotationValue: 0.114
+    - _MercuryScale: 3
+    - _MercurySkin: 0
+    - _Offset: 0.46
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RotationRad: 0
+    - _SKIN: 0
+    - _TextureEdgingPower: 3
+    - _TexureEdgingPower: 1
+    - _UnscaledTime: 0
+    - _UnscaledTimeClip: 0.000001
+    - _WaveXamplitude: 0.63
+    - _XRMotionVectorsPass: 0
+    - _ZebraSkin: 0
+    m_Colors:
+    - _BodySmoothEdge: {r: 1.69, g: 6.49, b: 0, a: 0}
+    - _DefaultFishEmission: {r: 0, g: 0, b: 0, a: 0}
+    - _Rotation: {r: 0.16, g: -45.44, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &2635674992861930167
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10

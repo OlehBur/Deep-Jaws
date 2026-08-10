@@ -81,10 +81,16 @@ public class SkinsButtons {
     //public GameObject ashflowDiscountObj;
     //public TextMeshProUGUI ashflowDiscountTxt;
 
-    public static readonly Skin[] SKINS_ITERATORS = Enum.GetValues(typeof(Skin))
-                    .Cast<Skin>()
-                    .Skip(1)//without default
-                    .ToArray();
+    public static readonly Skin[] PURCHASE_SKINS_ITERATORS = new Skin[]
+    {
+        Skin.Mercury,
+        Skin.Chameleon,
+        Skin.Ashflow
+    };
+    //Enum.GetValues(typeof(Skin))
+    //            .Cast<Skin>()
+    //            .Skip(1)//without default
+    //            .ToArray();
 
     //public const string SELECT_TEXT = "SELECT";
     //public const string SELECTED_TEXT = "SELECTED";
@@ -172,11 +178,11 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     private void Start() {
         if (GamePurchaseManager.Instance != null) {
-            GamePurchaseManager.Instance.OnUpdatePurchasedSkins -= UpdateSkinsSection;
+            GamePurchaseManager.Instance.OnUpdatePurchasedSkins -= UpdatePaidSkinsSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles -= UpdateAccountSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles -= InitMainMenuAccountTittles;
 
-            GamePurchaseManager.Instance.OnUpdatePurchasedSkins += UpdateSkinsSection;
+            GamePurchaseManager.Instance.OnUpdatePurchasedSkins += UpdatePaidSkinsSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles += UpdateAccountSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles += InitMainMenuAccountTittles;
 
@@ -190,33 +196,37 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
 
     void InitPreviewSkins() {
-        propBlock = new MaterialPropertyBlock();
-
-        chameleonRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-        chameleonRenderer.SetPropertyBlock(propBlock);
-
-        mercuryRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)FishLevel.Moray + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-        mercuryRenderer.SetPropertyBlock(propBlock);
-
-        ashflowRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        ashflowRenderer.SetPropertyBlock(propBlock);
-
-        zebraRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ZEBRA_PROP, 1);
-        zebraRenderer.SetPropertyBlock(propBlock);
+        //propBlock = new MaterialPropertyBlock();
+        FishSkinShader skinBuffer = new(chameleonRenderer);
+        skinBuffer.ActivateSkinByType(Skin.Chameleon);
+        //chameleonRenderer.GetPropertyBlock(propBlock);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        //chameleonRenderer.SetPropertyBlock(propBlock);
+        skinBuffer = new(mercuryRenderer);
+        skinBuffer.ActivateSkinByType(Skin.Mercury);
+        //mercuryRenderer.GetPropertyBlock(propBlock);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)FishLevel.Moray + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        //mercuryRenderer.SetPropertyBlock(propBlock);
+        skinBuffer = new(ashflowRenderer);
+        skinBuffer.ActivateSkinByType(Skin.Ashflow);
+        //ashflowRenderer.GetPropertyBlock(propBlock);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        //ashflowRenderer.SetPropertyBlock(propBlock);
+        skinBuffer = new(zebraRenderer);
+        skinBuffer.ActivateSkinByType(Skin.Zebra);
+        //zebraRenderer.GetPropertyBlock(propBlock);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
+        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ZEBRA_PROP, 1);
+        //zebraRenderer.SetPropertyBlock(propBlock);
     }
 
     private void Update() {
@@ -228,7 +238,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         skinsPreview.gameObject.SetActive(true);
         skinsPreviewWnd.SetActive(true);
 
-        foreach(Transform t in skinsPreview.transform)
+        foreach (Transform t in skinsPreview.transform)
             t.gameObject.SetActive(false);
 
         skinsPreview.GetChild(0).gameObject.SetActive(true);
@@ -278,13 +288,13 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         currentData.selectedSkin = purchasedSkins.Selected;
         ProgressSaver.SaveData(currentData);        //}
 
-        UpdateSkinsSection(purchasedSkins);
+        UpdatePaidSkinsSection(purchasedSkins);
     }
 
-    void UpdateSkinsSection(PurchasedSkins purchasedSkins) {
+    void UpdatePaidSkinsSection(PurchasedSkins purchasedSkins) {
         this.purchasedSkins = purchasedSkins;
 
-        foreach (Skin s in SkinsButtons.SKINS_ITERATORS) {
+        foreach (Skin s in SkinsButtons.PURCHASE_SKINS_ITERATORS) {
             skinsButtons.GetButton(s, BUY_BUTTON_TEXT_ID).gameObject.SetActive(true);
             skinsButtons.GetText(s, BUY_BUTTON_TEXT_ID).text = purchasedSkins.GetPrice(s);
             skinsButtons.GetButton(s, SELECT_BUTTON_TEXT_ID).gameObject.SetActive(false);
@@ -337,17 +347,17 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     public void OnSelectMercurySkinClick() {
         SaveSelectedSkinToProgress(Skin.Mercury);
         purchasedSkins.Selected = Skin.Mercury;
-        UpdateSkinsSection(purchasedSkins);
+        UpdatePaidSkinsSection(purchasedSkins);
     }
     public void OnSelectChameleonSkinClick() {
         SaveSelectedSkinToProgress(Skin.Chameleon);
         purchasedSkins.Selected = Skin.Chameleon;
-        UpdateSkinsSection(purchasedSkins);
+        UpdatePaidSkinsSection(purchasedSkins);
     }
     public void OnSelectAshflowSkinClick() {
         SaveSelectedSkinToProgress(Skin.Ashflow);
         purchasedSkins.Selected = Skin.Ashflow;
-        UpdateSkinsSection(purchasedSkins);
+        UpdatePaidSkinsSection(purchasedSkins);
     }
 
     void UpdateAccountSection(AccountTitles accountTitles) {
@@ -374,7 +384,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
         InitMainMenuAccountTittles(at);
         UpdateAccountSection(at);
-        UpdateSkinsSection(ps);
+        UpdatePaidSkinsSection(ps);
     }
 
     void OpenLoyaltyRewardedWnd() {
