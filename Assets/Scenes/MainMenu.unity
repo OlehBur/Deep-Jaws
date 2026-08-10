@@ -14315,6 +14315,7 @@ MonoBehaviour:
   audioManager: {fileID: 1643188027}
   graphicManager: {fileID: 1643188029}
   loadingPanel: {fileID: 1095141653}
+  sceneLoader: {fileID: 214496491906654509}
   noInternetConnectionWnd: {fileID: 50746417}
   mainMenuLight: {fileID: 1297749448}
   gmWndAnimator: {fileID: 3032745008772917344}
@@ -14898,7 +14899,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4751374547727398272, guid: d0b9685dba020b44cb7c71d0afc5f162, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 1be31487a5908bb4cb2e6b9984d6acf2, type: 3}
+  m_Resource: {fileID: 8300000, guid: 86229d0f72eae9d41bd7864fb4c1639a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -18058,9 +18059,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 214496491906654509}
-        m_TargetAssemblyTypeName: SceneLoader, GameAssembly
-        m_MethodName: OnLoad_SanctuaryScene
+      - m_Target: {fileID: 1643188028}
+        m_TargetAssemblyTypeName: MainmenuManager, GameAssembly
+        m_MethodName: OnSanctuaryClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

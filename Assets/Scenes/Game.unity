@@ -43008,7 +43008,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   spawnManager: {fileID: 1167468958}
   soundtrackSource: {fileID: 330585548}
-  coralRocksSound: {fileID: 8300000, guid: 55c291b6eb5f068498e53b4627dac5e1, type: 3}
+  coralRocksSound: {fileID: 8300000, guid: dea8700cf06676345a215fecad7087b5, type: 3}
   algaeForestSound: {fileID: 8300000, guid: 52948a034393a8649891515db592969b, type: 3}
   deepCoralsSound: {fileID: 8300000, guid: 89f08bfb623190c498b918bbb6542299, type: 3}
 --- !u!1001 &330625337
@@ -147932,6 +147932,7 @@ MonoBehaviour:
   audioManager: {fileID: 1167468960}
   graphicManager: {fileID: 1167468965}
   loadingPanel: {fileID: 1944758229}
+  sceneLoader: {fileID: 0}
   noInternetConnectionWnd: {fileID: 364819357}
   mainMenuLight: {fileID: 0}
   gmWndAnimator: {fileID: 0}

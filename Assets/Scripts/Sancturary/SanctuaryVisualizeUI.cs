@@ -218,6 +218,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         selectedBiome.OnStartUpgrade();
 
         selectedBiome.BoostResearch();
+        if (selectedBiome.Level == selectedBiome.Info.MaxLevel)
+            reseachButton.gameObject.SetActive(false);
         Debug.LogWarning("ACtivate one click research");
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);

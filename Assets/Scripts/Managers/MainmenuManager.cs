@@ -19,6 +19,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject loadingPanel;
 
     [Header("MainMenu Scene")]
+    [SerializeField] SceneLoader sceneLoader;
     [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] Light mainMenuLight;
     [SerializeField] Animator gmWndAnimator;
@@ -59,7 +60,7 @@ public class MainmenuManager : MonoBehaviour {
     private Color targetGMwndColor;
     private Color targetLightGMcolor;
     //private GPG_Manager gpg_manager;
-    
+
 
     private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
     private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
@@ -223,6 +224,13 @@ public class MainmenuManager : MonoBehaviour {
         ActivateNoInternetConnectionWnd(true);
         accountData.isConfirmedNoInternetDisadvantages = true;
         ProgressSaver.SaveData(accountData);
+    }
+
+    public void OnSanctuaryClick() {
+        if (GameManager.IsInternetNotAvailable)
+            ActivateNoInternetConnectionWnd(true);
+        else
+            sceneLoader.OnLoad_SanctuaryScene();
     }
 
     private void OnFramerateChanged(int index) {
