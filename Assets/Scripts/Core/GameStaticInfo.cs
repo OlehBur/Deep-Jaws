@@ -6,7 +6,7 @@ public enum FishLevel {
     Cuttlefish = -4,
     Dartfish = -1,
     Crab = 0,
-    SeaBass,
+    SeaBass = 1,
     Mackerel,
     Moray,
     Lionfish,

@@ -160,7 +160,7 @@ public class FishAnim : MonoBehaviour {
     }
 
     public void ActivateBiteAnimation(bool isNeedParticles = true) {
-        if (fish.IsVisible) {
+        if (fish.IsVisible && fish.IsActive) {
             if (animator != null)
                 animator.SetTrigger(GameStaticInfo.BITE_ANIMATOR_TRIGGER); // play bite animation
 

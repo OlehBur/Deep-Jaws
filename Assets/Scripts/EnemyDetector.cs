@@ -17,10 +17,10 @@ public class EnemyDetector : MonoBehaviour {
     }
 
     void Update() {
-        if (playerFish != null) {
+        if (playerFish != null && playerFish.IsActive) {
             int cnt = Physics.OverlapSphereNonAlloc(playerFish.transform.position, DETECTOR_RADIUS, colliders, GameStaticInfo.LAYER_MASK_ENTITY);
             if (cnt > 0) {
-                float minDistance = /*DETECTOR_RADIUS + 1*/0f;
+                float minDistance = DETECTOR_RADIUS;
                 Vector3 closestEnemyPos = Vector3.zero;
                 Fish enemyFish = null;
 
@@ -29,9 +29,14 @@ public class EnemyDetector : MonoBehaviour {
                         continue;
 
                     GameStaticInfo.TryGetFish(colliders[i].transform.parent.gameObject, out enemyFish);
-                    if (enemyFish != null && enemyFish != playerFish && enemyFish.IsLegitimateTarget(playerFish)) {
+                    if (enemyFish == null || enemyFish == playerFish)
+                        continue;
 
-                        float distance = Vector3.Distance(playerFish.transform.position, enemyFish.transform.position);
+                    bool isLegimate = enemyFish.IsLegitimateTarget(playerFish);
+                    //Debug.Log("Danger: " + isLegimate + ", cnt targets: " + cnt);
+
+                    if (isLegimate) {
+                        float distance = Vector3.Distance(playerFish./*Rb*/transform.position, enemyFish.transform.position);
                         if (distance < minDistance) {
                             minDistance = distance;
                             closestEnemyPos = enemyFish.transform.position;
@@ -39,7 +44,7 @@ public class EnemyDetector : MonoBehaviour {
                     }
                 }
 
-                if (minDistance != /*DETECTOR_RADIUS + 1*/0f) {
+                if (minDistance != DETECTOR_RADIUS) {
                     Vector3 lookPosInHorizontal = new Vector3(closestEnemyPos.x, /*playerFish.*/transform.position.y, closestEnemyPos.z);
 
                     transform.LookAt(lookPosInHorizontal, Vector3.up);

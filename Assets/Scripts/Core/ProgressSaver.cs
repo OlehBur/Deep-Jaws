@@ -102,10 +102,12 @@ public class WorldData : IData {
     public string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
 
     //game data
+    //public bool isNewSaveType = false;//only for transfer old players data
+    public GameMode gameMode = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
     public Vector3 playerPosition = Vector3.zero;
     public Quaternion playerRotation = Quaternion.identity;
     public float playerProgress = 0;
-    public FishLevel playerLevel = 0;
+    public FishLevel playerLevel = GameStaticInfo.PLAYER_INIT_LVL;
     public int playerHealth = 0;
 
     public string rewardedLimitDate = "";

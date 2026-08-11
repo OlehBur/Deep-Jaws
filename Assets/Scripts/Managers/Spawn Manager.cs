@@ -323,7 +323,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.SaveData(worldPlayerData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.Tuna;
+        //playerLvl = (int)FishLevel.WhiteShark;
         //playerProgress = .9f;
         //Debug.LogWarning(playerLvl);
 
