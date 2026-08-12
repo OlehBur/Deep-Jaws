@@ -35,9 +35,6 @@
         },
         {
             "m_Id": "161dc80a502f4dcf81bf81329cecc428"
-        },
-        {
-            "m_Id": "757d62f782834ec3aa37dab70fcc6ac2"
         }
     ],
     "m_Keywords": [],
@@ -116,9 +113,6 @@
         },
         {
             "m_Id": "b7c8e1a13f0d4e669b6d9ab413bd76e8"
-        },
-        {
-            "m_Id": "a8f036de8f9442b098b4ba6a7091a016"
         },
         {
             "m_Id": "a22d64c4451b4352bb6ea02668805bcd"
@@ -261,9 +255,9 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
-                    "m_Id": "a8f036de8f9442b098b4ba6a7091a016"
+                    "m_Id": "a22d64c4451b4352bb6ea02668805bcd"
                 },
-                "m_SlotId": 0
+                "m_SlotId": 2
             },
             "m_InputSlot": {
                 "m_Node": {
@@ -795,8 +789,8 @@
     "m_ObjectId": "23f232257e894b2badc1b8f76a6e30e9",
     "m_Title": "TimeSett (if unsc not 0, than use default Time)",
     "m_Position": {
-        "x": -791.0,
-        "y": 116.0
+        "x": -791.0001220703125,
+        "y": 115.99996948242188
     }
 }
 
@@ -822,34 +816,9 @@
     "m_ObjectId": "36acd90f17c74b20a2d25810929d0b35",
     "m_Title": "Clamp rotation min-max",
     "m_Position": {
-        "x": -726.0,
+        "x": -726.0001220703125,
         "y": -45.0
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
-    "m_ObjectId": "3a40395275604e8cbcd2c52ad63457e1",
-    "m_Id": 0,
-    "m_DisplayName": "DefaultFishEmission",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
-    "m_Labels": []
 }
 
 {
@@ -1045,9 +1014,6 @@
     "m_ObjectId": "4582fe8552404934a5281ea3e03f9bd8",
     "m_Name": "Frag",
     "m_ChildObjectList": [
-        {
-            "m_Id": "757d62f782834ec3aa37dab70fcc6ac2"
-        },
         {
             "m_Id": "af918b35eeb2449eb1b7f0f0de83b355"
         },
@@ -1367,8 +1333,8 @@
     "m_ObjectId": "69a9cb139892492d99b2b030dff5b8e7",
     "m_Title": "body mask",
     "m_Position": {
-        "x": -747.0,
-        "y": 446.0
+        "x": -747.0001220703125,
+        "y": 446.0000915527344
     }
 }
 
@@ -1402,41 +1368,6 @@
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
-}
-
-{
-    "m_SGVersion": 3,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
-    "m_ObjectId": "757d62f782834ec3aa37dab70fcc6ac2",
-    "m_Guid": {
-        "m_GuidSerialized": "c4e38ab0-c924-4a12-9bbf-cf4f6e8aac72"
-    },
-    "promotedFromAssetID": "",
-    "promotedFromCategoryName": "",
-    "promotedOrdering": -1,
-    "m_Name": "DefaultFishEmission",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "DefaultFishEmission",
-    "m_DefaultReferenceName": "_DefaultFishEmission",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": false,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": true,
-    "hlslDeclarationOverride": 2,
-    "m_Hidden": false,
-    "m_PerRendererData": false,
-    "m_customAttributes": [],
-    "m_Value": {
-        "r": 0.0,
-        "g": 0.0,
-        "b": 0.0,
-        "a": 0.0
-    },
-    "isMainColor": false,
-    "m_ColorMode": 1
 }
 
 {
@@ -1777,8 +1708,8 @@
     "m_ObjectId": "9f40b024601b417ab9708599cce2e05d",
     "m_Title": "FixeRotatipmArtefacts",
     "m_Position": {
-        "x": -785.0,
-        "y": 563.0
+        "x": -785.0001220703125,
+        "y": 563.0000610351563
     }
 }
 
@@ -1839,42 +1770,6 @@
         "y": 0.0
     },
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
-    "m_ObjectId": "a8f036de8f9442b098b4ba6a7091a016",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "Property",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 1949.9998779296875,
-            "y": 1753.9998779296875,
-            "width": 172.0001220703125,
-            "height": 34.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "3a40395275604e8cbcd2c52ad63457e1"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_Property": {
-        "m_Id": "757d62f782834ec3aa37dab70fcc6ac2"
-    }
 }
 
 {
@@ -2031,8 +1926,8 @@
     "m_ObjectId": "b2782bbd41ec4d19bf9d9a514f416738",
     "m_Title": "Waving",
     "m_Position": {
-        "x": -727.0,
-        "y": 259.0
+        "x": -727.0001220703125,
+        "y": 259.00006103515627
     }
 }
 
@@ -2048,10 +1943,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 1696.9998779296875,
-            "y": 1657.9998779296875,
+            "x": 1790.0001220703125,
+            "y": 1693.000244140625,
             "width": 206.0,
-            "height": 130.0
+            "height": 129.9998779296875
         }
     },
     "m_Slots": [

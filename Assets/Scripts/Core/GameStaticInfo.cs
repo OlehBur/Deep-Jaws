@@ -58,7 +58,19 @@ public enum Skin {
     Mercury,
     Chameleon,
     Ashflow,
-    Zebra
+    //free
+    Zebra,
+    Singularity,
+    Blinker,
+    Checkerboard,
+    Corrosion,
+    Cosmo,
+    Cupid,
+    Fairylight,
+    Pixy,
+    Porcelain,
+    Rainbow,
+    Sun
 }
 
 public struct PurchasedSkins {
@@ -83,6 +95,51 @@ public struct PurchasedSkins {
             Skin.Ashflow => AshflowPrice,
             _ => "---"
         };
+}
+
+public struct FreeSkins {
+    public bool Zebra;
+    public bool Singularity;
+    public bool Blinker;
+    public bool Checkerboard;
+    public bool Corrosion;
+    public bool Cosmo;
+    public bool Cupid;
+    public bool Fairylights;
+    public bool Pixy;
+    public bool Porcelain;
+    public bool Rainbow;
+    public bool Sun;
+
+    public int ZebraPrice;
+    public int SingularityPrice;
+    public int BlinkerPrice;
+    public int CheckerboardPrice;
+    public int CorrosionPrice;
+    public int CosmoPrice;
+    public int CupidPrice;
+    public int FairylightsPrice;
+    public int PixyPrice;
+    public int PorcelainPrice;
+    public int RainbowPrice;
+    public int SunPrice;
+
+    public int GetPrice(Skin s) =>
+    s switch {
+        Skin.Zebra => ZebraPrice,
+        Skin.Singularity => SingularityPrice,
+        Skin.Blinker => BlinkerPrice,
+        Skin.Checkerboard => CheckerboardPrice,
+        Skin.Corrosion => CorrosionPrice,
+        Skin.Cosmo => CosmoPrice,
+        Skin.Cupid => CupidPrice,
+        Skin.Fairylight => FairylightsPrice,
+        Skin.Pixy => PixyPrice,
+        Skin.Porcelain => PorcelainPrice,
+        Skin.Rainbow => RainbowPrice,
+        Skin.Sun => SunPrice,
+        _ => -1
+    };
 }
 
 

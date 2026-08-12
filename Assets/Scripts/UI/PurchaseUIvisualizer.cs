@@ -59,19 +59,43 @@ public class AccountsButtons {
 }
 
 [Serializable]
+public class SkinStoreCard {
+    public Button buyB;
+    public Button selectB;
+    public TextMeshProUGUI priceTxt;
+    public TextMeshProUGUI selectTxt;
+}
+
+[Serializable]
 public class SkinsButtons {
-    public Button buyMercury;
-    public Button selectMercury;
-    public TextMeshProUGUI mercuryPriceTxt;
-    public TextMeshProUGUI mercurySelectTxt;
-    public Button buyChameleon;
-    public Button selectChameleon;
-    public TextMeshProUGUI chameleonPriceTxt;
-    public TextMeshProUGUI chameleonSelectTxt;
-    public Button buyAshflow;
-    public Button selectAshflow;
-    public TextMeshProUGUI ashflowPriceTxt;
-    public TextMeshProUGUI ashflowSelectTxt;
+    public SkinStoreCard mercury;
+    public SkinStoreCard chameleon;
+    public SkinStoreCard ashflow;
+    public SkinStoreCard zebra;
+    public SkinStoreCard singularity;
+    public SkinStoreCard blinker;
+    public SkinStoreCard checkerboard;
+    public SkinStoreCard corrosion;
+    public SkinStoreCard cosmo;
+    public SkinStoreCard cupid;
+    public SkinStoreCard fairylights;
+    public SkinStoreCard pixy;
+    public SkinStoreCard porcelain;
+    public SkinStoreCard rainbow;
+    public SkinStoreCard sun;
+
+    //public Button buyMercury;
+    //public Button selectMercury;
+    //public TextMeshProUGUI mercuryPriceTxt;
+    //public TextMeshProUGUI mercurySelectTxt;
+    //public Button buyChameleon;
+    //public Button selectChameleon;
+    //public TextMeshProUGUI chameleonPriceTxt;
+    //public TextMeshProUGUI chameleonSelectTxt;
+    //public Button buyAshflow;
+    //public Button selectAshflow;
+    //public TextMeshProUGUI ashflowPriceTxt;
+    //public TextMeshProUGUI ashflowSelectTxt;
 
     //[Header("Discount Badges")]
     //public GameObject mercuryDiscountObj;
@@ -98,15 +122,41 @@ public class SkinsButtons {
     public Button GetButton(Skin s, bool isSelect) =>
         isSelect ?
         s switch {
-            Skin.Chameleon => selectChameleon,
-            Skin.Mercury => selectMercury,
-            Skin.Ashflow => selectAshflow,
+            Skin.Chameleon => chameleon.selectB,
+            Skin.Mercury => mercury.selectB,
+            Skin.Ashflow => ashflow.selectB,
+
+            Skin.Zebra => zebra.selectB,
+            Skin.Singularity => singularity.selectB,
+            Skin.Blinker => blinker.selectB,
+            Skin.Checkerboard => checkerboard.selectB,
+            Skin.Corrosion => corrosion.selectB,
+            Skin.Cosmo => cosmo.selectB,
+            Skin.Cupid => cupid.selectB,
+            Skin.Fairylight => fairylights.selectB,
+            Skin.Pixy => pixy.selectB,
+            Skin.Porcelain => porcelain.selectB,
+            Skin.Rainbow => rainbow.selectB,
+            Skin.Sun => sun.selectB,
             _ => null
         } :
          s switch {
-             Skin.Chameleon => buyChameleon,
-             Skin.Mercury => buyMercury,
-             Skin.Ashflow => buyAshflow,
+             Skin.Chameleon => chameleon.buyB,
+             Skin.Mercury => mercury.buyB,
+             Skin.Ashflow => ashflow.buyB,
+
+             Skin.Zebra => zebra.buyB,
+             Skin.Singularity => singularity.buyB,
+             Skin.Blinker => blinker.buyB,
+             Skin.Checkerboard => checkerboard.buyB,
+             Skin.Corrosion => corrosion.buyB,
+             Skin.Cosmo => cosmo.buyB,
+             Skin.Cupid => cupid.buyB,
+             Skin.Fairylight => fairylights.buyB,
+             Skin.Pixy => pixy.buyB,
+             Skin.Porcelain => porcelain.buyB,
+             Skin.Rainbow => rainbow.buyB,
+             Skin.Sun => sun.buyB,
              _ => null
          };
 
@@ -118,15 +168,41 @@ public class SkinsButtons {
     public TextMeshProUGUI GetText(Skin s, bool isSelectTxt) =>
         isSelectTxt ?
         s switch {
-            Skin.Chameleon => chameleonSelectTxt,
-            Skin.Mercury => mercurySelectTxt,
-            Skin.Ashflow => ashflowSelectTxt,
+            Skin.Chameleon => chameleon.selectTxt,
+            Skin.Mercury => mercury.selectTxt,
+            Skin.Ashflow => ashflow.selectTxt,
+
+            Skin.Zebra => zebra.selectTxt,
+            Skin.Singularity => singularity.selectTxt,
+            Skin.Blinker => blinker.selectTxt,
+            Skin.Checkerboard => checkerboard.selectTxt,
+            Skin.Corrosion => corrosion.selectTxt,
+            Skin.Cosmo => cosmo.selectTxt,
+            Skin.Cupid => cupid.selectTxt,
+            Skin.Fairylight => fairylights.selectTxt,
+            Skin.Pixy => pixy.selectTxt,
+            Skin.Porcelain => porcelain.selectTxt,
+            Skin.Rainbow => rainbow.selectTxt,
+            Skin.Sun => sun.selectTxt,
             _ => null
         } :
         s switch {
-            Skin.Chameleon => chameleonPriceTxt,
-            Skin.Mercury => mercuryPriceTxt,
-            Skin.Ashflow => ashflowPriceTxt,
+            Skin.Chameleon => chameleon.priceTxt,
+            Skin.Mercury => mercury.priceTxt,
+            Skin.Ashflow => ashflow.priceTxt,
+
+            Skin.Zebra => zebra.priceTxt,
+            Skin.Singularity => singularity.priceTxt,
+            Skin.Blinker => blinker.priceTxt,
+            Skin.Checkerboard => checkerboard.priceTxt,
+            Skin.Corrosion => corrosion.priceTxt,
+            Skin.Cosmo => cosmo.priceTxt,
+            Skin.Cupid => cupid.priceTxt,
+            Skin.Fairylight => fairylights.priceTxt,
+            Skin.Pixy => pixy.priceTxt,
+            Skin.Porcelain => porcelain.priceTxt,
+            Skin.Rainbow => rainbow.priceTxt,
+            Skin.Sun => sun.priceTxt,
             _ => null
         };
 
@@ -149,6 +225,7 @@ public class SkinsButtons {
 
 
 public class PurchaseUIvisualizer : MonoBehaviour {
+    [SerializeField] FishSkinManager fishSkinManager;
     [SerializeField] AccountsButtons accountsButtons;
     [SerializeField] SkinsButtons skinsButtons;
     [SerializeField] Button resetSkinsButton;
@@ -161,14 +238,27 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     [SerializeField] GameObject skinsPreviewWnd;
     [SerializeField] Transform skinsPreview;
-    [SerializeField] SkinnedMeshRenderer chameleonRenderer;
-    [SerializeField] SkinnedMeshRenderer mercuryRenderer;
-    [SerializeField] SkinnedMeshRenderer ashflowRenderer;
-    [SerializeField] SkinnedMeshRenderer zebraRenderer;
 
-    private MaterialPropertyBlock propBlock;
+
+    [SerializeField] SkinnedMeshRenderer chameleon_Seabass;
+    [SerializeField] SkinnedMeshRenderer mercury_Tuna;
+    [SerializeField] SkinnedMeshRenderer ashflow_Mackarel;
+    [SerializeField] SkinnedMeshRenderer zebra_Barracuda;
+    [SerializeField] SkinnedMeshRenderer singularity_Tuna;
+    [SerializeField] SkinnedMeshRenderer blinker_Lionfish;
+    [SerializeField] SkinnedMeshRenderer checkerboard_Seabass;
+    [SerializeField] SkinnedMeshRenderer corrosion_Mackarel;
+    [SerializeField] SkinnedMeshRenderer cosmo_Seabass;
+    [SerializeField] SkinnedMeshRenderer cupid_Barracuda;
+    [SerializeField] SkinnedMeshRenderer fairylight_Lionfish;
+    [SerializeField] SkinnedMeshRenderer pixy_Mackarel;
+    [SerializeField] SkinnedMeshRenderer porcelain_Barracuda;
+    [SerializeField] SkinnedMeshRenderer rainbow_Tuna;    
+    [SerializeField] SkinnedMeshRenderer sun_Lionfish;
+
+    //private MaterialPropertyBlock propBlock;
     private PurchasedSkins purchasedSkins;//buffer only for click listeners
-    private int selectedSkinsOnPreview = 0;
+    private int selectedSkinOnPreview = 0;
 
     //private const string PREF_LOYALTYCONFIRMED_KEY = "loyaltyWndConfirm";
     private const bool SELECT_BUTTON_TEXT_ID = true;
@@ -196,37 +286,22 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
 
     void InitPreviewSkins() {
-        //propBlock = new MaterialPropertyBlock();
-        FishSkinShader skinBuffer = new(chameleonRenderer);
-        skinBuffer.ActivateSkinByType(Skin.Chameleon);
-        //chameleonRenderer.GetPropertyBlock(propBlock);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 1);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-        //chameleonRenderer.SetPropertyBlock(propBlock);
-        skinBuffer = new(mercuryRenderer);
-        skinBuffer.ActivateSkinByType(Skin.Mercury);
-        //mercuryRenderer.GetPropertyBlock(propBlock);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 1);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURYSCALE_PROP, (int)FishLevel.Moray + GameStaticInfo.MERCURY_SKIN_BASE_SCALE);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-        //mercuryRenderer.SetPropertyBlock(propBlock);
-        skinBuffer = new(ashflowRenderer);
-        skinBuffer.ActivateSkinByType(Skin.Ashflow);
-        //ashflowRenderer.GetPropertyBlock(propBlock);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 1);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        //ashflowRenderer.SetPropertyBlock(propBlock);
-        skinBuffer = new(zebraRenderer);
-        skinBuffer.ActivateSkinByType(Skin.Zebra);
-        //zebraRenderer.GetPropertyBlock(propBlock);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ASHFLOW_PROP, 0);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_MERCURY_PROP, 0);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_CHAMELEON_PROP, 0);
-        //propBlock.SetFloat(GameStaticInfo.FISH_WAVING_ZEBRA_PROP, 1);
-        //zebraRenderer.SetPropertyBlock(propBlock);
+        fishSkinManager.InitSkin(chameleon_Seabass, Skin.Chameleon, FishLevel.SeaBass);
+        fishSkinManager.InitSkin(mercury_Tuna, Skin.Mercury, FishLevel.Tuna);
+        fishSkinManager.InitSkin(ashflow_Mackarel, Skin.Ashflow, FishLevel.Mackerel);
+        fishSkinManager.InitSkin(zebra_Barracuda, Skin.Zebra, FishLevel.Barracuda);
+        fishSkinManager.InitSkin(singularity_Tuna, Skin.Singularity, FishLevel.Tuna);
+        fishSkinManager.InitSkin(blinker_Lionfish, Skin.Blinker, FishLevel.Lionfish);
+        fishSkinManager.InitSkin(checkerboard_Seabass, Skin.Checkerboard, FishLevel.SeaBass);
+        fishSkinManager.InitSkin(corrosion_Mackarel, Skin.Corrosion, FishLevel.Mackerel);
+        fishSkinManager.InitSkin(cosmo_Seabass, Skin.Cosmo, FishLevel.SeaBass);
+        fishSkinManager.InitSkin(cupid_Barracuda, Skin.Cupid, FishLevel.Barracuda);
+        fishSkinManager.InitSkin(fairylight_Lionfish, Skin.Fairylight, FishLevel.Lionfish);
+        fishSkinManager.InitSkin(pixy_Mackarel, Skin.Pixy, FishLevel.Mackerel);
+        fishSkinManager.InitSkin(porcelain_Barracuda, Skin.Porcelain, FishLevel.Barracuda);
+        fishSkinManager.InitSkin(rainbow_Tuna, Skin.Rainbow, FishLevel.Tuna);
+        fishSkinManager.InitSkin(sun_Lionfish, Skin.Sun, FishLevel.Lionfish);
+
     }
 
     private void Update() {
@@ -241,7 +316,8 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         foreach (Transform t in skinsPreview.transform)
             t.gameObject.SetActive(false);
 
-        skinsPreview.GetChild(0).gameObject.SetActive(true);
+        selectedSkinOnPreview = 0;
+        skinsPreview.GetChild(selectedSkinOnPreview).gameObject.SetActive(true);
     }
 
     public void OnClose_ScinsPreviewWnd() {
@@ -250,14 +326,14 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     public void OnNextSkinPreview() {
-        skinsPreview.GetChild(selectedSkinsOnPreview).gameObject.SetActive(false);
-        ++selectedSkinsOnPreview;
+        skinsPreview.GetChild(selectedSkinOnPreview).gameObject.SetActive(false);
+        ++selectedSkinOnPreview;
 
-        selectedSkinsOnPreview = skinsPreview.childCount > selectedSkinsOnPreview ?
-            selectedSkinsOnPreview :
+        selectedSkinOnPreview = skinsPreview.childCount > selectedSkinOnPreview ?
+            selectedSkinOnPreview :
             0;
 
-        skinsPreview.GetChild(selectedSkinsOnPreview).gameObject.SetActive(true);
+        skinsPreview.GetChild(selectedSkinOnPreview).gameObject.SetActive(true);
     }
 
     public void SetActiveNoInternetWnd(bool isActivate) {
@@ -265,10 +341,15 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     void InitButtonsListeners() {
+        if (skinsButtons.rainbow.buyB == null) {
+            Debug.LogWarning("Skin buttons = null");
+            return;
+        }
+
         //skins
-        skinsButtons.buyMercury.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_MercurySkin);
-        skinsButtons.buyAshflow.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_AshflowSkin);
-        skinsButtons.buyChameleon.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_ChameleonSkin);
+        skinsButtons.mercury.buyB.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_MercurySkin);
+        skinsButtons.ashflow.buyB.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_AshflowSkin);
+        skinsButtons.chameleon.buyB.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_ChameleonSkin);
         //accounts
         accountsButtons.buyNoAd.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_NoAd);
         accountsButtons.buyPremium.onClick.AddListener(GamePurchaseManager.Instance.OnBuy_Premium);
@@ -293,6 +374,10 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     void UpdatePaidSkinsSection(PurchasedSkins purchasedSkins) {
         this.purchasedSkins = purchasedSkins;
+        if (skinsButtons.rainbow.buyB == null) {
+            Debug.LogWarning("Skin buttons = null");
+            return;
+        }
 
         foreach (Skin s in SkinsButtons.PURCHASE_SKINS_ITERATORS) {
             skinsButtons.GetButton(s, BUY_BUTTON_TEXT_ID).gameObject.SetActive(true);

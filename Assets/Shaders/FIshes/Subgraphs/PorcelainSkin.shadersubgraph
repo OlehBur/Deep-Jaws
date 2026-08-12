@@ -28,7 +28,11 @@
             "m_Id": "e8813ef2919544ed86fd6367e499fcfe"
         }
     ],
-    "m_GroupDatas": [],
+    "m_GroupDatas": [
+        {
+            "m_Id": "53d24baaed4f4824a8fac5b40ac5be13"
+        }
+    ],
     "m_StickyNoteDatas": [],
     "m_Edges": [
         {
@@ -223,6 +227,17 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.GroupData",
+    "m_ObjectId": "53d24baaed4f4824a8fac5b40ac5be13",
+    "m_Title": "Porcelain Whiter",
+    "m_Position": {
+        "x": -324.0,
+        "y": -70.0
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "6f4ed0a544374ee49db58a3a15f8d35c",
     "m_Name": "",
@@ -310,7 +325,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "X",
     "m_StageCapability": 3,
-    "m_Value": 1.0,
+    "m_Value": 0.5,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
@@ -344,17 +359,17 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1Node",
     "m_ObjectId": "a2226913983b4dca92d45fa0f0b24ab0",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "53d24baaed4f4824a8fac5b40ac5be13"
     },
     "m_Name": "Float",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -118.99998474121094,
-            "y": -71.99999237060547,
+            "x": -299.0,
+            "y": -11.000015258789063,
             "width": 125.99998474121094,
-            "height": 77.00000762939453
+            "height": 76.99998474121094
         }
     },
     "m_Slots": [

@@ -38,6 +38,9 @@
         },
         {
             "m_Id": "757d62f782834ec3aa37dab70fcc6ac2"
+        },
+        {
+            "m_Id": "bb012d54b3f44d8ea5039ab50954bf35"
         }
     ],
     "m_Keywords": [],
@@ -125,6 +128,9 @@
         },
         {
             "m_Id": "abcb643c9af14bd8a9032ebd3c9c490c"
+        },
+        {
+            "m_Id": "40a6b4a524ce40dab84511ad7ee4e379"
         }
     ],
     "m_GroupDatas": [
@@ -172,6 +178,20 @@
                     "m_Id": "426989fb06fd49fe9119f004309fb7f8"
                 },
                 "m_SlotId": 2062132034
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "40a6b4a524ce40dab84511ad7ee4e379"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "5a387eb362de4e8e9d860bf7c4d2cbf9"
+                },
+                "m_SlotId": -254171896
             }
         },
         {
@@ -764,6 +784,19 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
+    "m_ObjectId": "2b997fa382a042cebed354a850efd45f",
+    "m_Id": 0,
+    "m_DisplayName": "Heart",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "31010d1653824a44ac80c60d8c79252a",
     "m_Id": -941850232,
@@ -847,6 +880,42 @@
     },
     "m_Property": {
         "m_Id": "8e283452ea584db2a11a9d63d1935b70"
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "40a6b4a524ce40dab84511ad7ee4e379",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 1364.0,
+            "y": 1591.0,
+            "width": 113.0,
+            "height": 34.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "2b997fa382a042cebed354a850efd45f"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "bb012d54b3f44d8ea5039ab50954bf35"
     }
 }
 
@@ -1007,6 +1076,9 @@
     "m_ObjectId": "4582fe8552404934a5281ea3e03f9bd8",
     "m_Name": "Frag",
     "m_ChildObjectList": [
+        {
+            "m_Id": "bb012d54b3f44d8ea5039ab50954bf35"
+        },
         {
             "m_Id": "757d62f782834ec3aa37dab70fcc6ac2"
         },
@@ -1192,6 +1264,9 @@
             "m_Id": "9766b02e5267401f8e17c62f69a4509a"
         },
         {
+            "m_Id": "90bdea87fe9b4d74a90164ac2a2849d8"
+        },
+        {
             "m_Id": "c23352b204a5422e9b6f73dea7de9d70"
         }
     ],
@@ -1205,10 +1280,12 @@
     },
     "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"868652abfaf5e884ab295c3614600f67\",\n        \"type\": 3\n    }\n}",
     "m_PropertyGuids": [
-        "65758038-13f2-467b-8b58-43e834d9edb5"
+        "65758038-13f2-467b-8b58-43e834d9edb5",
+        "2f233e9d-fb57-4693-a3ae-2e6161ce47f8"
     ],
     "m_PropertyIds": [
-        2124419701
+        2124419701,
+        -254171896
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
@@ -1780,6 +1857,24 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "90bdea87fe9b4d74a90164ac2a2849d8",
+    "m_Id": -254171896,
+    "m_DisplayName": "Heart",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Heart",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"f3926198b2b7dec42940dc33b12e8151\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "9766b02e5267401f8e17c62f69a4509a",
     "m_Id": 2124419701,
@@ -2219,6 +2314,43 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.Occlusion"
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty",
+    "m_ObjectId": "bb012d54b3f44d8ea5039ab50954bf35",
+    "m_Guid": {
+        "m_GuidSerialized": "a3ee6e7d-2ff4-4501-9ffa-8a367f2d85a4"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Heart",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Heart",
+    "m_DefaultReferenceName": "_Heart_1",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": true,
+    "hlslDeclarationOverride": 2,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"f3926198b2b7dec42940dc33b12e8151\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "isMainTexture": false,
+    "useTilingAndOffset": false,
+    "useTexelSize": true,
+    "isHDR": false,
+    "m_Modifiable": true,
+    "m_DefaultType": 0
 }
 
 {

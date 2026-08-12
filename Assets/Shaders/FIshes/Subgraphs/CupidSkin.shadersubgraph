@@ -5,6 +5,9 @@
     "m_Properties": [
         {
             "m_Id": "6a198e23ea5045e3a0e070631a96a608"
+        },
+        {
+            "m_Id": "21e97fd9d710444fbca8e1b6990233d3"
         }
     ],
     "m_Keywords": [],
@@ -110,6 +113,9 @@
         },
         {
             "m_Id": "b161c624c8414e0cb2725b2ccd4c6549"
+        },
+        {
+            "m_Id": "ee630b2da0a34d4e971e8278ae4be30a"
         }
     ],
     "m_GroupDatas": [
@@ -644,6 +650,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "ee630b2da0a34d4e971e8278ae4be30a"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "3ac04fa91e044d2a97459243e52aaff8"
+                },
+                "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "ef2ad5ea5fa14a20bb31f38b4031f768"
                 },
                 "m_SlotId": 2
@@ -707,8 +727,8 @@
     "m_ObjectId": "0114d0e64c2146428e7175dcb7048fab",
     "m_Title": "Mask",
     "m_Position": {
-        "x": 108.00000762939453,
-        "y": 966.0
+        "x": 107.99993896484375,
+        "y": 965.9999389648438
     }
 }
 
@@ -885,6 +905,19 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
+    "m_ObjectId": "105d9e7d95f043138bbe572a1872c9a2",
+    "m_Id": 0,
+    "m_DisplayName": "Heart",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "1afbf47ab6bb4201be7f1f3b3255c106",
     "m_Id": 1,
@@ -1004,6 +1037,43 @@
     },
     "m_Space": 0,
     "m_PositionSource": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty",
+    "m_ObjectId": "21e97fd9d710444fbca8e1b6990233d3",
+    "m_Guid": {
+        "m_GuidSerialized": "2f233e9d-fb57-4693-a3ae-2e6161ce47f8"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Heart",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Heart",
+    "m_DefaultReferenceName": "_Heart",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": true,
+    "hlslDeclarationOverride": 2,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"f3926198b2b7dec42940dc33b12e8151\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "isMainTexture": false,
+    "useTilingAndOffset": false,
+    "useTexelSize": true,
+    "isHDR": false,
+    "m_Modifiable": true,
+    "m_DefaultType": 0
 }
 
 {
@@ -1877,8 +1947,8 @@
     "m_ObjectId": "531191595a144ef2b94975fe3b581473",
     "m_Title": "Cell Size",
     "m_Position": {
-        "x": -574.0,
-        "y": 433.0
+        "x": -574.0000610351563,
+        "y": 432.9998779296875
     }
 }
 
@@ -2154,7 +2224,7 @@
     "m_Title": "UV",
     "m_Position": {
         "x": -1004.0,
-        "y": -480.0
+        "y": -480.0000915527344
     }
 }
 
@@ -2467,6 +2537,9 @@
     "m_ChildObjectList": [
         {
             "m_Id": "6a198e23ea5045e3a0e070631a96a608"
+        },
+        {
+            "m_Id": "21e97fd9d710444fbca8e1b6990233d3"
         }
     ]
 }
@@ -2587,8 +2660,8 @@
     "m_ObjectId": "8b40a8434f9744d2b9641fbd6d31292a",
     "m_Title": "Random Rotate",
     "m_Position": {
-        "x": -343.9999694824219,
-        "y": 423.99993896484377
+        "x": -344.0000305175781,
+        "y": 423.99981689453127
     }
 }
 
@@ -2677,8 +2750,8 @@
     "m_ObjectId": "8e74a8a502e148348166441092f103ec",
     "m_Title": "Scale",
     "m_Position": {
-        "x": -389.0,
-        "y": -372.0
+        "x": -389.0000305175781,
+        "y": -372.00006103515627
     }
 }
 
@@ -2731,8 +2804,8 @@
     "m_ObjectId": "92a8073ea0fb4939a2ebab590f4e1916",
     "m_Title": "Erase Alpha",
     "m_Position": {
-        "x": 639.0,
-        "y": -344.0
+        "x": 638.9998779296875,
+        "y": -344.0000915527344
     }
 }
 
@@ -4302,6 +4375,42 @@
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "ee630b2da0a34d4e971e8278ae4be30a",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 228.99998474121095,
+            "y": -452.0,
+            "width": 112.99998474121094,
+            "height": 34.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "105d9e7d95f043138bbe572a1872c9a2"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "21e97fd9d710444fbca8e1b6990233d3"
     }
 }
 
