@@ -119,6 +119,7 @@ public class AccountData : IData {
     public string SavePath => Path.Combine(Application.persistentDataPath, "account.json");
 
     //player data
+    public int shellsCnt = 0;
     public bool isPremiumUser = false;
     public bool isNoAD = false;
     public bool isFounder = false;
@@ -146,6 +147,7 @@ public class AccountData : IData {
     public bool confirmedLoyalty = false;
     public bool isConfirmedNoInternetDisadvantages = false;//in case user first open app without internet connection
     public bool isLicensed = false;
+    public bool firstUpdOpen1_7 = true;
 
     public bool IsHasSkin(Skin skin) =>
         skin switch {
@@ -173,8 +175,6 @@ public class AccountData : IData {
 public class SanctuaryData : IData {
     public const int NON_UPGRADE_TIME = -1;
     public string SavePath => Path.Combine(Application.persistentDataPath, "sanctuary.json");
-
-    public int shellsCnt = 0;
 
     public int coralReef_Lvl = 0;
     public int cliffsSeaweed_Lvl = 0;

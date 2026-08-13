@@ -18,6 +18,14 @@ public class ShellsBarVIsualize : MonoBehaviour {
         shellsCnt.text = cnt.ToString();
     }
 
+    void ClaimInteractable(bool interactable) {
+        if (claimB != null)
+            if (!isInteracted)
+                claimB.interactable = interactable;
+            else
+                claimB.interactable = false;
+    }
+
     private void OnEnable() {
         if (SanctuariesManager.Instance != null) {
             SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
@@ -32,16 +40,12 @@ public class ShellsBarVIsualize : MonoBehaviour {
         }
     }
 
-    void ClaimInteractable(bool interactable) {
-        if (!isInteracted)
-            claimB.interactable = interactable;
-        else
-            claimB.interactable = false;
-    }
 
     private void OnDisable() {
         if (SanctuariesManager.Instance != null)
             SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
+        if (GameAdsManager.Instance != null)
+            GameAdsManager.Instance.OnAdButtonsInteractable -= ClaimInteractable;
 
         claimB.onClick.RemoveAllListeners();
     }

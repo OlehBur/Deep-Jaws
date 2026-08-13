@@ -14,9 +14,10 @@ public class GamePurchaseManager : MonoBehaviour {
     /// </summary>
     public event Action<AccountTitles> OnUpdateAccountTittles;
     public event Action<PurchasedSkins, AccountData> OnUpdatePurchasedSkins;
+    public event Action OnNonInternetConnection;
 
-    [SerializeField] GPG_Manager GPGmanager;
-    [SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
+    //[SerializeField] GPG_Manager GPGmanager;
+    //[SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
 
     private StoreController m_StoreController;
 
@@ -37,7 +38,7 @@ public class GamePurchaseManager : MonoBehaviour {
 
     private void Awake() {
         if (Instance != null && Instance != this) {
-            Instance.ReInit(GPGmanager, purchaseUIvisualizer, m_StoreController);
+            //Instance.ReInit(/*GPGmanager,*/ purchaseUIvisualizer/*, m_StoreController*/);
             Destroy(gameObject);
             return;
         }
@@ -51,14 +52,14 @@ public class GamePurchaseManager : MonoBehaviour {
     public void ForceOnUpdateAccountTittles(AccountTitles at) =>
         OnUpdateAccountTittles?.Invoke(at);
 
-    void ReInit(GPG_Manager GPGmanager, PurchaseUIvisualizer purchaseUIvisualizer, StoreController m_StoreController) {
-        this.GPGmanager = GPGmanager;//this.GPGmanager == null ? GPGmanager : this.GPGmanager;
-        this.purchaseUIvisualizer = purchaseUIvisualizer;//this.purchaseUIvisualizer == null ? purchaseUIvisualizer : this.purchaseUIvisualizer;
-        this.m_StoreController = this.m_StoreController == null ? m_StoreController : this.m_StoreController;
+    //void ReInit(/*GPG_Manager GPGmanager, */PurchaseUIvisualizer purchaseUIvisualizer/*, StoreController m_StoreController*/) {
+    //    //this.GPGmanager = GPGmanager;//this.GPGmanager == null ? GPGmanager : this.GPGmanager;
+    //    this.purchaseUIvisualizer = purchaseUIvisualizer;//this.purchaseUIvisualizer == null ? purchaseUIvisualizer : this.purchaseUIvisualizer;
+    //    //this.m_StoreController = this.m_StoreController == null ? m_StoreController : this.m_StoreController;
 
-        OnUpdateAccountTittles = null;
-        OnUpdatePurchasedSkins = null;
-    }
+    //    //OnUpdateAccountTittles = null;
+    //    //OnUpdatePurchasedSkins = null;
+    //}
 
     public void RefreshUI() {
         AccountTitles accountTitles = GetCurrentAccountTitles();
@@ -97,20 +98,22 @@ public class GamePurchaseManager : MonoBehaviour {
             m_StoreController.FetchProducts(initialProductsToFetch);
             m_StoreController.FetchPurchases();//get history for restore
             //Debug.LogWarning("FetchPurchases on start disabled");
-            if (purchaseUIvisualizer != null)
-                purchaseUIvisualizer.SetActiveNoInternetWnd(false);
+            //if (purchaseUIvisualizer != null)
+            //    purchaseUIvisualizer.SetActiveNoInternetWnd(false);
         }
         catch (Exception e) {
             Debug.LogError($"IAP v5: Offline mode or network error: {e.Message}");
-            if (purchaseUIvisualizer != null)
-                purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+            //if (purchaseUIvisualizer != null)
+            //    purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+            OnNonInternetConnection?.Invoke();
         }
     }
 
     public void OnRestorePurchases() {
         if (m_StoreController != null) {
-            if (Application.internetReachability == NetworkReachability.NotReachable && purchaseUIvisualizer != null)
-                purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+            if (Application.internetReachability == NetworkReachability.NotReachable/* && purchaseUIvisualizer != null*/)
+                //purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+                OnNonInternetConnection?.Invoke();
 
             Debug.Log("IAP v5: Manual restore purchases requested...");
             m_StoreController.FetchPurchases();
@@ -369,8 +372,9 @@ public class GamePurchaseManager : MonoBehaviour {
         if (m_StoreController != null) {
             // check internet conn before purchase
             if (Application.internetReachability == NetworkReachability.NotReachable) {
-                if (purchaseUIvisualizer != null)
-                    purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+                //if (purchaseUIvisualizer != null)
+                //    purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+                OnNonInternetConnection?.Invoke();
                 return;
             }
 
@@ -379,8 +383,9 @@ public class GamePurchaseManager : MonoBehaviour {
         }
         else {
             Debug.LogError("IAP v5: Store controller not ready!");
-            if (purchaseUIvisualizer != null)
-                purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+            //if (purchaseUIvisualizer != null)
+            //    purchaseUIvisualizer.SetActiveNoInternetWnd(true);
+            OnNonInternetConnection?.Invoke();
         }
         //if (m_StoreController != null) {
         //    Debug.Log($"IAP v5: Start the purchase process for {PROD_ID}");

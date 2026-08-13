@@ -209,7 +209,6 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     [SerializeField] GameObject skinsPreviewWnd;
     [SerializeField] Transform skinsPreview;
 
-
     [SerializeField] SkinnedMeshRenderer chameleon_Seabass;
     [SerializeField] SkinnedMeshRenderer mercury_Tuna;
     [SerializeField] SkinnedMeshRenderer ashflow_Mackarel;
@@ -246,7 +245,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             GamePurchaseManager.Instance.OnUpdatePurchasedSkins += UpdatePaidSkinsSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles += UpdateAccountSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles += InitMainMenuAccountTittles;
-
+            GamePurchaseManager.Instance.OnNonInternetConnection += OpenNoInternetWnd;
             LocalLoadTitlesAndSkins();
         }
 
@@ -266,6 +265,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             GamePurchaseManager.Instance.OnUpdatePurchasedSkins -= UpdatePaidSkinsSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles -= UpdateAccountSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles -= InitMainMenuAccountTittles;
+            GamePurchaseManager.Instance.OnNonInternetConnection -= OpenNoInternetWnd;
         }
 
         if (SanctuariesManager.Instance != null) {
@@ -339,8 +339,8 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         skinsPreview.GetChild(selectedSkinOnPreview).gameObject.SetActive(true);
     }
 
-    public void SetActiveNoInternetWnd(bool isActivate) {
-        NoInternetConnectionWnd.SetActive(isActivate);
+    public void OpenNoInternetWnd(/*bool isActivate*/) {
+        NoInternetConnectionWnd.SetActive(true);
     }
 
     void InitButtonsListeners() {

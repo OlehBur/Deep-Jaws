@@ -53,9 +53,15 @@ public class GameAdsManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui) {
-        this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
-        this.gui = this.gui == null ? gui : this.gui;
+    //void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui) {
+    //    this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
+    //    this.gui = this.gui == null ? gui : this.gui;
+    //    OnAdButtonsInteractable?.Invoke(true);
+    //}
+    void ReInitGameUI(SpawnManager newSpawnManager, MainmenuManager newGui) {
+        spawnManager = newSpawnManager;
+        gui = newGui;
+
         OnAdButtonsInteractable?.Invoke(true);
     }
 

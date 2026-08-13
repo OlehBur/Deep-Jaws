@@ -70,9 +70,10 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         if (SanctuariesManager.Instance != null) {
             SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
             SanctuariesManager.Instance.OnResearchUpdated += UpdateResearchProgress;
-            SanctuariesManager.Instance.OnBiomeResearched += UpdateUIafterResearch;
-            GameAdsManager.Instance.OnAdButtonsInteractable += BoostInteractable;
+            SanctuariesManager.Instance.OnBiomeResearched += UpdateUIafterResearch;           
         }
+        if (GameAdsManager.Instance != null)
+            GameAdsManager.Instance.OnAdButtonsInteractable += BoostInteractable;
 
         sanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
@@ -84,6 +85,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         //sanctuaryData.isHammerheadNeutralized = true;
         //Debug.LogWarning("Activate sone neutralization for testing");
     }
+
     private void OnDisable() {
         if (SanctuariesManager.Instance != null) {
             SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
@@ -172,8 +174,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
             reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
 
-            reseachButton.interactable = true;
-            Debug.LogWarning("Research always free");
+            //reseachButton.interactable = true;
+            //Debug.LogWarning("Research always free");
 
             if (selectedBiome.NotReserched) {
                 foreach (GameObject obj in biomeHideLockObjects)
@@ -217,10 +219,10 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         SanctuariesManager.Instance.OnAddShells(-selectedBiome.GetPriceToUpgrade());
         selectedBiome.OnStartUpgrade();
 
-        selectedBiome.BoostResearch();
-        if (selectedBiome.Level == selectedBiome.Info.MaxLevel)
-            reseachButton.gameObject.SetActive(false);
-        Debug.LogWarning("ACtivate one click research");
+        //selectedBiome.BoostResearch();
+        //if (selectedBiome.Level == selectedBiome.Info.MaxLevel)
+        //    reseachButton.gameObject.SetActive(false);
+        //Debug.LogWarning("ACtivate one click research");
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
@@ -235,8 +237,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
         reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
 
-        reseachButton.interactable = true;
-        Debug.LogWarning("Research always free");
+        //reseachButton.interactable = true;
+        //Debug.LogWarning("Research always free");
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
@@ -288,8 +290,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                     reseachButton.interactable = false;
                 }
 
-                reseachButton.interactable = true;
-                Debug.LogWarning("Research always free");
+                //reseachButton.interactable = true;
+                //Debug.LogWarning("Research always free");
 
                 //progress bar and boost button hide
                 researchProgressBar.gameObject.SetActive(false);

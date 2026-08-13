@@ -53,12 +53,12 @@ public class SanctuariesManager : MonoBehaviour {
         //init update
         OnShellsAmountChanged?.Invoke(ShellsCnt);
         OnResearchUpdated?.Invoke(BiomeType.CoralReef, coralReef.TimeToUpgrade);
-        OnAddShells(33333);
+        //OnAddShells(33333);
         //Debug.LogWarning("Added cheat extra shells (500)");
     }
 
     private void Update() {
-        SanctuariesBehaviour();
+        SanctuariesUpdateBehaviour();
     }
 
     public void BoostResearch(BiomeType type) {
@@ -75,8 +75,9 @@ public class SanctuariesManager : MonoBehaviour {
             _ => null
         };
 
-    void SanctuariesBehaviour() {
+    void SanctuariesUpdateBehaviour() {
         minuteTimer += Time.unscaledDeltaTime;
+        //Debug.Log(minuteTimer.ToString());
         if (minuteTimer >= PRODUCTION_UPDATE_INTERVAL) {
             minuteTimer = 0f;
             //Production
@@ -101,7 +102,7 @@ public class SanctuariesManager : MonoBehaviour {
 
     void ResearchBiomeProgress(BiomeWrapper biome) {
         if (biome.IsUpgrading) {
-            biome.TimeToUpgrade--;
+            biome.TimeToUpgrade-=GameStaticInfo.SECONDS_IN_MINUTE;
 
             UpgradeBiomeLevel(biome);
         }
@@ -131,8 +132,10 @@ public class SanctuariesManager : MonoBehaviour {
         //load data
         SanctuaryData sancturariesData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
+        AccountData accountData = ProgressSaver.IsAccountDataExist ?
+            ProgressSaver.LoadAccountData() : new AccountData();
 
-        ShellsCnt = sancturariesData.shellsCnt;
+        ShellsCnt = accountData.shellsCnt;
 
         //init Biomes
         coralReef = new(coralReefInfo, sancturariesData.coralReef_Lvl, sancturariesData.coralReef_SecondsToUpgrade);
@@ -150,8 +153,10 @@ public class SanctuariesManager : MonoBehaviour {
         if (Instance == this) {
             //save data
             SanctuaryData sancturariesData = ProgressSaver.IsSanctuaryDataExist ?
-            ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-            sancturariesData.shellsCnt = ShellsCnt;
+                ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
+            AccountData accountData = ProgressSaver.IsAccountDataExist ?
+                ProgressSaver.LoadAccountData() : new AccountData();
+            accountData.shellsCnt = ShellsCnt;
             sancturariesData.coralReef_Lvl = coralReef.Level;
             sancturariesData.coralReef_SecondsToUpgrade = coralReef.TimeToUpgrade;
 
@@ -164,6 +169,7 @@ public class SanctuariesManager : MonoBehaviour {
             sancturariesData.oceanicAbyss_Lvl = oceanicAbyss.Level;
             sancturariesData.oceanicAbyss_SecondsToUpgrade = oceanicAbyss.TimeToUpgrade;
             ProgressSaver.SaveData(sancturariesData);
+            ProgressSaver.SaveData(accountData);
             Instance = null;
 
             coralReef.OnBoostedProgress -= UpgradeBiomeLevel;
@@ -244,8 +250,8 @@ public class BiomeWrapper {
         if (TimeToUpgrade < 0)
             TimeToUpgrade = 0;
 
-        Debug.LogWarning("Activate one click research");
-        TimeToUpgrade = 0;
+        //Debug.LogWarning("Activate one click research");
+        //TimeToUpgrade = 0;
 
         OnBoostedProgress?.Invoke(this);
     }

@@ -32,10 +32,11 @@ public class GameResultWnd : MonoBehaviour {
     }
 
     void AdInteractable(bool interactable) {
-        if (receivedShells > 0)
-            doubleShellsB.interactable = interactable;
-        else
-            doubleShellsB.interactable = false;
+        if (doubleShellsB != null)
+            if (receivedShells > 0)
+                doubleShellsB.interactable = interactable;
+            else
+                doubleShellsB.interactable = false;
     }
 
     public void AddShellsWithoutWnd() {

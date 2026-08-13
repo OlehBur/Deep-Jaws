@@ -110,7 +110,7 @@ public class PlayerUIController : MonoBehaviour {
     private static readonly WaitForSecondsRealtime OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL);
     private static readonly WaitForSecondsRealtime HALF_OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL * .5f);
     private static readonly WaitForSecondsRealtime BLINDNESS_DARK_WAIT = new WaitForSecondsRealtime(1.4f);
-    private static readonly Vector3 SPRINT_BAR_SCALE_MULTIPLIER = new Vector3(0f, 1f, 1f);
+    //private static readonly Vector3 SPRINT_BAR_SCALE_MULTIPLIER = new Vector3(0f, 1f, 1f);
 
     private const string DEFAULT_FISH_ICONS_PARENT_NAME = "effects_icons";
     private const float SPRINT_BUTTON_COOLDOWN = 20f;

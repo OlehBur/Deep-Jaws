@@ -28,6 +28,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameResultWnd gameResult;
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
+    [SerializeField] GameObject newUpdWnd;
     [SerializeField] TMP_Dropdown languageDropdown;
     [SerializeField] TMP_Dropdown framerateDropdown;
     [SerializeField] Image gameModeWndBackground;
@@ -79,6 +80,15 @@ public class MainmenuManager : MonoBehaviour {
 
     private void Awake() {
         GameModeInit();
+        AccountData accountData = ProgressSaver.IsAccountDataExist ?
+            ProgressSaver.LoadAccountData() : new AccountData();
+
+        if (accountData.firstUpdOpen1_7 && newUpdWnd != null) {
+            Debug.Log("Confirmed first open on New Update 1.7");
+            newUpdWnd.SetActive(true);
+            accountData.firstUpdOpen1_7 = false;
+            ProgressSaver.SaveData(accountData);
+        }
     }
 
     private void Start() {
@@ -153,10 +163,11 @@ public class MainmenuManager : MonoBehaviour {
 
     public void ResetAndReloadGame_Hard() {
         ResetWorldData();
-        WorldData wd = new();
-        wd.gameMode = GameMode.Hard;
-        ProgressSaver.SaveData(wd);
-        GameStaticInfo.Gamemode = wd.gameMode;
+        //WorldData wd = new();
+        //wd.gameMode = GameMode.Hard;
+        Debug.Log("DELETED WORLD GAMEMODE AUTO SAVE");
+        //ProgressSaver.SaveData(wd);
+        GameStaticInfo.Gamemode = GameMode.Hard;//wd.gameMode;
         //PlayerPrefs.SetInt(GM_KEY, (int)GameMode.Hard);
         gameResult.AddShellsWithoutWnd();
         faderScene.OnLoad_GameScene();
@@ -258,18 +269,19 @@ public class MainmenuManager : MonoBehaviour {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void GameModeInit() {//init gamemode buttons        
-        WorldData wd = ProgressSaver.IsWorldDataExist ?
-            ProgressSaver.LoadWorldData() : new();
+        //WorldData wd = ProgressSaver.IsWorldDataExist ?
+        //    ProgressSaver.LoadWorldData() : new();
 
-        //if (!wd.isNewSaveType) {  ///only for old savings
-        GameMode oldSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
-        wd.gameMode = oldSave == GameMode.Easy ?//easy or not have save
-            wd.gameMode : oldSave;//if old save is easy - even empty wd - has easy by default \ otherwise load old save but dont save alrd
-        //wd.isNewSaveType = true;
-        //Debug.Log("Transfer world data to new version: success");
-        //}
+        ////if (!wd.isNewSaveType) {  ///only for old savings
+        //GameMode oldTypeSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
+        //*wd.gameMode*/
+        //GameStaticInfo.Gamemode = oldTypeSave == GameMode.Easy ?//easy or not have save
+        //    /*wd.gameMode*/GameStaticInfo.Gamemode : oldTypeSave;//if old save is easy - even empty wd - has easy by default \ otherwise load old save but dont save alrd
+        ////wd.isNewSaveType = true;
+        ////Debug.Log("Transfer world data to new version: success");
+        ////}
 
-        GameStaticInfo.Gamemode = wd.gameMode;
+        //GameStaticInfo.Gamemode = wd.gameMode;
         //ProgressSaver.SaveData(wd);
 
         //init gamemode
@@ -338,10 +350,11 @@ public class MainmenuManager : MonoBehaviour {
         StartCoroutine(ChangeColorGMmainMenu());
 
         //PlayerPrefs.SetInt("GameMode", gamemode);
-        WorldData wd = ProgressSaver.IsWorldDataExist ?
-            ProgressSaver.LoadWorldData() : new();
-        wd.gameMode = GameStaticInfo.Gamemode;
-        ProgressSaver.SaveData(wd);
+        Debug.Log("DELETED WORDL AUTO SAVE");
+        //WorldData wd = ProgressSaver.IsWorldDataExist ?
+        //    ProgressSaver.LoadWorldData() : new();
+        //wd.gameMode = GameStaticInfo.Gamemode;
+        //ProgressSaver.SaveData(wd);
 
         if (isGMneedAnimation) {
             gmWndAnimator.SetTrigger("Anim");
