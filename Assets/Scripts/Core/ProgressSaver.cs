@@ -139,6 +139,7 @@ public class AccountData : IData {
     public bool hasPorcelain = false;
     public bool hasRainbow = false;
     public bool hasSun = false;
+    public bool hasInvert = false;
     public Skin selectedSkin;
 
     //stats
@@ -148,9 +149,9 @@ public class AccountData : IData {
 
     public bool IsHasSkin(Skin skin) =>
         skin switch {
-            Skin.Mercury=>hasMercurySkin,
-            Skin.Chameleon=>hasChameleon,
-            Skin.Ashflow=>hasAshflowSkin,
+            Skin.Mercury => hasMercurySkin,
+            Skin.Chameleon => hasChameleon,
+            Skin.Ashflow => hasAshflowSkin,
             Skin.Porcelain => hasPorcelain,
             Skin.Zebra => hasZebra,
             Skin.Checkerboard => hasCheckerboard,
@@ -163,6 +164,7 @@ public class AccountData : IData {
             Skin.Rainbow => hasRainbow,
             Skin.Cosmo => hasCosmo,
             Skin.Singularity => hasSingularity,
+            Skin.Invert => hasInvert,
             _ => false
         };
 }

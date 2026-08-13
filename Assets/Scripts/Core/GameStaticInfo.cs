@@ -70,7 +70,8 @@ public enum Skin {
     Pixy,
     Porcelain,
     Rainbow,
-    Sun
+    Sun,
+    Invert
 }
 
 public struct PurchasedSkins {
@@ -97,50 +98,53 @@ public struct PurchasedSkins {
         };
 }
 
-public struct FreeSkins {
-    public bool Zebra;
-    public bool Singularity;
-    public bool Blinker;
-    public bool Checkerboard;
-    public bool Corrosion;
-    public bool Cosmo;
-    public bool Cupid;
-    public bool Fairylights;
-    public bool Pixy;
-    public bool Porcelain;
-    public bool Rainbow;
-    public bool Sun;
+//public struct FreeSkins {
+//    public bool Zebra;
+//    public bool Singularity;
+//    public bool Blinker;
+//    public bool Checkerboard;
+//    public bool Corrosion;
+//    public bool Cosmo;
+//    public bool Cupid;
+//    public bool Fairylights;
+//    public bool Pixy;
+//    public bool Porcelain;
+//    public bool Rainbow;
+//    public bool Sun;
+//    public bool Invert;
 
-    public int ZebraPrice;
-    public int SingularityPrice;
-    public int BlinkerPrice;
-    public int CheckerboardPrice;
-    public int CorrosionPrice;
-    public int CosmoPrice;
-    public int CupidPrice;
-    public int FairylightsPrice;
-    public int PixyPrice;
-    public int PorcelainPrice;
-    public int RainbowPrice;
-    public int SunPrice;
+//    public int ZebraPrice;
+//    public int SingularityPrice;
+//    public int BlinkerPrice;
+//    public int CheckerboardPrice;
+//    public int CorrosionPrice;
+//    public int CosmoPrice;
+//    public int CupidPrice;
+//    public int FairylightsPrice;
+//    public int PixyPrice;
+//    public int PorcelainPrice;
+//    public int RainbowPrice;
+//    public int SunPrice;
+//    public int InvertPrice;
 
-    public int GetPrice(Skin s) =>
-    s switch {
-        Skin.Zebra => ZebraPrice,
-        Skin.Singularity => SingularityPrice,
-        Skin.Blinker => BlinkerPrice,
-        Skin.Checkerboard => CheckerboardPrice,
-        Skin.Corrosion => CorrosionPrice,
-        Skin.Cosmo => CosmoPrice,
-        Skin.Cupid => CupidPrice,
-        Skin.Fairylight => FairylightsPrice,
-        Skin.Pixy => PixyPrice,
-        Skin.Porcelain => PorcelainPrice,
-        Skin.Rainbow => RainbowPrice,
-        Skin.Sun => SunPrice,
-        _ => -1
-    };
-}
+//    public int GetPrice(Skin s) =>
+//    s switch {
+//        Skin.Zebra => ZebraPrice,
+//        Skin.Singularity => SingularityPrice,
+//        Skin.Blinker => BlinkerPrice,
+//        Skin.Checkerboard => CheckerboardPrice,
+//        Skin.Corrosion => CorrosionPrice,
+//        Skin.Cosmo => CosmoPrice,
+//        Skin.Cupid => CupidPrice,
+//        Skin.Fairylight => FairylightsPrice,
+//        Skin.Pixy => PixyPrice,
+//        Skin.Porcelain => PorcelainPrice,
+//        Skin.Rainbow => RainbowPrice,
+//        Skin.Sun => SunPrice,
+//        Skin.Invert => InvertPrice,
+//        _ => -1
+//    };
+//}
 
 
 public static class GameStaticInfo {
@@ -262,14 +266,15 @@ public static class GameStaticInfo {
 
     //store prices
     public const int PORCELAIN_SKIN_PRICE = 500;
-    public const int ZEBRA_SKIN_PRICE = 950;
-    public const int CHECKER_SKIN_PRICE = 1100;
-    public const int BLINKER_SKIN_PRICE = 2000;
-    public const int CUPID_SKIN_PRICE = 3330;
-    public const int FAIRYLIGHT_SKIN_PRICE = 4000;
-    public const int PIXY_SKIN_PRICE = 4600;
+    public const int ZEBRA_SKIN_PRICE = 1300;
+    public const int INVERT_SKIN_PRICE = 1500;
+    public const int CHECKER_SKIN_PRICE = 1800;
+    public const int BLINKER_SKIN_PRICE = 2700;
+    public const int CUPID_SKIN_PRICE = 4000;
+    public const int FAIRYLIGHT_SKIN_PRICE = 4600;
+    public const int PIXY_SKIN_PRICE = 4900;
     public const int COROSSION_SKIN_PRICE = 6000;
-    public const int SUN_SKIN_PRICE = 6200;
+    public const int SUN_SKIN_PRICE = 6226;
     public const int RAINBOW_SKIN_PRICE = 8765;
     public const int COSMO_SKIN_PRICE = 9000;
     public const int SINGULAR_SKIN_PRICE = 11111;
@@ -287,8 +292,9 @@ public static class GameStaticInfo {
             Skin.Rainbow => GameStaticInfo.RAINBOW_SKIN_PRICE,
             Skin.Cosmo => GameStaticInfo.COSMO_SKIN_PRICE,
             Skin.Singularity => GameStaticInfo.SINGULAR_SKIN_PRICE,
+            Skin.Invert => INVERT_SKIN_PRICE,
             _ => -1
-        } / 100;
+        } /*/ 100*/;
 
     public const int BIOME_RESEARCH_BOOST_TIME = 15 * 60;//15 MIN
 

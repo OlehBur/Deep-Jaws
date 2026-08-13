@@ -431,6 +431,9 @@ public class GamePurchaseManager : MonoBehaviour {
             case Skin.Sun:
             data.hasSun = true;
             break;
+            case Skin.Invert:
+            data.hasInvert = true;
+            break;
             case Skin.Rainbow:
             data.hasRainbow = true;
             break;

@@ -75,6 +75,7 @@ public class SkinsCards {
     public SkinStoreCard porcelain;
     public SkinStoreCard rainbow;
     public SkinStoreCard sun;
+    public SkinStoreCard invert;
 
     public static readonly Skin[] ALL_SKINS_ITETATORS = Enum.GetValues(typeof(Skin))
         .Cast<Skin>()
@@ -91,6 +92,7 @@ public class SkinsCards {
     //            .Skip(1)//without default
     //            .ToArray();
     public static readonly Skin[] FREE_SKINS_ITERATORS = new Skin[] {
+        Skin.Invert,
         Skin.Zebra,
         Skin.Singularity,
         Skin.Blinker,
@@ -122,6 +124,7 @@ public class SkinsCards {
         Skin.Porcelain => porcelain,
         Skin.Rainbow => rainbow,
         Skin.Sun => sun,
+        Skin.Invert => invert,
         _ => chameleon
     };
 
@@ -182,6 +185,10 @@ public class SkinsCards {
             GamePurchaseManager.Instance.OnBuy_FreeSkin(Skin.Sun);
             sun.ShowSelectUI();
         });
+        invert.BuyOnClick.AddListener(() => {
+            GamePurchaseManager.Instance.OnBuy_FreeSkin(Skin.Invert);
+            invert.ShowSelectUI();
+        });
     }
 }
 
@@ -218,6 +225,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     [SerializeField] SkinnedMeshRenderer porcelain_Barracuda;
     [SerializeField] SkinnedMeshRenderer rainbow_Tuna;
     [SerializeField] SkinnedMeshRenderer sun_Lionfish;
+    [SerializeField] SkinnedMeshRenderer invert_Seabass;
 
     //private MaterialPropertyBlock propBlock;
     private PurchasedSkins purchasedSkins;//buffer only for click listeners
@@ -244,6 +252,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
         if (SanctuariesManager.Instance != null) {
             SanctuariesManager.Instance.OnShellsAmountChanged += UpdateFreeSkinsBuyInteractable;
+            UpdateFreeSkinsBuyInteractable(SanctuariesManager.Instance.ShellsCnt);
         }
 
         UpdateFreeSkinsSection(null);
@@ -252,9 +261,21 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         GamePurchaseManager.Instance?.RefreshUI();
     }
 
+    private void OnDisable() {
+        if (GamePurchaseManager.Instance != null) {
+            GamePurchaseManager.Instance.OnUpdatePurchasedSkins -= UpdatePaidSkinsSection;
+            GamePurchaseManager.Instance.OnUpdateAccountTittles -= UpdateAccountSection;
+            GamePurchaseManager.Instance.OnUpdateAccountTittles -= InitMainMenuAccountTittles;
+        }
+
+        if (SanctuariesManager.Instance != null) {
+            SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateFreeSkinsBuyInteractable;
+        }
+    }
+
     void UpdateFreeSkinsBuyInteractable(int cntShells) {
         bool enoughShellsBuff = false;
-        foreach (Skin s in SkinsCards.ALL_SKINS_ITETATORS) {
+        foreach (Skin s in SkinsCards.FREE_SKINS_ITERATORS) {
             enoughShellsBuff = GameStaticInfo.GetFreeSkinPrice(s) <= cntShells;
             skinsCards.GetSkinCard(s).SetBuyInterctable(enoughShellsBuff);
         }
@@ -276,6 +297,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         fishSkinManager.InitSkin(porcelain_Barracuda, Skin.Porcelain, FishLevel.Barracuda);
         fishSkinManager.InitSkin(rainbow_Tuna, Skin.Rainbow, FishLevel.Tuna);
         fishSkinManager.InitSkin(sun_Lionfish, Skin.Sun, FishLevel.Lionfish);
+        fishSkinManager.InitSkin(invert_Seabass, Skin.Invert, FishLevel.SeaBass);
 
         foreach (Skin s in SkinsCards.ALL_SKINS_ITETATORS)
             skinsCards.GetSkinCard(s).PreviewOnClick.AddListener(() => OpenPreviewWithCurrentSkin(s));
@@ -360,6 +382,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             Skin.Porcelain => porcelain_Barracuda,
             Skin.Rainbow => rainbow_Tuna,
             Skin.Sun => sun_Lionfish,
+            Skin.Invert => invert_Seabass,
             _ => chameleon_Seabass
         };
 
@@ -381,6 +404,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         ProgressSaver.SaveData(currentData);        //}
 
         UpdatePaidSkinsSection(purchasedSkins, currentData);
+        UpdateFreeSkinsSection(currentData);
     }
 
     void UpdateFreeSkinsSection(AccountData data) {
@@ -451,6 +475,12 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     public void OnSelectZebraSkinClick() {
         SaveSelectedSkinToProgress(Skin.Zebra, out AccountData data);
         //skinsCards.GetSkinCard(Skin.Zebra).UpdateData(true);
+        UpdatePaidSkinsSection(purchasedSkins, data);
+        UpdateFreeSkinsSection(data);
+    }
+
+    public void OnSelectInvertSkinClick() {
+        SaveSelectedSkinToProgress(Skin.Invert, out AccountData data);
         UpdatePaidSkinsSection(purchasedSkins, data);
         UpdateFreeSkinsSection(data);
     }

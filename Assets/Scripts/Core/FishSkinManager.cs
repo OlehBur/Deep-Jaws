@@ -31,6 +31,7 @@ public class FishSkinManager : ScriptableObject {
     [SerializeField] Material porcelain;
     [SerializeField] Material rainbow;
     [SerializeField] Material sun;
+    [SerializeField] Material invert;
 
     private Material runtimeMaterial;
 
@@ -126,6 +127,7 @@ public class FishSkinManager : ScriptableObject {
             Skin.Porcelain => porcelain,
             Skin.Rainbow => rainbow,
             Skin.Sun => sun,
+            Skin.Invert => invert,
             _ => null
         };
 

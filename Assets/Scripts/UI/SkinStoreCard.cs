@@ -23,6 +23,9 @@ public class SkinStoreCard : MonoBehaviour {
     public void SetBuyInterctable(bool interactable) => buyB.interactable = interactable;
 
     public void ShowPriceUI(string price) {
+        if (buyB == null)
+            return;
+
         priceTxt.text = price;
         buyB.gameObject.SetActive(true);
         selectB.gameObject.SetActive(false);
@@ -33,6 +36,8 @@ public class SkinStoreCard : MonoBehaviour {
         //SELECTED_TXT = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_selected");
         //SELECT_TXT = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_select");
         //}
+        if(buyB==null)
+            return;
 
         selectTxt.text = isSelected ?
             SELECTED_TXT.GetLocalizedString() : SELECT_TXT.GetLocalizedString();

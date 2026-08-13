@@ -4737,6 +4737,9 @@
             "m_Id": "3e0da00a17e44ee8b5c9541dab8f79eb"
         },
         {
+            "m_Id": "9d885e88e83a457b90fd2f9b7c343405"
+        },
+        {
             "m_Id": "18c18c0abd894c71b600977956875f7c"
         },
         {
@@ -4754,11 +4757,13 @@
     "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"11d547c715f3b5c469af231686129e5f\",\n        \"type\": 3\n    }\n}",
     "m_PropertyGuids": [
         "99219c93-1dd6-4905-88db-490822cb3c05",
-        "0d2ca6be-c94c-401f-b903-12d631f033b4"
+        "0d2ca6be-c94c-401f-b903-12d631f033b4",
+        "1314ca4b-b816-4388-a235-fcb6192f7925"
     ],
     "m_PropertyIds": [
         -581856785,
-        789748858
+        789748858,
+        -1021744922
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
@@ -5106,6 +5111,9 @@
     },
     "m_Slots": [
         {
+            "m_Id": "cb133fa017774d5d96c7a0932f3b878b"
+        },
+        {
             "m_Id": "482db237ef8643a3a737cbd07d405738"
         },
         {
@@ -5124,8 +5132,12 @@
         "m_SerializableColors": []
     },
     "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"d0a9e4ebe871f784ba36d6539b038bf6\",\n        \"type\": 3\n    }\n}",
-    "m_PropertyGuids": [],
-    "m_PropertyIds": [],
+    "m_PropertyGuids": [
+        "40b588ef-bf53-4726-b1e4-b90f93263d20"
+    ],
+    "m_PropertyIds": [
+        672658846
+    ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
 }
@@ -6228,7 +6240,7 @@
     "m_Title": "Fixed Center by obj pos (view uv)",
     "m_Position": {
         "x": -2789.0,
-        "y": 96.99994659423828
+        "y": 97.0
     }
 }
 
@@ -7435,6 +7447,24 @@
         "w": 0.0
     },
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "4f4cfb8c15294ea6961342828e30f827",
+    "m_Id": -254171896,
+    "m_DisplayName": "Heart",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Heart",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"f3926198b2b7dec42940dc33b12e8151\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
 }
 
 {
@@ -9251,7 +9281,7 @@
     "m_ObjectId": "78d0d907a6a84445bb276aa24c0ca863",
     "m_Title": "Ideal Circle Fix",
     "m_Position": {
-        "x": -1943.9998779296875,
+        "x": -1944.0,
         "y": 1247.0
     }
 }
@@ -10841,6 +10871,24 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "99ec0856b27f4fddb47a90985b226c05",
+    "m_Id": -607247975,
+    "m_DisplayName": "Noise",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Noise",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"7cc45c82bcf8d2149a0733403501cf22\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "9bf35b64be5c4e238ffbb2d9d2161f21",
     "m_Id": 0,
@@ -10894,6 +10942,24 @@
         "w": 0.0
     },
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "9d885e88e83a457b90fd2f9b7c343405",
+    "m_Id": -1021744922,
+    "m_DisplayName": "Noise",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Noise",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"7cc45c82bcf8d2149a0733403501cf22\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
 }
 
 {
@@ -12978,6 +13044,9 @@
             "m_Id": "8ac1a3372db54484898e0c407cdc196b"
         },
         {
+            "m_Id": "4f4cfb8c15294ea6961342828e30f827"
+        },
+        {
             "m_Id": "c96a5f227b1241e78e172f5785d8b644"
         }
     ],
@@ -12991,10 +13060,12 @@
     },
     "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"868652abfaf5e884ab295c3614600f67\",\n        \"type\": 3\n    }\n}",
     "m_PropertyGuids": [
-        "65758038-13f2-467b-8b58-43e834d9edb5"
+        "65758038-13f2-467b-8b58-43e834d9edb5",
+        "2f233e9d-fb57-4693-a3ae-2e6161ce47f8"
     ],
     "m_PropertyIds": [
-        2124419701
+        2124419701,
+        -254171896
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
@@ -14020,6 +14091,24 @@
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "cb133fa017774d5d96c7a0932f3b878b",
+    "m_Id": 672658846,
+    "m_DisplayName": "Noise",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Noise",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"7cc45c82bcf8d2149a0733403501cf22\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
 }
 
 {
@@ -15773,8 +15862,8 @@
     "m_ObjectId": "eb88cc07a3e34a0da8d5317da0d47e4e",
     "m_Title": "Move Fix",
     "m_Position": {
-        "x": -3414.999755859375,
-        "y": 191.99996948242188
+        "x": -3415.0,
+        "y": 192.0
     }
 }
 
@@ -16768,6 +16857,9 @@
             "m_Id": "f57e30c33e0643d68688053e2544404a"
         },
         {
+            "m_Id": "99ec0856b27f4fddb47a90985b226c05"
+        },
+        {
             "m_Id": "fff2d978c7ec486d85de2e49651a8090"
         },
         {
@@ -16787,10 +16879,12 @@
     },
     "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"d36184e39fcda654b879d81ed0847171\",\n        \"type\": 3\n    }\n}",
     "m_PropertyGuids": [
-        "5bb9706b-dff8-4560-b740-da8abc2d8dac"
+        "5bb9706b-dff8-4560-b740-da8abc2d8dac",
+        "e00086ec-6437-4a6e-8d39-4328cffae359"
     ],
     "m_PropertyIds": [
-        948880024
+        948880024,
+        -607247975
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
