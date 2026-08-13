@@ -13,13 +13,13 @@ public class GamePurchaseManager : MonoBehaviour {
     /// no ads, premium, founders
     /// </summary>
     public event Action<AccountTitles> OnUpdateAccountTittles;
-    public event Action<PurchasedSkins> OnUpdatePurchasedSkins;
+    public event Action<PurchasedSkins, AccountData> OnUpdatePurchasedSkins;
 
     [SerializeField] GPG_Manager GPGmanager;
     [SerializeField] PurchaseUIvisualizer purchaseUIvisualizer;
 
     private StoreController m_StoreController;
-    
+
     private const string PREMIUM_PRODUCT_ID = "com.deepjaws.premium_no_ads";
     private const string NOADD_PRODUCT_ID = "com.deepjaws.remove_interstitials";
     private const string SUPPORT_DEV_ID = "com.deepjaws.support_developer";
@@ -65,7 +65,7 @@ public class GamePurchaseManager : MonoBehaviour {
         PurchasedSkins purchasedSkins = GetCurrentPurchasedSkins();
 
         OnUpdateAccountTittles?.Invoke(accountTitles);
-        OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
+        OnUpdatePurchasedSkins?.Invoke(purchasedSkins, null);
     }
 
     async void Start() {
@@ -140,7 +140,7 @@ public class GamePurchaseManager : MonoBehaviour {
                 purchasedSkins.Mercury = currentData.hasMercurySkin;
                 purchasedSkins.Chameleon = currentData.hasChameleon;
                 purchasedSkins.Ashflow = currentData.hasAshflowSkin;
-                purchasedSkins.Selected = currentData.selectedSkin;
+                //purchasedSkins.Selected = currentData.selectedSkin;
 
                 accountTitles.NoAdPrice = accountTitles.HasPremium ? /*PURCHASED_PRODUCT*/purchasedTxt : ERROR_PRICE;
                 accountTitles.PremiumPrice = accountTitles.HasPremium ? /*PURCHASED_PRODUCT*/purchasedTxt : ERROR_PRICE;
@@ -150,7 +150,7 @@ public class GamePurchaseManager : MonoBehaviour {
                 purchasedSkins.AshflowPrice = purchasedSkins.Ashflow ? OWNED_PRODUCT : ERROR_PRICE;
 
                 OnUpdateAccountTittles?.Invoke(accountTitles);
-                OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
+                OnUpdatePurchasedSkins?.Invoke(purchasedSkins, currentData);
                 return;
             }
         }
@@ -177,8 +177,8 @@ public class GamePurchaseManager : MonoBehaviour {
                 purchasedSkins.Chameleon = true;
         }
 
-        if (ProgressSaver.IsAccountDataExist)//load local sekected skuin
-            purchasedSkins.Selected = ProgressSaver.LoadAccountData().selectedSkin;
+        //if (ProgressSaver.IsAccountDataExist)//load local sekected skuin
+        //    purchasedSkins.Selected = ProgressSaver.LoadAccountData().selectedSkin;
 
         UpdatePremiumInSaveFile(accountTitles, purchasedSkins);
         RefreshUI();
@@ -259,7 +259,7 @@ public class GamePurchaseManager : MonoBehaviour {
             ps.Mercury = data.hasMercurySkin;
             ps.Chameleon = data.hasChameleon;
             ps.Ashflow = data.hasAshflowSkin;
-            ps.Selected = data.selectedSkin;
+            //ps.Selected = data.selectedSkin;
         }
 
         ps.MercuryPrice = ps.Mercury ?
@@ -294,7 +294,7 @@ public class GamePurchaseManager : MonoBehaviour {
 
         //load prices
         OnUpdateAccountTittles?.Invoke(accountTitles);
-        OnUpdatePurchasedSkins?.Invoke(purchasedSkins);
+        OnUpdatePurchasedSkins?.Invoke(purchasedSkins, null);
 
         //Debug.LogWarning("Disabled manual call FetchPurchases");
         //m_StoreController.FetchPurchases();//Debug.Log("IAP v5: Items received. Checking purchase history...");
@@ -397,4 +397,58 @@ public class GamePurchaseManager : MonoBehaviour {
     public void OnBuy_MercurySkin() => BuyProduct(MERCURY_PRODUCT_ID);
     public void OnBuy_ChameleonSkin() => BuyProduct(CHAMELEON_PRODUCT_ID);
     public void OnBuy_AshflowSkin() => BuyProduct(IS_ASHFLOW_ON_SALE ? ASHFLOW_DISCOUNT_PRODUCT_ID : ASHFLOW_PRODUCT_ID);
+
+    public void OnBuy_FreeSkin(Skin skin) {
+        AccountData data = ProgressSaver.IsAccountDataExist ?
+            ProgressSaver.LoadAccountData() : new AccountData();
+        int price = GameStaticInfo.GetFreeSkinPrice(skin);
+
+        switch (skin) {
+            case Skin.Porcelain:
+            data.hasPorcelain = true;
+            break;
+            case Skin.Zebra:
+            data.hasZebra = true;
+            break;
+            case Skin.Checkerboard:
+            data.hasCheckerboard = true;
+            break;
+            case Skin.Blinker:
+            data.hasBlinker = true;
+            break;
+            case Skin.Cupid:
+            data.hasCupid = true;
+            break;
+            case Skin.Fairylight:
+            data.hasFairylight = true;
+            break;
+            case Skin.Pixy:
+            data.hasPixy = true;
+            break;
+            case Skin.Corrosion:
+            data.hasCorrosion = true;
+            break;
+            case Skin.Sun:
+            data.hasSun = true;
+            break;
+            case Skin.Rainbow:
+            data.hasRainbow = true;
+            break;
+            case Skin.Cosmo:
+            data.hasCosmo = true;
+            break;
+            case Skin.Singularity:
+            data.hasSingularity = true;
+            break;
+        }
+
+        if (SanctuariesManager.Instance != null)
+            SanctuariesManager.Instance.OnAddShells(-price);
+        else
+            Debug.LogWarning("Sanctuaries Manager Instance is null!");
+
+        ProgressSaver.SaveData(data);
+    }
+
+
 }

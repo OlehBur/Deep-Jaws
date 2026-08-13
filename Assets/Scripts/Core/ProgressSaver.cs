@@ -123,14 +123,48 @@ public class AccountData : IData {
     public bool isNoAD = false;
     public bool isFounder = false;
 
+    //skins
     public bool hasAshflowSkin = false;
     public bool hasMercurySkin = false;
     public bool hasChameleon = false;
+    public bool hasZebra = false;
+    public bool hasSingularity = false;
+    public bool hasBlinker = false;
+    public bool hasCheckerboard = false;
+    public bool hasCorrosion = false;
+    public bool hasCosmo = false;
+    public bool hasCupid = false;
+    public bool hasFairylight = false;
+    public bool hasPixy = false;
+    public bool hasPorcelain = false;
+    public bool hasRainbow = false;
+    public bool hasSun = false;
     public Skin selectedSkin;
 
+    //stats
     public bool confirmedLoyalty = false;
     public bool isConfirmedNoInternetDisadvantages = false;//in case user first open app without internet connection
     public bool isLicensed = false;
+
+    public bool IsHasSkin(Skin skin) =>
+        skin switch {
+            Skin.Mercury=>hasMercurySkin,
+            Skin.Chameleon=>hasChameleon,
+            Skin.Ashflow=>hasAshflowSkin,
+            Skin.Porcelain => hasPorcelain,
+            Skin.Zebra => hasZebra,
+            Skin.Checkerboard => hasCheckerboard,
+            Skin.Blinker => hasBlinker,
+            Skin.Cupid => hasCupid,
+            Skin.Fairylight => hasFairylight,
+            Skin.Pixy => hasPixy,
+            Skin.Corrosion => hasCorrosion,
+            Skin.Sun => hasSun,
+            Skin.Rainbow => hasRainbow,
+            Skin.Cosmo => hasCosmo,
+            Skin.Singularity => hasSingularity,
+            _ => false
+        };
 }
 
 [Serializable]

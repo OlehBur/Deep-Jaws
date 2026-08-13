@@ -162,7 +162,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             return;
 
         Renderer renderer = fishAnim.FishSkinnedMesh;
-        fishSkinManager.InitSkin(renderer, selectedSkin, fish.Level); 
+        if (fishSkinManager != null)
+            fishSkinManager.InitSkin(renderer, selectedSkin, fish.Level);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

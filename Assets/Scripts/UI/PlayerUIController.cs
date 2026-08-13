@@ -190,11 +190,12 @@ public class PlayerUIController : MonoBehaviour {
         //activate and draw progress for all effects icons that have player
         EffectsProgressReset(); // reset all icons progress
 
-        foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.activeEffects)
-            if (eff.Value == null || !eff.Value.Enabled)
-                EffectsBehaviour(eff.Key, false);
-            else  //!null & enabled
-                SetEffectProgress(eff.Key, eff.Value);
+        if (playerEffectManager != null && playerEffectManager.activeEffects.Count > 0)
+            foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.activeEffects)
+                if (eff.Value == null || !eff.Value.Enabled)
+                    EffectsBehaviour(eff.Key, false);
+                else  //!null & enabled
+                    SetEffectProgress(eff.Key, eff.Value);
 
         //if (isPlayableAreaActive)
         SprintButtonBehaviour();

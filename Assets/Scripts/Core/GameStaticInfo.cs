@@ -80,7 +80,7 @@ public struct PurchasedSkins {
     public string MercuryPrice;
     public string ChameleonPrice;
     public string AshflowPrice;
-    public Skin Selected;
+    //public Skin Selected;
     //public bool MercuryHasDiscount;
     //public bool ChameleonHasDiscount;
     //public bool AshflowHasDiscount;
@@ -260,6 +260,35 @@ public static class GameStaticInfo {
     //rewards
     public const int EXTRA_SHELLS_CNT = 100;
 
+    //store prices
+    public const int PORCELAIN_SKIN_PRICE = 500;
+    public const int ZEBRA_SKIN_PRICE = 950;
+    public const int CHECKER_SKIN_PRICE = 1100;
+    public const int BLINKER_SKIN_PRICE = 2000;
+    public const int CUPID_SKIN_PRICE = 3330;
+    public const int FAIRYLIGHT_SKIN_PRICE = 4000;
+    public const int PIXY_SKIN_PRICE = 4600;
+    public const int COROSSION_SKIN_PRICE = 6000;
+    public const int SUN_SKIN_PRICE = 6200;
+    public const int RAINBOW_SKIN_PRICE = 8765;
+    public const int COSMO_SKIN_PRICE = 9000;
+    public const int SINGULAR_SKIN_PRICE = 11111;
+    public static int GetFreeSkinPrice(Skin skin) =>
+        skin switch {
+            Skin.Porcelain => GameStaticInfo.PORCELAIN_SKIN_PRICE,
+            Skin.Zebra => GameStaticInfo.ZEBRA_SKIN_PRICE,
+            Skin.Checkerboard => GameStaticInfo.CHECKER_SKIN_PRICE,
+            Skin.Blinker => GameStaticInfo.BLINKER_SKIN_PRICE,
+            Skin.Cupid => GameStaticInfo.CUPID_SKIN_PRICE,
+            Skin.Fairylight => GameStaticInfo.FAIRYLIGHT_SKIN_PRICE,
+            Skin.Pixy => GameStaticInfo.PIXY_SKIN_PRICE,
+            Skin.Corrosion => GameStaticInfo.COROSSION_SKIN_PRICE,
+            Skin.Sun => GameStaticInfo.SUN_SKIN_PRICE,
+            Skin.Rainbow => GameStaticInfo.RAINBOW_SKIN_PRICE,
+            Skin.Cosmo => GameStaticInfo.COSMO_SKIN_PRICE,
+            Skin.Singularity => GameStaticInfo.SINGULAR_SKIN_PRICE,
+            _ => -1
+        } / 100;
 
     public const int BIOME_RESEARCH_BOOST_TIME = 15 * 60;//15 MIN
 
