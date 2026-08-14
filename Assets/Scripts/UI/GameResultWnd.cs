@@ -65,6 +65,7 @@ public class GameResultWnd : MonoBehaviour {
 
         points.text = reachedScore.ToString();
         multiplier.text = "X" + currentMultiplier.ToString("F1");
+        finalShells.color = Color.white;
         finalShells.text = receivedShells.ToString();
         doubleShells.text = $"(+{receivedShells})";
         doubleShellsB.interactable = receivedShells > 0;//don`t need double score without score)
@@ -74,9 +75,11 @@ public class GameResultWnd : MonoBehaviour {
     }
 
     void OnDoubleShellsReceive() {
-        if (SanctuariesManager.Instance != null) {
+        if (SanctuariesManager.Instance != null)
             SanctuariesManager.Instance.OnAddShells(receivedShells);
-            doubleShellsB.interactable = false;
-        }
+
+        doubleShellsB.interactable = false;
+        finalShells.text = (receivedShells * 2).ToString();
+        finalShells.color = Color.orange;
     }
 }

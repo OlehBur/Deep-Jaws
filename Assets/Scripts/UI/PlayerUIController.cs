@@ -413,7 +413,8 @@ public class PlayerUIController : MonoBehaviour {
 
         sprintButton.interactable = true;
         sprintButton.image.fillAmount = 1f; // reset the button fill amount
-        sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
+                                            //sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
+        SetSprintProgressPC(1);
         sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, 1f);
         currentSprintCooldownTime = 0f;
 

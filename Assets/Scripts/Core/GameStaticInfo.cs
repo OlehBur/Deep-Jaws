@@ -1,5 +1,4 @@
-﻿using Codice.CM.Client.Differences;
-using System;
+﻿using System;
 using UnityEngine;
 
 public enum FishLevel {
@@ -176,7 +175,7 @@ public static class GameStaticInfo {
     public const int SETTINGS_DEFAULT_LANGUAGE = 0;
 
     //gamemode
-    public static GameMode Gamemode { get; set; } = GetInitialGamemod();
+    public static GameMode Gamemode { get; set; } = /*GetInitialGamemod()*/GameMode.Easy;
     public const int GAMEMODES_COUNT = 3;
     public const float EASY_MODE_SHELLS_MULTIPLIER = 1f;
     public const float MEDIUM_MODE_SHELLS_MULTIPLIER = 1.2f;
@@ -184,18 +183,20 @@ public static class GameStaticInfo {
     public const int MAX_DAILY_REVIVALS = 10;
     public const int AUTO_RESPAWN_TIME = 5;
 
-    static GameMode GetInitialGamemod() {
-        GameMode oldTypeSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
-        GameMode newGm;
-        WorldData wd = ProgressSaver.IsWorldDataExist ?
-            ProgressSaver.LoadWorldData() : new WorldData();
-        bool isOldSaveExist = oldTypeSave != GameMode.Easy;
+    //static GameMode GetInitialGamemod() {
+    //    //GameMode oldTypeSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
+    //    GameMode newGm;
+    //    WorldData wd = ProgressSaver.IsWorldDataExist ?
+    //        ProgressSaver.LoadWorldData() : new WorldData();
+    //    //bool isOldSaveExist = oldTypeSave != GameMode.Easy;
 
-        newGm = isOldSaveExist ?//easy or not have save
-            oldTypeSave : wd.gameMode;
+    //    newGm =
+    //        //isOldSaveExist ?//easy or not have save
+    //        //oldTypeSave :
+    //        wd.gameMode;
 
-        return newGm;
-    }
+    //    return newGm;
+    //}
 
     //fish
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish

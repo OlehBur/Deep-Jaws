@@ -269,8 +269,8 @@ public class MainmenuManager : MonoBehaviour {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void GameModeInit() {//init gamemode buttons        
-        //WorldData wd = ProgressSaver.IsWorldDataExist ?
-        //    ProgressSaver.LoadWorldData() : new();
+                         //WorldData wd = ProgressSaver.IsWorldDataExist ?
+                         //    ProgressSaver.LoadWorldData() : new();
 
         ////if (!wd.isNewSaveType) {  ///only for old savings
         //GameMode oldTypeSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
@@ -280,6 +280,19 @@ public class MainmenuManager : MonoBehaviour {
         ////wd.isNewSaveType = true;
         ////Debug.Log("Transfer world data to new version: success");
         ////}
+
+        int oldTypeSave = PlayerPrefs.GetInt("GameMode", -1);
+        GameMode newGm;
+        WorldData wd = ProgressSaver.IsWorldDataExist ?
+            ProgressSaver.LoadWorldData() : new WorldData();
+        bool isOldSaveExist = oldTypeSave != -1;
+
+        newGm = isOldSaveExist ?//easy or not have save
+                            (GameMode)oldTypeSave : wd.gameMode;
+        if (isOldSaveExist)
+            PlayerPrefs.DeleteKey("GameMode");
+        GameStaticInfo.Gamemode = isOldSaveExist ?
+            newGm : GameStaticInfo.Gamemode;
 
         //GameStaticInfo.Gamemode = wd.gameMode;
         //ProgressSaver.SaveData(wd);
@@ -351,6 +364,7 @@ public class MainmenuManager : MonoBehaviour {
 
         //PlayerPrefs.SetInt("GameMode", gamemode);
         Debug.Log("DELETED WORDL AUTO SAVE");
+
         //WorldData wd = ProgressSaver.IsWorldDataExist ?
         //    ProgressSaver.LoadWorldData() : new();
         //wd.gameMode = GameStaticInfo.Gamemode;

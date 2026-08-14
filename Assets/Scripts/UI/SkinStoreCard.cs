@@ -20,6 +20,15 @@ public class SkinStoreCard : MonoBehaviour {
     //private static string SELECT_TXT => LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_select");
 
 
+    private void OnEnable() {
+        SELECTED_TXT.StringChanged += OnStringUpdated;
+        SELECT_TXT.StringChanged += OnStringUpdated;
+    }
+
+    private void OnDisable() {
+        SELECTED_TXT.StringChanged -= OnStringUpdated;
+        SELECT_TXT.StringChanged -= OnStringUpdated;
+    }
     public void SetBuyInterctable(bool interactable) => buyB.interactable = interactable;
 
     public void ShowPriceUI(string price) {
@@ -36,15 +45,26 @@ public class SkinStoreCard : MonoBehaviour {
         //SELECTED_TXT = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_selected");
         //SELECT_TXT = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_select");
         //}
-        if(buyB==null)
+        if (buyB == null)
             return;
 
-        selectTxt.text = isSelected ?
-            SELECTED_TXT.GetLocalizedString() : SELECT_TXT.GetLocalizedString();
+        //LocalizedString currentStr = isSelected ?
+        //    SELECTED_TXT : SELECT_TXT;
+        //currentStr.GetLocalizedStringAsync().Completed += handle => {
+        //    selectTxt.text = handle.Result;
+        //};
+        LocalizedString currentStr = isSelected ? SELECTED_TXT : SELECT_TXT;
+        currentStr.RefreshString();//force text upd
+
         selectB.interactable = !isSelected;
 
         buyB.gameObject.SetActive(false);
         selectB.gameObject.SetActive(true);
+    }
+
+    private void OnStringUpdated(string translatedValue) {
+        selectTxt.text = selectB.interactable ?
+            SELECT_TXT.GetLocalizedString() : SELECTED_TXT.GetLocalizedString();
     }
 
     public void UpdateData(bool isSelected, bool isPurchased = true, string price = "") {

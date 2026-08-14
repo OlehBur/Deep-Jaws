@@ -54,7 +54,7 @@ public class SanctuariesManager : MonoBehaviour {
         OnShellsAmountChanged?.Invoke(ShellsCnt);
         OnResearchUpdated?.Invoke(BiomeType.CoralReef, coralReef.TimeToUpgrade);
         //OnAddShells(33333);
-        //Debug.LogWarning("Added cheat extra shells (500)");
+        //Debug.LogWarning("Added cheat extra shells");
     }
 
     private void Update() {

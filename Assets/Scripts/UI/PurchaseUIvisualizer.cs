@@ -237,6 +237,9 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
 
     private void Start() {
+        UpdateFreeSkinsSection(null);
+        UpdatePaidSkinsSection(purchasedSkins, null);
+
         if (GamePurchaseManager.Instance != null) {
             GamePurchaseManager.Instance.OnUpdatePurchasedSkins -= UpdatePaidSkinsSection;
             GamePurchaseManager.Instance.OnUpdateAccountTittles -= UpdateAccountSection;
@@ -254,7 +257,6 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             UpdateFreeSkinsBuyInteractable(SanctuariesManager.Instance.ShellsCnt);
         }
 
-        UpdateFreeSkinsSection(null);
         InitPreviewSkins();
         InitButtonsListeners();
         GamePurchaseManager.Instance?.RefreshUI();

@@ -27,6 +27,7 @@ public class Fish : MonoBehaviour {
 
     public FishInfo DefaultInfo => fishInfo;
     public Vector3 VisualTransformScale => prefabVisualTransform.localScale;
+    public Quaternion VisualRotation => prefabVisualTransform.rotation;
     public Rigidbody Rb => rb;
     public FishLevel Level => /*level*/fishInfo.Level;
     public int Health { get { return health; } protected set { health = value; } }
