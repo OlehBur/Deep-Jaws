@@ -174,9 +174,6 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
             reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
 
-            //reseachButton.interactable = true;
-            //Debug.LogWarning("Research always free");
-
             if (selectedBiome.NotReserched) {
                 foreach (GameObject obj in biomeHideLockObjects)
                     obj.SetActive(false);
@@ -236,9 +233,6 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         productionPerMinuteTxt.text = selectedBiome.GetProductionPerMinute().ToString() + "/" + minuteShort.GetLocalizedString();
         researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
         reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
-
-        //reseachButton.interactable = true;
-        //Debug.LogWarning("Research always free");
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }

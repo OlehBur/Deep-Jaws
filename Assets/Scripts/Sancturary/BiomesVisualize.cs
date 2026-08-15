@@ -85,6 +85,7 @@ public class BiomesVisualize : MonoBehaviour {
 
     IEnumerator ResearchAnim(Transform modelsTrans, GameObject buildParticle) {
         modelsTrans.localScale = Vector3.zero;
+        buildParticle.SetActive(false);
         buildParticle.SetActive(true);
 
         yield return WAIT_PARTICLE_BURST;

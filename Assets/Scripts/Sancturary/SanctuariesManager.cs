@@ -53,6 +53,7 @@ public class SanctuariesManager : MonoBehaviour {
         //init update
         OnShellsAmountChanged?.Invoke(ShellsCnt);
         OnResearchUpdated?.Invoke(BiomeType.CoralReef, coralReef.TimeToUpgrade);
+       
         //OnAddShells(33333);
         //Debug.LogWarning("Added cheat extra shells");
     }
@@ -237,9 +238,6 @@ public class BiomeWrapper {
             return;
 
         TimeToUpgrade = (int)(Info.UpgradeTimeByLevel_Hours[level] * SECONDS_IN_HOUR);
-        //TimeToUpgrade = (int)(TimeToUpgrade * .01f);
-        //Debug.LogWarning("Activate fast research");
-        //Level++;
     }
 
     public void BoostResearch() {
