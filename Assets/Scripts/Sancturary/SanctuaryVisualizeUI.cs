@@ -223,10 +223,6 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
         UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
     }
-    //void OnBoostResearch() {
-    //    selectedBiome.BoostResearch();
-    //    UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
-    //}
 
     void UpdateBiomeNonStatInfo() {
         UpdateStars(selectedBiome.Level, selectedBiome.Info.MaxLevel);

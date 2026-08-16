@@ -126,6 +126,7 @@ public class FishAdditionalCompManager : MonoBehaviour {
         for (int i = 0; i < pool.Length; i++) {
             if (!pool[i].activeInHierarchy) {
                 obj = pool[i];
+                obj.SetActive(false);
                 return;
             }
         }

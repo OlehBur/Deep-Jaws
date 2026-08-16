@@ -81,7 +81,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     public const int PUFFERFISH_SPAWN_COUNT = 20;
     public const int CUTTLEFISH_SPAWN_COUNT = 30;
     public const int DARTFISH_SPAWN_COUNT = 50;
-    public const int POOL_SIZE = 85;
+    public const int POOL_SIZE = 90;
 
     private const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
     private const int SHIELDS_POOL_CNT = 30; // POOL_SIZE/4
@@ -291,7 +291,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.SaveData(worldPlayerData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.Tuna;
+        //playerLvl = (int)FishLevel.Lionfish;
         //playerProgress = .9f;
         //Debug.LogWarning("Activeted Cheat spawn lvl: " + playerLvl);
 

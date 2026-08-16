@@ -110,29 +110,17 @@ public class FishControl : MonoBehaviour, IFish {
     //    Debug.Log(colliderDefaultHeight / Fish.GROWTH_MULTIPLIER + " " + colliderDefaultRadius / Fish.GROWTH_MULTIPLIER);
     //}
 
-    //void Awake() {
-    //    IEnemy = this;
-    //    rb = GetComponent<Rigidbody>();
-    //    fishLayerMask = LayerMask.GetMask("Entity");
-    //}
-
-    //void Start() {
-    //    SetDefaultState(); // Set initial state after full initialization
-    //}
-
     private void OnDisable() {
         // Cancel all delayed calls when disabled
         CancelInvoke();
         //SetDefaultState(); //HARD SHIT DO NOT UNCOMMENT !!!
         SleepPhysics();
-        //JoyAxis.OnAxisChanged -= OnMove;
 
         if (fish != null && fish.IsPlayer) {
             if (IFish != null)
                 IFish.CurrentTarget = null;
             isMoved = false;
             JoyAxis.Axis = Vector2.zero;
-            //JoyAxis.isReset = true;
         }
     }
 
@@ -377,6 +365,7 @@ public class FishControl : MonoBehaviour, IFish {
             if (direction.sqrMagnitude > DIRECTION_ROTATE_MAGNITUDE_TRIGGER) {
                 targetLook = Quaternion.LookRotation(direction, Vector3.up);
                 rotationTransform.rotation = Quaternion.RotateTowards(rotationTransform.rotation, targetLook, fish.RotationSpeed * delta);
+                //rotationTransform.Rotate(Vector3.one);
             }
             else //standing still
                 targetLook = rotationTransform.rotation;

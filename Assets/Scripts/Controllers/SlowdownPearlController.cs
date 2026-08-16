@@ -12,7 +12,7 @@ public class SlowdownPearlController : MonoBehaviour {
 
     private const string FLOWER_ANIM_NAME = "Nymphae_Flower";
     private const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
-    private const float MAX_RESPAWN_TIME = 120f; //2 minutes
+    private const float MAX_RESPAWN_TIME = 180f; //3 minutes
     private const float MAX_AXIS_ANGLE_DIR = 45f;
 
     private Vector3 randomRotateDir;

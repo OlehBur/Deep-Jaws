@@ -281,20 +281,20 @@ public class MainmenuManager : MonoBehaviour {
         ////Debug.Log("Transfer world data to new version: success");
         ////}
 
-        int oldTypeSave = PlayerPrefs.GetInt("GameMode", -1);
-        GameMode newGm;
+        //int oldTypeSave = PlayerPrefs.GetInt("GameMode", -1);
+        //GameMode newGm;
         WorldData wd = ProgressSaver.IsWorldDataExist ?
             ProgressSaver.LoadWorldData() : new WorldData();
-        bool isOldSaveExist = oldTypeSave != -1;
+        //bool isOldSaveExist = oldTypeSave != -1;
 
-        newGm = isOldSaveExist ?//easy or not have save
-                            (GameMode)oldTypeSave : wd.gameMode;
-        if (isOldSaveExist)
-            PlayerPrefs.DeleteKey("GameMode");
-        GameStaticInfo.Gamemode = isOldSaveExist ?
-            newGm : GameStaticInfo.Gamemode;
+        //newGm = isOldSaveExist ?//easy or not have save
+        //                    (GameMode)oldTypeSave : wd.gameMode;
+        //if (isOldSaveExist)
+        //    PlayerPrefs.DeleteKey("GameMode");
+        //GameStaticInfo.Gamemode = isOldSaveExist ?
+        //    newGm : GameStaticInfo.Gamemode;
 
-        //GameStaticInfo.Gamemode = wd.gameMode;
+        GameStaticInfo.Gamemode = wd.gameMode;
         //ProgressSaver.SaveData(wd);
 
         //init gamemode

@@ -103,7 +103,7 @@ public class WorldData : IData {
 
     //game data
     //public bool isNewSaveType = false;//only for transfer old players data
-    public GameMode gameMode = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
+    public GameMode gameMode;//(GameMode)PlayerPrefs.GetInt("GameMode", 0);
     public Vector3 playerPosition = Vector3.zero;
     public Quaternion playerRotation = Quaternion.identity;
     public float playerProgress = 0;

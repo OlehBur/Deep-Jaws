@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4234837169667622650}
   - component: {fileID: 8371339825292365308}
   m_Layer: 0
-  m_Name: HitParticles
+  m_Name: BiteParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -604,7 +604,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 1000
+    maxNumParticles: 100
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
