@@ -1,10 +1,14 @@
+using System;
 using UnityEngine;
 
 
 public class PlayerLeaderboardScore : MonoBehaviour {
     private SpawnManager spawnManager;
     private Fish player;
+
     public static long Score { get; private set; } = 0;
+    public static event Action<long> OnChanged;
+
     private static int EasyDeaths { get; set; }
     private const string DEATHS_KEY = "Deaths";
 
@@ -59,9 +63,12 @@ public class PlayerLeaderboardScore : MonoBehaviour {
         PlayerPrefs.SetInt(DEATHS_KEY, EasyDeaths);
 
 
-    private void OnScoreAdd(int score) =>
+    private void OnScoreAdd(int score) {
         Score += score;
-    //Debug.Log($"Player score: {this.score}");
+        //Debug.Log($"Player score: {this.score}");
+
+        OnChanged?.Invoke(Score);
+    }
 
     public void OnPauseMenuOpen() => //save score when the pause menu is opened
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);

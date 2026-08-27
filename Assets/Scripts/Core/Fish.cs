@@ -63,7 +63,9 @@ public class Fish : MonoBehaviour {
     /// </summary>
     public event Action<int> OnFishEat;
     public event Action OnFishDamage;
-    public event Action OnInfoStatsChanged;
+    //public event Action OnInfoStatsChanged;
+    public event Action OnHealthChanged;
+    public event Action OnProgressChanged;
 
     private float SpeedMultiplier { get; set; } = 1;
     private float SpeedMultiplierSecond { get; set; } = 1;
@@ -90,7 +92,9 @@ public class Fish : MonoBehaviour {
         SpeedMultiplierThird = 1f;
         SpeedMultiplierFourth = 1f;
 
-        OnInfoStatsChanged?.Invoke();
+        //OnInfoStatsChanged?.Invoke();
+        OnHealthChanged?.Invoke();
+        OnProgressChanged?.Invoke();
         UpdateGrowSize();
     }
 
@@ -106,7 +110,9 @@ public class Fish : MonoBehaviour {
     public void CopyData(int health, float progress) {
         Health = health;
         Progress = progress;
-        OnInfoStatsChanged?.Invoke();
+        //OnInfoStatsChanged?.Invoke();
+        OnHealthChanged?.Invoke();
+        OnProgressChanged?.Invoke();
         UpdateGrowSize();//update in case of load data from save
     }
 
@@ -146,10 +152,10 @@ public class Fish : MonoBehaviour {
         enemyProgressMultiplier = GameStaticInfo.Gamemode != GameMode.Easy ? 1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
         progressDivider *= enemyProgressMultiplier;
 
-        //if (IsPlayer) {
-        //    progressDivider = 4f;
-        //    Debug.LogWarning("Activated fast progress!!!");
-        //}
+        if (IsPlayer) {
+            progressDivider = 4f;
+            Debug.LogWarning("Activated fast progress!!!");
+        }
 
         Progress += 1f / progressDivider;
         if (!IsPlayer && Progress > 1f) //player can grow over 1f progress
@@ -161,7 +167,8 @@ public class Fish : MonoBehaviour {
         //Debug.Log($"{gameObject.name} ({Progress}) eats {victim.name} ({victim.Progress}).");
 
         UpdateGrowSize();
-        OnInfoStatsChanged?.Invoke();
+        //OnInfoStatsChanged?.Invoke();
+        OnProgressChanged?.Invoke();
 
         /*return*/
         isStillAlive = victim.TakeDamage(damage);
@@ -223,7 +230,8 @@ public class Fish : MonoBehaviour {
         Progress += 1 / (MIN_PROGRESS_GAIN_MULTIPLIER + (float)fishInfo.Level * MIN_PROGRESS_GAIN_MULTIPLIER);
         OnFishEat?.Invoke(1);
         UpdateGrowSize();
-        OnInfoStatsChanged?.Invoke();
+        //OnInfoStatsChanged?.Invoke();
+        OnProgressChanged?.Invoke();
     }
 
     /// <summary>
@@ -234,7 +242,8 @@ public class Fish : MonoBehaviour {
     public bool TakeDamage(int damage) {
         Health -= damage;
         OnFishDamage?.Invoke();
-        OnInfoStatsChanged?.Invoke();
+        //OnInfoStatsChanged?.Invoke();
+        OnHealthChanged?.Invoke();
 
         if (Health <= 0) {
             Die();
@@ -246,7 +255,8 @@ public class Fish : MonoBehaviour {
 
     public void Heal(int amount) {
         Health = Mathf.Min(Health + amount, /*MaxHealth*/fishInfo.MaxHealth);
-        OnInfoStatsChanged?.Invoke();
+        //OnInfoStatsChanged
+        OnHealthChanged?.Invoke();
     }
 
     public void Die() {

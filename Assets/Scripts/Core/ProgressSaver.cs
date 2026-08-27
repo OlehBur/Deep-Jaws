@@ -94,7 +94,8 @@ public class SettingsData : IData {
     public int shadow_resolution = GameStaticInfo.SETTINGS_SHADOWMAP_RESOLUTION_2;
     public int framerate = GameStaticInfo.DEFAULT_SCREEN_FRAMERATE;
 
-    //language
+    //language & ui
+    public bool autoUI = true;
     public int language = GameStaticInfo.SETTINGS_DEFAULT_LANGUAGE;
 }
 
@@ -103,7 +104,7 @@ public class WorldData : IData {
 
     //game data
     //public bool isNewSaveType = false;//only for transfer old players data
-    public GameMode gameMode;//(GameMode)PlayerPrefs.GetInt("GameMode", 0);
+    public GameMode gameMode = GameMode.None;//(GameMode)PlayerPrefs.GetInt("GameMode", 0);
     public Vector3 playerPosition = Vector3.zero;
     public Quaternion playerRotation = Quaternion.identity;
     public float playerProgress = 0;

@@ -93,6 +93,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
 
     public void Init() {
+        Time.timeScale = 0f;
+
         fishAdditionalComponentManager.Init(SHIELDS_POOL_CNT,
             DEAD_BUBBLES_POOL_CNT,
             BITE_PARTICLES_POOL_CNT,
@@ -116,6 +118,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
         if (GameStaticInfo.Gamemode == GameMode.Hard)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_the_hard_way);
+
+        Time.timeScale = 1f;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -291,7 +295,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.SaveData(worldPlayerData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.Lionfish;
+        //playerLvl = (int)FishLevel.Tuna;
         //playerProgress = .9f;
         //Debug.LogWarning("Activeted Cheat spawn lvl: " + playerLvl);
 
@@ -468,7 +472,6 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                     if (!prem && !noadd) {//if doesnt have immunitet
 
                         if (/*gameAdsManager*/GameAdsManager.Instance.OnShowInterstitialAd()) {//only if ad will be shown
-                            gameManager.GameSetPause(true);
                             mainmenuManager.ActivatePauseWnd(true);
                         }
                     }
@@ -499,7 +502,19 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         float currentWeight = 0f;
         float[] spawnWeight = (PlayerFish.Level == FishLevel.SeaBass) ?
             SPAWN_WEIGHTS_EASY_START : SPAWN_WEIGHTS_EASY;//easy enemies for beginner players
-        //weight by gamemode
+                                                          //weight by gamemode
+
+        if (GameStaticInfo.Gamemode == GameMode.None) {
+            Debug.LogWarning("Activate fast game scene start!");
+
+            if (ProgressSaver.IsWorldDataExist)
+                GameStaticInfo.Gamemode = ProgressSaver.LoadWorldData().gameMode;
+
+            if (GameStaticInfo.Gamemode == GameMode.None) {
+                GameStaticInfo.Gamemode = GameMode.Easy;
+                Debug.LogWarning("Gamemode selection System doesnt work properly!");
+            }
+        }
         spawnWeight = GameStaticInfo.Gamemode switch {
             GameMode.Easy => spawnWeight,
             GameMode.Medium => SPAWN_WEIGHTS_MEDIUM,

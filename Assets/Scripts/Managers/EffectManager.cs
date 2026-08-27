@@ -165,8 +165,8 @@ public class EffectManager : MonoBehaviour {
 
             //if (type == FishEffectType.StunInitiator)
             //    Debug.Log("Stun Initiator effect applied");
-
-            activeEffects[type].OnEffeñtExpire -= RemoveEffect;
+            if (activeEffects.TryGetValue(type, out Effect effect))
+                effect.OnEffeñtExpire -= RemoveEffect;
             activeEffects[type] = newEffect; // use [] instead TryAdd 
 
             UpdateIconVisualization();

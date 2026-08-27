@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
-using UnityEngine.Localization; //  for Uri.EscapeDataString
+using UnityEngine.Localization;
+using System.Runtime.CompilerServices; //  for Uri.EscapeDataString
 
 
 /// <summary>
@@ -29,8 +27,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject guideBookWnd;
     [SerializeField] GameObject newUpdWnd;
-    [SerializeField] TMP_Dropdown languageDropdown;
-    [SerializeField] TMP_Dropdown framerateDropdown;
+
     [SerializeField] Image gameModeWndBackground;
     [SerializeField] Image signInIcon;
     [SerializeField] GameObject kingOfDeepsObj;
@@ -40,22 +37,14 @@ public class MainmenuManager : MonoBehaviour {
     //[SerializeField] LocalizedString settingsMaxFpsLocalized;
 
     [Header("Game Scene")]
-    /// <summary>
-    /// only for game scene
-    /// </summary>
+    //only for game scene
     [SerializeField] GameObject[] gamemodePauseTitles;
+    [SerializeField] GameManager gameManager;
+    [SerializeField] GameObject pauseButton;
     [SerializeField] GameObject pauseWnd;
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] RespawnWnd respawnWnd;
 
-    private int previousLocaleIndex = 0;
-    private Framerate currentFramerateIndex;
-    private enum Framerate {
-        Max,
-        F30,
-        F60,
-        F120
-    }
     private bool isGMneedAnimation = true;
     private bool isWorldDataExist = false;
     private Color targetGMwndColor;
@@ -79,7 +68,9 @@ public class MainmenuManager : MonoBehaviour {
 
 
     private void Awake() {
-        GameModeInit();
+        if (gamemodePauseTitles != null)
+            GameModeTitlesInit();
+
         AccountData accountData = ProgressSaver.IsAccountDataExist ?
             ProgressSaver.LoadAccountData() : new AccountData();
 
@@ -97,13 +88,10 @@ public class MainmenuManager : MonoBehaviour {
         if (faderScene != null)        // Ensure the fader scene is not destroyed on load
             faderScene?.gameObject.SetActive(true);
 
-        if (continueButton != null)// Initialize the continue button visibility based on saved data
+        if (continueButton != null) {// Initialize the continue button visibility based on saved data
             continueButton?.SetActive(isWorldDataExist);
-
-        if (framerateDropdown != null) {//if any settings field setted
-            SettingsData savedSettings = ProgressSaver.LoadSettingsData();
-            LanguageInit(savedSettings);
-            FramerateInit(savedSettings);
+            GameStaticInfo.Gamemode = isWorldDataExist? 
+                ProgressSaver.LoadWorldData().gameMode: GameMode.None;
         }
 
         if (GameManager.IsInternetNotAvailable)
@@ -113,6 +101,9 @@ public class MainmenuManager : MonoBehaviour {
             kingOfDeepsObj.SetActive(false);
             kingOfDeepsAnimator.enabled = false;
         }
+
+        if (pauseButton != null)
+            pauseButton.SetActive(!GameManager.IsRunOnPC);
     }
 
     private void OnEnable() {
@@ -130,6 +121,18 @@ public class MainmenuManager : MonoBehaviour {
 
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
             GPG_Manager.Instance.OnLoadKingOfDeeps -= KingOfDeepsUpdate;
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void GameModeTitlesInit() {//init gamemode buttons        
+        if (gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
+            foreach (GameObject tit in gamemodePauseTitles)
+                tit.SetActive(false);
+
+            gamemodePauseTitles[(int)GameStaticInfo.Gamemode].SetActive(true);
+        }
+        //Debug.LogWarning(GameStaticInfo.Gamemode);
     }
 
     void KingOfDeepsUpdate(string playerNick) {
@@ -151,81 +154,21 @@ public class MainmenuManager : MonoBehaviour {
             spawnManager.RespawnPlayer(true, false);
             return;
         }
-
         //GameAdsManager.Instance.UpdateDailyRevivesTxt();
         respawnWnd.gameObject.SetActive(true);
-
     }
 
     public void ActivatePauseWnd(bool isActivate) {
+        if (gameManager != null)
+            gameManager.GameSetPause(isActivate);
         pauseWnd.SetActive(isActivate);
     }
 
     public void ResetAndReloadGame_Hard() {
         ResetWorldData();
-        //WorldData wd = new();
-        //wd.gameMode = GameMode.Hard;
-        Debug.Log("DELETED WORLD GAMEMODE AUTO SAVE");
-        //ProgressSaver.SaveData(wd);
-        GameStaticInfo.Gamemode = GameMode.Hard;//wd.gameMode;
-        //PlayerPrefs.SetInt(GM_KEY, (int)GameMode.Hard);
+        GameStaticInfo.Gamemode = GameMode.Hard;
         gameResult.AddShellsWithoutWnd();
         faderScene.OnLoad_GameScene();
-    }
-
-    async void LanguageInit(SettingsData savedSettings) {
-        await LocalizationSettings.InitializationOperation.Task; // wait readiness
-
-        previousLocaleIndex = savedSettings == null ?
-            (int)GameStaticInfo.LocalizationID.English : savedSettings.language;
-        //PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
-
-        if (previousLocaleIndex < 0 || previousLocaleIndex >= LocalizationSettings.AvailableLocales.Locales.Count)
-            previousLocaleIndex = 0;
-
-        if (LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex];
-
-        languageDropdown.value = previousLocaleIndex;
-        languageDropdown.onValueChanged.RemoveAllListeners();
-        languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
-    }
-
-    void FramerateInit(SettingsData savedSettings) {
-        List<string> fpsListing = new();
-        QualitySettings.vSyncCount = 0;
-        int screenMaxFramerate = GameManager.ScreenMaxFramerate;
-        //framerateDropdown.ClearOptions();
-        //Debug.LogWarning("DROPDOWN ALWAYS CLEANING UP");
-
-        //Load and set Def val
-        currentFramerateIndex = savedSettings == null ? Framerate.Max : (Framerate)savedSettings.framerate;
-        //currentFramerateIndex = (Framerate)PlayerPrefs.GetInt(FPS_KEY, 0);
-        Application.targetFrameRate = currentFramerateIndex switch {
-            Framerate.Max => screenMaxFramerate,
-            Framerate.F30 => GameStaticInfo.FRAMERATE_30,
-            Framerate.F60 => GameStaticInfo.FRAMERATE_60,
-            Framerate.F120 => GameStaticInfo.FRAMERATE_120,
-            _ => GameStaticInfo.FRAMERATE_30
-        };
-
-        //init dropdown
-        if (framerateDropdown.options.Count == 0) {
-            fpsListing.Add(/*settingsMaxFpsLocalized.GetLocalizedString() +*/ $"{screenMaxFramerate} Hz");//max
-            //Debug.LogWarning(screenMaxFramerate);
-            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_30)
-                fpsListing.Add(GameStaticInfo.FRAMERATE_30.ToString() + " Hz");
-            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_60)
-                fpsListing.Add(GameStaticInfo.FRAMERATE_60.ToString() + " Hz");
-            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_120)
-                fpsListing.Add(GameStaticInfo.FRAMERATE_120.ToString() + " Hz");
-
-            framerateDropdown.AddOptions(fpsListing);
-        }
-
-        framerateDropdown.SetValueWithoutNotify((int)currentFramerateIndex);
-        framerateDropdown.onValueChanged.RemoveAllListeners();
-        framerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
     }
 
     void FirstNoConnectionOpen() {
@@ -247,66 +190,6 @@ public class MainmenuManager : MonoBehaviour {
             sceneLoader.OnLoad_SanctuaryScene();
     }
 
-    private void OnFramerateChanged(int index) {
-        currentFramerateIndex = (Framerate)index;
-        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
-        if (savedSettings == null)
-            savedSettings = new SettingsData();
-        savedSettings.framerate = index;
-
-        ProgressSaver.SaveData(savedSettings);
-        //PlayerPrefs.SetInt(FPS_KEY, index);
-
-        Application.targetFrameRate = currentFramerateIndex switch {
-            Framerate.Max => GameManager.ScreenMaxFramerate,
-            Framerate.F30 => 30,
-            Framerate.F60 => 60,
-            Framerate.F120 => 120,
-            _ => 30
-        };
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void GameModeInit() {//init gamemode buttons        
-                         //WorldData wd = ProgressSaver.IsWorldDataExist ?
-                         //    ProgressSaver.LoadWorldData() : new();
-
-        ////if (!wd.isNewSaveType) {  ///only for old savings
-        //GameMode oldTypeSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
-        //*wd.gameMode*/
-        //GameStaticInfo.Gamemode = oldTypeSave == GameMode.Easy ?//easy or not have save
-        //    /*wd.gameMode*/GameStaticInfo.Gamemode : oldTypeSave;//if old save is easy - even empty wd - has easy by default \ otherwise load old save but dont save alrd
-        ////wd.isNewSaveType = true;
-        ////Debug.Log("Transfer world data to new version: success");
-        ////}
-
-        //int oldTypeSave = PlayerPrefs.GetInt("GameMode", -1);
-        //GameMode newGm;
-        WorldData wd = ProgressSaver.IsWorldDataExist ?
-            ProgressSaver.LoadWorldData() : new WorldData();
-        //bool isOldSaveExist = oldTypeSave != -1;
-
-        //newGm = isOldSaveExist ?//easy or not have save
-        //                    (GameMode)oldTypeSave : wd.gameMode;
-        //if (isOldSaveExist)
-        //    PlayerPrefs.DeleteKey("GameMode");
-        //GameStaticInfo.Gamemode = isOldSaveExist ?
-        //    newGm : GameStaticInfo.Gamemode;
-
-        GameStaticInfo.Gamemode = wd.gameMode;
-        //ProgressSaver.SaveData(wd);
-
-        //init gamemode
-        if (gamemodePauseTitles != null && gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
-            foreach (GameObject tit in gamemodePauseTitles)
-                tit.SetActive(false);
-
-            gamemodePauseTitles[(int)GameStaticInfo.Gamemode].SetActive(true);
-        }
-        //Debug.LogWarning(GameStaticInfo.Gamemode);
-    }
-
     IEnumerator ChangeColorGMwnd() {
         //Debug.Log("gm changing color started");
         while (gameModeWndBackground.color != targetGMwndColor) {
@@ -322,22 +205,6 @@ public class MainmenuManager : MonoBehaviour {
             mainMenuLight.color = Color.Lerp(mainMenuLight.color, targetLightGMcolor, Time.deltaTime);
             yield return null;
         }
-    }
-
-    private void OnLanguageChanged(int index) {
-        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
-        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
-        if (savedSettings == null)
-            savedSettings = new SettingsData();
-        savedSettings.language = index;
-
-        ProgressSaver.SaveData(savedSettings);
-        //PlayerPrefs.SetInt(LOCALE_PREF_KEY, index); // Save the selected locale index
-
-        if (previousLocaleIndex != index)
-            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_dont_understand);
-
-        previousLocaleIndex = index;
     }
 
     public void OnGameModeSet(int gamemode) {
@@ -363,25 +230,13 @@ public class MainmenuManager : MonoBehaviour {
         StartCoroutine(ChangeColorGMmainMenu());
 
         //PlayerPrefs.SetInt("GameMode", gamemode);
-        Debug.Log("DELETED WORDL AUTO SAVE");
-
-        //WorldData wd = ProgressSaver.IsWorldDataExist ?
-        //    ProgressSaver.LoadWorldData() : new();
-        //wd.gameMode = GameStaticInfo.Gamemode;
-        //ProgressSaver.SaveData(wd);
+        //Debug.Log("DELETED WORDL AUTO SAVE");
 
         if (isGMneedAnimation) {
             gmWndAnimator.SetTrigger("Anim");
             isGMneedAnimation = false;
         }
     }
-
-    //public void InitGPGServices(GPG_Manager gpg_manager) {
-    //    this.gpg_manager = gpg_manager;
-
-    //    if (gpg_manager != null && kingOfDeepsObj != null)
-    //        gpg_manager.OnLoadKingOfDeeps += KingOfDeepsUpdate;
-    //}
 
     public void OnServicesButton(int buttonIndex) {
         if (GPG_Manager.Instance != null)
@@ -413,27 +268,12 @@ public class MainmenuManager : MonoBehaviour {
                 successSignInColor : failedSignInColor;
     }
 
-    //public static void OnGameSceneLoad() {
-    //    // Load the game scene
-    //    UnityEngine.SceneManagement.SceneManager.LoadScene(GameStaticInfo.GAME_SCENE_NAME);
-    //}
-
-    //public static void OnMainMenuLoad() {
-    //    UnityEngine.SceneManagement.SceneManager.LoadScene(GameStaticInfo.MAINMENU_SCENE_NAME);
-    //}
-
-    //public static void OnLoadingSceneLoad() {
-    //    UnityEngine.SceneManagement.SceneManager.LoadScene(GameStaticInfo.LOADING_SCENE_NAME);
-    //}
-
     public void ResetWorldData() {
         PlayerLeaderboardScore.LoadSavedData();
         PlayerPrefs.DeleteAll();//delete all player prefs data 
-        //PlayerPrefs.SetInt(LOCALE_PREF_KEY, LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)); //except settings data 
         audioManager.SaveAudioData(); // Save current audio settings
         graphicManager.SaveGraphicsData(); // Save current graphic settings
         PlayerLeaderboardScore.SaveLoadedData();
-        //ProgressSaver.Delete();
         ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();
     }
 

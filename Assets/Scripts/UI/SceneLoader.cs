@@ -101,6 +101,8 @@ public class SceneLoader : MonoBehaviour {
     }
 
     private IEnumerator LoadAsyncRoutine(SceneType sceneToLoad) {
+        AudioListener.volume = 0f;
+
         string sceneName = sceneToLoad switch {
             SceneType.MainMenu => GameStaticInfo.MAINMENU_SCENE_NAME,
             SceneType.Game => GameStaticInfo.GAME_SCENE_NAME,
@@ -118,6 +120,7 @@ public class SceneLoader : MonoBehaviour {
         while (asyncLoad.progress < 0.9f)
             yield return null;
 
+        AudioListener.volume = 1f;
         asyncLoad.allowSceneActivation = true;
 
         while (!asyncLoad.isDone || (sceneToLoad == SceneType.Game && !GameManager.IsSceneReady))
@@ -128,6 +131,6 @@ public class SceneLoader : MonoBehaviour {
             SceneManager.UnloadSceneAsync(GameStaticInfo.LOADING_SCENE_NAME);
         }
 
-        isTransitioning = false; 
+        isTransitioning = false;
     }
 }

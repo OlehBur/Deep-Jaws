@@ -10,6 +10,10 @@ public class PoisonEffect : Effect {
         targetFish.ChangeSpeedMultiplier(PLAYER_SPEED_MULTIPLIER, FishSpeedModifierType.Poison);
         //if (target.IsPlayer)
         //    Debug.LogWarning("Player has poison effect");
+        targetFish.TakeDamage(DAMAGE_AMOUNT);
+
+        if (targetFish.Health <= 0)
+            Enabled = false;
     }
 
     protected override void OnExpire() {

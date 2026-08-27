@@ -6,6 +6,7 @@ using Google.Play.InputMapping;
 
 
 public enum GameActionId { SPRINT = 0, MOVE_FORWARD = 1, MOVE_LEFT = 2, MOVE_RIGHT = 3, MOVE_BACKWARD = 4 }
+public enum GameNavigationId { PAUSE_RESUME = 0 }
 public enum GameGroupId { GAMEPLAY = 1 }
 
 
@@ -42,7 +43,10 @@ public class DJ_PlayGamesInputProvider : PlayInputMappingProvider {
         var movementActions = new List<PlayInputAction> { moveUp, moveLeft, moveDown, moveRight, sprint };
         var movementGroup = PlayInputGroup.Create("Movement", movementActions);
 
-        return PlayInputMap.Create(new List<PlayInputGroup> { movementGroup }, PlayMouseSettings.Create(false, false));
+        var pause_resume = PlayInputAction.Create("Pause/Resume", (int)GameNavigationId.PAUSE_RESUME, CreateSimpleControls(AndroidKeyCode.KEYCODE_ESCAPE));
+        var navigationGroup = PlayInputGroup.Create("Navigation", new List<PlayInputAction> { pause_resume });
+
+        return PlayInputMap.Create(new List<PlayInputGroup> { movementGroup, navigationGroup }, PlayMouseSettings.Create(false, false));
     }
 }
 #endif

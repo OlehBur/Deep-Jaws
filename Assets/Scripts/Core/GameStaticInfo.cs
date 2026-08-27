@@ -150,6 +150,7 @@ public struct PurchasedSkins {
 public static class GameStaticInfo {
     public const int SECONDS_IN_HOUR = 3600;
     public const int SECONDS_IN_MINUTE = 60;
+    public const float PERCENT_MULTIPLIER = 100f;
 
     public static readonly string GAME_SCENE_NAME = "Game";
     public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
@@ -175,28 +176,13 @@ public static class GameStaticInfo {
     public const int SETTINGS_DEFAULT_LANGUAGE = 0;
 
     //gamemode
-    public static GameMode Gamemode { get; set; } = /*GetInitialGamemod()*/GameMode.Easy;
+    public static GameMode Gamemode { get; set; } = GameMode.None;
     public const int GAMEMODES_COUNT = 3;
     public const float EASY_MODE_SHELLS_MULTIPLIER = 1f;
     public const float MEDIUM_MODE_SHELLS_MULTIPLIER = 1.2f;
     public const float HARD_MODE_SHELLS_MULTIPLIER = 1.5f;
     public const int MAX_DAILY_REVIVALS = 10;
     public const int AUTO_RESPAWN_TIME = 5;
-
-    //static GameMode GetInitialGamemod() {
-    //    //GameMode oldTypeSave = (GameMode)PlayerPrefs.GetInt("GameMode", 0);
-    //    GameMode newGm;
-    //    WorldData wd = ProgressSaver.IsWorldDataExist ?
-    //        ProgressSaver.LoadWorldData() : new WorldData();
-    //    //bool isOldSaveExist = oldTypeSave != GameMode.Easy;
-
-    //    newGm =
-    //        //isOldSaveExist ?//easy or not have save
-    //        //oldTypeSave :
-    //        wd.gameMode;
-
-    //    return newGm;
-    //}
 
     //fish
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish

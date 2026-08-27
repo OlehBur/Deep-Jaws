@@ -27,19 +27,19 @@ public class GameManager : MonoBehaviour {
     }
     public static float CurrentDefaultGameTime { get; private set; }
     public static readonly float DEFAULT_GAME_TIME = 1f;
-    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor;
+    public static readonly bool IsRunOnPC = false;// GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor;
     public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
     public static bool IsGamePaused => Time.timeScale == 0f;
     public static bool IsSceneReady { get; private set; } = false;
 
     private const float CANVAS_ACTIVATE_DELAY = .5f;
-    private const float SCENE_ACTIVATE_DELAY = .1f;
+    private const float SCENE_ACTIVATE_DELAY = .14f;
     private const float FIXED_DELTA_TINE_HIGH = .02f;
     private const float FIXED_DELTA_TINE_LOW = .05f;
 
     //game init
     void Awake() {
-        //Debug.LogWarning("Run On ANDROID Enanbled");
+        Debug.LogWarning("Run On ANDROID Enanbled");
 
         gameCanvas.SetActive(false);
         GameSetPause(true);//wait until the spawn manager finishes creating pools
@@ -110,6 +110,6 @@ public class GameManager : MonoBehaviour {
     private void OnDestroy() {
         Time.timeScale = DEFAULT_GAME_TIME;
         SetFixedDeltaTime(true);
-        IsSceneReady = false;
+        //IsSceneReady = false;
     }
 }

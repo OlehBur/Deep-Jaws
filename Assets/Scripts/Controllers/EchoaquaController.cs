@@ -120,17 +120,15 @@ using System.Collections;
 using UnityEngine;
 
 public class EchoaquaController : MonoBehaviour {
-    [SerializeField] private Material echoaquaShader;
-    [SerializeField] private GameObject vibrissaeColliders;
-    [SerializeField] private GameObject lightsVibrissaeParent;
-    [SerializeField] private Transform mapPreviewCollider;
-
-    [SerializeField] private FishHeartbeatsManager heartbeatsManager;
-    [SerializeField] private PlayerUIController playerUIController;
-    [SerializeField] private Transform ecqhoMembraneCenter;
-
-    [SerializeField] private AudioManager audioManager;
-    [SerializeField] private Animator echoaquaAnimator;
+    [SerializeField] Material echoaquaShader;
+    [SerializeField] GameObject vibrissaeColliders;
+    [SerializeField] GameObject lightsVibrissaeParent;
+    [SerializeField] Transform mapPreviewCollider;
+    [SerializeField] FishHeartbeatsManager heartbeatsManager;
+    [SerializeField] PlayerUIController playerUIController;
+    [SerializeField] Transform ecqhoMembraneCenter;
+    [SerializeField] AudioManager audioManager;
+    [SerializeField] Animator echoaquaAnimator;
 
     private const string VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes";
     private const string REVERSE_VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes_Reverse";
@@ -194,7 +192,7 @@ public class EchoaquaController : MonoBehaviour {
 
             echoaquaAnimator.Play(MEMBRANE_ANIMATION_NAME, 0);
             echoaquaAnimator.Play(VIBRASES_ANIMATION_NAME, 1);
-            playerUIController.SetPlayableAreaActive(false);
+            //playerUIController.SetPlayableAreaActive(false);
         }
     }
 
@@ -236,7 +234,7 @@ public class EchoaquaController : MonoBehaviour {
             mapPreviewColliderInitialY + MAP_PREVIEW_COLLIDER_OFFSET_Y,
             mapPreviewCollider.position.z
         );
-        playerUIController.SetPlayableAreaActive(true);
+        //playerUIController.SetPlayableAreaActive(true);
 
         // inverse prog 1 -> 0
         while (currentProgress > 0f) {

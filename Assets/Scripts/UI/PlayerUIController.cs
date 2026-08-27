@@ -4,15 +4,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 
 /// <summary>
-/// контролюЇ прогреси ус≥х ефект≥в, €к≥ впливають на гравц€ а також ун≥кальний спринт ефект прив'€заний до в≥дпов≥дноњ клав≥ш≥ на екран≥ 
-/// controller for all effects that affect the player, as well as the unique sprint effect bound to the corresponding key on the screen
+/// game hud
 /// </summary>
 /// 
 public class PlayerUIController : MonoBehaviour {
+    [SerializeField] InputActionReference moveAction;
+    [SerializeField] InputActionReference jumpAction;
+    [SerializeField] InputActionReference cancelAction;
+    [SerializeField] GameObject pauseMenu;
+    [SerializeField] MainmenuManager mainmenu;
+
     [Header("Icons for effects (UI)")]
     [SerializeField] RectTransform iconsParent;
     [SerializeField] Image shieldIcon;
@@ -23,6 +29,8 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] Image poisonIcon;
     [SerializeField] Image blindnessIcon;
     [SerializeField] Button sprintButton; // button for sprint effect activation
+                                          //[SerializeField] AudioClip damageAudio;
+    [SerializeField] AudioManager audioManager;
 
     [Header("Overlays")]
     [SerializeField] Image damageOverlay; // red overlay for damage effect
@@ -32,18 +40,21 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] Image blindnessOverlay;
     [SerializeField] Image zoneOverlay;
     [SerializeField] TextMeshProUGUI zoneOverlayMsg;
-    //[SerializeField] AudioClip damageAudio;
-    [SerializeField] AudioManager audioManager;
+    [SerializeField] LocalizedString coralReefClear;
+    [SerializeField] LocalizedString seaweedClear;
 
     [Header("Player Info")]
-    [SerializeField] TextMeshProUGUI healthProgresCurr_txt;
-    [SerializeField] TextMeshProUGUI healthProgresMax_txt;
-    [SerializeField] TextMeshProUGUI lvlProgres_txt;
-    [SerializeField] TextMeshProUGUI lvl_txt;
-    [SerializeField] TextMeshProUGUI score_txt;
-    [SerializeField] Image healthBar; // image to display player health bar
-    [SerializeField] Image lvlBar; // image to display player level bar
-    [SerializeField] Transform playerProgressIconsParent;
+    //[SerializeField] TextMeshProUGUI healthProgresCurr_txt;
+    //[SerializeField] TextMeshProUGUI healthProgresMax_txt;
+    //[SerializeField] TextMeshProUGUI lvlProgres_txt;
+    //[SerializeField] TextMeshProUGUI lvl_txt;
+    //[SerializeField] TextMeshProUGUI score_txt;
+    //[SerializeField] Image healthBar; // image to display player health bar
+    //[SerializeField] Image lvlBar; // image to display player level bar
+    //[SerializeField] Transform playerProgressIconsParent;
+    [SerializeField] ScoreBar scoreBar;
+    [SerializeField] PlayerGrowthBar growthBar;
+    [SerializeField] HealthBar healthBar;
     [SerializeField] GameObject playebleAreaUI;//to take away the player's ability to move 
     [SerializeField] Image sprintProgressImage;
     [SerializeField] RectTransform sprintProgressPC;
@@ -98,18 +109,24 @@ public class PlayerUIController : MonoBehaviour {
         iconsPositionsMultipliers6,
         iconsPositionsMultipliers7
     };
+    public const float VIEW_HUD_TIME = 1f;
+    public const float VIEW_HEALTH_TIME = 2f;
+    public const float VIEW_JAW_TIME = .8f;
+    public const float FADE_HUD_TIME = 1.5f;
 
     private SpawnManager spawnManager;
     private EffectManager playerEffectManager;
     private float currentSprintCooldownTime = 0;
-    private int currentPlayerProgressIconInd = 0;
+    //private FishLevel currentProgressIco = FishLevel.SeaBass;
     private Fish playerFish; // reference to the player fish component
     //private bool isPlayableAreaActive = true;
+    private Coroutine zoneCoroutine;
 
     private readonly Dictionary<FishEffectType, RectTransform> effectsSlotsMatch = new Dictionary<FishEffectType, RectTransform> { };//private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
     private static readonly WaitForSecondsRealtime OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL);
     private static readonly WaitForSecondsRealtime HALF_OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL * .5f);
     private static readonly WaitForSecondsRealtime BLINDNESS_DARK_WAIT = new WaitForSecondsRealtime(1.4f);
+    private static readonly WaitForSecondsRealtime FOUR_SECONDS_WAIT = new WaitForSecondsRealtime(4f);
     //private static readonly Vector3 SPRINT_BAR_SCALE_MULTIPLIER = new Vector3(0f, 1f, 1f);
 
     private const string DEFAULT_FISH_ICONS_PARENT_NAME = "effects_icons";
@@ -124,7 +141,6 @@ public class PlayerUIController : MonoBehaviour {
     public void Init(SpawnManager sp) {
         spawnManager = sp;
         //Debug.LogWarning(spawnManager);
-        PlayerReConnect(spawnManager.PlayerFish, false);
 
         effectsSlotsMatch[FishEffectType.Shield] = shieldIcon.transform.parent.GetComponent<RectTransform>();
         effectsSlotsMatch[FishEffectType.Stun] = stunIcon.transform.parent.GetComponent<RectTransform>();
@@ -135,6 +151,8 @@ public class PlayerUIController : MonoBehaviour {
         effectsSlotsMatch[FishEffectType.Blindness] = blindnessIcon.transform.parent.GetComponent<RectTransform>();
 
         spawnManager.OnPlayerRespawn += PlayerReConnect;
+        PlayerLeaderboardScore.OnChanged += UpdateScoreInfo;
+        SettingsUI.OnHudHideChanged += UpdateHUDbars;
 
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
         stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
@@ -153,14 +171,49 @@ public class PlayerUIController : MonoBehaviour {
         }
     }
 
-    public void SetPlayableAreaActive(bool isActive) {
-        //#if !UNITY_EDITOR && !PLAY_GAMES_PC
-        //        playebleAreaUI.SetActive(isActive);
-        //#endif
-        //isPlayableAreaActive = isActive;
-        Debug.LogWarning("Playable area always active!");
-        //JoyAxis.Axis = Vector2.zero; // reset joystick input
+    private void Start() {
+        PlayerReConnect(spawnManager.PlayerFish, false);//in start for access to objects corutines etc.
     }
+
+    void OnEnable() {
+        moveAction.action.Enable();
+        jumpAction.action.Enable();
+        jumpAction.action.performed += OnSprint;
+        cancelAction.action.Enable();
+        cancelAction.action.performed += OnPauseWnd;
+    }
+
+    void OnDisable() {
+        moveAction.action.Disable();
+        jumpAction.action.performed -= OnSprint;
+        jumpAction.action.Disable();
+        cancelAction.action.performed -= OnPauseWnd;
+        cancelAction.action.Disable();
+    }
+
+    void OnSprint(InputAction.CallbackContext ctx) {
+        if (sprintButton.interactable) {
+            //for Googlr Play Games PC
+            //if (GameManager.IsRunOnPC && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
+            OnSpintButtonClick();
+
+            return;
+        }
+    }
+
+    void OnPauseWnd(InputAction.CallbackContext ctx) {
+        if (pauseMenu.activeInHierarchy == GameManager.IsGamePaused)
+            mainmenu.ActivatePauseWnd(!GameManager.IsGamePaused);
+    }
+
+    //public void SetPlayableAreaActive(bool isActive) {
+    //    //#if !UNITY_EDITOR && !PLAY_GAMES_PC
+    //    //        playebleAreaUI.SetActive(isActive);
+    //    //#endif
+    //    //isPlayableAreaActive = isActive;
+    //    Debug.LogWarning("Playable area always active!");
+    //    //JoyAxis.Axis = Vector2.zero; // reset joystick input
+    //}
 
     public void OnSpintButtonClick() {
         playerEffectManager.ApplyEffect(FishEffectType.SprintSpeed, SPRINT_EFFECT_DURATION);
@@ -208,41 +261,69 @@ public class PlayerUIController : MonoBehaviour {
         if (Keyboard.current == null)
             return;
 
-        Vector2 moveInput = Vector2.zero;
-        if (Keyboard.current.wKey.isPressed)
-            moveInput.y += 1f;
-        if (Keyboard.current.sKey.isPressed)
-            moveInput.y -= 1f;
-        if (Keyboard.current.aKey.isPressed)
-            moveInput.x -= 1f;
-        if (Keyboard.current.dKey.isPressed)
-            moveInput.x += 1f;
+        //Vector2 moveInput = Vector2.zero;
+        //if (Keyboard.current.wKey.isPressed)
+        //    moveInput.y += 1f;
+        //if (Keyboard.current.sKey.isPressed)
+        //    moveInput.y -= 1f;
+        //if (Keyboard.current.aKey.isPressed)
+        //    moveInput.x -= 1f;
+        //if (Keyboard.current.dKey.isPressed)
+        //    moveInput.x += 1f;
+
+        Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
 
         JoyAxis.Axis = moveInput.normalized; // set the joystick axis to the normalized input vector
     }
 
-    void UpdatePlayerInfo() {
-        int lvlProgress = (int)(playerFish.Progress * 100);
+    void UpdateProgressInfo() {
+        int lvlProgress = (int)(playerFish.Progress * GameStaticInfo.PERCENT_MULTIPLIER);
+        if (growthBar.Coroutine != null)
+            StopCoroutine(growthBar.Coroutine);
+
+        if (gameObject.activeInHierarchy)
+            growthBar.Coroutine = StartCoroutine(growthBar.Animation());
+        else
+            growthBar.ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
+
+        growthBar.progress.text = lvlProgress.ToString();
+        growthBar.GetProgress(playerFish.Level).fillAmount = playerFish.Progress;
+    }
+
+    void UpdateHealthInfo() {
         float health = playerFish.Health;
         if (health < 0)
             health = 0f;
+        if (healthBar.Coroutine != null)
+            StopCoroutine(healthBar.Coroutine);
 
-        healthProgresCurr_txt.text = health.ToString();
-        healthProgresMax_txt.text = playerFish./*MaxHealth*/DefaultInfo.MaxHealth.ToString();
-        lvlProgres_txt.text = lvlProgress.ToString();
-        healthBar.fillAmount = (float)playerFish.Health / playerFish.DefaultInfo.MaxHealth;
+        healthBar.currProgress.text = health.ToString();
+        healthBar.maxProgress.text = playerFish.DefaultInfo.MaxHealth.ToString();
+        healthBar.filler.fillAmount = (float)playerFish.Health / playerFish.DefaultInfo.MaxHealth;
 
-        lvl_txt.text = ((int)playerFish.Level).ToString();
-        lvlBar.fillAmount = playerFish.Progress;
+        if (gameObject.activeInHierarchy)
+            healthBar.Coroutine = StartCoroutine(healthBar.Animation(healthBar.filler.fillAmount));
+        else
+            healthBar.ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
+    }
 
-        score_txt.text = PlayerLeaderboardScore.Score.ToString();
+    void UpdateScoreInfo(long score) {
+        if (scoreBar.Coroutine != null)
+            StopCoroutine(scoreBar.Coroutine);
+
+        if (gameObject.activeInHierarchy)
+            scoreBar.Coroutine = StartCoroutine(scoreBar.Animation());
+        else
+            scoreBar.ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
+
+        scoreBar.score.text = score.ToString();
     }
 
     void SprintButtonBehaviour() {
         if (sprintButton.interactable) {
-            //for Googlr Play Games PC
-            if (GameManager.IsRunOnPC && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
-                OnSpintButtonClick();
+            //    //for Googlr Play Games PC
+            //    if (GameManager.IsRunOnPC && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
+            //        OnSpintButtonClick();
 
             return;
         }
@@ -378,7 +459,10 @@ public class PlayerUIController : MonoBehaviour {
 
     }
 
-    IEnumerator OverlayFader(Image overlay, FishEffectType type, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null) {
+    IEnumerator OverlayFader(Image overlay, FishEffectType type, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null, bool isLongDuration = false) {
+        if (isLongDuration)
+            yield return FOUR_SECONDS_WAIT;
+
         while (overlay.color.a > 0 && overlay.gameObject.activeInHierarchy) {
             overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, overlay.color.a - updateInterval);
 
@@ -387,6 +471,7 @@ public class PlayerUIController : MonoBehaviour {
 
             yield return OVERLAY_UPD_WAIT;
         }
+
         overlay.gameObject.SetActive(false);
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
     }
@@ -394,7 +479,8 @@ public class PlayerUIController : MonoBehaviour {
     void PlayerReConnect(Fish fish, bool isDie) {
         //Debug.LogWarning("PlayerRespawn");
         if (playerFish != null && playerEffectManager != null) {
-            playerFish.OnInfoStatsChanged -= UpdatePlayerInfo;
+            playerFish.OnProgressChanged -= UpdateProgressInfo;
+            playerFish.OnHealthChanged -= UpdateHealthInfo;
             playerFish.OnFishDamage -= ActivateDamageOverlay;
             playerEffectManager.OnEffectChanges -= EffectsBehaviour;
         }
@@ -407,7 +493,8 @@ public class PlayerUIController : MonoBehaviour {
         playerEffectManager = fish.GetComponent<EffectManager>(); //get player transform
 
         //syubscribe to events of the new player fish
-        playerFish.OnInfoStatsChanged += UpdatePlayerInfo; // subscribe to player fish stats change event
+        playerFish.OnProgressChanged += UpdateProgressInfo;
+        playerFish.OnHealthChanged += UpdateHealthInfo;
         playerFish.OnFishDamage += ActivateDamageOverlay;
         playerEffectManager.OnEffectChanges += EffectsBehaviour;
 
@@ -428,19 +515,36 @@ public class PlayerUIController : MonoBehaviour {
             if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value) && value != null)
                 EffectsBehaviour(effectType, true);
 
-        UpdatePlayerInfo();
-        UpdateProgressIcon();
+        UpdateHUDbars();
+        growthBar.ActivateIcon(/*currentProgressIco*/fish.Level);
+        //growthBar.GetProgress(fish.Level).fillAmount = fish.Progress;
+
+        if (!isDie) {//lvl upgr & unlock new biomes
+            if (fish.Level == FishLevel.Moray)
+                ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
+            else if (fish.Level == FishLevel.HammerShark)
+                ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
+        }
     }
 
-    void UpdateProgressIcon() {
-        int maxIndex = playerProgressIconsParent.childCount - 1;
-        if (currentPlayerProgressIconInd <= maxIndex)
-            playerProgressIconsParent.GetChild(currentPlayerProgressIconInd).gameObject.SetActive(false);
-
-        currentPlayerProgressIconInd = (int)playerFish.Level - 1;
-        if (currentPlayerProgressIconInd <= maxIndex)
-            playerProgressIconsParent.GetChild(currentPlayerProgressIconInd).gameObject.SetActive(true);
+    void UpdateHUDbars() {
+        UpdateHealthInfo();
+        UpdateProgressInfo();
+        UpdateScoreInfo(PlayerLeaderboardScore.Score);
+        //UpdateProgressIcon();
     }
+
+    //void UpdateProgressIcon() {
+    //FishLevel maxIndex = FishLevel.WhiteShark;//playerProgressIconsParent.childCount - 1;
+
+    //if (currentProgressIco <= maxIndex)
+    //    playerProgressIconsParent.GetChild(currentProgressIco).gameObject.SetActive(false);
+
+
+    //currentPlayerProgressIconInd = (int)playerFish.Level - 1;
+    //if (currentProgressIco <= maxIndex)
+    //    playerProgressIconsParent.GetChild(currentProgressIco).gameObject.SetActive(true);
+    //}
 
     private void ResetOverlays() {
         poisonOverlay.gameObject.SetActive(false);
@@ -459,7 +563,7 @@ public class PlayerUIController : MonoBehaviour {
         StopAllCoroutines();
     }
 
-    public void ActivateZoneOverlay(string msg) {
+    public void ActivateZoneOverlay(string msg, bool isLongDuration = false) {
         zoneOverlayMsg.color = new Color(zoneOverlayMsg.color.r, zoneOverlayMsg.color.g, zoneOverlayMsg.color.b, 1f);
         if (zoneOverlay.gameObject.activeInHierarchy)
             return;//corutine is already running (wait for next call)
@@ -467,7 +571,9 @@ public class PlayerUIController : MonoBehaviour {
         //Debug.LogWarning("ActivateZone");
         zoneOverlay.gameObject.SetActive(true);
         zoneOverlayMsg.text = msg;
-        StartCoroutine(OverlayFader(zoneOverlay, FishEffectType.None, OVERLAY_ZONE_UPDATE_INTERVAL, zoneOverlayMsg));
+        if (zoneCoroutine != null)
+            StopCoroutine(zoneCoroutine);
+        zoneCoroutine = StartCoroutine(OverlayFader(zoneOverlay, FishEffectType.None, OVERLAY_ZONE_UPDATE_INTERVAL, zoneOverlayMsg, isLongDuration));
     }
 
     /// <summary>
@@ -540,6 +646,8 @@ public class PlayerUIController : MonoBehaviour {
 
     public void OnDestroy() {
         PlayerReConnect(playerFish, false);
+        PlayerLeaderboardScore.OnChanged -= UpdateScoreInfo;
+        SettingsUI.OnHudHideChanged -= UpdateHUDbars;
         StopAllCoroutines();
     }
 }
