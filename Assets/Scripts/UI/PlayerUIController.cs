@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 
@@ -33,25 +35,13 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] AudioManager audioManager;
 
     [Header("Overlays")]
-    [SerializeField] Image damageOverlay; // red overlay for damage effect
-    [SerializeField] Image stopTimeOverlay; // viol overlay for stop time effect
-    [SerializeField] Image stunOverlay;
-    [SerializeField] Image poisonOverlay;
-    [SerializeField] Image blindnessOverlay;
+    [SerializeField] Volume mainVolume;
     [SerializeField] Image zoneOverlay;
     [SerializeField] TextMeshProUGUI zoneOverlayMsg;
     [SerializeField] LocalizedString coralReefClear;
     [SerializeField] LocalizedString seaweedClear;
 
     [Header("Player Info")]
-    //[SerializeField] TextMeshProUGUI healthProgresCurr_txt;
-    //[SerializeField] TextMeshProUGUI healthProgresMax_txt;
-    //[SerializeField] TextMeshProUGUI lvlProgres_txt;
-    //[SerializeField] TextMeshProUGUI lvl_txt;
-    //[SerializeField] TextMeshProUGUI score_txt;
-    //[SerializeField] Image healthBar; // image to display player health bar
-    //[SerializeField] Image lvlBar; // image to display player level bar
-    //[SerializeField] Transform playerProgressIconsParent;
     [SerializeField] ScoreBar scoreBar;
     [SerializeField] PlayerGrowthBar growthBar;
     [SerializeField] HealthBar healthBar;
@@ -117,17 +107,27 @@ public class PlayerUIController : MonoBehaviour {
     private SpawnManager spawnManager;
     private EffectManager playerEffectManager;
     private float currentSprintCooldownTime = 0;
-    //private FishLevel currentProgressIco = FishLevel.SeaBass;
     private Fish playerFish; // reference to the player fish component
-    //private bool isPlayableAreaActive = true;
     private Coroutine zoneCoroutine;
 
+    private Vignette vignette = null;
+    private LensDistortion lensDistortion = null;
+    private ChromaticAberration chromaticAberration = null;
+    private ColorAdjustments colorAdjustments = null;
+    private DepthOfField depthOfField = null;
+    private Coroutine damageCoroutine;
+    private Coroutine stunCoroutine;
+    private Coroutine poisonCoroutine;
+    private Coroutine freezeCoroutine;
+    private Coroutine blindnessCoroutine;
+
+    private readonly Color VIGNETTE_DEFAULT_COLOR = Color.black;
+    private readonly Color VIGNETTE_DAMAGE_COLOR = Color.red;
+    private const float VIGNETTE_INTENS_DAMAGE = 0.56f;
+    private const float VIGNETTE_INTENS_DEFAULT = 0.417f;
     private readonly Dictionary<FishEffectType, RectTransform> effectsSlotsMatch = new Dictionary<FishEffectType, RectTransform> { };//private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
     private static readonly WaitForSecondsRealtime OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL);
-    private static readonly WaitForSecondsRealtime HALF_OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL * .5f);
-    private static readonly WaitForSecondsRealtime BLINDNESS_DARK_WAIT = new WaitForSecondsRealtime(1.4f);
     private static readonly WaitForSecondsRealtime FOUR_SECONDS_WAIT = new WaitForSecondsRealtime(4f);
-    //private static readonly Vector3 SPRINT_BAR_SCALE_MULTIPLIER = new Vector3(0f, 1f, 1f);
 
     private const string DEFAULT_FISH_ICONS_PARENT_NAME = "effects_icons";
     private const float SPRINT_BUTTON_COOLDOWN = 20f;
@@ -136,6 +136,24 @@ public class PlayerUIController : MonoBehaviour {
     private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
     private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
     private const float SPRINT_PROGRESS_PC_LOADING_ALPHA = 0.3f;
+
+    private const float LENS_DISORTION_MAX_INTENS = -0.7f;
+    private const float LENS_DISORTION_DEFAULT_INTENS = 0f;
+    private const float LENS_DISORTION_OFFSET_MULT = .08f;
+    private const float LENS_DISORTION_OFFSET_CENTER = .5f;
+    private const float LENS_DISORTION_MAX_SCALE = 1.17f;
+    private const float LENS_DISORTION_DEFAULT_SCALE = 1f;
+    private const float LENS_DISORTION_OFFSET_SPEED = .5f;//in rad/s
+    private const float CHROMATICABERRATION_DEFAULT_INTENSITY = 0;
+    private const float CHROMATICABERRATION_MAX_INTENSITY = 1;
+    private const float COLORADJUSTMENTS_DEFAULT_HUE = 0;
+    private const float COLORADJUSTMENTS_RANGE_HUE_MULT = 180f;
+    private const float COLORADJUSTMENTS_DEFAULT_SATURATION = 0f;
+    private const float COLORADJUSTMENTS_MAX_SATURATION = 100f;
+    private const float EFFECTS_FADE_DURATION = 1.5f;
+    private const float DEPTHOFFIELD_DEFAULT_START = 26f;
+    private const float DEPTHOFFIELD_DEFAULT_END = 27f;
+    private const float DEPTHOFFIELD_MIN_STARTEND = 0f;
 
 
     public void Init(SpawnManager sp) {
@@ -154,13 +172,6 @@ public class PlayerUIController : MonoBehaviour {
         PlayerLeaderboardScore.OnChanged += UpdateScoreInfo;
         SettingsUI.OnHudHideChanged += UpdateHUDbars;
 
-        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
-        stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
-        stunOverlay.color = new Color(stunOverlay.color.r, stunOverlay.color.g, stunOverlay.color.b, 1f);
-        poisonOverlay.color = new Color(poisonOverlay.color.r, poisonOverlay.color.g, poisonOverlay.color.b, 1f);
-        zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
-        blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
-
         if (GameManager.IsRunOnPC) {
             playebleAreaUI.SetActive(false);
             sprintProgressPC.transform.parent.gameObject.SetActive(true);
@@ -169,6 +180,17 @@ public class PlayerUIController : MonoBehaviour {
             sprintProgressPC.transform.parent.gameObject.SetActive(false);
             playebleAreaUI.SetActive(true);
         }
+
+        if (mainVolume.sharedProfile.TryGet(out Vignette vignette))
+            this.vignette = vignette;
+        if (mainVolume.sharedProfile.TryGet(out LensDistortion lensDistortion))
+            this.lensDistortion = lensDistortion;
+        if (mainVolume.sharedProfile.TryGet(out ChromaticAberration chromaticAberration))
+            this.chromaticAberration = chromaticAberration;
+        if (mainVolume.sharedProfile.TryGet(out ColorAdjustments colorAdjustments))
+            this.colorAdjustments = colorAdjustments;
+        if (mainVolume.sharedProfile.TryGet(out DepthOfField depthOfField))
+            this.depthOfField = depthOfField;
     }
 
     private void Start() {
@@ -189,6 +211,30 @@ public class PlayerUIController : MonoBehaviour {
         jumpAction.action.Disable();
         cancelAction.action.performed -= OnPauseWnd;
         cancelAction.action.Disable();
+
+        ResetVisualEffects();
+    }
+
+    void ResetVisualEffects() {
+        if (vignette != null) {
+            vignette.intensity.value = VIGNETTE_INTENS_DEFAULT;
+            vignette.color.value = VIGNETTE_DEFAULT_COLOR;
+        }
+        if (lensDistortion != null) {
+            lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
+            lensDistortion.center.value = Vector2.one * LENS_DISORTION_OFFSET_CENTER;
+            lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
+        }
+        if (chromaticAberration != null) {
+            chromaticAberration.intensity.value = CHROMATICABERRATION_DEFAULT_INTENSITY;
+        }
+        if (colorAdjustments != null) {
+            colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
+            colorAdjustments.saturation.value = COLORADJUSTMENTS_DEFAULT_SATURATION;
+        }
+        if (depthOfField != null) {
+            depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+        }
     }
 
     void OnSprint(InputAction.CallbackContext ctx) {
@@ -205,15 +251,6 @@ public class PlayerUIController : MonoBehaviour {
         if (pauseMenu.activeInHierarchy == GameManager.IsGamePaused)
             mainmenu.ActivatePauseWnd(!GameManager.IsGamePaused);
     }
-
-    //public void SetPlayableAreaActive(bool isActive) {
-    //    //#if !UNITY_EDITOR && !PLAY_GAMES_PC
-    //    //        playebleAreaUI.SetActive(isActive);
-    //    //#endif
-    //    //isPlayableAreaActive = isActive;
-    //    Debug.LogWarning("Playable area always active!");
-    //    //JoyAxis.Axis = Vector2.zero; // reset joystick input
-    //}
 
     public void OnSpintButtonClick() {
         playerEffectManager.ApplyEffect(FishEffectType.SprintSpeed, SPRINT_EFFECT_DURATION);
@@ -261,18 +298,7 @@ public class PlayerUIController : MonoBehaviour {
         if (Keyboard.current == null)
             return;
 
-        //Vector2 moveInput = Vector2.zero;
-        //if (Keyboard.current.wKey.isPressed)
-        //    moveInput.y += 1f;
-        //if (Keyboard.current.sKey.isPressed)
-        //    moveInput.y -= 1f;
-        //if (Keyboard.current.aKey.isPressed)
-        //    moveInput.x -= 1f;
-        //if (Keyboard.current.dKey.isPressed)
-        //    moveInput.x += 1f;
-
         Vector2 moveInput = moveAction.action.ReadValue<Vector2>();
-
         JoyAxis.Axis = moveInput.normalized; // set the joystick axis to the normalized input vector
     }
 
@@ -320,29 +346,22 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void SprintButtonBehaviour() {
-        if (sprintButton.interactable) {
-            //    //for Googlr Play Games PC
-            //    if (GameManager.IsRunOnPC && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)//pc debug
-            //        OnSpintButtonClick();
-
+        if (sprintButton.interactable)
             return;
-        }
 
         if (currentSprintCooldownTime >= SPRINT_BUTTON_COOLDOWN) {
             sprintButton.interactable = true;
             currentSprintCooldownTime = 0f;
             sprintButton.image.fillAmount = 1f; // reset the button fill amount
-            //sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
             SetSprintProgressPC(1f);
 
             sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, 1f);
         }
         else {
             sprintButton.image.fillAmount = currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
-            //sprintProgressPC.transform.localScale = Vector3.right * sprintButton.image.fillAmount + SPRINT_BAR_SCALE_MULTIPLIER;//fillAmount = sprintButton.image.fillAmount;
             SetSprintProgressPC(sprintButton.image.fillAmount);
             sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, SPRINT_PROGRESS_PC_LOADING_ALPHA);
-            currentSprintCooldownTime += Time.deltaTime;
+            currentSprintCooldownTime += DJTime.UnscaledDeltaTime;
         }
     }
 
@@ -416,47 +435,224 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void ActivateDamageOverlay() {
-        damageOverlay.gameObject.SetActive(true);
+        //damageOverlay.gameObject.SetActive(true);
         audioManager.PlayVFX(VFX_clip.Damage);
-        StartCoroutine(OverlayFader(damageOverlay, FishEffectType.None));
+        //StartCoroutine(OverlayFader(damageOverlay, FishEffectType.None));
+        if (damageCoroutine != null)
+            StopCoroutine(damageCoroutine);
+        damageCoroutine = StartCoroutine(DamageVignette());
     }
 
-    IEnumerator BlindnessOverlayAnimation(Effect effect) {
-        const float OVERLAY_MAX_ALPHA = 1f;
-        const float OVERLAY_MIN_ALPHA = .2f;
+    IEnumerator DamageVignette() {
+        float deltaSmooth = 0;
+        float normDelta = 0;
+        vignette.color.value = VIGNETTE_DAMAGE_COLOR;
+        vignette.intensity.value = VIGNETTE_INTENS_DAMAGE;
 
-        while (effect != null && effect.Enabled) {
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
 
-            while (blindnessOverlay.color.a < OVERLAY_MAX_ALPHA) {//blink
-                blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a + OVERLAYS_UPDATE_INTERVAL);
+            vignette.color.value = Color.Lerp(VIGNETTE_DAMAGE_COLOR, VIGNETTE_DEFAULT_COLOR, normDelta);
+            vignette.intensity.value = Mathf.Lerp(VIGNETTE_INTENS_DAMAGE, VIGNETTE_INTENS_DEFAULT, normDelta);
 
-                if (effect == null || !effect.Enabled)
-                    break;
-
-                yield return HALF_OVERLAY_UPD_WAIT;
-            }
-
-            if (effect != null && effect.Enabled)
-                yield return BLINDNESS_DARK_WAIT;
-
-            while (blindnessOverlay.color.a > OVERLAY_MIN_ALPHA) {
-                if (effect == null || !effect.Enabled)
-                    break;
-
-                blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
-                yield return HALF_OVERLAY_UPD_WAIT;
-            }
+            yield return null;
         }
 
-        while (blindnessOverlay.color.a > 0f) {//final fade out
-            blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, blindnessOverlay.color.a - OVERLAYS_UPDATE_INTERVAL);
-            yield return HALF_OVERLAY_UPD_WAIT;
+        vignette.color.value = VIGNETTE_DEFAULT_COLOR;
+        vignette.intensity.value = VIGNETTE_INTENS_DEFAULT;
+        damageCoroutine = null;
+    }
+
+    IEnumerator FreezeTimeEffect() {
+        bool isFreeze = true;
+        float deltaSmooth = 0;
+        float normDelta = 0;
+        chromaticAberration.intensity.value = CHROMATICABERRATION_MAX_INTENSITY;
+
+        //while (deltaSmooth < EFFECTS_FADE_DURATION) {
+        //    deltaSmooth += DJTime.UnscaledDeltaTime;
+        //    normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
+
+        //    chromaticAberration.intensity.value = Mathf.Lerp(CHROMATICABERRATION_DEFAULT_INTENSITY, CHROMATICABERRATION_MAX_INTENSITY, normDelta);
+
+        //    yield return OVERLAY_UPD_WAIT;
+        //}
+        //chromaticAberration.intensity.value = CHROMATICABERRATION_MAX_INTENSITY;
+
+        while (isFreeze) {
+            isFreeze = playerEffectManager.activeEffects.ContainsKey(FishEffectType.FreezeTime)
+                && playerEffectManager.activeEffects[FishEffectType.FreezeTime].Enabled;
+            yield return null;
         }
 
-        blindnessOverlay.gameObject.SetActive(false);
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
 
-        blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
+            chromaticAberration.intensity.value = Mathf.Lerp(CHROMATICABERRATION_MAX_INTENSITY, CHROMATICABERRATION_DEFAULT_INTENSITY, normDelta);
 
+            yield return null;
+        }
+
+        chromaticAberration.intensity.value = CHROMATICABERRATION_DEFAULT_INTENSITY;
+        freezeCoroutine = null;
+    }
+
+    IEnumerator BlindnessEffect() {
+        bool isBlindness = true;
+        float hueShift = 0f;
+        float deltaSmooth = 0;
+        float normDelta = 0;
+
+        colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
+        depthOfField.gaussianStart.value = DEPTHOFFIELD_MIN_STARTEND;
+        depthOfField.gaussianEnd.value = DEPTHOFFIELD_MIN_STARTEND;
+
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            hueShift = Mathf.Sin(Time.time) * COLORADJUSTMENTS_RANGE_HUE_MULT;
+            colorAdjustments.hueShift.value = hueShift;
+            colorAdjustments.saturation.value = Mathf.Lerp(COLORADJUSTMENTS_DEFAULT_SATURATION, COLORADJUSTMENTS_MAX_SATURATION, normDelta);
+
+            yield return null;
+        }
+        colorAdjustments.saturation.value = COLORADJUSTMENTS_MAX_SATURATION;
+
+        while (isBlindness) {
+            isBlindness = playerEffectManager.activeEffects.ContainsKey(FishEffectType.Blindness)
+                && playerEffectManager.activeEffects[FishEffectType.Blindness].Enabled;
+
+            hueShift = Mathf.Sin(Time.time) * COLORADJUSTMENTS_RANGE_HUE_MULT;
+            colorAdjustments.hueShift.value = hueShift;
+
+            yield return null;
+        }
+
+        deltaSmooth = 0;
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
+            hueShift = Mathf.Lerp(hueShift, COLORADJUSTMENTS_DEFAULT_HUE, normDelta);
+
+            colorAdjustments.hueShift.value = hueShift;
+            colorAdjustments.saturation.value = Mathf.Lerp(COLORADJUSTMENTS_MAX_SATURATION, COLORADJUSTMENTS_DEFAULT_SATURATION, normDelta);
+            depthOfField.gaussianStart.value = Mathf.Lerp(DEPTHOFFIELD_MIN_STARTEND, DEPTHOFFIELD_DEFAULT_START, normDelta);
+            depthOfField.gaussianEnd.value = Mathf.Lerp(DEPTHOFFIELD_MIN_STARTEND, DEPTHOFFIELD_DEFAULT_END, normDelta);
+
+            yield return null;
+        }
+
+        depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+        depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
+        colorAdjustments.saturation.value = COLORADJUSTMENTS_DEFAULT_SATURATION;
+        colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
+        blindnessCoroutine = null;
+    }
+
+    IEnumerator StunEffect() {
+        bool isStun = true;
+        float deltaSmooth = 0;
+        float normDelta = 0f;
+        float time = 0;
+        float x = 0;
+        float y = 0;
+
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
+            time = Time.time * LENS_DISORTION_OFFSET_SPEED;
+            x = Mathf.Cos(time) * LENS_DISORTION_OFFSET_MULT * normDelta;
+            y = Mathf.Sin(time) * LENS_DISORTION_OFFSET_MULT * normDelta;
+
+            lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_INTENS, LENS_DISORTION_MAX_INTENS, normDelta);
+            lensDistortion.center.value = new Vector2(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
+            lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_SCALE, LENS_DISORTION_MAX_SCALE, normDelta);
+
+            yield return null;
+        }
+
+        while (isStun) {
+            isStun = playerEffectManager.activeEffects.ContainsKey(FishEffectType.Stun)
+                && playerEffectManager.activeEffects[FishEffectType.Stun].Enabled;
+
+            time = Time.time * LENS_DISORTION_OFFSET_SPEED;
+            x = Mathf.Cos(time) * LENS_DISORTION_OFFSET_MULT;
+            y = Mathf.Sin(time) * LENS_DISORTION_OFFSET_MULT;
+            lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
+            lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
+            lensDistortion.center.value = new Vector2(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
+            yield return null;
+        }
+
+        //smooth fade
+
+        deltaSmooth = 0f;
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
+            x = Mathf.Lerp(x, 0f, normDelta);
+            y = Mathf.Lerp(y, 0f, normDelta);
+
+            if (!playerEffectManager.activeEffects.TryGetValue(FishEffectType.Poison, out Effect effect)
+                || !effect.Enabled) {//so check if stun not active
+                lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
+                lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
+            }
+            lensDistortion.center.value.Set(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
+
+            yield return null;
+        }
+
+        lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
+        lensDistortion.center.value.Set(LENS_DISORTION_OFFSET_CENTER, LENS_DISORTION_OFFSET_CENTER);
+        lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
+
+        stunCoroutine = null;
+    }
+
+    IEnumerator PoisonEffect() {
+        bool isPoison = true;
+        float deltaSmooth = 0;
+        float normDelta = 0;
+
+
+        while (deltaSmooth < EFFECTS_FADE_DURATION) {
+            deltaSmooth += DJTime.UnscaledDeltaTime;
+            normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
+
+            lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_INTENS, LENS_DISORTION_MAX_INTENS, normDelta);
+            lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_SCALE, LENS_DISORTION_MAX_SCALE, normDelta);
+
+            yield return null;
+        }
+
+        while (isPoison) {
+            isPoison = playerEffectManager.activeEffects.ContainsKey(FishEffectType.Poison)
+                && playerEffectManager.activeEffects[FishEffectType.Poison].Enabled;
+            lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
+            lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
+            yield return null;
+        }
+
+        //smooth fade
+        if (!playerEffectManager.activeEffects.TryGetValue(FishEffectType.Stun, out Effect effect)
+                || !effect.Enabled) {//poison and stun use same lens distortion//so check if stun not active
+
+            deltaSmooth = 0f;
+            while (deltaSmooth < EFFECTS_FADE_DURATION) {
+                deltaSmooth += DJTime.UnscaledDeltaTime;
+                normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
+
+                lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
+                lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
+                yield return null;
+            }
+        }
+        lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
+        lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
+
+        poisonCoroutine = null;
     }
 
     IEnumerator OverlayFader(Image overlay, FishEffectType type, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null, bool isLongDuration = false) {
@@ -508,7 +704,10 @@ public class PlayerUIController : MonoBehaviour {
         DisactivateDefaultIcons();
         EffectsProgressReset();
 
-        ResetOverlays();
+        //ResetOverlays();
+        zoneOverlay.gameObject.SetActive(false);
+        zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
+        ResetVisualEffects();
 
         //upd icons pos of spawn effects
         foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
@@ -534,34 +733,22 @@ public class PlayerUIController : MonoBehaviour {
         //UpdateProgressIcon();
     }
 
-    //void UpdateProgressIcon() {
-    //FishLevel maxIndex = FishLevel.WhiteShark;//playerProgressIconsParent.childCount - 1;
+    //private void ResetOverlays() {
+    //    poisonOverlay.gameObject.SetActive(false);
+    //    poisonOverlay.color = new Color(poisonOverlay.color.r, poisonOverlay.color.g, poisonOverlay.color.b, 1f);
+    //    stunOverlay.gameObject.SetActive(false);
+    //    stunOverlay.color = new Color(stunOverlay.color.r, stunOverlay.color.g, stunOverlay.color.b, 1f);
+    //    damageOverlay.gameObject.SetActive(false);
+    //    damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
+    //    stopTimeOverlay.gameObject.SetActive(false);
+    //    stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
+    //    blindnessOverlay.gameObject.SetActive(false);
+    //    blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
+    //    zoneOverlay.gameObject.SetActive(false);
+    //    zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
 
-    //if (currentProgressIco <= maxIndex)
-    //    playerProgressIconsParent.GetChild(currentProgressIco).gameObject.SetActive(false);
-
-
-    //currentPlayerProgressIconInd = (int)playerFish.Level - 1;
-    //if (currentProgressIco <= maxIndex)
-    //    playerProgressIconsParent.GetChild(currentProgressIco).gameObject.SetActive(true);
+    //    StopAllCoroutines();
     //}
-
-    private void ResetOverlays() {
-        poisonOverlay.gameObject.SetActive(false);
-        poisonOverlay.color = new Color(poisonOverlay.color.r, poisonOverlay.color.g, poisonOverlay.color.b, 1f);
-        stunOverlay.gameObject.SetActive(false);
-        stunOverlay.color = new Color(stunOverlay.color.r, stunOverlay.color.g, stunOverlay.color.b, 1f);
-        damageOverlay.gameObject.SetActive(false);
-        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1f);
-        stopTimeOverlay.gameObject.SetActive(false);
-        stopTimeOverlay.color = new Color(stopTimeOverlay.color.r, stopTimeOverlay.color.g, stopTimeOverlay.color.b, 1f);
-        blindnessOverlay.gameObject.SetActive(false);
-        blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
-        zoneOverlay.gameObject.SetActive(false);
-        zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
-
-        StopAllCoroutines();
-    }
 
     public void ActivateZoneOverlay(string msg, bool isLongDuration = false) {
         zoneOverlayMsg.color = new Color(zoneOverlayMsg.color.r, zoneOverlayMsg.color.g, zoneOverlayMsg.color.b, 1f);
@@ -612,36 +799,28 @@ public class PlayerUIController : MonoBehaviour {
             }
         }
 
-        //add overlays
-        Image currentOverlay = type switch {
-            FishEffectType.Stun => stunOverlay,
-            FishEffectType.Poison => poisonOverlay,
-            FishEffectType.FreezeTime => stopTimeOverlay,
-            FishEffectType.Blindness => blindnessOverlay,
-            _ => null
-        };
+        ////add overlays
+        //Image currentOverlay = type switch {
+        //    FishEffectType.Stun => stunOverlay,
+        //    FishEffectType.Poison => poisonOverlay,
+        //    FishEffectType.FreezeTime => stopTimeOverlay,
+        //    FishEffectType.Blindness => blindnessOverlay,
+        //    _ => null
+        //};
 
-        if (currentOverlay != null) {
-            if (type == FishEffectType.Blindness) {
-                if (isAdded) {
-                    Effect effect = playerEffectManager.activeEffects[FishEffectType.Blindness];
-                    blindnessOverlay.color = new Color(blindnessOverlay.color.r, blindnessOverlay.color.g, blindnessOverlay.color.b, 1f);
-                    blindnessOverlay.gameObject.SetActive(true);
-                    StartCoroutine(BlindnessOverlayAnimation(effect));
-                }
-                else
-                    return;
-            }
-            else {
-
-                if (isAdded) {
-                    currentOverlay.color = new Color(currentOverlay.color.r, currentOverlay.color.g, currentOverlay.color.b, 1);
-                    currentOverlay.gameObject.SetActive(true);
-                }
-                else
-                    StartCoroutine(OverlayFader(currentOverlay, type));
-            }
+        //if (currentOverlay != null) {
+        if (isAdded) {
+            if (type == FishEffectType.Stun && stunCoroutine == null)
+                stunCoroutine = StartCoroutine(StunEffect());
+            else if (type == FishEffectType.Poison && poisonCoroutine == null)
+                poisonCoroutine = StartCoroutine(PoisonEffect());
+            else if (type == FishEffectType.FreezeTime && freezeCoroutine == null)
+                freezeCoroutine = StartCoroutine(FreezeTimeEffect());
+            else if (type == FishEffectType.Blindness && blindnessCoroutine == null)
+                blindnessCoroutine = StartCoroutine(BlindnessEffect());
         }
+        else
+            return;
     }
 
     public void OnDestroy() {

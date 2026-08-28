@@ -58,7 +58,7 @@ public class EntityWalking : MonoBehaviour {
         transform.position = Vector3.MoveTowards(
             transform.position,
             targetPoint,
-            moveSpeed * Time.deltaTime
+            moveSpeed * DJTime.DeltaTime
         );
         //transform.position = Vector3.SmoothDamp(
         //    transform.position,
@@ -73,7 +73,7 @@ public class EntityWalking : MonoBehaviour {
             transform.rotation = Quaternion.RotateTowards(
                 transform.rotation,
                 targetRotation,
-                rotateSpeed * Time.deltaTime
+                rotateSpeed * DJTime.DeltaTime
             );
             // checl ang (0 - look on targ, 180 - otherwise)
         }
@@ -93,7 +93,7 @@ public class EntityWalking : MonoBehaviour {
             float currentAngleToTarget = Vector3.SignedAngle(transform.forward, directionToTarget, Vector3.up);
             float rotationSteepnessNormalized = currentAngleToTarget / MAX_LOOK_ROTATION_DETECT;
             //smooth rotate
-            //shaderCurrentSmoothRot = Mathf.MoveTowards(shaderCurrentSmoothRot, rotationSteepnessNormalized * SHADER_MAX_ROT_VAL, shaderRotSpeed * Time.deltaTime);
+            //shaderCurrentSmoothRot = Mathf.MoveTowards(shaderCurrentSmoothRot, rotationSteepnessNormalized * SHADER_MAX_ROT_VAL, shaderRotSpeed * DJTime.DeltaTime);
 
             FishAnim.SetMaterialProp(ref fishRenderer, ref matPropBlock, GameStaticInfo.FISH_WAVING_ROT_PROP, /*shaderCurrentSmoothRot*/rotationSteepnessNormalized * SHADER_MAX_ROT_VAL);
             //Debug.Log(rotationSteepnessNormalized);

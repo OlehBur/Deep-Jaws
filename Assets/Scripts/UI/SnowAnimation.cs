@@ -36,10 +36,10 @@ public class SnowAnimation : MonoBehaviour {
 
                 dir = Random.Range(0, 5);
                 if (dir == 0)
-                    buffPos.x -= Time.unscaledDeltaTime * SIDE_SPEED;
+                    buffPos.x -= DJTime.UnscaledDeltaTime * SIDE_SPEED;
                 else if (dir == 1)
-                    buffPos.x += Time.unscaledDeltaTime * SIDE_SPEED;
-                buffPos.y -= Random.value * DOWN_SPEED * Time.unscaledDeltaTime;
+                    buffPos.x += DJTime.UnscaledDeltaTime * SIDE_SPEED;
+                buffPos.y -= Random.value * DOWN_SPEED * DJTime.UnscaledDeltaTime;
 
                 rs.anchoredPosition = buffPos;
             }

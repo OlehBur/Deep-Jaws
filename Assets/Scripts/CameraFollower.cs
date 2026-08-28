@@ -1,8 +1,6 @@
 using UnityEngine;
 
 /// <summary>
-/// CameraFollower клас що змушує камеру слідукувати за гравцем
-/// і додається як компонент до незалежного коллайдера що однаково дочірній до об'єкта Visibility Checker як і сама камера - 
 /// CameraFollower is a class that makes the camera follow the player and is added as a component to an
 /// independent collider that is equally a child of the Visibility Checker object as the camera itself.
 /// </summary>
@@ -40,11 +38,9 @@ public class CameraFollower : MonoBehaviour {
     public void Init(SpawnManager spawnManager) {
         this.spawnManager = spawnManager;
         spawnManager.OnPlayerRespawn += ResetPlayerTarget;
-        //spawnManager.OnPlayerDie += ReInitCameraFollowing;
 
-        target = spawnManager.PlayerFish.transform/*pool[SpawnManager.PLAYER_INDEX].transform*/; //get player transform
-        playerFish = spawnManager.PlayerFish;//target.GetComponent<Fish>(); //get player fish component
-        //initialPosition = transform.position;
+        target = spawnManager.PlayerFish.transform; //get player transform
+        playerFish = spawnManager.PlayerFish;//get player fish component
         cameraObj.farClipPlane = CAM_INIT_FAR_CLIP;
     }
 
@@ -55,8 +51,8 @@ public class CameraFollower : MonoBehaviour {
         if (player == null)
             return;
 
-        target = /*spawnManager.pool[SpawnManager.PLAYER_INDEX]*/player.transform; //get player transform
-        playerFish = player;//target.GetComponent<Fish>();
+        target = player.transform; //get player transform
+        playerFish = player;
 
         isActivateAvoidence = false;// while camera is not close enough to player position, do not activate obstacle avoidance
         currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
@@ -64,28 +60,9 @@ public class CameraFollower : MonoBehaviour {
         currentVelocity = Vector3.zero;
     }
 
-    //void ReInitCameraFollowing() {
-    //    isActivateAvoidence = false;// while camera is not close enough to player position, do not activate obstacle avoidance
-    //    currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
-
-    //    currentVelocity = Vector3.zero;
-
-    //    target = spawnManager.PlayerFish.transform;
-    //    playerFish = spawnManager.PlayerFish;
-
-    //    //cameraObj.transform.position = Vector3.SmoothDamp(
-    //    //    transform.position,
-    //    //    initialPosition,
-    //    //    ref currentVelocity,
-    //    //    DEFAULT_FOLLOW_SMOOTH_TIME,
-    //    //    Mathf.Infinity, Time.unscaledDeltaTime); // reset camera position   
-    //}
-
     // fixed update for camera follow becaurse target is moving with physics
     void LateUpdate() {
         DynamicCameraObjMovement();
-
-        //if (isActivateAvoidence)
         ObstacleAvoidance();
 
         //Debug.Log(targetPosition);
@@ -104,17 +81,18 @@ public class CameraFollower : MonoBehaviour {
             cameraObj.transform.position =
                 Vector3.Lerp(cameraObj.transform.position,
                 cameraObj.transform.position - cameraObj.transform.forward * /*CAM_HEIGHT_OBSTACLE_OFFSET*/currentHeightOffset,
-                Time.unscaledDeltaTime * AVOIDANCE_SPEED);
+                DJTime.UnscaledDeltaTime * AVOIDANCE_SPEED);
 
-            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_DEFAULT_FAR_CLIP, Time.unscaledDeltaTime * FAR_CLIP_CHANGE_SPEED);
+            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_DEFAULT_FAR_CLIP, DJTime.UnscaledDeltaTime * FAR_CLIP_CHANGE_SPEED);
         }
         else if (!isDetectObstacle && Vector3.Distance(transform.position, cameraObj.transform.position) > MIN_DISTANCE_CANERA_TO_ORIGIN) {// if obstacle is not detected and we are far enough then return to normal position
             cameraObj.transform.position =
                 Vector3.Lerp(cameraObj.transform.position,
                 transform.position,
-                Time.unscaledDeltaTime * AVOIDANCE_SPEED);
+                DJTime.UnscaledDeltaTime * AVOIDANCE_SPEED);
 
-            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_INIT_FAR_CLIP, Time.unscaledDeltaTime * FAR_CLIP_CHANGE_SPEED); ;
+            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_INIT_FAR_CLIP, DJTime.UnscaledDeltaTime * FAR_CLIP_CHANGE_SPEED);
+            ;
         }
     }
 
@@ -134,15 +112,14 @@ public class CameraFollower : MonoBehaviour {
 
         //initial camera following
         if ((currentSmoothTime - DEFAULT_FOLLOW_SMOOTH_TIME) > SMOOTH_EPSILON) {
-            currentSmoothTime = Mathf.Lerp(currentSmoothTime, DEFAULT_FOLLOW_SMOOTH_TIME, Time.unscaledDeltaTime);
-            /*transform*/
+            currentSmoothTime = Mathf.Lerp(currentSmoothTime, DEFAULT_FOLLOW_SMOOTH_TIME, DJTime.UnscaledDeltaTime);
             dynamicCamera.position = Vector3.SmoothDamp(dynamicCamera.position, targetPosition, ref currentVelocity,
-                currentSmoothTime, Mathf.Infinity, Time.unscaledDeltaTime);//, Mathf.Infinity, Time.unscaledDeltaTime for Independence from timeScale
-            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_DEFAULT_FAR_CLIP, Time.unscaledDeltaTime);
+                currentSmoothTime, Mathf.Infinity, DJTime.UnscaledDeltaTime);//, Mathf.Infinity, DJTime.UnscaledDeltaTime for Independence from timeScale
+            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_DEFAULT_FAR_CLIP, DJTime.UnscaledDeltaTime);
         }
         else { //default camera following
             dynamicCamera.position = Vector3.SmoothDamp(dynamicCamera.position, targetPosition, ref currentVelocity,
-                DEFAULT_FOLLOW_SMOOTH_TIME, Mathf.Infinity, Time.unscaledDeltaTime);
+                DEFAULT_FOLLOW_SMOOTH_TIME, Mathf.Infinity, DJTime.UnscaledDeltaTime);
 
             if (!isActivateAvoidence)
                 isActivateAvoidence = true;
@@ -160,8 +137,6 @@ public class CameraFollower : MonoBehaviour {
     private void OnTriggerEnter(Collider collision) {
         //Debug.Log("Camera obstacle detection started");
         TriggerBehaviour(collision, true);
-        //if (collision.CompareTag("Obstacle"))
-        //    isDetectObstacle = true;
 
     }
 
@@ -175,19 +150,11 @@ public class CameraFollower : MonoBehaviour {
     }
 
     void TriggerBehaviour(Collider collider, bool isEnter) {
-        //if (collider.CompareTag("Obstacle")) {
         currentHeightOffset = CAM_HEIGHT_OBSTACLE_OFFSET;
         isDetectObstacle = isEnter;
-        //}
-        //else
-        if (collider.CompareTag(GameStaticInfo.TAG_MAP_PREV) && isEnter)
-            //if (isEnter)
-            currentHeightOffset = CAM_HEIGHT_MAP_OFFSET;
-        //else
-        //    currentHeightOffset = CAM_HEIGHT_OBSTACLE_OFFSET;
 
-        //currentHeightOffset = CAM_HEIGHT_MAP_OFFSET;
-        //isDetectObstacle = isEnter;
-        //}
+        if (collider.CompareTag(GameStaticInfo.TAG_MAP_PREV) && isEnter)
+            currentHeightOffset = CAM_HEIGHT_MAP_OFFSET;
+
     }
 }

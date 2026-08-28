@@ -65,7 +65,7 @@ public class PufferfishController : MonoBehaviour {
         GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
         if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
             && fish.Level != FishLevel.Pufferfish) {
-            currentTimeCollision += Time.fixedDeltaTime;
+            currentTimeCollision += DJTime.FixedDeltaTime;
 
             if (currentTimeCollision > BITE_INTERVAL) {
                 currentTimeCollision = 0f;

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5969785251740188367}
   - component: {fileID: 7897566602956328321}
   - component: {fileID: 7133310288963215871}
+  - component: {fileID: 1789779909801093501}
   m_Layer: 0
   m_Name: GeothermalBubbles
   m_TagString: Untagged
@@ -4836,3 +4837,16 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &1789779909801093501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4345509644486292067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6cc69ea88f6f448a4d883a82fff144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::ParticleTimescaleController
+  particleSys: {fileID: 7897566602956328321}

@@ -19,7 +19,7 @@ public class HotSpringManager : MonoBehaviour {
 
     void Update() {
         if (!bubbleChild.activeInHierarchy) {
-            currentTime += Time.deltaTime;
+            currentTime += DJTime.DeltaTime;
             if (currentTime >= timeToSpawn) {
                 currentTime = 0f;
                 timeToSpawn = Random.Range(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL);

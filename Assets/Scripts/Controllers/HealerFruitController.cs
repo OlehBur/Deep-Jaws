@@ -49,7 +49,7 @@ public class HealerFruitController : MonoBehaviour {
             //fast light icreasing after threshold
             float progress = Mathf.Max(0, transform.localScale.x / growthScale.x - PROGGRESS_THRESHOLD) * PROGGRESS_MULTIPLIER; // [0;1] gr after threshold
 
-            transform.localScale += Vector3.one * GROWTH_SPEED * Time.deltaTime;
+            transform.localScale += Vector3.one * GROWTH_SPEED * DJTime.DeltaTime;
             fruitLight.intensity = Mathf.Lerp(fruitLight.intensity, lightIntensity, progress);
             fruitMaterial.SetColor("_EmissionColor", Color.blue * Mathf.Max(MIN_MATERIAL_EMISSION, progress) * MATERIAL_EMISSION_SCALE);
         }

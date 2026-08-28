@@ -85,7 +85,7 @@ public class СuttlefishController : MonoBehaviour {
         if (fish.IsActive && isAllowOverlapping)
             Overlapping();
 
-        curentPoisonCooldown = (curentPoisonCooldown - Time.fixedDeltaTime < 0) ? 0 : curentPoisonCooldown - Time.fixedDeltaTime;
+        curentPoisonCooldown = (curentPoisonCooldown - DJTime.FixedDeltaTime < 0) ? 0 : curentPoisonCooldown - DJTime.FixedDeltaTime;
     }
 
     private void OnTriggerEnter(Collider other) {

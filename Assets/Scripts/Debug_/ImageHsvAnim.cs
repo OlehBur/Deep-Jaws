@@ -16,7 +16,7 @@ public class ImageHsvAnim : MonoBehaviour {
     void Update() {
         image.color = Color.HSVToRGB(progress, DEFAULT_COLOR_S, DEFAULT_COLOR_V);
 
-        progress += Time.deltaTime;
+        progress += DJTime.UnscaledDeltaTime;
         if (progress > 1f)
             progress = 0f;
     }

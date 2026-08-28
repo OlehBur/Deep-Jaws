@@ -132,6 +132,6 @@ public class FishAlmanacVisualizeUI : MonoBehaviour {
     }
 
     private void Update() {
-        fishesParent.Rotate(Vector3.up, FISH_ROTATE_SPEED * Time.deltaTime);
+        fishesParent.Rotate(Vector3.up, FISH_ROTATE_SPEED * DJTime.UnscaledDeltaTime);
     }
 }

@@ -89,13 +89,13 @@ public class ZoneController : MonoBehaviour {
         float currProg = zoneBarrierMat.GetFloat(GameStaticInfo.ZONE_PROGRESS_PROP);
 
         while (currProg < 1f) {
-            currProg = Mathf.Clamp01(currProg + Time.deltaTime * BARRIER_TOUCH_ANIMATION_INTERVAL);
+            currProg = Mathf.Clamp01(currProg + DJTime.DeltaTime * BARRIER_TOUCH_ANIMATION_INTERVAL);
             zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, currProg);
             currProg = zoneBarrierMat.GetFloat(GameStaticInfo.ZONE_PROGRESS_PROP);
             yield return null;
         }
         while (currProg > 0f) {
-            currProg = Mathf.Clamp01(currProg - Time.deltaTime * BARRIER_TOUCH_ANIMATION_INTERVAL * 2);//double speed
+            currProg = Mathf.Clamp01(currProg - DJTime.DeltaTime * BARRIER_TOUCH_ANIMATION_INTERVAL * 2);//double speed
             zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, currProg);
             currProg = zoneBarrierMat.GetFloat(GameStaticInfo.ZONE_PROGRESS_PROP);
             yield return null;

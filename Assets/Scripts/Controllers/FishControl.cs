@@ -185,7 +185,7 @@ public class FishControl : MonoBehaviour, IFish {
             break;
 
             case EnemyState.Escape:
-            currentEscapeTime += Time.fixedDeltaTime;
+            currentEscapeTime += DJTime.FixedDeltaTime;
             direction = IFish.Escape();
             break;
 
@@ -359,7 +359,8 @@ public class FishControl : MonoBehaviour, IFish {
             //    return;
             //}
 
-            float delta = (fish.IsPlayer) ? Time.unscaledDeltaTime : Time.deltaTime;
+            float delta = (fish.IsPlayer) ?
+                DJTime.UnscaledDeltaTime : DJTime.DeltaTime;
             Quaternion targetLook;
 
             if (direction.sqrMagnitude > DIRECTION_ROTATE_MAGNITUDE_TRIGGER) {
@@ -371,7 +372,7 @@ public class FishControl : MonoBehaviour, IFish {
                 targetLook = rotationTransform.rotation;
 
             if (fishAnim != null && fishAnim.IsInited)
-                fishAnim.RotateAnimation(rotationTransform.forward, /*targetLook * Vector3.forward*/direction, delta);
+                fishAnim.RotateAnimation(rotationTransform.forward, direction, delta);
         }
     }
 
@@ -382,7 +383,7 @@ public class FishControl : MonoBehaviour, IFish {
 
         if (targetPos != Vector3.zero) {
             targetPos.y = rb.linearVelocity.y;
-            rb.linearVelocity = targetPos;
+            rb.linearVelocity = targetPos * DJTime.TimeScale;
         }
     }
 
@@ -400,7 +401,7 @@ public class FishControl : MonoBehaviour, IFish {
         Vector3 currentForward = rotationTransform.rotation * Vector3.forward;
 
         if (fishAnim != null && fishAnim.IsInited)
-            fishAnim?.RotateAnimation(rotationTransform.forward, currentForward, Time.fixedDeltaTime);//zero rotation
+            fishAnim?.RotateAnimation(rotationTransform.forward, currentForward, DJTime.FixedDeltaTime);//zero rotation
     }
 
     void IFish.FishProximity(Fish otherFish) {
@@ -420,7 +421,7 @@ public class FishControl : MonoBehaviour, IFish {
         //GameObject collisObj = collider.gameObject;
 
         //if other fish
-        if (/*victimObj != null && */transform != victimObj//not self collision
+        if (transform != victimObj//not self collision
              && GameStaticInfo.TryGetFish(victimObj, out Fish other)     //if collision with another fish
         && (fish.IsPlayer || other == IFish.CurrentTarget) //collision obj is our victim
             && fish.IsLegitimateTarget(other)//victim is weaker
@@ -429,7 +430,7 @@ public class FishControl : MonoBehaviour, IFish {
             if (isStayContact) {
                 //Debug.Log("stay Bites: " + Time.time);
                 contactTime += (fish.IsPlayer) ?
-                    Time.unscaledDeltaTime : Time.fixedDeltaTime;
+                    DJTime.UnscaledDeltaTime : DJTime.FixedDeltaTime;
 
                 if (contactTime >= fish.DeffaultAttackTime) {//damage each second
                     contactTime = 0f;

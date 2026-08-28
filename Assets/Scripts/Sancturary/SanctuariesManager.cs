@@ -77,7 +77,7 @@ public class SanctuariesManager : MonoBehaviour {
         };
 
     void SanctuariesUpdateBehaviour() {
-        minuteTimer += Time.unscaledDeltaTime;
+        minuteTimer += DJTime.UnscaledDeltaTime;
         //Debug.Log(minuteTimer.ToString());
         if (minuteTimer >= PRODUCTION_UPDATE_INTERVAL) {
             minuteTimer = 0f;

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3928436208904989013}
   - component: {fileID: 4263341621985611494}
   - component: {fileID: 7232367709555891971}
+  - component: {fileID: 2166952748082276016}
   m_Layer: 0
   m_Name: HealPlayerParticles
   m_TagString: Untagged
@@ -4895,3 +4896,16 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &2166952748082276016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344173358258605977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6cc69ea88f6f448a4d883a82fff144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::ParticleTimescaleController
+  particleSys: {fileID: 4263341621985611494}

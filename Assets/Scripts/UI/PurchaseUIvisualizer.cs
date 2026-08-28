@@ -308,7 +308,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
     private void Update() {
         if (skinsPreview.gameObject.activeInHierarchy)
-            skinsPreview.Rotate(Vector3.up, Time.deltaTime * SKINS_PREVIEW_ROTATION_SPEED);
+            skinsPreview.Rotate(Vector3.up, DJTime.UnscaledDeltaTime * SKINS_PREVIEW_ROTATION_SPEED);
     }
 
     public void OnOpen_ScinsPreviewWnd() {

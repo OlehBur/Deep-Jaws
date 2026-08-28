@@ -82,17 +82,11 @@ public class FishAnim : MonoBehaviour {
         SetMaterialProp(ref skinnedMesh, ref matPropBlock, /*"_RotationRad"*/GameStaticInfo.FISH_WAVING_ROT_PROP, skinnedMesh.sharedMaterial.GetFloat(GameStaticInfo.FISH_WAVING_ROT_PROP));
     }
 
-    public static /*float*/void SetMaterialProp(ref Renderer renderer, ref MaterialPropertyBlock mapBlock, int paramId, /*bool isGet, */float value = 0) {
+    public static void SetMaterialProp(ref Renderer renderer, ref MaterialPropertyBlock mapBlock, int paramId, float value = 0) {
         //Debug.LogWarning(renderer + " " + mapBlock);
         renderer.GetPropertyBlock(mapBlock);
-
-        //if (isGet)
-        //    return mapBlock.GetFloat(paramName);
-        //else {//set
         mapBlock.SetFloat(paramId, value);
         renderer.SetPropertyBlock(mapBlock);
-        //}
-        //return -1;
     }
 
     public static float GetMaterialProp(ref Renderer renderer, ref MaterialPropertyBlock mapBlock, int paramId) {

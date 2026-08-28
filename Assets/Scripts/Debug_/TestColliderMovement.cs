@@ -10,12 +10,12 @@ public class TestColliderMovement : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         const float speed = 5f; // speed of movement
-        Vector3 targetPos = Vector3.forward * speed * Time.fixedDeltaTime;
+        Vector3 targetPos = Vector3.forward * speed * DJTime.FixedDeltaTime;
         rb.MovePosition(rb.position + targetPos);
     }
 
     //void Update() {
     //    const float speed = 5f;
-    //    transform.position += Vector3.forward * speed * Time.deltaTime;
+    //    transform.position += Vector3.forward * speed * DJTime.DeltaTime;
     //}
 }

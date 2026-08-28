@@ -89,7 +89,8 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
         if (player != null)
             player.OnFishEat -= OnScoreAdd;
-        spawnManager.OnPlayerRespawn -= PlayerReconnect;
+        if (spawnManager != null)
+            spawnManager.OnPlayerRespawn -= PlayerReconnect;
     }
 
     /*LederboardKey*/

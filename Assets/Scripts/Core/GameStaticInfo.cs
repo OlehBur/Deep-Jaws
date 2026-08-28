@@ -299,10 +299,13 @@ public static class GameStaticInfo {
 
     public const int BIOME_RESEARCH_BOOST_TIME = 15 * 60;//15 MIN
 
-    public static Vector2 WorldToNormalizeScreenPos(Vector3 pos) {
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);
+    public static Vector2 WorldToNormalizeScreenPos(Vector3 pos, Camera targetCamera = null) {
+        //Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);
 
-        return new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+        //return new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+        Camera cam = targetCamera != null ? targetCamera : Camera.main;
+        Vector3 viewportPos = cam.WorldToViewportPoint(pos);
+        return new Vector2(viewportPos.x, viewportPos.y);
     }
 
     public static bool TryGetFish(GameObject fishObject, out Fish fish) {
@@ -312,6 +315,13 @@ public static class GameStaticInfo {
             TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager.cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
             TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish) || //dartfish
             TryGetFishFromPool(fishObject, SpawnManager.dartfishPool_Objects, SpawnManager.dartfishPool_FishComponents, out fish);
+    }
+
+    public static bool Approximately(Color a, Color b, float tolerance = 0.01f) {
+        return Mathf.Abs(a.r - b.r) < tolerance &&
+               Mathf.Abs(a.g - b.g) < tolerance &&
+               Mathf.Abs(a.b - b.b) < tolerance &&
+               Mathf.Abs(a.a - b.a) < tolerance;
     }
 
     static bool TryGetFishFromPool(GameObject fishObject, GameObject[] pool, Fish[] fishPool, out Fish fish) {

@@ -318,13 +318,13 @@ public class EffectManager : MonoBehaviour {
             || (!hasSpeedEffects && speedEffectSource.volume == 0f))
             return;
 
-        float velocity = (prevPos - rb.position).magnitude / Time.fixedDeltaTime;
+        float velocity = (prevPos - rb.position).magnitude / DJTime.FixedDeltaTime;
         prevPos = rb.position;
 
         if (velocity > 0f && hasSpeedEffects)//if fish is moving and has speed effects - inc vol
-            speedEffectSource.volume = Mathf.Lerp(speedEffectSource.volume, 1f, Time.fixedDeltaTime * VOLUME_FADE_SPEED);
+            speedEffectSource.volume = Mathf.Lerp(speedEffectSource.volume, 1f, DJTime.FixedDeltaTime * VOLUME_FADE_SPEED);
         else
-            speedEffectSource.volume = Mathf.Lerp(speedEffectSource.volume, 0, Time.fixedDeltaTime * VOLUME_FADE_SPEED);
+            speedEffectSource.volume = Mathf.Lerp(speedEffectSource.volume, 0, DJTime.FixedDeltaTime * VOLUME_FADE_SPEED);
 
         // dis audiosource if it dont need
         if (speedEffectSource.volume < MIN_VOLUME && !hasSpeedEffects)

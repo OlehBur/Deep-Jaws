@@ -53,11 +53,11 @@ public abstract class Effect /*: MonoBehaviour*/ {
     }
 
     public virtual void UpdateTimer() {
-        if (Time.timeScale == 0f)//in pause menu effect must be freezed
+        if (DJTime.TimeScale == 0f)//in pause menu effect must be freezed
             return;
 
-        float delta = type == FishEffectType.FreezeTime ? 
-            Time.unscaledDeltaTime : Time.deltaTime;
+        float delta = type == FishEffectType.FreezeTime ?
+            DJTime.UnscaledDeltaTime : DJTime.DeltaTime;
 
         LeftTime -= delta/*deltaTime*/;
 

@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 7311484714152965776}
   - component: {fileID: 8316133541576619740}
   - component: {fileID: 7721526498671429939}
+  - component: {fileID: -7345440337503869728}
   m_Layer: 10
-  m_Name: EntityHeartbeat
+  m_Name: Heartbeat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4836,3 +4837,16 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &-7345440337503869728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445976189343147248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6cc69ea88f6f448a4d883a82fff144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::ParticleTimescaleController
+  particleSys: {fileID: 8316133541576619740}

@@ -18,7 +18,7 @@ public class SonicPulseControl : MonoBehaviour {
 
     private void Update() {
         if (triggerCollider != null && !triggerCollider.enabled) {
-            curentRechargeTime = curentRechargeTime - Time.deltaTime; // decrease recharge time
+            curentRechargeTime = curentRechargeTime - DJTime.DeltaTime; // decrease recharge time
 
             if (curentRechargeTime <= 0f)
                 triggerCollider.enabled = true;
@@ -31,7 +31,7 @@ public class SonicPulseControl : MonoBehaviour {
     }
 
     void PulseScalingAnim() {
-        pulseTransform.localScale = pulseTransform.localScale + Vector3.one * GameStaticInfo.STUN_SONAR_SPEED * Time.deltaTime;
+        pulseTransform.localScale = pulseTransform.localScale + Vector3.one * GameStaticInfo.STUN_SONAR_SPEED * DJTime.DeltaTime;
 
         if (pulseTransform.localScale.x >= GameStaticInfo.STUN_SONAR_MAX_SCALE) {
             playAnim = false;

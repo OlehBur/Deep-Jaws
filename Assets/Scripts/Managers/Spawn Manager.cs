@@ -93,7 +93,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
 
     public void Init() {
-        Time.timeScale = 0f;
+        DJTime.TimeScale = 0f;
 
         fishAdditionalComponentManager.Init(SHIELDS_POOL_CNT,
             DEAD_BUBBLES_POOL_CNT,
@@ -119,7 +119,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         if (GameStaticInfo.Gamemode == GameMode.Hard)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_the_hard_way);
 
-        Time.timeScale = 1f;
+        DJTime.TimeScale = 1f;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

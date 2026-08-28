@@ -17,7 +17,7 @@ public class AutoScalerToDef : MonoBehaviour {
     }
 
     void Update() {
-        transform.localScale = Vector3.Lerp(transform.localScale, defaultScale, speed * Time.deltaTime);
+        transform.localScale = Vector3.Lerp(transform.localScale, defaultScale, speed * DJTime.DeltaTime);
 
         if (V3Eq(defaultScale, transform.localScale))
         enabled = false; // Disable this script when the scale reaches the default scale

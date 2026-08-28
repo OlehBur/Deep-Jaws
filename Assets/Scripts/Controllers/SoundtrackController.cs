@@ -44,7 +44,7 @@ public class SoundtrackController : MonoBehaviour {
 
     IEnumerator SmoothSoundChange(AudioClip target) {
         while (soundtrackSource.volume > 0 && soundtrackSource.clip != null) {//for first call - skip volume fade
-            soundtrackSource.volume -= Time.unscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
+            soundtrackSource.volume -= DJTime.UnscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
             yield return null;
         }
 
@@ -53,7 +53,7 @@ public class SoundtrackController : MonoBehaviour {
         soundtrackSource.Play();
 
         while (soundtrackSource.volume < 1) {
-            soundtrackSource.volume += Time.unscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
+            soundtrackSource.volume += DJTime.UnscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
             yield return null;
         }
     }

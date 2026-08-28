@@ -193,7 +193,7 @@ public class MainmenuManager : MonoBehaviour {
     IEnumerator ChangeColorGMwnd() {
         //Debug.Log("gm changing color started");
         while (gameModeWndBackground.color != targetGMwndColor) {
-            gameModeWndBackground.color = Color.Lerp(gameModeWndBackground.color, targetGMwndColor, Time.deltaTime/* * GM_COLOR_CHANGING_SPEED*/);
+            gameModeWndBackground.color = Color.Lerp(gameModeWndBackground.color, targetGMwndColor, DJTime.DeltaTime);
             yield return null;
         }
 
@@ -202,7 +202,7 @@ public class MainmenuManager : MonoBehaviour {
 
     IEnumerator ChangeColorGMmainMenu() {
         while (mainMenuLight.color != targetLightGMcolor) {
-            mainMenuLight.color = Color.Lerp(mainMenuLight.color, targetLightGMcolor, Time.deltaTime);
+            mainMenuLight.color = Color.Lerp(mainMenuLight.color, targetLightGMcolor, DJTime.DeltaTime);
             yield return null;
         }
     }

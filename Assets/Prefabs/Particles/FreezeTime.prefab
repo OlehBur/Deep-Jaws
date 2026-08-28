@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 49561686355044736}
   - component: {fileID: 2805636339923051165}
   - component: {fileID: 7105205111854547677}
+  - component: {fileID: -549472349607119089}
   m_Layer: 0
   m_Name: FreezeTime
   m_TagString: Untagged
@@ -4895,3 +4896,16 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &-549472349607119089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4249491078268717306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6cc69ea88f6f448a4d883a82fff144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::ParticleTimescaleController
+  particleSys: {fileID: 2805636339923051165}

@@ -22,7 +22,7 @@ public class PoisonEffect : Effect {
 
     public override void UpdateTimer() {
         base.UpdateTimer();
-        currentTime += Time.deltaTime/*unscaledDeltaTime*/;
+        currentTime += DJTime.DeltaTime;
 
         if (currentTime >= DAMAGE_INTERVAL && !GameManager.IsGamePaused) {
             currentTime = 0f;

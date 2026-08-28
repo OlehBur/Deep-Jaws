@@ -2,19 +2,13 @@ using UnityEngine;
 
 
 /// <summary>
-/// Менеджер що контролює всі дочірні об'єкти (медузи) наче в кожного з них є контролер руху та ефектів
+/// A manager that controls all child objects (jellyfish)—it's as if each of them has its own motion and effects controller
 /// </summary>
 public class JellyfishController : MonoBehaviour {
-    //[SerializeField] float heightOffset;
-    //[SerializeField] float widthOffset;
-    //[SerializeField] float lenthOffset;
-    //private Vector3 centerPos;
-
     [SerializeField] Transform waypoints;
     [SerializeField] float speed;
     [SerializeField] float maxRandYOffsetMultiplier;
     private float[] maxRandYOffsetMultipliers;
-    //private float localWorldCenterY;
     private const float MOVEMENT_EPSILON = 0.1f;
     private const float ROTATION_EPSILON = 1e-4f;
     private int[] currentPointId;
@@ -23,31 +17,15 @@ public class JellyfishController : MonoBehaviour {
     private Collider[] jellyColliders;
     private bool isJellyColliderActive;
     [SerializeField] AudioManager audioManager;
-    //[SerializeField] AudioSource jellyAudioSource;
-    //[SerializeField] AudioClip jellyBiteClip;
     [SerializeField] float coldownTime;
     private float currentColdown;
 
 
     void Awake() {
-        ////centerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z - lenthOffset);
-
-        //currentPointId = GetClosetPointId();
-        //initYSinOffset = Random.value * Mathf.PI;
-        //maxRandYOffsetMultiplier = Random.value * maxRandYOffsetMultiplier;
-        //currentColdown = -coldownTime;
-
-        ////localWorldCenterY = transform.TransformPoint(Vector3.zero).y;
-
-        //////init coldown time during loading map - meduses doesnt bite in case if player spawned so close
-        ////if (jellyCollider != null)
-        ////    jellyCollider.enabled = false;
-
         InitMovementArrays();
     }
 
     //call from game manager
-    /*public*/
     void InitMovementArrays() {
         int jellyfishCnt = transform.childCount;
         currentPointId = new int[jellyfishCnt];
@@ -55,7 +33,7 @@ public class JellyfishController : MonoBehaviour {
         maxRandYOffsetMultipliers = new float[jellyfishCnt];
 
         if (IsJellifishHasBehaviour()) {//jelly fish has coldown and has effects etc.
-            currentColdown = /*-coldownTime*/0;//in case if player spawn in jellyfish
+            currentColdown = 0f;//in case if player spawn in jellyfish
             jellyColliders = new Collider[jellyfishCnt];
         }
 
@@ -96,7 +74,7 @@ public class JellyfishController : MonoBehaviour {
     }
 
     void Update() {
-        if (!isJellyColliderActive && IsJellifishHasBehaviour()/*jellyCollider != null && !jellyCollider.enabled*/)
+        if (!isJellyColliderActive && IsJellifishHasBehaviour())
             PoisonColdownBeh();
 
         if (waypoints != null)
@@ -104,10 +82,9 @@ public class JellyfishController : MonoBehaviour {
     }
 
     void PoisonColdownBeh() {
-        currentColdown += Time.deltaTime;
+        currentColdown += DJTime.DeltaTime;
 
         if (currentColdown > coldownTime) {
-            //jellyCollider.enabled = true;
             isJellyColliderActive = true;
             SetActivateColliders(isJellyColliderActive);
             currentColdown = 0;
@@ -128,9 +105,9 @@ public class JellyfishController : MonoBehaviour {
     void Movement(ref int currentPoint, Transform trans, float initYOffset, float maxYRandOffset) {
         //pos
         Transform target = waypoints.GetChild(currentPoint);
-        Vector3 newPos = Vector3.MoveTowards(trans.position, target.position, speed * Time.deltaTime);
+        Vector3 newPos = Vector3.MoveTowards(trans.position, target.position, speed * DJTime.DeltaTime);
         trans.position = new Vector3(newPos.x,
-            /*localWorldCenterY*/target.position.y + Mathf.Sin(initYOffset + Time.time) * maxYRandOffset * speed,
+            target.position.y + Mathf.Sin(initYOffset + Time.time) * maxYRandOffset * speed,
             newPos.z);
         //Debug.LogWarning();
 
@@ -139,7 +116,7 @@ public class JellyfishController : MonoBehaviour {
         targPosSub.y = 0f;//only hor
         if (targPosSub.sqrMagnitude > ROTATION_EPSILON) {
             Quaternion targRot = Quaternion.LookRotation(targPosSub, Vector3.up);
-            trans.rotation = Quaternion.Slerp(trans.rotation, targRot, Time.deltaTime);
+            trans.rotation = Quaternion.Slerp(trans.rotation, targRot, DJTime.DeltaTime);
         }
 
         //next point if already arrive
@@ -153,11 +130,9 @@ public class JellyfishController : MonoBehaviour {
     //cooldown and sound only for player fish
     private void OnTriggerStay(Collider other) {
         if (isJellyColliderActive && !other.isTrigger && other.CompareTag(GameStaticInfo.TAG_PLAYER)) {
-            //jellyCollider.enabled = false;
             isJellyColliderActive = false;
             SetActivateColliders(isJellyColliderActive);
             audioManager.PlayVFX(VFX_clip.Hydra);
-            //jellyAudioSource.PlayOneShot(jellyBiteClip);
         }
     }
 
@@ -179,20 +154,5 @@ public class JellyfishController : MonoBehaviour {
             Gizmos.DrawLine(newPos, t.position);
             newPos = t.position;
         }
-
-        //Gizmos.DrawSphere(waypoints.GetChild(currentPointId).position, 5f);
-
-
-        //Vector3 prevPos = centerPos;
-        //prevPos.x += widthOffset;
-
-        //for (int i = 1; i <= 25; i++) {
-        //    float angle = (i * Mathf.PI * 2f) / 25f;
-        //    float x = Mathf.Cos(angle) * widthOffset;
-        //    float z = Mathf.Sin(angle) * lenthOffset;
-        //    newPos = transform.position + new Vector3(x, 0, z);
-        //    Gizmos.DrawLine(prevPos, newPos);
-        //    prevPos = newPos;
-        //}
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1590671250798370777}
   - component: {fileID: 4234837169667622650}
   - component: {fileID: 8371339825292365308}
+  - component: {fileID: -7829692010433275246}
   m_Layer: 0
   m_Name: BiteParticles
   m_TagString: Untagged
@@ -4894,3 +4895,16 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &-7829692010433275246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7205333905808350337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6cc69ea88f6f448a4d883a82fff144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::ParticleTimescaleController
+  particleSys: {fileID: 4234837169667622650}

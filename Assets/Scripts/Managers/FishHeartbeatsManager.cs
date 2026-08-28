@@ -9,7 +9,8 @@ using UnityEngine.UI;
 /// </summary>
 public class FishHeartbeatsManager : MonoBehaviour {
     [SerializeField] ParticleSystem heartbeatPrefab;
-    [SerializeField] Transform heartbeatParent;
+    //[SerializeField] Transform heartbeatParent;
+    //[field: SerializeField] public Transform HeartbeatParent {get;private set;}
     [SerializeField] RenderTexture heartbeatView;
     [SerializeField] RenderTexture defaultView;
     [Header("for otimization disabling")]
@@ -34,7 +35,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
     public void Init(SpawnManager spawnManager) {
         this.spawnManager = spawnManager;
-        heartbeatParent.gameObject.SetActive(false);
+        /*heartbeatParent.*/gameObject.SetActive(false);
         ReInitPool();
         InitRenderTextureSize(defaultView);
         InitRenderTextureSize(heartbeatView);
@@ -79,7 +80,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
         if (fishHeartbeatsParticlesPool[index] == null) {
             fishHeartbeatsParticlesPool[index] = Instantiate(heartbeatPrefab,
-                fish.transform.position, Quaternion.identity, heartbeatParent);
+                fish.transform.position, Quaternion.identity, /*heartbeatParent*/transform);
             fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
         }
         else {
@@ -108,6 +109,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
     public void SetActivateShaderPreparation(bool isActivate) {
         if (isActivate && heartBeatParticleCorutine == null) {
+            gameObject.SetActive(true);
             heartBeatParticleCorutine = StartCoroutine(HeartBeatParticles());
             //InvokeRepeating(nameof(ReInitPool), 0f, HERTBEAT_PARTICLES_UPDATE_INTERVAL);
         }
@@ -115,7 +117,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
             StopCoroutine(HeartBeatParticles());
         //CancelInvoke(nameof(ReInitPool));
 
-        heartbeatParent.gameObject.SetActive(isActivate);
+        /*heartbeatParent.*/gameObject.SetActive(isActivate);
         shaderCamerasParent.SetActive(isActivate);
         uiShaderVisualize.enabled = isActivate;
 

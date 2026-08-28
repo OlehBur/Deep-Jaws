@@ -92,7 +92,7 @@ public class BiomesVisualize : MonoBehaviour {
 
         modelsTrans.gameObject.SetActive(true);
         while (modelsTrans.localScale.x < 1f) {
-            modelsTrans.localScale += Vector3.one * Time.deltaTime * SCALING_MODELS_SPEED;
+            modelsTrans.localScale += Vector3.one * DJTime.DeltaTime * SCALING_MODELS_SPEED;
 
             yield return null;
         }

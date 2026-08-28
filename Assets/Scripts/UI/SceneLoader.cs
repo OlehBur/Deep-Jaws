@@ -46,7 +46,7 @@ public class SceneLoader : MonoBehaviour {
         image.color = color;
 
         while (image.color.a > TRANSPARENT_ALPHA) {
-            color.a = Mathf.MoveTowards(color.a, TRANSPARENT_ALPHA, Time.unscaledDeltaTime * FADE_SPEED);
+            color.a = Mathf.MoveTowards(color.a, TRANSPARENT_ALPHA, DJTime.UnscaledDeltaTime * FADE_SPEED);
             image.color = color;
             yield return null;
         }
@@ -92,7 +92,7 @@ public class SceneLoader : MonoBehaviour {
         image.color = color;
 
         while (image.color.a < OPAQUE_ALPHA) {
-            color.a = Mathf.MoveTowards(color.a, OPAQUE_ALPHA, Time.unscaledDeltaTime * FADE_SPEED);
+            color.a = Mathf.MoveTowards(color.a, OPAQUE_ALPHA, DJTime.UnscaledDeltaTime * FADE_SPEED);
             image.color = color;
             yield return null;
         }

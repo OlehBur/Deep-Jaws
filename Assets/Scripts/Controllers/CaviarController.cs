@@ -33,7 +33,7 @@ public class CaviarController : MonoBehaviour {
             if (current_reEnablerTime >= MAX_REENABLE_TIME)
                 ActivateCaviar();
             else
-                current_reEnablerTime += Time.deltaTime;
+                current_reEnablerTime += DJTime.DeltaTime;
     }
 
     private void OnTriggerEnter(Collider other) {

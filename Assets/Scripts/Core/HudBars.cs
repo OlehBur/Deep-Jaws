@@ -45,7 +45,7 @@ public class PlayerGrowthBar {
         progressPercent.transform.localScale = Vector3.one * DEFAULT_TEXT_SIZE;
         ChangeTransparancy(1f);
         while (timer > 0) {
-            timer -= Time.deltaTime;
+            timer -= DJTime.UnscaledDeltaTime;
 
             if (timer < scaleUpTime) {
                 float delta = timer / scaleUpTime /*/ PlayerUIController.VIEW_HUD_TIME*/;
@@ -66,7 +66,7 @@ public class PlayerGrowthBar {
 
         timer = PlayerUIController.FADE_HUD_TIME;
         while (timer > 0) {
-            timer -= Time.deltaTime;
+            timer -= DJTime.UnscaledDeltaTime;
 
             if (SettingsUI.IsAutoHideUI)
                 ChangeTransparancy(timer / PlayerUIController.FADE_HUD_TIME);
@@ -159,7 +159,7 @@ public class HealthBar {
 
         ChangeTransparancy(1f);
         while (timer > 0) {
-            timer -= Time.deltaTime;
+            timer -= DJTime.UnscaledDeltaTime;
             heartBeatSpeed = Time.time * heartBeatFreqMult;
             scaleNoiseMult = Mathf.PerlinNoise(heartBeatSpeed, 0) * HEART_ADD_SCALE_MULT;
             healthBar.transform.localScale = Vector3.one + Vector3.one * scaleNoiseMult;
@@ -168,7 +168,7 @@ public class HealthBar {
 
         timer = PlayerUIController.VIEW_HEALTH_TIME;
         while (timer > 0) {
-            timer -= Time.deltaTime;
+            timer -= DJTime.UnscaledDeltaTime;
             heartBeatSpeed = Time.time * heartBeatFreqMult;
             scaleNoiseMult = Mathf.PerlinNoise(heartBeatSpeed, 0) * HEART_ADD_SCALE_MULT;
             healthBar.transform.localScale = Vector3.one + Vector3.one * scaleNoiseMult;
@@ -216,7 +216,7 @@ public class ScoreBar {
         ico.transform.localScale = Vector3.one * DEFAULT_JAW_SCALE;
         score.transform.localScale = Vector3.one * DEFAULT_TEXT_SCALE;
         while (timer < jawOpenTime) {
-            timer += Time.deltaTime;
+            timer += DJTime.UnscaledDeltaTime;
 
             //if (ico.transform.localScale.y < MAX_JAW_Y_SCALE) {
             t = timer / jawOpenTime;
@@ -233,7 +233,7 @@ public class ScoreBar {
 
         //Jaw close
         while (timer < jawCloseTime) {
-            timer += Time.deltaTime;
+            timer += DJTime.UnscaledDeltaTime;
 
             //if (ico.transform.localScale.y > MIN_JAW_Y_SCALE) {
             t = (timer - jawOpenTime) / (jawCloseTime - jawOpenTime);
@@ -250,7 +250,7 @@ public class ScoreBar {
 
         //jaw return 
         while (timer < PlayerUIController.VIEW_JAW_TIME) {
-            timer += Time.deltaTime;
+            timer += DJTime.UnscaledDeltaTime;
             if (ico.transform.localScale.y < DEFAULT_JAW_SCALE) {
                 t = (timer - jawCloseTime) / (PlayerUIController.VIEW_JAW_TIME - jawCloseTime);
                 newYscale = Mathf.Lerp(MIN_JAW_Y_SCALE, DEFAULT_JAW_SCALE, t);
@@ -265,7 +265,7 @@ public class ScoreBar {
         //FADE
         timer = PlayerUIController.FADE_HUD_TIME;
         while (timer > 0) {
-            timer -= Time.deltaTime;
+            timer -= DJTime.UnscaledDeltaTime;
 
             if (SettingsUI.IsAutoHideUI)
                 ChangeTransparancy(timer / PlayerUIController.FADE_HUD_TIME);

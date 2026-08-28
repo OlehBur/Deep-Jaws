@@ -7,7 +7,8 @@ public class StopTimeEffect : Effect {
     Animator fishAnimator;//for freeze fish animation
     float currentTime = 0f;
     const float STOP_TIME_SCALE = .2f;
-    const float STOPTIME_SPEED_MULTIPLIER = 1f / STOP_TIME_SCALE;
+    const float STOPTIME_SPEED_MULTIPLIER = (1f / STOP_TIME_SCALE) * SLOW_MULT;
+    const float SLOW_MULT = .9f;
     /// <summary>
     /// значення при якому шейдер починає знову брати значення скаледТайм замість нашого з ефекту 
     /// value we set when shader starts to take scaledTime value instead of our from effect
@@ -49,7 +50,7 @@ public class StopTimeEffect : Effect {
     }
 
     public override void UpdateTimer() {
-        currentTime += Time.unscaledDeltaTime;
+        currentTime += DJTime.UnscaledDeltaTime;
         FishAnim.SetMaterialProp(ref fishRenderer, ref fishMatProp, GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, currentTime);
 
         base.UpdateTimer();

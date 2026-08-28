@@ -12,7 +12,7 @@ public class SlowdownPearlController : MonoBehaviour {
 
     private const string FLOWER_ANIM_NAME = "Nymphae_Flower";
     private const string FLOWER_REVERSE_ANIM_NAME = "Nymphae_Flower_reverse";
-    private const float MAX_RESPAWN_TIME = 180f; //3 minutes
+    private const float MAX_RESPAWN_TIME = 18.0f; //3 minutes
     private const float MAX_AXIS_ANGLE_DIR = 45f;
 
     private Vector3 randomRotateDir;
@@ -29,7 +29,7 @@ public class SlowdownPearlController : MonoBehaviour {
     }
 
     void Start() {
-        //Debug.LogWarning("Changed flower time");
+        Debug.LogWarning("Changed flower time");
         pearlCollider.enabled = false;
 
         if (!IsActivationInvokeStarted) {
@@ -47,7 +47,7 @@ public class SlowdownPearlController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (pearlMeshRenderer.enabled)
-            transform.Rotate(randomRotateDir * Time.deltaTime);
+            transform.Rotate(randomRotateDir * DJTime.DeltaTime);
     }
 
     private void OnTriggerStay(Collider other) {
