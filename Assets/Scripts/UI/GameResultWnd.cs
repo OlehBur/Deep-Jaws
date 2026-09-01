@@ -69,6 +69,7 @@ public class GameResultWnd : MonoBehaviour {
         finalShells.text = receivedShells.ToString();
         doubleShells.text = $"(+{receivedShells})";
         doubleShellsB.interactable = receivedShells > 0;//don`t need double score without score)
+        doubleShellsB.gameObject.SetActive(true);
 
         if (SanctuariesManager.Instance != null)//default shells cnt
             SanctuariesManager.Instance.OnAddShells(receivedShells);
@@ -79,6 +80,7 @@ public class GameResultWnd : MonoBehaviour {
             SanctuariesManager.Instance.OnAddShells(receivedShells);
 
         doubleShellsB.interactable = false;
+        doubleShellsB.gameObject.SetActive(false);
         finalShells.text = (receivedShells * 2).ToString();
         finalShells.color = Color.orange;
     }

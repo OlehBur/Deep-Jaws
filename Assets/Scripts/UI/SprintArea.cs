@@ -1,7 +1,7 @@
-using PlasticGui.WorkspaceWindow.NotificationBar;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
 
 public class SprintArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     [SerializeField] RectTransform area;

@@ -7,9 +7,17 @@ using UnityEngine.UI;
 
 
 public class SettingsUI : MonoBehaviour {
-    [SerializeField] Toggle autoHideUI_tog;
-    [SerializeField] TMP_Dropdown languageDropdown;
-    [SerializeField] TMP_Dropdown framerateDropdown;
+    [field: SerializeField] public Toggle BloomTog { get; private set; }
+    [field: SerializeField] public Toggle BlurTog { get; private set; }
+    [field: SerializeField] public Toggle VignetteTog { get; private set; }
+    [field: SerializeField] public Toggle ShadowCastTog { get; private set; }
+    [field: SerializeField] public Toggle AutoHideUI_tog { get; private set; }
+    [field: SerializeField] public Slider ShadowDistSl { get; private set; }
+    [field: SerializeField] public Slider ShadowFixSl { get; private set; }
+    [field: SerializeField] public Slider GameResolutSl { get; private set; }
+    [field: SerializeField] public TMP_Dropdown ShadowResolution { get; private set; }
+    [field: SerializeField] public TMP_Dropdown LanguageDropdown { get; private set; }
+    [field: SerializeField] public TMP_Dropdown FramerateDropdown { get; private set; }
 
     public static bool IsAutoHideUI { get; private set; } = true;
     public static event Action OnHudHideChanged;
@@ -29,22 +37,22 @@ public class SettingsUI : MonoBehaviour {
     //}
 
     private void Awake() {
-        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist?
-            ProgressSaver.LoadSettingsData(): new SettingsData();
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist ?
+            ProgressSaver.LoadSettingsData() : new SettingsData();
         IsAutoHideUI = savedSettings.autoUI;
     }
 
     private void Start() {
         SettingsData savedSettings = ProgressSaver.LoadSettingsData();
-        if (framerateDropdown != null) {//if any settings field setted            
+        if (FramerateDropdown != null) {//if any settings field setted            
             LanguageInit(savedSettings);
             FramerateInit(savedSettings);
         }
 
-        autoHideUI_tog.onValueChanged.AddListener(OnAutoHideUIToggle);
-        autoHideUI_tog.isOn = savedSettings == null ?
+        AutoHideUI_tog.onValueChanged.AddListener(OnAutoHideUIToggle);
+        AutoHideUI_tog.isOn = savedSettings == null ?
             true : savedSettings.autoUI;
-        autoHideUI_tog.onValueChanged.Invoke(autoHideUI_tog.isOn);
+        AutoHideUI_tog.onValueChanged.Invoke(AutoHideUI_tog.isOn);
     }
 
 
@@ -61,9 +69,9 @@ public class SettingsUI : MonoBehaviour {
         if (LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex];
 
-        languageDropdown.value = previousLocaleIndex;
-        languageDropdown.onValueChanged.RemoveAllListeners();
-        languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
+        LanguageDropdown.value = previousLocaleIndex;
+        LanguageDropdown.onValueChanged.RemoveAllListeners();
+        LanguageDropdown.onValueChanged.AddListener(OnLanguageChanged);
     }
 
     void FramerateInit(SettingsData savedSettings) {
@@ -85,7 +93,7 @@ public class SettingsUI : MonoBehaviour {
         };
 
         //init dropdown
-        if (framerateDropdown.options.Count == 0) {
+        if (FramerateDropdown.options.Count == 0) {
             fpsListing.Add(/*settingsMaxFpsLocalized.GetLocalizedString() +*/ $"{screenMaxFramerate} Hz");//max
             //Debug.LogWarning(screenMaxFramerate);
             if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_30)
@@ -95,12 +103,12 @@ public class SettingsUI : MonoBehaviour {
             if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_120)
                 fpsListing.Add(GameStaticInfo.FRAMERATE_120.ToString() + " Hz");
 
-            framerateDropdown.AddOptions(fpsListing);
+            FramerateDropdown.AddOptions(fpsListing);
         }
 
-        framerateDropdown.SetValueWithoutNotify((int)currentFramerateIndex);
-        framerateDropdown.onValueChanged.RemoveAllListeners();
-        framerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
+        FramerateDropdown.SetValueWithoutNotify((int)currentFramerateIndex);
+        FramerateDropdown.onValueChanged.RemoveAllListeners();
+        FramerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
     }
 
     private void OnLanguageChanged(int index) {

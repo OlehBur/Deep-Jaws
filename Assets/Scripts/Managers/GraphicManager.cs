@@ -1,9 +1,8 @@
 using System.Runtime.CompilerServices;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UI;
+
 
 public class GraphicManager : MonoBehaviour {
     [Header("Graphics Settings")]
@@ -12,46 +11,36 @@ public class GraphicManager : MonoBehaviour {
     [SerializeField] UniversalRenderPipelineAsset urpAsset;
 
     [Header("UI elements")]
-    [SerializeField] Toggle bloomTog;
-    [SerializeField] Toggle vignetteTog;
-    [SerializeField] Toggle shadowCastTog;
-    [SerializeField] Slider shadowDistSl;
-    [SerializeField] Slider shadowFixSl;
-    [SerializeField] Slider gameResolutSl;
-    [SerializeField] TMP_Dropdown shadowResolution;
-
-    //private const string BLOOM_KEY = "bloom_active";
-    //private const string VIGNETTE_KEY = "vignette_active";
-    //private const string SHADOWCAST_KEY = "shadow_active";
-    //private const string SHADOWDIST_KEY = "shadow_distance";
-    //private const string SHADOWFIX_KEY = "shadow_bias";
-    //private const string GAMERESOLUTION_KEY = "resolution_scale";
-    //private const string SHADOWRESOLUTION_KEY = "shadow_resolution";
+    [SerializeField] SettingsUI settingsUI;
 
 
     void Start() {
-        bloomTog.onValueChanged.AddListener(value => {
+        settingsUI.BloomTog.onValueChanged.AddListener(value => {
             if (mainVolume.sharedProfile.TryGet(out Bloom bloom))
                 bloom.active = value;
             //Debug.LogWarning("Volume bloom trigger");
         });
-        vignetteTog.onValueChanged.AddListener(value => {
+        settingsUI.BlurTog.onValueChanged.AddListener(value => {
+            if (mainVolume.sharedProfile.TryGet(out DepthOfField blur))
+                blur.active = value;
+        });
+        settingsUI.VignetteTog.onValueChanged.AddListener(value => {
             if (mainVolume.sharedProfile.TryGet(out Vignette vignette))
                 vignette.active = value;
         });
-        shadowCastTog.onValueChanged.AddListener(value => {
+        settingsUI.ShadowCastTog.onValueChanged.AddListener(value => {
             mainLight.shadows = value ? LightShadows.Hard : LightShadows.None;
         });
-        shadowDistSl.onValueChanged.AddListener(value => {
+        settingsUI.ShadowDistSl.onValueChanged.AddListener(value => {
             urpAsset.shadowDistance = value * GameStaticInfo.SETTINGS_SHADOW_DIST_MULTIPLIER;
         });
-        shadowFixSl.onValueChanged.AddListener(value => {
+        settingsUI.ShadowFixSl.onValueChanged.AddListener(value => {
             urpAsset.shadowDepthBias = value * GameStaticInfo.SETTINGS_SHADOW_FIX_MULTIPLIER;
         });
-        gameResolutSl.onValueChanged.AddListener(value => {
+        settingsUI.GameResolutSl.onValueChanged.AddListener(value => {
             urpAsset.renderScale = value;
         });
-        shadowResolution.onValueChanged.AddListener(value => {
+        settingsUI.ShadowResolution.onValueChanged.AddListener(value => {
             urpAsset.mainLightShadowmapResolution = value switch {
                 0 => GameStaticInfo.SETTINGS_SHADOWMAP_RESOLUTION_0,
                 1 => GameStaticInfo.SETTINGS_SHADOWMAP_RESOLUTION_1,
@@ -65,13 +54,14 @@ public class GraphicManager : MonoBehaviour {
     }
 
     public void ResetSettingsToDefault() {
-        bloomTog.isOn = true;
-        vignetteTog.isOn = true;
-        shadowCastTog.isOn = true;
-        shadowDistSl.value = GameStaticInfo.SETTINGS_DEFAULT_SHADOW_DIST;
-        shadowFixSl.value = GameStaticInfo.SETTINGS_DEFAULT_SHADOW_FIX;
-        gameResolutSl.value = GameStaticInfo.SETTINGS_DEFAYLT_GAME_RESOLUTION;
-        shadowResolution.value = GameStaticInfo.SETTINGS_DEFAULT_GAME_RESOLUTION_INDEX;
+        settingsUI.BloomTog.isOn = true;
+        settingsUI.BlurTog.isOn = true;
+        settingsUI.VignetteTog.isOn = true;
+        settingsUI.ShadowCastTog.isOn = true;
+        settingsUI.ShadowDistSl.value = GameStaticInfo.SETTINGS_DEFAULT_SHADOW_DIST;
+        settingsUI.ShadowFixSl.value = GameStaticInfo.SETTINGS_DEFAULT_SHADOW_FIX;
+        settingsUI.GameResolutSl.value = GameStaticInfo.SETTINGS_DEFAYLT_GAME_RESOLUTION;
+        settingsUI.ShadowResolution.value = GameStaticInfo.SETTINGS_DEFAULT_GAME_RESOLUTION_INDEX;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -79,19 +69,21 @@ public class GraphicManager : MonoBehaviour {
         SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 
-        bloomTog.isOn = settingsData.bloom;//(PlayerPrefs.GetInt(BLOOM_KEY, 1) == 1) ? true : false;
-        bloomTog.onValueChanged.Invoke(bloomTog.isOn);
+        settingsUI.BloomTog.isOn = settingsData.bloom;//(PlayerPrefs.GetInt(BLOOM_KEY, 1) == 1) ? true : false;
+        settingsUI.BloomTog.onValueChanged.Invoke(settingsUI.BloomTog.isOn);
 
-        vignetteTog.isOn = settingsData.vignette;//(PlayerPrefs.GetInt(VIGNETTE_KEY, 1) == 1) ? true : false;
-        vignetteTog.onValueChanged.Invoke(vignetteTog.isOn);
+        settingsUI.BlurTog.isOn = settingsData.blur;
+        settingsUI.BlurTog.onValueChanged.Invoke(settingsUI.BlurTog.isOn);
+        settingsUI.VignetteTog.isOn = settingsData.vignette;//(PlayerPrefs.GetInt(VIGNETTE_KEY, 1) == 1) ? true : false;
+        settingsUI.VignetteTog.onValueChanged.Invoke(settingsUI.VignetteTog.isOn);
 
-        shadowCastTog.isOn = settingsData.shadow_casting;// (PlayerPrefs.GetInt(SHADOWCAST_KEY, 1) == 1) ? true : false;
-        shadowCastTog.onValueChanged.Invoke(shadowCastTog.isOn);
+        settingsUI.ShadowCastTog.isOn = settingsData.shadow_casting;// (PlayerPrefs.GetInt(SHADOWCAST_KEY, 1) == 1) ? true : false;
+        settingsUI.ShadowCastTog.onValueChanged.Invoke(settingsUI.ShadowCastTog.isOn);
 
-        shadowDistSl.value = settingsData.shadow_distance;//PlayerPrefs.GetFloat(SHADOWDIST_KEY, DEFAULT_SHADOW_DIST);
-        shadowFixSl.value = settingsData.shadow_fixer;// PlayerPrefs.GetFloat(SHADOWFIX_KEY, DEFAULT_SHADOW_FIX);
-        gameResolutSl.value = settingsData.game_resolution;//PlayerPrefs.GetFloat(GAMERESOLUTION_KEY, DEFAYLT_GAME_RESOLUTION);
-        shadowResolution.value = settingsData.shadow_resolution;//PlayerPrefs.GetInt(SHADOWRESOLUTION_KEY, DEFAULT_GAME_RESOLUTION_INDEX);
+        settingsUI.ShadowDistSl.value = settingsData.shadow_distance;//PlayerPrefs.GetFloat(SHADOWDIST_KEY, DEFAULT_SHADOW_DIST);
+        settingsUI.ShadowFixSl.value = settingsData.shadow_fixer;// PlayerPrefs.GetFloat(SHADOWFIX_KEY, DEFAULT_SHADOW_FIX);
+        settingsUI.GameResolutSl.value = settingsData.game_resolution;//PlayerPrefs.GetFloat(GAMERESOLUTION_KEY, DEFAYLT_GAME_RESOLUTION);
+        settingsUI.ShadowResolution.value = settingsData.shadow_resolution;//PlayerPrefs.GetInt(SHADOWRESOLUTION_KEY, DEFAULT_GAME_RESOLUTION_INDEX);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -99,22 +91,16 @@ public class GraphicManager : MonoBehaviour {
         SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 
-        settingsData.bloom = bloomTog.isOn;
-        settingsData.vignette = vignetteTog.isOn;
-        settingsData.shadow_casting = shadowCastTog.isOn;
-        settingsData.shadow_distance = shadowDistSl.value;
-        settingsData.shadow_fixer = shadowFixSl.value;
-        settingsData.game_resolution = gameResolutSl.value;
-        settingsData.shadow_resolution = shadowResolution.value;
+        settingsData.bloom = settingsUI.BloomTog.isOn;
+        settingsData.blur = settingsUI.BlurTog.isOn;
+        settingsData.vignette = settingsUI.VignetteTog.isOn;
+        settingsData.shadow_casting = settingsUI.ShadowCastTog.isOn;
+        settingsData.shadow_distance = settingsUI.ShadowDistSl.value;
+        settingsData.shadow_fixer = settingsUI.ShadowFixSl.value;
+        settingsData.game_resolution = settingsUI.GameResolutSl.value;
+        settingsData.shadow_resolution = settingsUI.ShadowResolution.value;
 
         ProgressSaver.SaveData(settingsData);
-        //PlayerPrefs.SetInt(BLOOM_KEY, bloomTog.isOn ? 1 : 0);
-        //PlayerPrefs.SetInt(VIGNETTE_KEY, vignetteTog.isOn ? 1 : 0);
-        //PlayerPrefs.SetInt(SHADOWCAST_KEY, shadowCastTog.isOn ? 1 : 0);
-        //PlayerPrefs.SetFloat(SHADOWDIST_KEY, shadowDistSl.value);
-        //PlayerPrefs.SetFloat(SHADOWFIX_KEY, shadowFixSl.value);
-        //PlayerPrefs.SetFloat(GAMERESOLUTION_KEY, gameResolutSl.value);
-        //PlayerPrefs.SetInt(SHADOWRESOLUTION_KEY, shadowResolution.value);
     }
 
     //save gr data on exit

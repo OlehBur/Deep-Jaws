@@ -189,8 +189,12 @@ public class PlayerUIController : MonoBehaviour {
             this.chromaticAberration = chromaticAberration;
         if (mainVolume.sharedProfile.TryGet(out ColorAdjustments colorAdjustments))
             this.colorAdjustments = colorAdjustments;
-        if (mainVolume.sharedProfile.TryGet(out DepthOfField depthOfField))
+        if (mainVolume.sharedProfile.TryGet(out DepthOfField depthOfField)) {
             this.depthOfField = depthOfField;
+            this.depthOfField.mode.value = DepthOfFieldMode.Gaussian;
+            this.depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+            this.depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
+        }
     }
 
     private void Start() {
@@ -336,6 +340,9 @@ public class PlayerUIController : MonoBehaviour {
     void UpdateScoreInfo(long score) {
         if (scoreBar.Coroutine != null)
             StopCoroutine(scoreBar.Coroutine);
+
+        if (gameObject == null)
+            return;
 
         if (gameObject.activeInHierarchy)
             scoreBar.Coroutine = StartCoroutine(scoreBar.Animation());

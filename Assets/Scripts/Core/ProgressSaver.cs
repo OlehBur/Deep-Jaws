@@ -86,6 +86,7 @@ public class SettingsData : IData {
 
     //graphics
     public bool bloom = true;
+    public bool blur = true;
     public bool vignette = true;
     public bool shadow_casting = true;
     public float shadow_distance = GameStaticInfo.SETTINGS_SHADOW_DIST_MULTIPLIER;

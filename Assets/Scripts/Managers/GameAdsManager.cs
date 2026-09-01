@@ -24,6 +24,7 @@ public class GameAdsManager : MonoBehaviour {
 
     public bool IsAdStartShow { get; private set; } = false;
     public event Action OnDoubleShellsRewarded;
+    public event Action OnExtraShellsRewarded;
     public event Action OnReviveRewarded;
 
     private LevelPlayRewardedAd rewardedAd;
@@ -332,6 +333,7 @@ public class GameAdsManager : MonoBehaviour {
         else if (adTarget == AdTarget.ExtraShells) {
             if (SanctuariesManager.Instance != null)
                 SanctuariesManager.Instance.OnAddShells(GameStaticInfo.EXTRA_SHELLS_CNT);
+            OnExtraShellsRewarded?.Invoke();
         }
         else if (adTarget == AdTarget.BoostResearch) {
             if (SanctuariesManager.Instance != null)

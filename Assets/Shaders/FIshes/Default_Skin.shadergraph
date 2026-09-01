@@ -641,6 +641,20 @@
             },
             "m_InputSlot": {
                 "m_Node": {
+                    "m_Id": "14ef1ea7d5ea42208194b382becaa3fb"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "571fe363122e4fc288fc940e9b708cf9"
+                },
+                "m_SlotId": 1
+            },
+            "m_InputSlot": {
+                "m_Node": {
                     "m_Id": "1b12266bdc7d4ee8b6e040ee7cb6b186"
                 },
                 "m_SlotId": -581856785
@@ -1237,20 +1251,6 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
-                    "m_Id": "ce0686c4353c4ebf9655b05e3dc7a2fc"
-                },
-                "m_SlotId": 1
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "14ef1ea7d5ea42208194b382becaa3fb"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
                     "m_Id": "d479c45036264cd082fa08de4d3eb2dc"
                 },
                 "m_SlotId": 2
@@ -1758,6 +1758,9 @@
             "m_Id": "4b39c067978d4cdfab05fa439d7f63ae"
         },
         {
+            "m_Id": "a258b65d53fb479cbd125a87c0d64b3e"
+        },
+        {
             "m_Id": "36a8ded900164163a23e5235c77a830e"
         }
     ],
@@ -1773,12 +1776,14 @@
     "m_PropertyGuids": [
         "025c4b24-23dc-457e-be1c-48094af35034",
         "4e9c5414-56c5-4a25-acdc-38d157a24b82",
-        "2a4e5733-5ebe-45b0-8f18-cdf61f92e0dc"
+        "2a4e5733-5ebe-45b0-8f18-cdf61f92e0dc",
+        "7c313fd7-32be-4b1e-ab80-42f4d31a4881"
     ],
     "m_PropertyIds": [
         2050656012,
         1472887850,
-        1171489565
+        1171489565,
+        1109759761
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
@@ -6373,6 +6378,24 @@
         "m_SerializableColors": []
     },
     "m_Value": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "a258b65d53fb479cbd125a87c0d64b3e",
+    "m_Id": 1109759761,
+    "m_DisplayName": "Noise",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Noise",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"7cc45c82bcf8d2149a0733403501cf22\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
 }
 
 {

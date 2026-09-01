@@ -26,6 +26,12 @@ public class ShellsBarVIsualize : MonoBehaviour {
                 claimB.interactable = false;
     }
 
+    void OnExtraShellsReceive() {
+        if (claimB != null)
+            claimB.interactable = false;
+        shellsCnt.color = Color.orange;
+    }
+
     private void OnEnable() {
         if (SanctuariesManager.Instance != null) {
             SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
@@ -33,6 +39,7 @@ public class ShellsBarVIsualize : MonoBehaviour {
 
         if (GameAdsManager.Instance != null) {
             GameAdsManager.Instance.OnAdButtonsInteractable += ClaimInteractable;
+            GameAdsManager.Instance.OnExtraShellsRewarded += OnExtraShellsReceive;
             claimB.onClick.AddListener(() => {
                 GameAdsManager.Instance.OnClaimExtraShellsClick();
                 isInteracted = true;
@@ -44,10 +51,12 @@ public class ShellsBarVIsualize : MonoBehaviour {
     private void OnDisable() {
         if (SanctuariesManager.Instance != null)
             SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
-        if (GameAdsManager.Instance != null)
+        if (GameAdsManager.Instance != null) {
             GameAdsManager.Instance.OnAdButtonsInteractable -= ClaimInteractable;
+            GameAdsManager.Instance.OnExtraShellsRewarded -= OnExtraShellsReceive;
+        }
 
-        claimB.onClick.RemoveAllListeners();
+            claimB.onClick.RemoveAllListeners();
     }
 
 }
