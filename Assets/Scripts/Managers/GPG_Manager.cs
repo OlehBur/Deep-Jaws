@@ -183,7 +183,8 @@ public class GPG_Manager : MonoBehaviour {
     }
 
     public void OnSign() {
-        ShowNoConnectionIfNeed();
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(GameStaticInfo.GAME_SCENE_NAME))
+            ShowNoConnectionIfNeed();
 
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();

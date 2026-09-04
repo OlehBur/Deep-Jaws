@@ -90,8 +90,8 @@ public class MainmenuManager : MonoBehaviour {
 
         if (continueButton != null) {// Initialize the continue button visibility based on saved data
             continueButton?.SetActive(isWorldDataExist);
-            GameStaticInfo.Gamemode = isWorldDataExist? 
-                ProgressSaver.LoadWorldData().gameMode: GameMode.None;
+            GameStaticInfo.Gamemode = isWorldDataExist ?
+                ProgressSaver.LoadWorldData().gameMode : GameMode.None;
         }
 
         if (GameManager.IsInternetNotAvailable)
@@ -144,8 +144,11 @@ public class MainmenuManager : MonoBehaviour {
         kingOfDeepsAnimator.enabled = true;
     }
 
-    public void ActivateNoInternetConnectionWnd(bool isActive) =>
-        noInternetConnectionWnd.SetActive(isActive);
+    public void ActivateNoInternetConnectionWnd(bool isActive) {
+        if (noInternetConnectionWnd != null)
+            noInternetConnectionWnd.SetActive(isActive);
+    }
+
     public void ActivateLoadingPanelWnd(bool isActive) =>
         loadingPanel.SetActive(isActive);
 

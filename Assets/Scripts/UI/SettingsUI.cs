@@ -49,9 +49,9 @@ public class SettingsUI : MonoBehaviour {
             FramerateInit(savedSettings);
         }
 
+        //toggle init
         AutoHideUI_tog.onValueChanged.AddListener(OnAutoHideUIToggle);
-        AutoHideUI_tog.isOn = savedSettings == null ?
-            true : savedSettings.autoUI;
+        AutoHideUI_tog.isOn = IsAutoHideUI;
         AutoHideUI_tog.onValueChanged.Invoke(AutoHideUI_tog.isOn);
     }
 

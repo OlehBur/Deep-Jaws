@@ -18,27 +18,34 @@ public class GraphicManager : MonoBehaviour {
         settingsUI.BloomTog.onValueChanged.AddListener(value => {
             if (mainVolume.sharedProfile.TryGet(out Bloom bloom))
                 bloom.active = value;
+            SaveGraphicsData();
             //Debug.LogWarning("Volume bloom trigger");
         });
         settingsUI.BlurTog.onValueChanged.AddListener(value => {
             if (mainVolume.sharedProfile.TryGet(out DepthOfField blur))
                 blur.active = value;
+            SaveGraphicsData();
         });
         settingsUI.VignetteTog.onValueChanged.AddListener(value => {
             if (mainVolume.sharedProfile.TryGet(out Vignette vignette))
                 vignette.active = value;
+            SaveGraphicsData();
         });
         settingsUI.ShadowCastTog.onValueChanged.AddListener(value => {
             mainLight.shadows = value ? LightShadows.Hard : LightShadows.None;
+             SaveGraphicsData();
         });
         settingsUI.ShadowDistSl.onValueChanged.AddListener(value => {
             urpAsset.shadowDistance = value * GameStaticInfo.SETTINGS_SHADOW_DIST_MULTIPLIER;
+             SaveGraphicsData();
         });
         settingsUI.ShadowFixSl.onValueChanged.AddListener(value => {
             urpAsset.shadowDepthBias = value * GameStaticInfo.SETTINGS_SHADOW_FIX_MULTIPLIER;
+             SaveGraphicsData();
         });
         settingsUI.GameResolutSl.onValueChanged.AddListener(value => {
             urpAsset.renderScale = value;
+             SaveGraphicsData();
         });
         settingsUI.ShadowResolution.onValueChanged.AddListener(value => {
             urpAsset.mainLightShadowmapResolution = value switch {
@@ -48,6 +55,7 @@ public class GraphicManager : MonoBehaviour {
                 3 => GameStaticInfo.SETTINGS_SHADOWMAP_RESOLUTION_3,
                 _ => GameStaticInfo.SETTINGS_SHADOWMAP_RESOLUTION_0,
             };
+            SaveGraphicsData();
         });
 
         LoadGraphicsData();
