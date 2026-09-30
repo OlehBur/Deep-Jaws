@@ -11,7 +11,7 @@ public class CaviarController : MonoBehaviour {
     private float defaultY;
     private float randinInitProgress;
     private const string KEY_STR = "caviar_time_";
-    private static int playerEatedCaviarCnt { get; set; }
+    private static int PlayerEatedCaviarCnt { get; set; }
     private const int MAX_CAVIAR_EATEN_CNT = 35;//to trigger achievement Gourmet
 
 
@@ -25,7 +25,7 @@ public class CaviarController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {       
+    void Update() {
         float y = Mathf.Sin((Time.time + randinInitProgress) * WAVING_SPEED) * WAVING_AMPLITUDE;
         transform.localPosition = new Vector3(transform.localPosition.x, defaultY + y, transform.localPosition.z);
 
@@ -47,9 +47,12 @@ public class CaviarController : MonoBehaviour {
             && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)) {
             fish.FeedCaviar();
 
-            ++playerEatedCaviarCnt;
-            if (playerEatedCaviarCnt >= MAX_CAVIAR_EATEN_CNT)
+            ++PlayerEatedCaviarCnt;
+
+#if UNITY_ANDROID 
+            if (PlayerEatedCaviarCnt >= MAX_CAVIAR_EATEN_CNT)
                 GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_overseas_gourmet);
+#endif
 
             caviarModel.SetActive(false);//disable caviar object
             current_reEnablerTime = 0f;
@@ -67,7 +70,7 @@ public class CaviarController : MonoBehaviour {
         if (Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
             /*gameObject*/
             caviarModel.SetActive(true);
-        else 
+        else
             current_reEnablerTime = 0f;
     }
 }

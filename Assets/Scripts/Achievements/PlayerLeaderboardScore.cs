@@ -32,6 +32,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
                 this.player.OnFishEat += OnScoreAdd;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (GameStaticInfo.Gamemode == GameMode.Easy) {
                 EasyDeaths++;
                 GPG_Manager.Instance?.OnSavePlayerDeathsToLeaderBoard(EasyDeaths);
@@ -41,6 +42,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
                 Score = 0; // Reset score when the player is disabled
                            //Debug.Log("LeadBoardScore PlayerReconnect");
             }
+#endif
         }
         else {
             if (this.player == null) {//first init 
@@ -70,17 +72,22 @@ public class PlayerLeaderboardScore : MonoBehaviour {
         OnChanged?.Invoke(Score);
     }
 
-    public void OnPauseMenuOpen() => //save score when the pause menu is opened
+    public void OnPauseMenuOpen() {//save score when the pause menu is opened
+#if UNITY_ANDROID && !UNITY_EDITOR
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
     //Score = 0; // Reset score when the player is disabled
     //Debug.Log("LeadBoardScore OnDisable");
+#endif
+    }
 
     public void OnResetScore() => Score = 0;
 
     private void OnDisable/*OnApplicationQuit*/() {
+#if UNITY_ANDROID && !UNITY_EDITOR
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
         Score = 0; // Reset score when the player is disabled
         //Debug.Log("OnApplicationQuit");
+#endif
     }
 
     private void OnDestroy() {

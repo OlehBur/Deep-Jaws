@@ -1,160 +1,164 @@
 using UnityEngine;
 
 /// <summary>
-/// CameraFollower is a class that makes the camera follow the player and is added as a component to an
-/// independent collider that is equally a child of the Visibility Checker object as the camera itself.
+/// CameraFollower забезпечує плавне слідування за гравцем із динамічним
+/// обминанням перешкод через SphereCast та підтримкою режиму огляду мапи.
 /// </summary>
-//[RequireComponent(typeof(Camera))]
-[RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(Rigidbody))]
 public class CameraFollower : MonoBehaviour {
-    [SerializeField] Camera cameraObj;
-    [SerializeField] Transform dynamicCamera; //layer for obstacles
-    private const float CAM_HEIGHT_OBSTACLE_OFFSET = 25f; // height offset for camera obstacle avoidance
-    private const float CAM_HEIGHT_MAP_OFFSET = 50f; // height offset for camera obstacle avoidance
-    private float currentHeightOffset = CAM_HEIGHT_OBSTACLE_OFFSET;
-    bool isDetectObstacle = false; // flag for obstacle detection
-    bool isActivateAvoidence = false;
+    [Header("References")]
+    [SerializeField] private Camera cameraObj;
+    [SerializeField] private Transform dynamicCamera;
 
-    private Transform target; //player transform
-    private readonly Vector3 initialPosition = new Vector3(0, 38.64f, -20.52f);
-    private Vector3 targetPosition = Vector3.zero;
-    private Vector3 currentVelocity;
-    private Fish playerFish; //player fish component
+    [Header("Obstacle Avoidance Settings")]
+    [SerializeField] private LayerMask obstacleMask = ~0;
+    [Tooltip("Радіус сфери камери для SphereCast (щоб кути камери не врізалися в стіни)")]
+    [SerializeField] private float cameraRadius = 0.4f;
+    [Tooltip("Мінімальна відстань від гравця до камери")]
+    [SerializeField] private float minDistanceToPlayer = 1.5f;
+    [Tooltip("Вертикальний офсет точки погляду на гравці (наприклад, центр риби)")]
+    [SerializeField] private float playerPivotHeight = 1.0f;
+
+    public static CameraFollower Instance { get; private set; }
+
+    [Header("Follow Settings")]
     private const float DEFAULT_HEIGHT_OFFSET = 6.5f;
     private const float DEFAULT_FORWARD_OFFSET = 3.5f;
-    private const float MIN_PROGRESS_VALUE = 0.1f; // minimal progress value
-    private const float MAX_PROGRESS_RESPONS = 2f; // max progress value for camera follow
-    private const float INITIAL_FOLLOW_SMOOTH_TIME = 2f; // initial smooth follow velocity
-    private const float DEFAULT_FOLLOW_SMOOTH_TIME = .3f; // default smooth follow velocity
-    private const float SMOOTH_EPSILON = .01f;
+    private const float MAX_PROGRESS_RESPONS = 2f;
+    private const float MIN_PROGRESS_VALUE = 0.1f;
+
+    private const float INITIAL_FOLLOW_SMOOTH_TIME = 2f;
+    private const float DEFAULT_FOLLOW_SMOOTH_TIME = 0.3f;
+    private const float SMOOTH_EPSILON = 0.01f;
+
+    [Header("Far Clip Settings")]
     private const float CAM_INIT_FAR_CLIP = 97f;
     private const float CAM_DEFAULT_FAR_CLIP = 160f;
 
-    private float currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME; // current smooth follow velocity
+    [Header("Map View Settings")]
+    private const float MAP_VIEW_HEIGHT_OFFSET = 50f;
+    private const float MAP_VIEW_FORWARD_OFFSET = 20f;
+
+    public bool IsMapViewActive { get; set; } = false;
+
+    private Transform target;
+    private Fish playerFish;
     private SpawnManager spawnManager;
 
+    private Vector3 initialPosition = new Vector3(0, 38.64f, -20.52f);
+    private Vector3 currentVelocity;
+    private float currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
+
+    private void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        //DontDestroyOnLoad(gameObject);
+    }
 
     public void Init(SpawnManager spawnManager) {
         this.spawnManager = spawnManager;
         spawnManager.OnPlayerRespawn += ResetPlayerTarget;
 
-        target = spawnManager.PlayerFish.transform; //get player transform
-        playerFish = spawnManager.PlayerFish;//get player fish component
-        cameraObj.farClipPlane = CAM_INIT_FAR_CLIP;
+        if (spawnManager.PlayerFish != null) {
+            target = spawnManager.PlayerFish.transform;
+            playerFish = spawnManager.PlayerFish;
+        }
+
+        if (cameraObj != null)
+            cameraObj.farClipPlane = CAM_INIT_FAR_CLIP;
     }
 
-    /// <summary>
-    /// init after player respawn
-    /// </summary>
-    void ResetPlayerTarget(Fish player, bool isDie) {
+    private void ResetPlayerTarget(Fish player, bool isDie) {
         if (player == null)
             return;
 
-        target = player.transform; //get player transform
+        target = player.transform;
         playerFish = player;
 
-        isActivateAvoidence = false;// while camera is not close enough to player position, do not activate obstacle avoidance
         currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
-
         currentVelocity = Vector3.zero;
     }
 
-    // fixed update for camera follow becaurse target is moving with physics
-    void LateUpdate() {
-        DynamicCameraObjMovement();
-        ObstacleAvoidance();
-
-        //Debug.Log(targetPosition);
+    private void LateUpdate() {
+        UpdateCameraMovement();
     }
 
-    void ObstacleAvoidance() {
-        if (playerFish == null)
-            return;
+    private void UpdateCameraMovement() {
+        Vector3 desiredPosition;
 
-        const float AVOIDANCE_SPEED = 2.3f;
-        const float MIN_DISTANCE_CANERA_TO_ORIGIN = 0.01f;
-        const float FAR_CLIP_CHANGE_SPEED = 5f;
-        float currentDistanceToOrigin = Vector3.Distance(transform.position, cameraObj.transform.position);
+        if (playerFish != null && target != null) {
+            float lvlCoefficient = 0.5f * (int)playerFish.Level;
+            float progressCoefficient = 1f + Mathf.Min(playerFish.Progress, MAX_PROGRESS_RESPONS) + MIN_PROGRESS_VALUE;
 
-        if (isDetectObstacle && currentDistanceToOrigin < /*CAM_HEIGHT_OBSTACLE_OFFSET*/currentHeightOffset) {//if obstacle detected and we are not far enough, then do this
-            cameraObj.transform.position =
-                Vector3.Lerp(cameraObj.transform.position,
-                cameraObj.transform.position - cameraObj.transform.forward * /*CAM_HEIGHT_OBSTACLE_OFFSET*/currentHeightOffset,
-                DJTime.UnscaledDeltaTime * AVOIDANCE_SPEED);
+            float calculatedHeight = DEFAULT_HEIGHT_OFFSET + lvlCoefficient * progressCoefficient;
+            float calculatedForward = DEFAULT_FORWARD_OFFSET + lvlCoefficient * progressCoefficient;
 
-            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_DEFAULT_FAR_CLIP, DJTime.UnscaledDeltaTime * FAR_CLIP_CHANGE_SPEED);
-        }
-        else if (!isDetectObstacle && Vector3.Distance(transform.position, cameraObj.transform.position) > MIN_DISTANCE_CANERA_TO_ORIGIN) {// if obstacle is not detected and we are far enough then return to normal position
-            cameraObj.transform.position =
-                Vector3.Lerp(cameraObj.transform.position,
-                transform.position,
-                DJTime.UnscaledDeltaTime * AVOIDANCE_SPEED);
+            if (IsMapViewActive) {
+                calculatedHeight += MAP_VIEW_HEIGHT_OFFSET;
+                calculatedForward += MAP_VIEW_FORWARD_OFFSET;
+            }
 
-            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_INIT_FAR_CLIP, DJTime.UnscaledDeltaTime * FAR_CLIP_CHANGE_SPEED);
-            ;
-        }
-    }
-
-    void DynamicCameraObjMovement() {
-        if (playerFish != null) {
-            float lvlCoefficient = 0.5f * (int)playerFish.Level; // coefficient for fish level influence on camera position
-            float proggressCoefficient = 1f + Mathf.Min(playerFish.Progress, MAX_PROGRESS_RESPONS) + MIN_PROGRESS_VALUE; // ensure progress is not zero to avoid division by zero
-
-            targetPosition = new Vector3(
+            desiredPosition = new Vector3(
                 target.position.x,
-                target.position.y + DEFAULT_HEIGHT_OFFSET + lvlCoefficient * proggressCoefficient,//height offset based on fish level
-                target.position.z - DEFAULT_FORWARD_OFFSET - lvlCoefficient * proggressCoefficient
-                );
+                target.position.y + calculatedHeight,
+                target.position.z - calculatedForward
+            );
         }
-        else
-            targetPosition = initialPosition;
+        else {
+            desiredPosition = initialPosition;
+        }
 
-        //initial camera following
+        //dynam avoidamc obstacles ( SphereCast)
+        Vector3 finalTargetPosition = desiredPosition;
+
+        if (target != null && !IsMapViewActive) {
+            // point on player (begin ray)
+            Vector3 pivotPoint = target.position + Vector3.up * playerPivotHeight;
+            Vector3 rayDirection = desiredPosition - pivotPoint;
+            float maxDistance = rayDirection.magnitude;
+
+            if (maxDistance > 0.001f) {
+                rayDirection.Normalize();
+
+                // sphere in cam dir
+                if (Physics.SphereCast(pivotPoint, cameraRadius, rayDirection, out RaycastHit hit, maxDistance, obstacleMask, QueryTriggerInteraction.Ignore)) {
+                    //only obst offset
+                    float safeDistance = Mathf.Max(hit.distance - cameraRadius, minDistanceToPlayer);
+                    finalTargetPosition = pivotPoint + rayDirection * safeDistance;
+                }
+            }
+        }
+
+        // Smooth cam movement
         if ((currentSmoothTime - DEFAULT_FOLLOW_SMOOTH_TIME) > SMOOTH_EPSILON) {
-            currentSmoothTime = Mathf.Lerp(currentSmoothTime, DEFAULT_FOLLOW_SMOOTH_TIME, DJTime.UnscaledDeltaTime);
-            dynamicCamera.position = Vector3.SmoothDamp(dynamicCamera.position, targetPosition, ref currentVelocity,
-                currentSmoothTime, Mathf.Infinity, DJTime.UnscaledDeltaTime);//, Mathf.Infinity, DJTime.UnscaledDeltaTime for Independence from timeScale
-            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, CAM_DEFAULT_FAR_CLIP, DJTime.UnscaledDeltaTime);
+            currentSmoothTime = Mathf.Lerp(currentSmoothTime, DEFAULT_FOLLOW_SMOOTH_TIME, Time.unscaledDeltaTime);
         }
-        else { //default camera following
-            dynamicCamera.position = Vector3.SmoothDamp(dynamicCamera.position, targetPosition, ref currentVelocity,
-                DEFAULT_FOLLOW_SMOOTH_TIME, Mathf.Infinity, DJTime.UnscaledDeltaTime);
+        else {
+            currentSmoothTime = DEFAULT_FOLLOW_SMOOTH_TIME;
+        }
 
-            if (!isActivateAvoidence)
-                isActivateAvoidence = true;
+        dynamicCamera.position = Vector3.SmoothDamp(
+            dynamicCamera.position,
+            finalTargetPosition,
+            ref currentVelocity,
+            currentSmoothTime,
+            Mathf.Infinity,
+            Time.unscaledDeltaTime
+        );
+
+        // Far Clip Plane
+        if (cameraObj != null) {
+            float targetFarClip = IsMapViewActive ? CAM_DEFAULT_FAR_CLIP : CAM_DEFAULT_FAR_CLIP;
+            cameraObj.farClipPlane = Mathf.Lerp(cameraObj.farClipPlane, targetFarClip, Time.unscaledDeltaTime);
         }
     }
 
     private void OnDisable() {
-        if (spawnManager == null)
-            return;
-
-        spawnManager.OnPlayerRespawn -= ResetPlayerTarget;
-        //spawnManager.OnPlayerDie -= ReInitCameraFollowing;
-    }
-
-    private void OnTriggerEnter(Collider collision) {
-        //Debug.Log("Camera obstacle detection started");
-        TriggerBehaviour(collision, true);
-
-    }
-
-    private void OnTriggerStay(Collider other) {
-        TriggerBehaviour(other, true);
-    }
-
-    void OnTriggerExit(Collider collision) {
-        //Debug.Log("Camera obstacle detection ended");
-        TriggerBehaviour(collision, false);
-    }
-
-    void TriggerBehaviour(Collider collider, bool isEnter) {
-        currentHeightOffset = CAM_HEIGHT_OBSTACLE_OFFSET;
-        isDetectObstacle = isEnter;
-
-        if (collider.CompareTag(GameStaticInfo.TAG_MAP_PREV) && isEnter)
-            currentHeightOffset = CAM_HEIGHT_MAP_OFFSET;
-
+        if (spawnManager != null) {
+            spawnManager.OnPlayerRespawn -= ResetPlayerTarget;
+        }
     }
 }

@@ -204,6 +204,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     [SerializeField] Animator titleAdFree;
     [SerializeField] Animator titlePremium;
     [SerializeField] Animator titleFounder;
+    [SerializeField] Animator titleDemo;
     [SerializeField] GameObject NoInternetConnectionWnd;
 
     [SerializeField] GameObject skinsPreviewWnd;
@@ -237,6 +238,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
 
 
     private void Start() {
+#if UNITY_ANDROID && !UNITY_EDITOR
         UpdateFreeSkinsSection(null);
         UpdatePaidSkinsSection(purchasedSkins, null);
 
@@ -260,8 +262,20 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         InitPreviewSkins();
         InitButtonsListeners();
         GamePurchaseManager.Instance?.RefreshUI();
+#elif UNITY_STANDALONE_WIN
+        titleAdFree.gameObject.SetActive(false);
+        titlePremium.gameObject.SetActive(false);
+        titleFounder.gameObject.SetActive(false);
+        titleDemo.gameObject.SetActive(true);
+
+        titleAdFree.enabled = false;
+        titlePremium.enabled = false;
+        titleFounder.enabled = false;
+        titleDemo.enabled = true;
+#endif
     }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
     private void OnDisable() {
         if (GamePurchaseManager.Instance != null) {
             GamePurchaseManager.Instance.OnUpdatePurchasedSkins -= UpdatePaidSkinsSection;
@@ -310,6 +324,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         if (skinsPreview.gameObject.activeInHierarchy)
             skinsPreview.Rotate(Vector3.up, DJTime.UnscaledDeltaTime * SKINS_PREVIEW_ROTATION_SPEED);
     }
+#endif
 
     public void OnOpen_ScinsPreviewWnd() {
         skinsPreview.gameObject.SetActive(true);
@@ -345,6 +360,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         NoInternetConnectionWnd.SetActive(true);
     }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
     void InitButtonsListeners() {
         //if (skinsButtons.rainbow.buyB == null) {
         //    Debug.LogWarning("Skin buttons = null");
@@ -408,6 +424,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         UpdatePaidSkinsSection(purchasedSkins, currentData);
         UpdateFreeSkinsSection(currentData);
     }
+#endif
 
     void UpdateFreeSkinsSection(AccountData data) {
         if (data == null)
@@ -424,6 +441,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
     }
 
     void UpdatePaidSkinsSection(PurchasedSkins purchasedSkins, AccountData data) {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (data == null)
             data = ProgressSaver.IsAccountDataExist ?
                    ProgressSaver.LoadAccountData() : new AccountData();
@@ -439,8 +457,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             skinsCards.GetSkinCard(Skin.Mercury).ShowSelectUI(data.selectedSkin == Skin.Mercury);
         if (purchasedSkins.Ashflow)
             skinsCards.GetSkinCard(Skin.Ashflow).ShowSelectUI(data.selectedSkin == Skin.Ashflow);
-
-
+#endif
     }
 
     void SaveSelectedSkinToProgress(Skin skin, out AccountData data) {
@@ -553,6 +570,7 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         UpdateFreeSkinsSection(data);
     }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
     void UpdateAccountSection(AccountTitles accountTitles) {
         foreach (AccountPurchase ap in AccountsButtons.ACCOUNT_PURCH_ITERATORS) {
             accountsButtons.GetButton(ap).interactable = true;
@@ -599,10 +617,12 @@ public class PurchaseUIvisualizer : MonoBehaviour {
         titleAdFree.gameObject.SetActive(false);
         titlePremium.gameObject.SetActive(false);
         titleFounder.gameObject.SetActive(false);
+        titleDemo.gameObject.SetActive(false);
 
         titleAdFree.enabled = false;
         titlePremium.enabled = false;
         titleFounder.enabled = false;
+        titleDemo.enabled = false;
 
         if (at.HasFounder) {
             titleFounder.gameObject.SetActive(true);
@@ -618,4 +638,5 @@ public class PurchaseUIvisualizer : MonoBehaviour {
             titleAdFree.enabled = true;
         }
     }
+#endif
 }

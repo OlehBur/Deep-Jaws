@@ -18,14 +18,17 @@ public class MainmenuManager : MonoBehaviour {
 
     [Header("MainMenu Scene")]
     [SerializeField] SceneLoader sceneLoader;
+    [SerializeField] GameObject GPG_Services_UI;
     [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] Light mainMenuLight;
     [SerializeField] Animator gmWndAnimator;
     [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
+    [SerializeField] Button merineSanctuary;
     [SerializeField] SceneLoader faderScene;
     [SerializeField] GameResultWnd gameResult;
     [SerializeField] GameObject areUSureWnd;
-    [SerializeField] GameObject guideBookWnd;
+    //[SerializeField] GameObject guideBookWnd;
+    [SerializeField] GameObject gamemodeWnd;
     [SerializeField] GameObject newUpdWnd;
 
     [SerializeField] Image gameModeWndBackground;
@@ -44,6 +47,7 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameObject pauseWnd;
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] RespawnWnd respawnWnd;
+    [SerializeField] GameObject demoFinMsg;
 
     private bool isGMneedAnimation = true;
     private bool isWorldDataExist = false;
@@ -65,6 +69,7 @@ public class MainmenuManager : MonoBehaviour {
     //private const string FPS_KEY = "FPS";
     private const string REPORT_EMAIL = "bovv.company@gmail.com";
     private const string REPORT_SUBJECT = "Bug Report: Deep Jaws";
+    private const string GAME_FULL_URL = "https://play.google.com/store/apps/details?id=com.bovvcompany.deepjaws&referrer=utm_source%3Ditchio%26utm_medium%3Dpc_demo";
 
 
     private void Awake() {
@@ -79,6 +84,11 @@ public class MainmenuManager : MonoBehaviour {
             newUpdWnd.SetActive(true);
             accountData.firstUpdOpen1_7 = false;
             ProgressSaver.SaveData(accountData);
+        }
+
+        if (GPG_Services_UI != null) {
+            GPG_Services_UI.SetActive(!GameManager.IsPC_Demo());
+            merineSanctuary.interactable = !GameManager.IsPC_Demo();
         }
     }
 
@@ -106,21 +116,24 @@ public class MainmenuManager : MonoBehaviour {
             pauseButton.SetActive(!GameManager.IsRunOnPC);
     }
 
+
     private void OnEnable() {
         if (spawnManager != null)
             spawnManager.OnPlayerDied += ActivateRespawnWnd;
-
-
+#if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
             GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
+#endif
     }
 
     private void OnDisable() {
         if (spawnManager != null)
             spawnManager.OnPlayerDied -= ActivateRespawnWnd;
 
+#if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
             GPG_Manager.Instance.OnLoadKingOfDeeps -= KingOfDeepsUpdate;
+#endif
     }
 
 
@@ -135,6 +148,26 @@ public class MainmenuManager : MonoBehaviour {
         //Debug.LogWarning(GameStaticInfo.Gamemode);
     }
 
+    public void OnOpenGameInBrowser() =>
+            Application.OpenURL(GAME_FULL_URL);
+
+    public void OnOpenDemoFin() {
+        audioManager.PlayVFX(VFX_clip.BubblePop);
+        audioManager.PlayerAudioSource.Stop();
+        demoFinMsg.SetActive(true);
+    }
+
+    public void ActivateNoInternetConnectionWnd(bool isActive) {
+#if UNITY_ANDROID
+        if (noInternetConnectionWnd != null)
+            noInternetConnectionWnd.SetActive(isActive);
+#endif
+    }
+
+    public void ActivateLoadingPanelWnd(bool isActive) =>
+        loadingPanel.SetActive(isActive);
+
+#if UNITY_ANDROID
     void KingOfDeepsUpdate(string playerNick) {
         if (kingOfDeepsObj == null)
             return;
@@ -143,22 +176,28 @@ public class MainmenuManager : MonoBehaviour {
         kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
         kingOfDeepsAnimator.enabled = true;
     }
-
-    public void ActivateNoInternetConnectionWnd(bool isActive) {
-        if (noInternetConnectionWnd != null)
-            noInternetConnectionWnd.SetActive(isActive);
-    }
-
-    public void ActivateLoadingPanelWnd(bool isActive) =>
-        loadingPanel.SetActive(isActive);
+#endif
 
     void ActivateRespawnWnd() {
+#if UNITY_ANDROID
         if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
             spawnManager.RespawnPlayer(true, false);
             return;
         }
         //GameAdsManager.Instance.UpdateDailyRevivesTxt();
         respawnWnd.gameObject.SetActive(true);
+#else
+        spawnManager.RespawnPlayer(true, false);//just respawn without ui on pc
+#endif
+    }
+
+    public void OnSureSaveExitGame() {
+#if UNITY_ANDROID
+        gameResult.gameObject.SetActive(true);
+#else
+        spawnManager.OnSceneExit();
+        sceneLoader.OnLoad_MainMenuScene();
+#endif
     }
 
     public void ActivatePauseWnd(bool isActivate) {
@@ -242,6 +281,7 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     public void OnServicesButton(int buttonIndex) {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (GPG_Manager.Instance != null)
             switch (buttonIndex) {
                 case 0:
@@ -255,6 +295,7 @@ public class MainmenuManager : MonoBehaviour {
                 GPG_Manager.Instance.OnSign();
                 break;
             }
+#endif
     }
 
     //open ar u sur wnd if player already has saved game data
@@ -262,7 +303,8 @@ public class MainmenuManager : MonoBehaviour {
         if (isWorldDataExist)
             areUSureWnd?.SetActive(true);
         else
-            guideBookWnd?.SetActive(true);
+            gamemodeWnd.SetActive(true);
+        //guideBookWnd?.SetActive(true);
     }
 
     public void ChangeSignInColor(bool isSignIn) {
@@ -281,13 +323,17 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     public void OnSkipGuide() {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (!isWorldDataExist)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_are_you_serious);
+#endif
     }
 
     public void OnCompleteGuide() {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (isWorldDataExist)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_you_have_my_respect);
+#endif
     }
 
     public void OpenEmailClientForBugReport() {

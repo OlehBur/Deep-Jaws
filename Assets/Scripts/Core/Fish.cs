@@ -13,6 +13,19 @@ public enum FishSpeedModifierType {
 /// <summary>
 /// Class for the player and enemy fish (base component for fish prefab)
 /// </summary>
+
+public class ProgressArgs : EventArgs {
+    public ProgressArgs() {
+        IsCaviarEaten = false;
+    }
+    public ProgressArgs(bool isCaviarEaten) {
+        IsCaviarEaten = isCaviarEaten;
+    }
+
+    public bool IsCaviarEaten { get; set; }
+    //public bool IsFishBited { get; set; }
+}
+
 public class Fish : MonoBehaviour {
     [SerializeField]
     FishInfo fishInfo;
@@ -65,7 +78,7 @@ public class Fish : MonoBehaviour {
     public event Action OnFishDamage;
     //public event Action OnInfoStatsChanged;
     public event Action OnHealthChanged;
-    public event Action OnProgressChanged;
+    public event Action<ProgressArgs> OnProgressChanged;
 
     private float SpeedMultiplier { get; set; } = 1;
     private float SpeedMultiplierSecond { get; set; } = 1;
@@ -94,7 +107,7 @@ public class Fish : MonoBehaviour {
 
         //OnInfoStatsChanged?.Invoke();
         OnHealthChanged?.Invoke();
-        OnProgressChanged?.Invoke();
+        OnProgressChanged?.Invoke(new());
         UpdateGrowSize();
     }
 
@@ -112,7 +125,7 @@ public class Fish : MonoBehaviour {
         Progress = progress;
         //OnInfoStatsChanged?.Invoke();
         OnHealthChanged?.Invoke();
-        OnProgressChanged?.Invoke();
+        OnProgressChanged?.Invoke(new());
         UpdateGrowSize();//update in case of load data from save
     }
 
@@ -168,7 +181,7 @@ public class Fish : MonoBehaviour {
 
         UpdateGrowSize();
         //OnInfoStatsChanged?.Invoke();
-        OnProgressChanged?.Invoke();
+        OnProgressChanged?.Invoke(new());
 
         /*return*/
         isStillAlive = victim.TakeDamage(damage);
@@ -231,7 +244,7 @@ public class Fish : MonoBehaviour {
         OnFishEat?.Invoke(1);
         UpdateGrowSize();
         //OnInfoStatsChanged?.Invoke();
-        OnProgressChanged?.Invoke();
+        OnProgressChanged?.Invoke(new(isCaviarEaten: true));
     }
 
     /// <summary>
@@ -271,8 +284,10 @@ public class Fish : MonoBehaviour {
     public void UpdateGrowSize() {
         if (IsPlayer && Progress >= 1f && Level != GameStaticInfo.MAX_FISH_LEVEL) //player with max level will not grow
             OnFishLvlUp?.Invoke(gameObject);
+#if UNITY_ANDROID && !UNITY_EDITOR
         else if (IsPlayer && Level == GameStaticInfo.MAX_FISH_LEVEL && GameStaticInfo.Gamemode == GameMode.Hard && Progress >= KING_ABYSS_PROGRESS)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_king_of_the_abyss);
+#endif
 
         prefabVisualTransform.localScale = ScaleModifier * (1 + Mathf.Clamp01(Progress) * GROWTH_MULTIPLIER);
         OnFishUpdateSize?.Invoke(prefabVisualTransform.localScale);

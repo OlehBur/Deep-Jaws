@@ -11,7 +11,7 @@ public class FishInfoVisualizer : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        textMesh.text = $"LVL: {fish.Level.ToString()}, Prg: {fish.Progress.ToString("F1")}\n Eff: {GetEffectsInfo(effectManager.activeEffects)}";
+        textMesh.text = $"LVL: {fish.Level.ToString()}, Prg: {fish.Progress.ToString("F1")}\n Eff: {GetEffectsInfo(effectManager.ActiveEffects)}";
     }
 
     string GetEffectsInfo(Dictionary<FishEffectType, Effect> d) {

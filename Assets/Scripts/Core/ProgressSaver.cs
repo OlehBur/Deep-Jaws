@@ -102,6 +102,7 @@ public class SettingsData : IData {
 
 public class WorldData : IData {
     public string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
+    public bool IsAllTipsShowed() => isVictimTipShowed && isEnemyTipShowed && isEffectTipShowed;
 
     //game data
     //public bool isNewSaveType = false;//only for transfer old players data
@@ -111,6 +112,12 @@ public class WorldData : IData {
     public float playerProgress = 0;
     public FishLevel playerLevel = GameStaticInfo.PLAYER_INIT_LVL;
     public int playerHealth = 0;
+
+    //tips
+    public bool isVictimTipShowed = false;
+    public bool isEnemyTipShowed = false;
+    public bool isEffectTipShowed = false;
+    public bool isStageTipShowed = false;
 
     public string rewardedLimitDate = "";
     public int revivesLeft = GameStaticInfo.MAX_DAILY_REVIVALS;

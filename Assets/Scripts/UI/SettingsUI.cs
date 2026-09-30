@@ -1,10 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
-
 
 public class SettingsUI : MonoBehaviour {
     [field: SerializeField] public Toggle BloomTog { get; private set; }
@@ -23,7 +23,7 @@ public class SettingsUI : MonoBehaviour {
     public static event Action OnHudHideChanged;
 
     private int previousLocaleIndex = 0;
-    private Framerate currentFramerateIndex;
+
     private enum Framerate {
         Max,
         F30,
@@ -31,127 +31,154 @@ public class SettingsUI : MonoBehaviour {
         F120
     }
 
-    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    //static void ClearStatics() {
-    //    IsAutoHideUI = true;
-    //}
+    // Automatic application of settings when starting the game
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void AutoApplySettingsOnStartup() {
+        //apply FPS and VSync synchronously (instantly, without waiting)
+        ApplyBasicSettings();
 
-    private void Awake() {
-        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist ?
-            ProgressSaver.LoadSettingsData() : new SettingsData();
+        // upload the localization through a safe background runner
+        GameObject runner = new GameObject("[LocalizationInitializer]");
+        DontDestroyOnLoad(runner);
+        runner.AddComponent<LocalizationStartupRunner>();
+    }
+
+    private static void ApplyBasicSettings() {
+        try {
+            SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+                ? ProgressSaver.LoadSettingsData()
+                : new SettingsData();
+
+            IsAutoHideUI = savedSettings.autoUI;
+
+            QualitySettings.vSyncCount = 0;
+            int maxFps = Screen.currentResolution.refreshRateRatio.value > 0
+                ? (int)Screen.currentResolution.refreshRateRatio.value
+                : 60;
+
+            Application.targetFrameRate = savedSettings.framerate switch {
+                0 => maxFps,
+                1 => 30,
+                2 => 60,
+                3 => 120,
+                _ => 30
+            };
+        }
+        catch (Exception ex) {
+            Debug.LogError($"[SettingsUI] Error applying basic settings on startup: {ex}");
+        }
+    }
+
+    private void OnEnable() {
+        RefreshUIValues();
+    }
+
+    private void RefreshUIValues() {
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+            ? ProgressSaver.LoadSettingsData()
+            : new SettingsData();
+
         IsAutoHideUI = savedSettings.autoUI;
-    }
 
-    private void Start() {
-        SettingsData savedSettings = ProgressSaver.LoadSettingsData();
-        if (FramerateDropdown != null) {//if any settings field setted            
-            LanguageInit(savedSettings);
-            FramerateInit(savedSettings);
+        if (AutoHideUI_tog != null) {
+            AutoHideUI_tog.onValueChanged.RemoveAllListeners();
+            AutoHideUI_tog.isOn = IsAutoHideUI;
+            AutoHideUI_tog.onValueChanged.AddListener(OnAutoHideUIToggle);
         }
 
-        //toggle init
-        AutoHideUI_tog.onValueChanged.AddListener(OnAutoHideUIToggle);
-        AutoHideUI_tog.isOn = IsAutoHideUI;
-        AutoHideUI_tog.onValueChanged.Invoke(AutoHideUI_tog.isOn);
-    }
-
-
-    async void LanguageInit(SettingsData savedSettings) {
-        await LocalizationSettings.InitializationOperation.Task; // wait readiness
-
-        previousLocaleIndex = savedSettings == null ?
-            (int)GameStaticInfo.LocalizationID.English : savedSettings.language;
-        //PlayerPrefs.GetInt(LOCALE_PREF_KEY, (int)GameStaticInfo.LocalizationID.English);
-
-        if (previousLocaleIndex < 0 || previousLocaleIndex >= LocalizationSettings.AvailableLocales.Locales.Count)
-            previousLocaleIndex = 0;
-
-        if (LocalizationSettings.AvailableLocales.Locales.Count > previousLocaleIndex)
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[previousLocaleIndex];
-
-        LanguageDropdown.value = previousLocaleIndex;
-        LanguageDropdown.onValueChanged.RemoveAllListeners();
-        LanguageDropdown.onValueChanged.AddListener(OnLanguageChanged);
-    }
-
-    void FramerateInit(SettingsData savedSettings) {
-        List<string> fpsListing = new();
-        QualitySettings.vSyncCount = 0;
-        int screenMaxFramerate = GameManager.ScreenMaxFramerate;
-        //framerateDropdown.ClearOptions();
-        //Debug.LogWarning("DROPDOWN ALWAYS CLEANING UP");
-
-        //Load and set Def val
-        currentFramerateIndex = savedSettings == null ? Framerate.Max : (Framerate)savedSettings.framerate;
-        //currentFramerateIndex = (Framerate)PlayerPrefs.GetInt(FPS_KEY, 0);
-        Application.targetFrameRate = currentFramerateIndex switch {
-            Framerate.Max => screenMaxFramerate,
-            Framerate.F30 => GameStaticInfo.FRAMERATE_30,
-            Framerate.F60 => GameStaticInfo.FRAMERATE_60,
-            Framerate.F120 => GameStaticInfo.FRAMERATE_120,
-            _ => GameStaticInfo.FRAMERATE_30
-        };
-
-        //init dropdown
-        if (FramerateDropdown.options.Count == 0) {
-            fpsListing.Add(/*settingsMaxFpsLocalized.GetLocalizedString() +*/ $"{screenMaxFramerate} Hz");//max
-            //Debug.LogWarning(screenMaxFramerate);
-            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_30)
-                fpsListing.Add(GameStaticInfo.FRAMERATE_30.ToString() + " Hz");
-            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_60)
-                fpsListing.Add(GameStaticInfo.FRAMERATE_60.ToString() + " Hz");
-            if (screenMaxFramerate >= GameStaticInfo.FRAMERATE_120)
-                fpsListing.Add(GameStaticInfo.FRAMERATE_120.ToString() + " Hz");
-
-            FramerateDropdown.AddOptions(fpsListing);
+        if (LanguageDropdown != null) {
+            previousLocaleIndex = savedSettings.language;
+            LanguageDropdown.onValueChanged.RemoveAllListeners();
+            LanguageDropdown.value = previousLocaleIndex;
+            LanguageDropdown.onValueChanged.AddListener(OnLanguageChanged);
         }
 
-        FramerateDropdown.SetValueWithoutNotify((int)currentFramerateIndex);
-        FramerateDropdown.onValueChanged.RemoveAllListeners();
-        FramerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
+        if (FramerateDropdown != null) {
+            InitFramerateOptions();
+            FramerateDropdown.onValueChanged.RemoveAllListeners();
+            FramerateDropdown.SetValueWithoutNotify(savedSettings.framerate);
+            FramerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
+        }
+    }
+
+    private void InitFramerateOptions() {
+        if (FramerateDropdown != null && FramerateDropdown.options.Count == 0) {
+            List<string> options = new List<string> { "Max", "30 Hz", "60 Hz", "120 Hz" };
+            FramerateDropdown.ClearOptions();
+            FramerateDropdown.AddOptions(options);
+        }
     }
 
     private void OnLanguageChanged(int index) {
-        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
-        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist ?
-            ProgressSaver.LoadSettingsData() : new SettingsData();
+        if (index >= 0 && index < LocalizationSettings.AvailableLocales.Locales.Count) {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
+        }
+
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+            ? ProgressSaver.LoadSettingsData()
+            : new SettingsData();
+
         savedSettings.language = index;
-
         ProgressSaver.SaveData(savedSettings);
-        //PlayerPrefs.SetInt(LOCALE_PREF_KEY, index); // Save the selected locale index
 
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (previousLocaleIndex != index)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_dont_understand);
-
+#endif
         previousLocaleIndex = index;
     }
 
     private void OnFramerateChanged(int index) {
-        currentFramerateIndex = (Framerate)index;
-        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist ?
-            ProgressSaver.LoadSettingsData() : new SettingsData();
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+            ? ProgressSaver.LoadSettingsData()
+            : new SettingsData();
+
         savedSettings.framerate = index;
-
         ProgressSaver.SaveData(savedSettings);
-        //PlayerPrefs.SetInt(FPS_KEY, index);
 
-        Application.targetFrameRate = currentFramerateIndex switch {
-            Framerate.Max => GameManager.ScreenMaxFramerate,
-            Framerate.F30 => 30,
-            Framerate.F60 => 60,
-            Framerate.F120 => 120,
+        int maxFps = Screen.currentResolution.refreshRateRatio.value > 0
+            ? (int)Screen.currentResolution.refreshRateRatio.value
+            : 60;
+
+        Application.targetFrameRate = index switch {
+            0 => maxFps,
+            1 => 30,
+            2 => 60,
+            3 => 120,
             _ => 30
         };
     }
 
-    void OnAutoHideUIToggle(bool toggle) {
-        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist ?
-            ProgressSaver.LoadSettingsData() : new SettingsData();
+    private void OnAutoHideUIToggle(bool toggle) {
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+            ? ProgressSaver.LoadSettingsData()
+            : new SettingsData();
 
         IsAutoHideUI = toggle;
         savedSettings.autoUI = IsAutoHideUI;
         OnHudHideChanged?.Invoke();
 
         ProgressSaver.SaveData(savedSettings);
+    }
+}
+
+// helper class for safe language loading without frame freezes
+public class LocalizationStartupRunner : MonoBehaviour {
+    private IEnumerator Start() {
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+            ? ProgressSaver.LoadSettingsData()
+            : new SettingsData();
+
+        // wait for Unity Localization in frame mode (yield return instead of await)
+        yield return LocalizationSettings.InitializationOperation;
+
+        int localeIndex = savedSettings.language;
+        if (localeIndex >= 0 && localeIndex < LocalizationSettings.AvailableLocales.Locales.Count) {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localeIndex];
+            Debug.Log($"[LocalizationStartup] Successfully loaded locale index: {localeIndex}");
+        }
+
+        // self-destruct so as not to litter the memory
+        Destroy(gameObject);
     }
 }

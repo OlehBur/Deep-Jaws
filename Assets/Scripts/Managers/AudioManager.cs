@@ -34,7 +34,7 @@ public class AudioManager : MonoBehaviour {
 
 
     [SerializeField] AudioSource vfxGameAudioSource;
-    public AudioSource playerRevolumeAudioSource;
+    [field: SerializeField] public AudioSource PlayerAudioSource{get; private set;}
     [SerializeField] AudioClip pearlSoundClip;
     [SerializeField] AudioClip fishBiteClip;
     //[SerializeField] AudioClip fishCurrentClip;
@@ -144,8 +144,10 @@ public class AudioManager : MonoBehaviour {
         musicSlider.onValueChanged.AddListener(value => {
             MusicVolume = SliderToDB(value, MAX_MUSIC_DB);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (value == 0f)
                 GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_hey_give_it_back);
+#endif
         });
         sfxSlider.onValueChanged.AddListener(value => SFXVolume = SliderToDB(value, MAX_SFX_DB));
     }

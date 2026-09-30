@@ -31,9 +31,11 @@ public class EffectArea : MonoBehaviour {
     }
 
     void CheckPlayerEffectAchievents(FishEffectType effect) {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (effect == FishEffectType.Shield)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_just_how_big_must_that_gum_have_been);
         else if (effect == FishEffectType.StunInitiator)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_dot_dot_dot_dash_dash_dash_dot_dot_dot);
+#endif
     }
 }

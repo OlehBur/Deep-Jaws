@@ -506,15 +506,15 @@ public class FishControl : MonoBehaviour, IFish {
     }
 
 
-    bool CheckEatAchievements(FishLevel victimLvl) {
+    void CheckEatAchievements(FishLevel victimLvl) {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (victimLvl == GameStaticInfo.PEACEFUL_FISH_LVL)//if eat crab
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_youre_my_friend_now);
         else if (victimLvl == fish.Level)//same lvl
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_cannibalism);
         else if (victimLvl == FishLevel.Mackerel && fish.Level == FishLevel.Moray)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_former_threat_current_snack);
-
-        return true;
+#endif
     }
 
     /// <summary>

@@ -28,7 +28,8 @@ public class SprintEffect : Effect {
     protected override void OnExpire() {
         const float NORMAL_SPEED_MULTIPLIER = 1f;
 
-        trailObj.SetActive(false);
+        if (trailObj != null)
+            trailObj.SetActive(false);
         targetFish.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
         //Debug.Log($"{target.name} has expired Speed Effect after {duration} s.");
         fishAnim?.SprintAnimation(false); // disable sprint animation speed

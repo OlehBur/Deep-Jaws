@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Unity.Services.LevelPlay;
-using TMPro;
+using System.Threading.Tasks;
 
 
 public enum AdTarget {
@@ -28,8 +26,8 @@ public class GameAdsManager : MonoBehaviour {
     public event Action OnReviveRewarded;
 
     private LevelPlayRewardedAd rewardedAd;
-    private LevelPlayInterstitialAd interstitialAd;
     private bool isSdkInitialized = false;
+    private LevelPlayInterstitialAd interstitialAd;
     private AdTarget adTarget = AdTarget.None;
     private BiomeType boostResearch;
     private float timeAfterInterstetial = 0f;
@@ -42,7 +40,7 @@ public class GameAdsManager : MonoBehaviour {
     private const float INTERSTETIAL_TIME_INTERVAL = 2 * 60;//m*s (m)
     private const float INTERSETIAL_DELAY_RELOAD = 10f;
 
-
+#if UNITY_ANDROID
     private void Awake() {
         if (Instance != null && Instance != this) {
             Instance.ReInitGameUI(spawnManager, gui);
@@ -66,12 +64,19 @@ public class GameAdsManager : MonoBehaviour {
         OnAdButtonsInteractable?.Invoke(true);
     }
 
-    void Start() {
-        LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
-        LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
+    async void Start() {
+        await Task.Delay(2000);
 
-        //LevelPlay.SetMetaData("is_test_suite", "enable");
-        LevelPlay.Init(APP_KEY, GetUserID());
+        try {
+            LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
+            LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
+
+            //LevelPlay.SetMetaData("is_test_suite", "enable");
+            LevelPlay.Init(APP_KEY, GetUserID());
+        }
+        catch (Exception ex) {
+            Debug.LogWarning($"[AdInit] LevelPlay init failed safely: {ex.Message}");
+        }
     }
 
     bool IsInterstetialTime => Time.time - timeAfterInterstetial >= INTERSTETIAL_TIME_INTERVAL;
@@ -119,8 +124,10 @@ public class GameAdsManager : MonoBehaviour {
         isSdkInitialized = false;
         Debug.LogError($"LevelPlay initialization error: {le}");
     }
+#endif
 
     public void OnReviveClicked() {//rewarded
+#if UNITY_ANDROID
         adTarget = AdTarget.ExtraLife;
         IsAdStartShow = true;
         gui.ActivateLoadingPanelWnd(true);
@@ -135,6 +142,7 @@ public class GameAdsManager : MonoBehaviour {
         }
 
         RewardedCheckAndShow();
+#endif
     }
 
     public void OnDoubleShellsClick() {//rewarded
@@ -193,6 +201,7 @@ public class GameAdsManager : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     public bool OnShowInterstitialAd() {//just show ad (used in pause menu on exit)
+#if UNITY_ANDROID
         if (IsInterstetialTime)
             ResetInterstetialTime();
         else
@@ -210,10 +219,12 @@ public class GameAdsManager : MonoBehaviour {
             interstitialAd.ShowAd();
             return true;
         }
+#endif
 
         return false;
     }
 
+#if UNITY_ANDROID
     void RewardedAdOnRewardEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
         isRewardEarned = true;
 
@@ -222,11 +233,13 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     void ProcessEarnedReward() {
+
         if (isRewardEarned) {
             RewardedRewardBeh();
             isRewardEarned = false;
         }
     }
+#endif
 
     //true if limit hsnt exhausted
     //bool RewardedLimitRecalc() {
@@ -254,10 +267,13 @@ public class GameAdsManager : MonoBehaviour {
     //    //SetLimitAdAmountTxt(attemptsLeft);
     //}
 
+#if UNITY_ANDROID || UNITY_EDITOR
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
-        ProcessEarnedReward();
 
+        ProcessEarnedReward();
         rewardedAd.LoadAd();
+
+
 #if UNITY_EDITOR//  in case if OnAdClosed worked first, it reset adTarget to None via ResetState().
         IsAdStartShow = false;
         gui.ActivateLoadingPanelWnd(false);
@@ -270,8 +286,10 @@ public class GameAdsManager : MonoBehaviour {
     void OnRewardedLoadFailed(LevelPlayAdError error) {
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
+#endif
 
     public void OnRetryClicked() {//restart -> interstitial
+#if UNITY_ANDROID
         adTarget = AdTarget.JustRespawn;
 
         if (IsInterstetialTime)
@@ -300,8 +318,10 @@ public class GameAdsManager : MonoBehaviour {
             InterstitialRespawnBeh();
             ResetState();
         }
+#endif
     }
 
+#if UNITY_ANDROID
     void OnInterstitialAdClosed(LevelPlayAdInfo adInfo) {
         interstitialAd.LoadAd(); //load immediately load on backgr new ad
         InterstitialRespawnBeh();
@@ -357,4 +377,5 @@ public class GameAdsManager : MonoBehaviour {
         LevelPlay.OnInitSuccess -= SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed -= SdkInitializationFailedEvent;
     }
+#endif
 }

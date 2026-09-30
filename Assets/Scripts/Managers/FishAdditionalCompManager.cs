@@ -104,6 +104,8 @@ public class FishAdditionalCompManager : MonoBehaviour {
         objToActivate.transform.localPosition = localPositon;
         objToActivate.transform.localScale = localScale;
         objToActivate.transform.localRotation = locRotation;
+        if (type == FishComponentType.BiteParticle)
+            objToActivate.transform.SetParent(null, true);
         objToActivate.SetActive(true);
 
         return objToActivate;

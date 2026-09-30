@@ -1,12 +1,16 @@
 using UnityEngine;
+
+#if UNITY_ANDROID 
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using System.Reflection;
 using System.Collections;
 using UnityEngine.SceneManagement;
-using System;
 using System.Linq;
 using UnityEngine.SocialPlatforms;//?!
+#endif
+using System;
+
 
 /// <summary>
 /// Google Play Games Manager
@@ -18,6 +22,8 @@ public class GPG_Manager : MonoBehaviour {
     [SerializeField] MainmenuManager mainmenu;
     [SerializeField] GamePurchaseManager purchaseManager;
 
+
+#if UNITY_ANDROID 
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
 
     private const float WAKKE_UP_ACHIEVEMENT_TIME = 180 * 60f;
@@ -302,4 +308,10 @@ public class GPG_Manager : MonoBehaviour {
     private void OnDestroy() {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+#else
+    private void Awake() {
+        Debug.LogWarning("Running on PC: Google Services and Ads disabled.");
+    }
+#endif
 }

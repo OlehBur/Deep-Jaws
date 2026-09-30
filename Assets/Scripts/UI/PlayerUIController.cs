@@ -20,6 +20,7 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] InputActionReference cancelAction;
     [SerializeField] GameObject pauseMenu;
     [SerializeField] MainmenuManager mainmenu;
+    [SerializeField] GameTips gameTips;
 
     [Header("Icons for effects (UI)")]
     [SerializeField] RectTransform iconsParent;
@@ -152,7 +153,7 @@ public class PlayerUIController : MonoBehaviour {
     private const float COLORADJUSTMENTS_MAX_SATURATION = 100f;
     private const float EFFECTS_FADE_DURATION = 1.5f;
     private const float DEPTHOFFIELD_DEFAULT_START = 26f;
-    private const float DEPTHOFFIELD_DEFAULT_END = 27f;
+    private const float DEPTHOFFIELD_DEFAULT_END = 30f;
     private const float DEPTHOFFIELD_MIN_STARTEND = 0f;
 
 
@@ -284,8 +285,8 @@ public class PlayerUIController : MonoBehaviour {
         //activate and draw progress for all effects icons that have player
         EffectsProgressReset(); // reset all icons progress
 
-        if (playerEffectManager != null && playerEffectManager.activeEffects.Count > 0)
-            foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.activeEffects)
+        if (playerEffectManager != null && playerEffectManager.ActiveEffects.Count > 0)
+            foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.ActiveEffects)
                 if (eff.Value == null || !eff.Value.Enabled)
                     EffectsBehaviour(eff.Key, false);
                 else  //!null & enabled
@@ -306,7 +307,7 @@ public class PlayerUIController : MonoBehaviour {
         JoyAxis.Axis = moveInput.normalized; // set the joystick axis to the normalized input vector
     }
 
-    void UpdateProgressInfo() {
+    void UpdateProgressInfo(ProgressArgs args = null) {
         int lvlProgress = (int)(playerFish.Progress * GameStaticInfo.PERCENT_MULTIPLIER);
         if (growthBar.Coroutine != null)
             StopCoroutine(growthBar.Coroutine);
@@ -318,6 +319,9 @@ public class PlayerUIController : MonoBehaviour {
 
         growthBar.progress.text = lvlProgress.ToString();
         growthBar.GetProgress(playerFish.Level).fillAmount = playerFish.Progress;
+
+        if (args != null && args.IsCaviarEaten)
+            gameTips.OnEffectTip();
     }
 
     void UpdateHealthInfo() {
@@ -488,8 +492,8 @@ public class PlayerUIController : MonoBehaviour {
         //chromaticAberration.intensity.value = CHROMATICABERRATION_MAX_INTENSITY;
 
         while (isFreeze) {
-            isFreeze = playerEffectManager.activeEffects.ContainsKey(FishEffectType.FreezeTime)
-                && playerEffectManager.activeEffects[FishEffectType.FreezeTime].Enabled;
+            isFreeze = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.FreezeTime)
+                && playerEffectManager.ActiveEffects[FishEffectType.FreezeTime].Enabled;
             yield return null;
         }
 
@@ -527,8 +531,8 @@ public class PlayerUIController : MonoBehaviour {
         colorAdjustments.saturation.value = COLORADJUSTMENTS_MAX_SATURATION;
 
         while (isBlindness) {
-            isBlindness = playerEffectManager.activeEffects.ContainsKey(FishEffectType.Blindness)
-                && playerEffectManager.activeEffects[FishEffectType.Blindness].Enabled;
+            isBlindness = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Blindness)
+                && playerEffectManager.ActiveEffects[FishEffectType.Blindness].Enabled;
 
             hueShift = Mathf.Sin(Time.time) * COLORADJUSTMENTS_RANGE_HUE_MULT;
             colorAdjustments.hueShift.value = hueShift;
@@ -580,8 +584,8 @@ public class PlayerUIController : MonoBehaviour {
         }
 
         while (isStun) {
-            isStun = playerEffectManager.activeEffects.ContainsKey(FishEffectType.Stun)
-                && playerEffectManager.activeEffects[FishEffectType.Stun].Enabled;
+            isStun = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Stun)
+                && playerEffectManager.ActiveEffects[FishEffectType.Stun].Enabled;
 
             time = Time.time * LENS_DISORTION_OFFSET_SPEED;
             x = Mathf.Cos(time) * LENS_DISORTION_OFFSET_MULT;
@@ -601,7 +605,7 @@ public class PlayerUIController : MonoBehaviour {
             x = Mathf.Lerp(x, 0f, normDelta);
             y = Mathf.Lerp(y, 0f, normDelta);
 
-            if (!playerEffectManager.activeEffects.TryGetValue(FishEffectType.Poison, out Effect effect)
+            if (!playerEffectManager.ActiveEffects.TryGetValue(FishEffectType.Poison, out Effect effect)
                 || !effect.Enabled) {//so check if stun not active
                 lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
                 lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
@@ -635,15 +639,15 @@ public class PlayerUIController : MonoBehaviour {
         }
 
         while (isPoison) {
-            isPoison = playerEffectManager.activeEffects.ContainsKey(FishEffectType.Poison)
-                && playerEffectManager.activeEffects[FishEffectType.Poison].Enabled;
+            isPoison = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Poison)
+                && playerEffectManager.ActiveEffects[FishEffectType.Poison].Enabled;
             lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
             lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
             yield return null;
         }
 
         //smooth fade
-        if (!playerEffectManager.activeEffects.TryGetValue(FishEffectType.Stun, out Effect effect)
+        if (!playerEffectManager.ActiveEffects.TryGetValue(FishEffectType.Stun, out Effect effect)
                 || !effect.Enabled) {//poison and stun use same lens distortion//so check if stun not active
 
             deltaSmooth = 0f;
@@ -718,7 +722,7 @@ public class PlayerUIController : MonoBehaviour {
 
         //upd icons pos of spawn effects
         foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
-            if (playerEffectManager.activeEffects.TryGetValue(effectType, out Effect value) && value != null)
+            if (playerEffectManager.ActiveEffects.TryGetValue(effectType, out Effect value) && value != null)
                 EffectsBehaviour(effectType, true);
 
         UpdateHUDbars();
@@ -726,10 +730,13 @@ public class PlayerUIController : MonoBehaviour {
         //growthBar.GetProgress(fish.Level).fillAmount = fish.Progress;
 
         if (!isDie) {//lvl upgr & unlock new biomes
-            if (fish.Level == FishLevel.Moray)
+            if (fish.Level == FishLevel.Mackerel)
+                gameTips.OnStageTip();
+            else if (fish.Level == FishLevel.Moray)
                 ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
             else if (fish.Level == FishLevel.HammerShark)
                 ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
+
         }
     }
 
@@ -788,9 +795,9 @@ public class PlayerUIController : MonoBehaviour {
 
         if (effectsCnt > 0) {//reposing
             int effectIconInd = 0;
-            foreach (FishEffectType currType in playerEffectManager.activeEffects.Keys) {
+            foreach (FishEffectType currType in playerEffectManager.ActiveEffects.Keys) {
                 if (!EffectManager.IsVisibleEffect(currType, true)
-                    || playerEffectManager.activeEffects[currType] == null || !playerEffectManager.activeEffects[currType].Enabled)
+                    || playerEffectManager.ActiveEffects[currType] == null || !playerEffectManager.ActiveEffects[currType].Enabled)
                     continue;
 
                 //Debug.Log(effectsCnt - 1 + " " + effectIconInd);

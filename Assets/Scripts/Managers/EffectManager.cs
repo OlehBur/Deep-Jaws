@@ -28,7 +28,7 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] Fish fish;
     [SerializeField] FishAnim fishAnim;
 
-    public Dictionary<FishEffectType, Effect> activeEffects { get; private set; } = new();
+    public Dictionary<FishEffectType, Effect> ActiveEffects { get; private set; } = new();
     public event Action<FishEffectType, bool> OnEffectChanges;
     public GameObject ShieldObj { get; set; } = null;
     // cache all effect types for iteration
@@ -57,20 +57,20 @@ public class EffectManager : MonoBehaviour {
             return;
 
         this.audioManager = audioManager;
-        speedEffectSource = audioManager.playerRevolumeAudioSource;
+        speedEffectSource = audioManager.PlayerAudioSource;
     }
     private void OnEnable() {
         if (fishSkinnedRenderer != null)//if respawn afret freezetime effect activation
             fishSkinnedRenderer.sharedMaterial.SetFloat(/*"_UnscaledTime"*/GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, 0f);
 
-        activeEffects.Clear();
+        ActiveEffects.Clear();
     }
 
     // effects update timers
     private void Update() {
         foreach (FishEffectType type in AllEffectTypes)
             if (IsEffectActive(type))
-                activeEffects[type].UpdateTimer();
+                ActiveEffects[type].UpdateTimer();
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public class EffectManager : MonoBehaviour {
     /// <param name="type"></param>
     /// <returns></returns>
     public bool IsEffectActive(FishEffectType type) {
-        return activeEffects.ContainsKey(type) && activeEffects[type] != null && activeEffects[type].Enabled;
+        return ActiveEffects.ContainsKey(type) && ActiveEffects[type] != null && ActiveEffects[type].Enabled;
     }
 
     public bool IsNoNegativeEffects() {
@@ -92,7 +92,7 @@ public class EffectManager : MonoBehaviour {
     public int GetActiveEffectCnt(TypeEffects key) {
         int cnt = 0;
 
-        foreach (KeyValuePair<FishEffectType, Effect> kvp in activeEffects)
+        foreach (KeyValuePair<FishEffectType, Effect> kvp in ActiveEffects)
             if (kvp.Value != null && kvp.Value.Enabled)
                 switch (key) {
                     case TypeEffects.All:
@@ -143,7 +143,7 @@ public class EffectManager : MonoBehaviour {
 
 
     public void ApplyEffect(FishEffectType type, float duration) {
-        if (activeEffects.TryGetValue(type, out Effect existing) && existing != null && existing.Enabled) {
+        if (ActiveEffects.TryGetValue(type, out Effect existing) && existing != null && existing.Enabled) {
             existing.Refresh(duration);
             return;
         }
@@ -154,7 +154,7 @@ public class EffectManager : MonoBehaviour {
         Effect newEffect = InitNewEffect(type);
 
         if (newEffect != null) {
-            activeEffects[type] = newEffect;
+            ActiveEffects[type] = newEffect;
             newEffect.Init(fish, duration);
 
             if (type == FishEffectType.Shield) {//import after Init (shield obj added in apply meth in init)
@@ -165,9 +165,9 @@ public class EffectManager : MonoBehaviour {
 
             //if (type == FishEffectType.StunInitiator)
             //    Debug.Log("Stun Initiator effect applied");
-            if (activeEffects.TryGetValue(type, out Effect effect))
+            if (ActiveEffects.TryGetValue(type, out Effect effect))
                 effect.OnEffeñtExpire -= RemoveEffect;
-            activeEffects[type] = newEffect; // use [] instead TryAdd 
+            ActiveEffects[type] = newEffect; // use [] instead TryAdd 
 
             UpdateIconVisualization();
 
@@ -194,11 +194,13 @@ public class EffectManager : MonoBehaviour {
     }
 
     private void CheckAchievements() {
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (IsEffectActive(FishEffectType.SprintSpeed) && IsEffectActive(FishEffectType.CurrentSpeed)/*activeEffects.ContainsKey(FishEffectType.SprintSpeed) && activeEffects.ContainsKey(FishEffectType.CurrentSpeed)*/)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_youre_fast_as_flash);
 
         if (GetActiveEffectCnt(TypeEffects.VisibleUI) >= 4)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_thats_impossible_seriously);
+#endif
     }
 
 
@@ -212,7 +214,7 @@ public class EffectManager : MonoBehaviour {
 
         //only needed icons activation and positioning
         int index = 0;
-        foreach (var kvp in activeEffects) {
+        foreach (var kvp in ActiveEffects) {
             if (kvp.Value != null && kvp.Value.Enabled && IsVisibleEffect(kvp.Key, false)) {
                 SetIconActive(kvp.Key, true, XOffsets[index]);
                 index++;
@@ -333,7 +335,7 @@ public class EffectManager : MonoBehaviour {
 
     // safe cleanup
     private void OnDestroy() {
-        foreach (KeyValuePair<FishEffectType, Effect> kvp in activeEffects) {
+        foreach (KeyValuePair<FishEffectType, Effect> kvp in ActiveEffects) {
             if (kvp.Value != null) {
                 kvp.Value.OnEffeñtExpire -= RemoveEffect;
             }
@@ -343,12 +345,12 @@ public class EffectManager : MonoBehaviour {
     private void OnDisable() {
         foreach (FishEffectType type in AllEffectTypes)
             if (IsEffectActive(type)) {
-                activeEffects[type].OnEffeñtExpire -= RemoveEffect;
-                activeEffects[type].DeactivateEffect();
-                activeEffects[type].Enabled = false;
+                ActiveEffects[type].OnEffeñtExpire -= RemoveEffect;
+                ActiveEffects[type].DeactivateEffect();
+                ActiveEffects[type].Enabled = false;
             }
 
-        activeEffects.Clear();
+        ActiveEffects.Clear();
         SetAllIconsActive(false);
     }
 }

@@ -115,9 +115,10 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         if (isInAllowTPfromZone)
             PlayerFish.transform.position = Vector3.up * PlayerFish.transform.position.y;
 
-        //Debug.LogWarning("todo: fin method of pool down. (also fish comp arr)");
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (GameStaticInfo.Gamemode == GameMode.Hard)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_the_hard_way);
+#endif
 
         DJTime.TimeScale = 1f;
     }
@@ -295,8 +296,8 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         ProgressSaver.SaveData(worldPlayerData);
     }
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
-        //playerLvl = (int)FishLevel.WhiteShark;
-        //playerProgress = .9f;
+        //playerLvl = (int)FishLevel.Mackerel;
+        //playerProgress = .94f;
         //Debug.LogWarning("Activeted Cheat spawn lvl: " + playerLvl);
 
         int playerIndex = playerLvl - 1;
@@ -325,7 +326,9 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
                 StopCoroutine(playerShieldCorutine);
 
             playerShieldCorutine = StartCoroutine(AddShieldToPlayer_Delay(playerEffectManager));
+#if UNITY_ANDROID && !UNITY_EDITOR
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_here_we_go_again);
+#endif
             RespawnEntitiesMap(playerFishBuffer.Level);
         }
         else {
@@ -368,11 +371,17 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     }
 
     void PlayerLvlUpAct(GameObject gameObject) {
-        DeactivateRespawnPrefab(gameObject, PlayerFish.Level, true, false);//true - only plyer event
+        if (GameManager.IsPC_Demo() && PlayerFish.Level >= FishLevel.Mackerel) {
+            gameManager.GameSetPause(true);
+            mainmenuManager.OnOpenDemoFin();
+        }
+        else
+            DeactivateRespawnPrefab(gameObject, PlayerFish.Level, true, false);//true - only plyer event
         //Debug.LogWarning("player lvl up");
     }
 
     void CheckPlayerLvlAchievements(FishLevel playerLvl) {
+#if UNITY_ANDROID && !UNITY_EDITOR
         switch (playerLvl) {
             case FishLevel.Mackerel:
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_so_thats_how_it_is);
@@ -398,6 +407,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_but_its_gray);
             break;
         }
+#endif
     }
 
     void SpawnEnemyFish(int visPoolIndex, int lvl, bool isRandomPos = false) {

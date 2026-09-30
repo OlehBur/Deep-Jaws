@@ -2,116 +2,125 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-	//[SerializeField] MainmenuManager mainmenuManager;
-	[SerializeField] CameraFollower cameraFollower;
-	[SerializeField] SpawnManager spawnManager;
-	[SerializeField] FishHeartbeatsManager fishHeartbeatsManager;
-	[SerializeField] JellyfishController[] jellyfishControllerArray;
-	[SerializeField] PlayerUIController playerEffectsUI;
-	[SerializeField] PlayerLeaderboardScore playerLeaderboardScore;
-	[SerializeField] Button pauseExitButton;
-	[SerializeField] GameObject gameCanvas;
-	/// <summary>
-	/// позначає час який має бути встановлено під час виходу з паузи (може бути як стандартний 1, так і змінений певними ефектами)
-	/// </summary>
+    //[SerializeField] MainmenuManager mainmenuManager;
+    [SerializeField] CameraFollower cameraFollower;
+    [SerializeField] SpawnManager spawnManager;
+    [SerializeField] FishHeartbeatsManager fishHeartbeatsManager;
+    [SerializeField] JellyfishController[] jellyfishControllerArray;
+    [SerializeField] PlayerUIController playerEffectsUI;
+    [SerializeField] PlayerLeaderboardScore playerLeaderboardScore;
+    [SerializeField] Button pauseExitButton;
+    [SerializeField] GameObject gameCanvas;
+    /// <summary>
+    /// позначає час який має бути встановлено під час виходу з паузи (може бути як стандартний 1, так і змінений певними ефектами)
+    /// </summary>
 
-	public static int ScreenMaxFramerate {
-		get {
-			int screenMaxFramerate = 0;
-			screenMaxFramerate = Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
-			if (screenMaxFramerate <= 0)
-				screenMaxFramerate = GameStaticInfo.DEFAULT_SCREEN_FRAMERATE;
+    public static int ScreenMaxFramerate {
+        get {
+            int screenMaxFramerate = 0;
+            screenMaxFramerate = Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
+            if (screenMaxFramerate <= 0)
+                screenMaxFramerate = GameStaticInfo.DEFAULT_SCREEN_FRAMERATE;
 
-			return screenMaxFramerate;
-		}
-	}
-	public static float CurrentDefaultGameTime { get; private set; }
-	public static readonly float DEFAULT_GAME_TIME = 1f;
-	public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor;
-	public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
-	public static bool IsGamePaused => DJTime.TimeScale == 0f;
-	public static bool IsSceneReady { get; private set; } = false;
+            return screenMaxFramerate;
+        }
+    }
+    public static float CurrentDefaultGameTime { get; private set; }
+    public static readonly float DEFAULT_GAME_TIME = 1f;
+    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor || IsPC_Demo();
+    public static bool IsPC_Demo() {
+#if UNITY_STANDALONE_WIN// && !UNITY_EDITOR
+		return true;
+#else
+        return false;
+#endif
+    }
+    public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
+    public static bool IsGamePaused => DJTime.TimeScale == 0f;
+    public static bool IsSceneReady { get; private set; } = false;
 
-	private const float CANVAS_ACTIVATE_DELAY = .5f;
-	private const float SCENE_ACTIVATE_DELAY = .14f;
-	private const float FIXED_DELTA_TINE_HIGH = .02f;
-	private const float FIXED_DELTA_TINE_LOW = .05f;
+    private const float CANVAS_ACTIVATE_DELAY = .5f;
+    private const float SCENE_ACTIVATE_DELAY = .14f;
+    private const float FIXED_DELTA_TINE_HIGH = .02f;
+    private const float FIXED_DELTA_TINE_LOW = .05f;
 
-	//game init
-	void Awake() {
-		//Debug.LogWarning("Run On ANDROID Enanbled");
+    //game init
+    void Awake() {
+        //Debug.LogWarning("Run On ANDROID Enanbled");
 
-		gameCanvas.SetActive(false);
-		GameSetPause(true);//wait until the spawn manager finishes creating pools
-		spawnManager.Init();
-		cameraFollower.Init(spawnManager); // initialize the camera follower with the spawn manager
-		fishHeartbeatsManager.Init(spawnManager);
-		playerEffectsUI.Init(spawnManager);
-		playerLeaderboardScore.Init(spawnManager);
-		CurrentDefaultGameTime = DEFAULT_GAME_TIME;
+        gameCanvas.SetActive(false);
+        GameSetPause(true);//wait until the spawn manager finishes creating pools
 
-		SetFixedDelta();
-		GameSetPause(false);
-		Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
-		Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);
-	}
+        spawnManager.Init();
+        cameraFollower.Init(spawnManager); // initialize the camera follower with the spawn manager
+        fishHeartbeatsManager.Init(spawnManager);
+        playerEffectsUI.Init(spawnManager);
+        playerLeaderboardScore.Init(spawnManager);
+        CurrentDefaultGameTime = DEFAULT_GAME_TIME;
 
-	void DelaySceneActivate() {
-		IsSceneReady = true;
-		AudioListener.volume = 1f; // enable vol
-	}
+        SetFixedDelta();
+        GameSetPause(false);
 
-	void DelayCanvasActivate() {
-		gameCanvas.SetActive(true);
-	}
+        Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
+        Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);
+    }
 
-	void SetFixedDelta() {
-		if (SystemInfo.processorCount < 5) {
-			//Application.targetFrameRate = 30;
-			DJTime.SetFixedTime(FIXED_DELTA_TINE_LOW);
-			CurrentFixedDeltaTime = FIXED_DELTA_TINE_LOW;
-		}
-		else {
-			//Application.targetFrameRate = 60;
-			DJTime.SetFixedTime(FIXED_DELTA_TINE_HIGH);
-			CurrentFixedDeltaTime = FIXED_DELTA_TINE_HIGH;
-		}
-	}
+    void DelaySceneActivate() {
+        IsSceneReady = true;
+        AudioListener.volume = 1f; // enable vol
+    }
 
-	public static void SetFixedDeltaTime(bool isRestoreTime, float newDelta = FIXED_DELTA_TINE_LOW) {
-		if (isRestoreTime)
-			DJTime.SetFixedTime(CurrentFixedDeltaTime);
-		else
-			DJTime.SetFixedTime(newDelta);
-	}
+    void DelayCanvasActivate() {
+        gameCanvas.SetActive(true);
+    }
 
-	public void GameSetPause(bool isPause/*, bool activatePauseWnd*/) {
-		DJTime.TimeScale = (isPause) ?
-			0f : CurrentDefaultGameTime; // pause or resume the game
+    void SetFixedDelta() {
+        if (SystemInfo.processorCount < 5) {
+            //Application.targetFrameRate = 30;
+            DJTime.SetFixedTime(FIXED_DELTA_TINE_LOW);
+            CurrentFixedDeltaTime = FIXED_DELTA_TINE_LOW;
+        }
+        else {
+            //Application.targetFrameRate = 60;
+            DJTime.SetFixedTime(FIXED_DELTA_TINE_HIGH);
+            CurrentFixedDeltaTime = FIXED_DELTA_TINE_HIGH;
+        }
+    }
 
-		if (spawnManager != null && spawnManager.PlayerFish != null) {
-			spawnManager.PlayerFish.gameObject.TryGetComponent(out EffectManager playerEffManager);
-			if (isPause && pauseExitButton != null)
-				//if (/*playerEffManager != null && */)
-				//can exist only if the player is not being pursued by enemies and has no active effects
-				pauseExitButton.interactable = playerEffManager.IsNoNegativeEffects() && !GameStaticInfo.IS_ENEMY_DETECTOR_ENABLED;
-		}
+    public static void SetFixedDeltaTime(bool isRestoreTime, float newDelta = FIXED_DELTA_TINE_LOW) {
+        if (isRestoreTime)
+            DJTime.SetFixedTime(CurrentFixedDeltaTime);
+        else
+            DJTime.SetFixedTime(newDelta);
+    }
 
-		//if ((activatePauseWnd && isPause) || !isPause)//when unpause or pause if bool activate = true
-		//    mainmenuManager.ActivatePauseWnd(isPause);
-	}
+    public void GameSetPause(bool isPause/*, bool activatePauseWnd*/) {
+        DJTime.TimeScale = (isPause) ?
+            0f : CurrentDefaultGameTime; // pause or resume the game
 
-	public static void ChangeGameTime(float time) {
-		CurrentDefaultGameTime = time;
-		DJTime.TimeScale = time;
-	}
+        if (spawnManager != null && spawnManager.PlayerFish != null) {
+            spawnManager.PlayerFish.gameObject.TryGetComponent(out EffectManager playerEffManager);
+            if (isPause && pauseExitButton != null)
+                //if (/*playerEffManager != null && */)
+                //can exist only if the player is not being pursued by enemies and has no active effects
+                pauseExitButton.interactable = playerEffManager.IsNoNegativeEffects() && !GameStaticInfo.IS_ENEMY_DETECTOR_ENABLED;
+        }
 
-	public static bool IsInternetNotAvailable =>
-		Application.internetReachability == NetworkReachability.NotReachable;
+        //if ((activatePauseWnd && isPause) || !isPause)//when unpause or pause if bool activate = true
+        //    mainmenuManager.ActivatePauseWnd(isPause);
+    }
 
-	private void OnDestroy() {
-		DJTime.TimeScale = DEFAULT_GAME_TIME;
-		SetFixedDeltaTime(true);
-		//IsSceneReady = false;
-	}
+    public static void ChangeGameTime(float time) {
+        CurrentDefaultGameTime = time;
+        DJTime.TimeScale = time;
+    }
+
+    public static bool IsInternetNotAvailable =>
+        Application.internetReachability == NetworkReachability.NotReachable;
+
+    private void OnDestroy() {
+        DJTime.TimeScale = DEFAULT_GAME_TIME;
+        SetFixedDeltaTime(true);
+        //IsSceneReady = false;
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class LicenseValidator : MonoBehaviour {
     [Header("UI Panels")]
@@ -41,7 +39,7 @@ public class LicenseValidator : MonoBehaviour {
     private void PerformLicenseCheck() {
         //string installer = Application.installerName;
         bool isFromPlayStore = false;// = (installer == "com.android.vending");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD || UNITY_STANDALONE_WIN
         isFromPlayStore = true;
         //Debug.Log("<color=yellow>[LicenseValidator]</color> Bypassed check: Running in Unity Editor.");
 #else

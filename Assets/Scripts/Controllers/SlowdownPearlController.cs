@@ -61,8 +61,9 @@ public class SlowdownPearlController : MonoBehaviour {
             audioManager.PlayVFX(VFX_clip.FreezeTime);
             //pearlAudioSource.PlayOneShot(pearlSoundClip);        
             OnPearlDeactivate?.Invoke();
-
+#if UNITY_ANDROID && !UNITY_EDITOR
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_a_fragile_beauty_in_a_sea_of_decay);
+#endif
         }
     }
 

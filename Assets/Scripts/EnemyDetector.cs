@@ -6,6 +6,7 @@ using UnityEngine;
 /// checks for enemies in the area that pose a threat to the player and moves its gaze (with a pointer) to the nearest enemy
 /// </summary>
 public class EnemyDetector : MonoBehaviour {
+    [SerializeField] GameTips gameTips;
     [SerializeField] GameObject pointer;
     private const float DETECTOR_RADIUS_MULTIPLIER = 1.8f; // multiplier for the detector radius to give the player a little advantage
     private float DETECTOR_RADIUS => (playerFish != null) ? 18f : playerFish.DefaultInfo.ResponseRadius * DETECTOR_RADIUS_MULTIPLIER;//a value larger than the maximum response radius in the some fishes (12), to give the player a little advantage)))
@@ -49,6 +50,7 @@ public class EnemyDetector : MonoBehaviour {
 
                     transform.LookAt(lookPosInHorizontal, Vector3.up);
                     pointer.SetActive(true);
+                    gameTips.OnEnemyTip();
                     GameStaticInfo.IS_ENEMY_DETECTOR_ENABLED = true;
                 }
                 else {

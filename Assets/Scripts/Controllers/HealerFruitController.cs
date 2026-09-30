@@ -61,14 +61,17 @@ public class HealerFruitController : MonoBehaviour {
         if (other.attachedRigidbody == null)
             return;
 
-        const float MIN_HEALTH_MULTIPLIER = 0.3f;//_TO_TRIGGER_MarineMedicine
         Transform parentFish = other.attachedRigidbody.transform;
 
         if (other.isTrigger && parentFish.CompareTag("Player") && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
             && parentFish.TryGetComponent(out FishAnim animManager)) {
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            const float MIN_HEALTH_MULTIPLIER = 0.3f;//_TO_TRIGGER_MarineMedicine
+
             if (fish.Health <= fish./*MaxHealth*/DefaultInfo.MaxHealth * MIN_HEALTH_MULTIPLIER)
                 GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_algae_are_beneficial_to_health);
+#endif
 
             audioManager.PlayVFX(VFX_clip.Heal);
             //audioSource.PlayOneShot(healClip);
@@ -80,8 +83,8 @@ public class HealerFruitController : MonoBehaviour {
             //healParticle.transform.position = other.transform.position;
             //healParticle.SetActive(true);//spawn particles
             dishAddCompMangr.ActivateObjectFromPool(FishComponentType.PlayerHealParticle,
-                other.transform, 
-                Vector3.zero, 
+                other.transform,
+                Vector3.zero,
                 MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale),
                 Quaternion.identity);
             //Instantiate(healParticle, other.transform).transform.localScale = MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale);

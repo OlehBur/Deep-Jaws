@@ -17,14 +17,16 @@ public class StunInitiatorEffet : Effect {
         for (int i = 0; i < collidedObjCnt; i++) {
             Rigidbody victimRb = collideObjects[i].attachedRigidbody;
 
-            if (collideObjects[i] != null && victimRb != null 
+            if (collideObjects[i] != null && victimRb != null
                 && victimRb.gameObject != targetFish.gameObject) {
                 if (victimRb.TryGetComponent(out EffectManager effectManager))
                     effectManager.ApplyEffect(FishEffectType.Stun, /*Duration*/GameStaticInfo.STUN_DEFAULT_DURATION);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
                 if (GameStaticInfo.TryGetFish(victimRb.gameObject, out Fish victimFish)
                    && targetFish.IsPlayer && victimFish.Level == FishLevel.Pufferfish)
                     GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_i_am_inevitability);
+#endif
             }
         }
         //Debug.Log(collidedObjCnt);
