@@ -24,7 +24,7 @@ public class SettingsUI : MonoBehaviour {
 
     private int previousLocaleIndex = 0;
 
-    private enum Framerate {
+    public enum Framerate {
         Max,
         F30,
         F60,
@@ -35,38 +35,29 @@ public class SettingsUI : MonoBehaviour {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void AutoApplySettingsOnStartup() {
         //apply FPS and VSync synchronously (instantly, without waiting)
-        ApplyBasicSettings();
+        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
+                      ? ProgressSaver.LoadSettingsData()
+                      : new SettingsData();
+
+        IsAutoHideUI = savedSettings.autoUI;
+
+        QualitySettings.vSyncCount = 0;
+        int maxFps = Screen.currentResolution.refreshRateRatio.value > 0
+            ? (int)Screen.currentResolution.refreshRateRatio.value
+            : 60;
+
+        Application.targetFrameRate = savedSettings.framerate switch {
+            0 => maxFps,
+            1 => 30,
+            2 => 60,
+            3 => 120,
+            _ => 30
+        };
 
         // upload the localization through a safe background runner
         GameObject runner = new GameObject("[LocalizationInitializer]");
         DontDestroyOnLoad(runner);
         runner.AddComponent<LocalizationStartupRunner>();
-    }
-
-    private static void ApplyBasicSettings() {
-        try {
-            SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
-                ? ProgressSaver.LoadSettingsData()
-                : new SettingsData();
-
-            IsAutoHideUI = savedSettings.autoUI;
-
-            QualitySettings.vSyncCount = 0;
-            int maxFps = Screen.currentResolution.refreshRateRatio.value > 0
-                ? (int)Screen.currentResolution.refreshRateRatio.value
-                : 60;
-
-            Application.targetFrameRate = savedSettings.framerate switch {
-                0 => maxFps,
-                1 => 30,
-                2 => 60,
-                3 => 120,
-                _ => 30
-            };
-        }
-        catch (Exception ex) {
-            Debug.LogError($"[SettingsUI] Error applying basic settings on startup: {ex}");
-        }
     }
 
     private void OnEnable() {
@@ -97,6 +88,7 @@ public class SettingsUI : MonoBehaviour {
             InitFramerateOptions();
             FramerateDropdown.onValueChanged.RemoveAllListeners();
             FramerateDropdown.SetValueWithoutNotify(savedSettings.framerate);
+            FramerateDropdown.value = savedSettings.framerate;
             FramerateDropdown.onValueChanged.AddListener(OnFramerateChanged);
         }
     }

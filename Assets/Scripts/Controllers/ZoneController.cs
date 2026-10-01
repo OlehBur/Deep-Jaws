@@ -4,7 +4,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
 
-enum ZoneType {
+public enum ZoneType {
     //CoralRocks,
     AlgaesForest,
     DeepCorals
@@ -16,45 +16,45 @@ public class ZoneController : MonoBehaviour {
     [SerializeField] Material zoneBarrierMat;
     [SerializeField] Collider barrierCollider;
     [SerializeField] PlayerUIController playerUIController;
-    [SerializeField] LocalizedString morayWarnLocalizedString;
-    [SerializeField] LocalizedString hammerheadWarnLocalizedString;
+    //[SerializeField] LocalizedString morayWarnLocalizedString;
+    //[SerializeField] LocalizedString hammerheadWarnLocalizedString;
     private static bool isBarrierAnimationActive { get; set; } = false;
     private const float BARRIER_TOUCH_ANIMATION_INTERVAL = 1.6f;
-    private string fishLvlRequirMsg;
+    //private string fishLvlRequirMsg;
 
-    void OnEnable() {
-        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
-    }
+    //void OnEnable() {
+    //    LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
+    //}
 
-    private void OnDestroy() {
-        LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
-    }
+    //private void OnDestroy() {
+    //    LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
+    //}
 
-    void OnDisable() {
-        LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
-    }
+    //void OnDisable() {
+    //    LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
+    //}
 
-    //realtime reaction on changing locale
-    void OnLanguageChanged(UnityEngine.Localization.Locale newLocale) {
-        fishLvlRequirMsg = zoneType switch {
-            ZoneType.AlgaesForest => morayWarnLocalizedString.GetLocalizedString(),
-            ZoneType.DeepCorals => hammerheadWarnLocalizedString.GetLocalizedString(),
-            _ => morayWarnLocalizedString.GetLocalizedString()
-        };
-    }
+    ////realtime reaction on changing locale
+    //void OnLanguageChanged(UnityEngine.Localization.Locale newLocale) {
+    //    fishLvlRequirMsg = zoneType switch {
+    //        ZoneType.AlgaesForest => morayWarnLocalizedString.GetLocalizedString(),
+    //        ZoneType.DeepCorals => hammerheadWarnLocalizedString.GetLocalizedString(),
+    //        _ => morayWarnLocalizedString.GetLocalizedString()
+    //    };
+    //}
 
     private void Start() {//work onlu once per game install (only for old players)
-        spawnManager.OnPlayerRespawn += ZoneByLvlBehaviour;
+        spawnManager.OnPlayerRespawn += BiomeByLvlBehaviour;
         if (spawnManager.PlayerFish != null)
-            ZoneByLvlBehaviour(spawnManager.PlayerFish, false);
+            BiomeByLvlBehaviour(spawnManager.PlayerFish, false);
 
-        Locale currentLocale = LocalizationSettings.SelectedLocale;
-        OnLanguageChanged(currentLocale);
+        //Locale currentLocale = LocalizationSettings.SelectedLocale;
+        //OnLanguageChanged(currentLocale);
 
         zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, 0);//resert previous mat
     }
 
-    void ZoneByLvlBehaviour(Fish fish, bool isDie) {
+    void BiomeByLvlBehaviour(Fish fish, bool isDie) {
         if (fish == null)
             return;
 
@@ -76,7 +76,9 @@ public class ZoneController : MonoBehaviour {
         Rigidbody victimRb = collision.collider.attachedRigidbody;
 
         if (victimRb != null && victimRb.CompareTag(GameStaticInfo.TAG_PLAYER)) {
-            playerUIController.ActivateZoneOverlay(fishLvlRequirMsg);
+            //playerUIController.ActivateZoneOverlay(fishLvlRequirMsg);
+            playerUIController.ActivateBiomeTip(zoneType);
+
             if (!isBarrierAnimationActive) {
                 StartCoroutine(BarrierTouchAnimation());
                 zoneBarrierMat.SetVector(GameStaticInfo.ZONE_TOUCH_POS_PROP, collision.GetContact(0).point);

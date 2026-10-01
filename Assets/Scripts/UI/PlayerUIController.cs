@@ -37,8 +37,8 @@ public class PlayerUIController : MonoBehaviour {
 
     [Header("Overlays")]
     [SerializeField] Volume mainVolume;
-    [SerializeField] Image zoneOverlay;
-    [SerializeField] TextMeshProUGUI zoneOverlayMsg;
+    //[SerializeField] Image zoneOverlay;
+    //[SerializeField] TextMeshProUGUI zoneOverlayMsg;
     [SerializeField] LocalizedString coralReefClear;
     [SerializeField] LocalizedString seaweedClear;
 
@@ -716,8 +716,8 @@ public class PlayerUIController : MonoBehaviour {
         EffectsProgressReset();
 
         //ResetOverlays();
-        zoneOverlay.gameObject.SetActive(false);
-        zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
+        //zoneOverlay.gameObject.SetActive(false);
+        //zoneOverlay.color = new Color(zoneOverlay.color.r, zoneOverlay.color.g, zoneOverlay.color.b, 1f);
         ResetVisualEffects();
 
         //upd icons pos of spawn effects
@@ -733,11 +733,20 @@ public class PlayerUIController : MonoBehaviour {
             if (fish.Level == FishLevel.Mackerel)
                 gameTips.OnStageTip();
             else if (fish.Level == FishLevel.Moray)
-                ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
+                gameTips.OnClearCoralTip();
+                //ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
             else if (fish.Level == FishLevel.HammerShark)
-                ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
+                gameTips.OnClearSeaweedTip();
+                //ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
 
         }
+    }
+
+    public void ActivateBiomeTip(ZoneType type) {
+        if (type == ZoneType.AlgaesForest)
+            gameTips.OnAlgaesBarrierTip();
+        else if (type == ZoneType.DeepCorals)
+            gameTips.OnDeepCoralsBarrierTip();
     }
 
     void UpdateHUDbars() {
@@ -764,18 +773,18 @@ public class PlayerUIController : MonoBehaviour {
     //    StopAllCoroutines();
     //}
 
-    public void ActivateZoneOverlay(string msg, bool isLongDuration = false) {
-        zoneOverlayMsg.color = new Color(zoneOverlayMsg.color.r, zoneOverlayMsg.color.g, zoneOverlayMsg.color.b, 1f);
-        if (zoneOverlay.gameObject.activeInHierarchy)
-            return;//corutine is already running (wait for next call)
+    //public void ActivateZoneOverlay(string msg, bool isLongDuration = false) {
+    //    zoneOverlayMsg.color = new Color(zoneOverlayMsg.color.r, zoneOverlayMsg.color.g, zoneOverlayMsg.color.b, 1f);
+    //    if (zoneOverlay.gameObject.activeInHierarchy)
+    //        return;//corutine is already running (wait for next call)
 
-        //Debug.LogWarning("ActivateZone");
-        zoneOverlay.gameObject.SetActive(true);
-        zoneOverlayMsg.text = msg;
-        if (zoneCoroutine != null)
-            StopCoroutine(zoneCoroutine);
-        zoneCoroutine = StartCoroutine(OverlayFader(zoneOverlay, FishEffectType.None, OVERLAY_ZONE_UPDATE_INTERVAL, zoneOverlayMsg, isLongDuration));
-    }
+    //    //Debug.LogWarning("ActivateZone");
+    //    zoneOverlay.gameObject.SetActive(true);
+    //    zoneOverlayMsg.text = msg;
+    //    if (zoneCoroutine != null)
+    //        StopCoroutine(zoneCoroutine);
+    //    zoneCoroutine = StartCoroutine(OverlayFader(zoneOverlay, FishEffectType.None, OVERLAY_ZONE_UPDATE_INTERVAL, zoneOverlayMsg, isLongDuration));
+    //}
 
     /// <summary>
     /// for any additional behaviour (in UI) when an effect is added or removed from the player

@@ -102,7 +102,9 @@ public class SettingsData : IData {
 
 public class WorldData : IData {
     public string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
-    public bool IsAllTipsShowed() => isVictimTipShowed && isEnemyTipShowed && isEffectTipShowed;
+    public bool IsAllTipsShowed() => isVictimTipShowed && isEnemyTipShowed
+        && isEffectTipShowed && isStageTipShowed && isClearCoralsTipShowed
+        && isClearSeaweedShowed && isAlgaesBarrierTipShowed && isDeepCoralBarrierTipShowed;
 
     //game data
     //public bool isNewSaveType = false;//only for transfer old players data
@@ -118,6 +120,10 @@ public class WorldData : IData {
     public bool isEnemyTipShowed = false;
     public bool isEffectTipShowed = false;
     public bool isStageTipShowed = false;
+    public bool isClearCoralsTipShowed = false;
+    public bool isClearSeaweedShowed = false;
+    public bool isAlgaesBarrierTipShowed = false;
+    public bool isDeepCoralBarrierTipShowed = false;
 
     public string rewardedLimitDate = "";
     public int revivesLeft = GameStaticInfo.MAX_DAILY_REVIVALS;

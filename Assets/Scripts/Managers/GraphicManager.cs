@@ -33,19 +33,19 @@ public class GraphicManager : MonoBehaviour {
         });
         settingsUI.ShadowCastTog.onValueChanged.AddListener(value => {
             mainLight.shadows = value ? LightShadows.Hard : LightShadows.None;
-             SaveGraphicsData();
+            SaveGraphicsData();
         });
         settingsUI.ShadowDistSl.onValueChanged.AddListener(value => {
             urpAsset.shadowDistance = value * GameStaticInfo.SETTINGS_SHADOW_DIST_MULTIPLIER;
-             SaveGraphicsData();
+            SaveGraphicsData();
         });
         settingsUI.ShadowFixSl.onValueChanged.AddListener(value => {
             urpAsset.shadowDepthBias = value * GameStaticInfo.SETTINGS_SHADOW_FIX_MULTIPLIER;
-             SaveGraphicsData();
+            SaveGraphicsData();
         });
         settingsUI.GameResolutSl.onValueChanged.AddListener(value => {
             urpAsset.renderScale = value;
-             SaveGraphicsData();
+            SaveGraphicsData();
         });
         settingsUI.ShadowResolution.onValueChanged.AddListener(value => {
             urpAsset.mainLightShadowmapResolution = value switch {
@@ -70,6 +70,8 @@ public class GraphicManager : MonoBehaviour {
         settingsUI.ShadowFixSl.value = GameStaticInfo.SETTINGS_DEFAULT_SHADOW_FIX;
         settingsUI.GameResolutSl.value = GameStaticInfo.SETTINGS_DEFAYLT_GAME_RESOLUTION;
         settingsUI.ShadowResolution.value = GameStaticInfo.SETTINGS_DEFAULT_GAME_RESOLUTION_INDEX;
+        settingsUI.FramerateDropdown.value = (int)SettingsUI.Framerate.Max;
+        settingsUI.AutoHideUI_tog.isOn = true;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
