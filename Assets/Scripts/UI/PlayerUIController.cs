@@ -199,7 +199,7 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     private void Start() {
-        PlayerReConnect(spawnManager.PlayerFish, false);//in start for access to objects corutines etc.
+        PlayerReConnect(spawnManager.PlayerCurrentFish, false);//in start for access to objects corutines etc.
     }
 
     void OnEnable() {

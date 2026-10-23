@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 
 public enum TypeEffects {
@@ -34,11 +35,15 @@ public class EffectManager : MonoBehaviour {
     // cache all effect types for iteration
     public static readonly FishEffectType[] AllEffectTypes = (FishEffectType[])Enum.GetValues(typeof(FishEffectType));
 
-    private bool hasSpeedEffects = false;    //fixed update optimization
-    private AudioSource speedEffectSource;
-    private AudioManager audioManager;
-    private FishAdditionalCompManager fishAdditionalComponentManager;
-    private Vector3 prevPos;
+    private Queue<Effect> _effectQueue = new();
+    private bool _hasSpeedEffects = false;    //fixed update optimization
+    private AudioSource _speedEffectSource;
+    //private AudioManager _audioManager;
+    //private FishAdditionalCompManager _fishAdditionalComponentManager;
+    private Vector3 _prevPos;
+
+    [Inject] private readonly AudioManager _audioManager;
+    [Inject] private readonly VFXpoolManager _fishAddCompMngr;
 
     private const float X_OFFSET_DOUBLE = .6f;
     private const float X_OFFSET_TRIPLE = 1.2f;
@@ -50,15 +55,15 @@ public class EffectManager : MonoBehaviour {
     /// set player current effect audiosource to control volume by effect
     /// </summary>
     /// <param name="speedEffectSource">only for player</param>
-    public void Init(AudioManager audioManager/*, AudioSource speedEffectSource*/, FishAdditionalCompManager fishAdditionalComponentManager) {
-        this.fishAdditionalComponentManager = fishAdditionalComponentManager;
+    //public void Init(/*AudioManager audioManager, FishAdditionalCompManager fishAdditionalComponentManager*/) {
+    //    this._fishAdditionalComponentManager = fishAdditionalComponentManager;
 
-        if (audioManager == null)
-            return;
+    //    if (audioManager == null)
+    //        return;
 
-        this.audioManager = audioManager;
-        speedEffectSource = audioManager.PlayerAudioSource;
-    }
+    //    this._audioManager = audioManager;
+    //    _speedEffectSource = audioManager.PlayerAudioSource;
+    //}
     private void OnEnable() {
         if (fishSkinnedRenderer != null)//if respawn afret freezetime effect activation
             fishSkinnedRenderer.sharedMaterial.SetFloat(/*"_UnscaledTime"*/GameStaticInfo.FISH_WAVING_UNSCAL_TIME_PROP, 0f);
@@ -71,6 +76,14 @@ public class EffectManager : MonoBehaviour {
         foreach (FishEffectType type in AllEffectTypes)
             if (IsEffectActive(type))
                 ActiveEffects[type].UpdateTimer();
+
+        //check queue for new effects
+        if (_effectQueue.Count > 0) {
+            Effect newEffect = _effectQueue.Dequeue();
+
+            if (newEffect != null)
+                ApplyEffect(newEffect.Type, newEffect.Duration);
+        }
     }
 
     /// <summary>
@@ -141,6 +154,8 @@ public class EffectManager : MonoBehaviour {
     public static bool IsNegativeEffect(FishEffectType type) =>
         type == FishEffectType.Stun || type == FishEffectType.Poison || type == FishEffectType.Blindness;
 
+    public void SetEffectInQueue(FishEffectType type, float duration) =>
+        _effectQueue.Enqueue(InitNewEffect(type));
 
     public void ApplyEffect(FishEffectType type, float duration) {
         if (ActiveEffects.TryGetValue(type, out Effect existing) && existing != null && existing.Enabled) {
@@ -189,7 +204,7 @@ public class EffectManager : MonoBehaviour {
 
     //optimization for FixedUpdate
     private void UpdateSpeedEffectsFlag() {
-        hasSpeedEffects = IsEffectActive(FishEffectType.SprintSpeed) ||
+        _hasSpeedEffects = IsEffectActive(FishEffectType.SprintSpeed) ||
                          IsEffectActive(FishEffectType.CurrentSpeed);
     }
 
@@ -269,32 +284,32 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateShieldEffect() {
-        if (!/*IsHaveShield*/fish.DefaultInfo.IsHaveShield)
+        if (!fish.DefaultInfo.IsHaveShield)
             return null;
 
-        ShieldEffect shieldEffect = new(audioManager,
-            fishAdditionalComponentManager,
-            /*editableTransform*/rotationTransform,
-            /*shieldLocalPos*/fish.DefaultInfo.ShieldLocPos,
-            /*shieldLocalScale*/fish.DefaultInfo.ShieldVisualScale);
+        ShieldEffect shieldEffect = new(_audioManager,
+            _fishAddCompMngr,
+            rotationTransform,
+            fish.DefaultInfo.ShieldLocPos,
+            fish.DefaultInfo.ShieldVisualScale);
 
         return shieldEffect;
     }
 
     private Effect CreateCurrentEffect() {
-        CurrentEffect speedEffect = new(fishAdditionalComponentManager, /*transform*/rotationTransform, /*whirlLocalPos*/fish.DefaultInfo.WhirlLocPos);
+        CurrentEffect speedEffect = new(_fishAddCompMngr, rotationTransform, fish.DefaultInfo.WhirlLocPos);
 
-        if (speedEffectSource != null)//not null only for player
-            speedEffectSource.enabled = true;
+        if (_speedEffectSource != null)//not null only for player
+            _speedEffectSource.enabled = true;
 
         return speedEffect;
     }
 
     private Effect CreateSprintEffect() {
-        SprintEffect sprintEffect = new(fishAdditionalComponentManager, fishAnim, rotationTransform, fish.DefaultInfo.WhirlLocPos);
+        SprintEffect sprintEffect = new(_fishAddCompMngr, fishAnim, rotationTransform, fish.DefaultInfo.WhirlLocPos);
 
-        if (speedEffectSource != null)
-            speedEffectSource.enabled = true;
+        if (_speedEffectSource != null)
+            _speedEffectSource.enabled = true;
 
         return sprintEffect;
     }
@@ -316,21 +331,21 @@ public class EffectManager : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if (!fish.IsPlayer || speedEffectSource == null
-            || (!hasSpeedEffects && speedEffectSource.volume == 0f))
+        if (!fish.IsPlayer || _speedEffectSource == null
+            || (!_hasSpeedEffects && _speedEffectSource.volume == 0f))
             return;
 
-        float velocity = (prevPos - rb.position).magnitude / DJTime.FixedDeltaTime;
-        prevPos = rb.position;
+        float velocity = (_prevPos - rb.position).magnitude / DJTime.FixedDeltaTime;
+        _prevPos = rb.position;
 
-        if (velocity > 0f && hasSpeedEffects)//if fish is moving and has speed effects - inc vol
-            speedEffectSource.volume = Mathf.Lerp(speedEffectSource.volume, 1f, DJTime.FixedDeltaTime * VOLUME_FADE_SPEED);
+        if (velocity > 0f && _hasSpeedEffects)//if fish is moving and has speed effects - inc vol
+            _speedEffectSource.volume = Mathf.Lerp(_speedEffectSource.volume, 1f, DJTime.FixedDeltaTime * VOLUME_FADE_SPEED);
         else
-            speedEffectSource.volume = Mathf.Lerp(speedEffectSource.volume, 0, DJTime.FixedDeltaTime * VOLUME_FADE_SPEED);
+            _speedEffectSource.volume = Mathf.Lerp(_speedEffectSource.volume, 0, DJTime.FixedDeltaTime * VOLUME_FADE_SPEED);
 
         // dis audiosource if it dont need
-        if (speedEffectSource.volume < MIN_VOLUME && !hasSpeedEffects)
-            speedEffectSource.enabled = false;
+        if (_speedEffectSource.volume < MIN_VOLUME && !_hasSpeedEffects)
+            _speedEffectSource.enabled = false;
     }
 
     // safe cleanup

@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.Localization;
-using System.Runtime.CompilerServices; //  for Uri.EscapeDataString
+using System.Runtime.CompilerServices;
+using VContainer; //  for Uri.EscapeDataString
 
 
 /// <summary>
@@ -55,6 +56,7 @@ public class MainmenuManager : MonoBehaviour {
     private Color targetLightGMcolor;
     //private GPG_Manager gpg_manager;
 
+    [Inject] private readonly PlayerPoolService playerSpawnService;
 
     private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
     private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
@@ -114,12 +116,26 @@ public class MainmenuManager : MonoBehaviour {
 
         if (pauseButton != null)
             pauseButton.SetActive(!GameManager.IsRunOnPC);
+
+        playerSpawnService.OnPlayerLVLup += (Level) => {
+            if (GameManager.IsPC_Demo() && Level >= FishLevel.Mackerel) {
+                gameManager.GameSetPause(true);
+                OnOpenDemoFin();
+            }
+
+            (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
+            if (!prem && !noadd) {//if doesnt have immunitet
+                if (/*gameAdsManager*/GameAdsManager.Instance.OnShowInterstitialAd()) //only if ad will be shown
+                    ActivatePauseWnd(true);
+            }
+        };
+
     }
 
 
     private void OnEnable() {
-        if (spawnManager != null)
-            spawnManager.OnPlayerDied += ActivateRespawnWnd;
+        if (playerSpawnService != null)
+            playerSpawnService.OnPlayerDied += ActivateRespawnWnd;
 #if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
             GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
@@ -127,8 +143,8 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void OnDisable() {
-        if (spawnManager != null)
-            spawnManager.OnPlayerDied -= ActivateRespawnWnd;
+        if (playerSpawnService != null)
+            playerSpawnService.OnPlayerDied -= ActivateRespawnWnd;
 
 #if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
@@ -181,7 +197,8 @@ public class MainmenuManager : MonoBehaviour {
     void ActivateRespawnWnd() {
 #if UNITY_ANDROID
         if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
-            spawnManager.RespawnPlayer(true, false);
+            ResetAndReloadGame_Hard();
+            //playerSpawnService.RespawnPlayer(true, false);
             return;
         }
         //GameAdsManager.Instance.UpdateDailyRevivesTxt();

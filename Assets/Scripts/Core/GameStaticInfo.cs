@@ -184,6 +184,24 @@ public static class GameStaticInfo {
     public const int MAX_DAILY_REVIVALS = 10;
     public const int AUTO_RESPAWN_TIME = 5;
 
+    //pools
+    public const float FISH_SPAWN_HEINGT = 1.78f;
+    public const int PUFFERFISH_SPAWN_COUNT = 20;
+    public const int CUTTLEFISH_SPAWN_COUNT = 30;
+    public const int DARTFISH_SPAWN_COUNT = 50;
+    public const int POOL_FISH_SIZE = 90;
+    public const int PLAYER_POOL_SIZE = (int)(MAX_FISH_LEVEL - 1);//crab is uncounted
+
+    public const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
+    public const int SHIELDS_POOL_CNT = 30; // POOL_SIZE/4
+    public const int WHIRLE_POOL_CNT = 18;
+    public const int BITE_PARTICLES_POOL_CNT = 25;
+    public const int SKELETON_PARTICLE_POOL_CNT = 12;
+    public const int DEAD_BUBBLES_POOL_CNT = 12;
+    public const int INK_PARTICLES_POOL_CNT = 5;//CUTTLEFISH_SPAWN_COUNT / 6
+    public const int HEAL_PARTICLES_POOL_MAX_CNT = 3;
+    public const int SPRINT_PARTICLES_POOL_MAX_CNT = 2;
+
     //fish
     public const FishLevel PLAYER_INIT_LVL = FishLevel.SeaBass; // initial level of the player fish
     /// <summary>

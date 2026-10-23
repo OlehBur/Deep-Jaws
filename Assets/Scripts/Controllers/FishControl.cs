@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
+using VContainer;
 
 [RequireComponent(typeof(Fish))]
 public class FishControl : MonoBehaviour, IFish {
@@ -50,12 +51,14 @@ public class FishControl : MonoBehaviour, IFish {
 
     //reaction to other fish
     private readonly Collider[] overlapResults = new Collider[5];
-    public SpawnManager SpawnManager { get; private set; }
+    //public SpawnManager SpawnManager { get; private set; }
     private float contactTime = 0f; // time of contact with other fish
+    [Inject] private readonly IPlayerPoolService _playerProvider;
 
 
-    public void Init(SpawnManager spawnManager) {
-        SpawnManager = spawnManager;
+
+    public void Init(/*SpawnManager spawnManager*/) {
+        //SpawnManager = spawnManager;
         IFish = this;
         //this.fish = fish;
         IFish.CurrentTarget = null; // Reset current target when enabled
@@ -148,8 +151,8 @@ public class FishControl : MonoBehaviour, IFish {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsFishNeedUpdate() {
-        if (SpawnManager != null && SpawnManager.PlayerFish != null && rb != null && SpawnManager.PlayerFish.Rb != null) {
-            float distanceToPlayer = Vector3.Distance(SpawnManager.PlayerFish./*transform*/Rb.position, /*transform.position*/rb.position);
+        if (_playerProvider.PlayerCurrentFish != null && rb != null && _playerProvider.PlayerCurrentFish.Rb != null) {
+            float distanceToPlayer = Vector3.Distance(_playerProvider.PlayerCurrentFish.Rb.position, rb.position);
             if (distanceToPlayer > GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY) {
                 if (fish.IsActive)
                     fish.IsActive = false;

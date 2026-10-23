@@ -1,4 +1,6 @@
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 
 public enum FishComponentType {
@@ -13,44 +15,53 @@ public enum FishComponentType {
 }
 
 
-public class FishAdditionalCompManager : MonoBehaviour {
-    [SerializeField] Transform fishAddCompPoolParent;
-    [SerializeField] GameObject shieldBubblePrefab;
-    [SerializeField] GameObject spintLinePrefab;
-    [SerializeField] GameObject whirlLinePrefab;
-    [SerializeField] GameObject deadBubblesParticlPrefab;
-    [SerializeField] GameObject biteParticlePrefab;
-    [SerializeField] GameObject skeletParticlePrefab;
-    [SerializeField] GameObject healParticlePrefab;
-    [SerializeField] GameObject inkParticlesPrefab;
-    private const int HEAL_FRUIT_MAX_CNT = 3;
+public class VFXpoolManager : IInitializable/*MonoBehaviour*/ {
+    //[SerializeField] Transform fishAddCompPoolParent;
+    //[SerializeField] GameObject shieldBubblePrefab;
+    //[SerializeField] GameObject spintLinePrefab;
+    //[SerializeField] GameObject whirlLinePrefab;
+    //[SerializeField] GameObject deadBubblesParticlPrefab;
+    //[SerializeField] GameObject biteParticlePrefab;
+    //[SerializeField] GameObject skeletParticlePrefab;
+    //[SerializeField] GameObject healParticlePrefab;
+    //[SerializeField] GameObject inkParticlesPrefab;
+    [Inject] public VFXpoolManager(VFX_PrefabsInfo additionalComponentsInfo, Transform fishAddCompPoolParent) {
+        _additionalComponentsInfo = additionalComponentsInfo;
+        _fishAddCompPoolParent = fishAddCompPoolParent;
+    }
 
-    private /*GameObject*/BubbleShieldWrapper[] shieldsPool;
-    private GameObject[] sprintLinePool;
-    private GameObject[] whirlLinePool;
-    private GameObject[] deadBubblesPool;
-    private GameObject[] biteParticlePool;
-    private GameObject[] skeletParticlePool;
-    private GameObject[] healParticlePool;
-    private GameObject[] inkParticlesPool;
+    private IObjectResolver _resolver;
+    private readonly VFX_PrefabsInfo _additionalComponentsInfo;
+    private readonly Transform _fishAddCompPoolParent;
+    private readonly IPlayerPoolService _playerSpawnService;
+    private readonly IEnemyPoolService _enemyPoolService;
+
+    private /*GameObject*/BubbleShieldWrapper[] _shieldsPool;
+    private GameObject[] _sprintLinePool;
+    private GameObject[] _whirlLinePool;
+    private GameObject[] _deadBubblesPool;
+    private GameObject[] _biteParticlePool;
+    private GameObject[] _skeletParticlePool;
+    private GameObject[] _healParticlePool;
+    private GameObject[] _inkParticlesPool;
 
 
-    public void Init(int shieldsCnt, int deadBubblesCnt, int biteParticlesCnt, int skeletonParticlesCnt, int whirlBubblesCnt, int inkParticlesCnt) {
-        InitPool(ref shieldsPool, shieldBubblePrefab, shieldsCnt);
-        InitPool(ref whirlLinePool, whirlLinePrefab, whirlBubblesCnt);
-        InitPool(ref deadBubblesPool, deadBubblesParticlPrefab, deadBubblesCnt);
-        InitPool(ref biteParticlePool, biteParticlePrefab, biteParticlesCnt);
-        InitPool(ref skeletParticlePool, skeletParticlePrefab, skeletonParticlesCnt);
-        InitPool(ref inkParticlesPool, inkParticlesPrefab, inkParticlesCnt);
-        InitPool(ref sprintLinePool, spintLinePrefab, 2);//for player only and in case respwn
-        InitPool(ref healParticlePool, healParticlePrefab, HEAL_FRUIT_MAX_CNT);//for player only
+    public void Initialize() { 
+        InitPool(ref _shieldsPool, _additionalComponentsInfo.ShieldBubblePrefab, GameStaticInfo.SHIELDS_POOL_CNT);
+        InitPool(ref _whirlLinePool, _additionalComponentsInfo.WhirlLinePrefab, GameStaticInfo.WHIRLE_POOL_CNT);
+        InitPool(ref _deadBubblesPool, _additionalComponentsInfo.DeadBubblesParticlPrefab, GameStaticInfo.DEAD_BUBBLES_POOL_CNT);
+        InitPool(ref _biteParticlePool, _additionalComponentsInfo.BiteParticlePrefab, GameStaticInfo.BITE_PARTICLES_POOL_CNT);
+        InitPool(ref _skeletParticlePool, _additionalComponentsInfo.SkeletParticlePrefab, GameStaticInfo.SKELETON_PARTICLE_POOL_CNT);
+        InitPool(ref _inkParticlesPool, _additionalComponentsInfo.InkParticlesPrefab, GameStaticInfo.INK_PARTICLES_POOL_CNT);
+        InitPool(ref _sprintLinePool, _additionalComponentsInfo.SpintLinePrefab, GameStaticInfo.SPRINT_PARTICLES_POOL_MAX_CNT);//for player only and in case respwn
+        InitPool(ref _healParticlePool, _additionalComponentsInfo.HealParticlePrefab, GameStaticInfo.HEAL_PARTICLES_POOL_MAX_CNT);//for player only
     }
 
     void InitPool(ref GameObject[] pool, GameObject prefab, int count) {
         pool = new GameObject[count];
 
         for (int i = 0; i < count; i++) {
-            pool[i] = Instantiate(prefab, fishAddCompPoolParent);
+            pool[i] = _resolver.Instantiate(prefab, _fishAddCompPoolParent);
             pool[i].SetActive(false);
         }
     }
@@ -60,7 +71,7 @@ public class FishAdditionalCompManager : MonoBehaviour {
 
         for (int i = 0; i < count; i++) {
             pool[i] = new();
-            pool[i].obj = Instantiate(prefab, fishAddCompPoolParent);
+            pool[i].obj = _resolver.Instantiate(prefab, _fishAddCompPoolParent);
             pool[i].obj.SetActive(false);
             pool[i].collider = pool[i].obj.GetComponent<CapsuleCollider>();
             pool[i].visualTransform = pool[i].obj.transform.GetChild(0);
@@ -75,25 +86,25 @@ public class FishAdditionalCompManager : MonoBehaviour {
             //GetInactiveObjectFromPool(shieldsPool, out objToActivate);
             //break;
             case FishComponentType.DeadBubblesParticle:
-            GetInactiveObjectFromPool(deadBubblesPool, out objToActivate);
+            GetInactiveObjectFromPool(_deadBubblesPool, out objToActivate);
             break;
             case FishComponentType.BiteParticle:
-            GetInactiveObjectFromPool(biteParticlePool, out objToActivate);
+            GetInactiveObjectFromPool(_biteParticlePool, out objToActivate);
             break;
             case FishComponentType.SkeletonParticle:
-            GetInactiveObjectFromPool(skeletParticlePool, out objToActivate);
+            GetInactiveObjectFromPool(_skeletParticlePool, out objToActivate);
             break;
             case FishComponentType.PlayerSprintLine:
-            GetInactiveObjectFromPool(sprintLinePool, out objToActivate);
+            GetInactiveObjectFromPool(_sprintLinePool, out objToActivate);
             break;
             case FishComponentType.PlayerHealParticle:
-            GetInactiveObjectFromPool(healParticlePool, out objToActivate);
+            GetInactiveObjectFromPool(_healParticlePool, out objToActivate);
             break;
             case FishComponentType.WhirlLine:
-            GetInactiveObjectFromPool(whirlLinePool, out objToActivate);
+            GetInactiveObjectFromPool(_whirlLinePool, out objToActivate);
             break;
             case FishComponentType.InkParticles:
-            GetInactiveObjectFromPool(inkParticlesPool, out objToActivate);
+            GetInactiveObjectFromPool(_inkParticlesPool, out objToActivate);
             break;
             default:
             Debug.LogWarning("ActivateObjectFromPool don`n have type: " + type);
@@ -112,7 +123,7 @@ public class FishAdditionalCompManager : MonoBehaviour {
     }
 
     public BubbleShieldWrapper ActivateShieldFromPool(Transform parent, Vector3 localPositon) {
-        GetInactiveShieldFromPool(shieldsPool, out BubbleShieldWrapper shield);
+        GetInactiveShieldFromPool(_shieldsPool, out BubbleShieldWrapper shield);
 
         shield.obj.transform.SetParent(parent);
         shield.obj.transform.localPosition = localPositon;

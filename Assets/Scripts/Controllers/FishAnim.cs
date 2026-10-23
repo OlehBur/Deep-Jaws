@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VContainer;
 
 
 [RequireComponent(typeof(Fish))]
@@ -11,6 +12,7 @@ public class FishAnim : MonoBehaviour {
     //[SerializeField] AnimationClip idleClip;
     [SerializeField] Renderer fishSkinnedMesh; //To get Mesh material
     [SerializeField] Transform editableTransform;
+    [SerializeField] EffectManager effectManager;
     //[SerializeField] Vector3 biteParticleLocPos;
     //[SerializeField] float bubbleMaxXoffset = 0; //change the width of the bubble in the rotation (to make the ends of the tail out)
     //[SerializeField] bool isUseRotatingShader = false;
@@ -19,22 +21,21 @@ public class FishAnim : MonoBehaviour {
     public Renderer FishSkinnedMesh => fishSkinnedMesh;
     public bool IsInited { get; private set; } = false;
 
-    private FishAdditionalCompManager fishAddCompMngr;
-    private AudioManager audioManager;
+    //private FishAdditionalCompManager fishAddCompMngr;
     private MaterialPropertyBlock matPropBlock;
     private float matDefSprintSpeed; // default sprint speed in the material
-    //private Material fishMat;
     private float maxShapeRotationVal;
-    private EffectManager effectManager;
+
+    [Inject] private readonly AudioManager _audioManager;
+    [Inject] private readonly VFXpoolManager _fishAddCompMngr;
 
     private const float BUBBLE_INIT_X_OFFSET = 0;
     private const float SPRINT_SPEED_MULTIPLIER = 2f; // multiplier for sprint speed
 
 
-    public void Init(AudioManager audioManager, EffectManager effectManager, FishAdditionalCompManager fishAddCompMngr/*Animator animator*/) {
-        this.audioManager = audioManager;
-        this.effectManager = effectManager;
-        this.fishAddCompMngr = fishAddCompMngr;
+    public void Init(/*EffectManager effectManager*/) {
+        //this.effectManager = effectManager;
+
         if (fish.IsPlayer)
             animator.updateMode = AnimatorUpdateMode.UnscaledTime;
 
@@ -161,14 +162,14 @@ public class FishAnim : MonoBehaviour {
                 animator.SetTrigger(GameStaticInfo.BITE_ANIMATOR_TRIGGER); // play bite animation
 
             if (isNeedParticles) //for optimization
-                fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
+                _fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
                     editableTransform,
                     /*biteParticleLocPos*/fish.DefaultInfo.BiteParticleLocPos,
                     Vector3.one,
                     Quaternion.identity);
 
             if (fish.IsPlayer)//only player
-                audioManager.PlayVFX(VFX_clip.Bite);
+                _audioManager.PlayVFX(VFX_clip.Bite);
         }
     }
 

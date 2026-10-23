@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class CurrentEffect : Effect {
     GameObject bubblesWhirlObj;
-    FishAdditionalCompManager fishAddComp;
+    VFXpoolManager fishAddComp;
     Vector3 whirlLocPos;
     Transform whirlParent;
     const float BOOSTED_SPEED_MULTIPLIER = 1.8f;
 
-    public CurrentEffect(FishAdditionalCompManager fishAddComp, Transform whirlParent, Vector3 whirlLocPos) {
+    public CurrentEffect(VFXpoolManager fishAddComp, Transform whirlParent, Vector3 whirlLocPos) {
         this.fishAddComp = fishAddComp;
         this.whirlLocPos = whirlLocPos;
         this.whirlParent = whirlParent;

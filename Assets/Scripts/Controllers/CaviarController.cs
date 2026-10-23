@@ -64,10 +64,10 @@ public class CaviarController : MonoBehaviour {
     }
 
     void ActivateCaviar() {
-        if (spawnManager.PlayerFish == null)
+        if (spawnManager.PlayerCurrentFish == null)
             return;
 
-        if (Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
+        if (Vector3.Distance(spawnManager.PlayerCurrentFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
             /*gameObject*/
             caviarModel.SetActive(true);
         else

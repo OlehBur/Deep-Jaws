@@ -20,7 +20,7 @@ public class СuttlefishController : MonoBehaviour {
     private Color targetColor = Color.black;
     private bool isAllowOverlapping = true;
     private bool isNeedReverseProgress = false;
-    private FishAdditionalCompManager fishAddComp;
+    private VFXpoolManager fishAddComp;
     private float curentPoisonCooldown = 0f;
 
     private static readonly WaitForSeconds SHADER_UPD_WAIT = new WaitForSeconds(SHADER_UPDATE_INTERVAL);
@@ -42,7 +42,7 @@ public class СuttlefishController : MonoBehaviour {
     private const float POISON_COOLDOWN = 10f;
 
 
-    public void Init(AudioManager audioManager, FishAdditionalCompManager fishAddComp) {
+    public void Init(AudioManager audioManager, VFXpoolManager fishAddComp) {
         this.audioManager = audioManager;
         this.fishAddComp = fishAddComp;
     }

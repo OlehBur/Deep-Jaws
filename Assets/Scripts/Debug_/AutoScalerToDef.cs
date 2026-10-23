@@ -1,8 +1,6 @@
 using UnityEngine;
 
 /// <summary>
-/// збільшує масштаб об'єкта до заданого значення починаючи з нуля і вимикає скрипт, коли досягається початковий масштаб,
-/// якщо вимкнути компонент то початкове значення відновиться 
 /// increases the scale of the object to the specified value starting from zero and disables 
 /// the script when the initial scale is reached, if the component is disabled then the initial value will be restored
 /// </summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum FishEffectType {//pos or neg (+/-)
@@ -13,36 +14,24 @@ public enum FishEffectType {//pos or neg (+/-)
     Blindness           //-
 }
 
-/// <summary>
-/// no(fish effect Component)
-/// </summary>
-public abstract class Effect /*: MonoBehaviour*/ {
+
+public abstract class Effect {
     /// <summary>
     /// value of effect duration in seconds (must be > 1s, because beacause)
     /// </summary>
     public float Duration { get; private set; }
-    protected FishEffectType type;
-    //protected bool isStartDeactivate = false;
+    public FishEffectType Type { get; private set; }
 
     public float LeftTime { get; private set; } // remaining time of the effect
     protected Fish targetFish;
     public event Action<FishEffectType> OnEffeñtExpire;
     protected const float NORMAL_SPEED_MULTIPLIER = 1f;
-    //private bool enabled = true;
-    public bool Enabled { get; set; } = true;
-    //public bool Enabled {
-    //    get { return enabled; }
-    //    set {
-    //        enabled = value;
 
-    //        if (!value)
-    //            DeactivateEffect();
-    //    }
-    //}
+    public bool Enabled { get; set; } = true;
 
 
     public void Init(Fish target, float duration) {
-        this.targetFish = target;
+        targetFish = target;
         Duration = duration;
         LeftTime = duration;
 
@@ -56,7 +45,7 @@ public abstract class Effect /*: MonoBehaviour*/ {
         if (DJTime.TimeScale == 0f)//in pause menu effect must be freezed
             return;
 
-        float delta = type == FishEffectType.FreezeTime ?
+        float delta = Type == FishEffectType.FreezeTime ?
             DJTime.UnscaledDeltaTime : DJTime.DeltaTime;
 
         LeftTime -= delta/*deltaTime*/;
@@ -91,6 +80,6 @@ public abstract class Effect /*: MonoBehaviour*/ {
         //const float DESTROY_DELAY_TIME = 0.05f; // delay to avoid issues with OnDestroy calling before OnExpire
         //isStartDeactivate = true;
         OnExpire();
-        OnEffeñtExpire?.Invoke(type);
+        OnEffeñtExpire?.Invoke(Type);
     }
 }

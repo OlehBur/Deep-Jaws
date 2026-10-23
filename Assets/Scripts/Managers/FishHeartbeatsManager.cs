@@ -54,7 +54,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
     void ReInitPool() {
         if (fishHeartbeatsParticlesPool == null)
             fishHeartbeatsParticlesPool = new ParticleSystem[SpawnManager.POOL_SIZE + SpawnManager.PUFFERFISH_SPAWN_COUNT + SpawnManager.CUTTLEFISH_SPAWN_COUNT + SpawnManager.DARTFISH_SPAWN_COUNT + spawnManager.PlayerPoolSize];
-        FishLevel playerLevel = spawnManager.PlayerFish.Level;
+        FishLevel playerLevel = spawnManager.PlayerCurrentFish.Level;
         ParticleSystem.MainModule particleMainModule;
 
         int index = 0;
@@ -95,7 +95,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
                 (fish.Level < playerLevel) ? WEAK_ENEMY_COLOR :
                     STRONG_ENEMY_COLOR;
 
-            enemyFishColor = (fish == spawnManager.PlayerFish) ?
+            enemyFishColor = (fish == spawnManager.PlayerCurrentFish) ?
                 PLAYER_COLOR : enemyFishColor;
 
             particleMainModule.startColor = enemyFishColor;

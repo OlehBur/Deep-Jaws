@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 public class GameManager : MonoBehaviour {
     //[SerializeField] MainmenuManager mainmenuManager;
@@ -14,6 +15,10 @@ public class GameManager : MonoBehaviour {
     /// <summary>
     /// позначає час який має бути встановлено під час виходу з паузи (може бути як стандартний 1, так і змінений певними ефектами)
     /// </summary>
+
+
+    [Inject] private readonly IPlayerPoolService _playerProvider; 
+
 
     public static int ScreenMaxFramerate {
         get {
@@ -46,12 +51,14 @@ public class GameManager : MonoBehaviour {
 
     //game init
     void Awake() {
+
         //Debug.LogWarning("Run On ANDROID Enanbled");
 
         gameCanvas.SetActive(false);
         GameSetPause(true);//wait until the spawn manager finishes creating pools
 
         spawnManager.Init();
+
         cameraFollower.Init(spawnManager); // initialize the camera follower with the spawn manager
         fishHeartbeatsManager.Init(spawnManager);
         playerEffectsUI.Init(spawnManager);
@@ -98,8 +105,8 @@ public class GameManager : MonoBehaviour {
         DJTime.TimeScale = (isPause) ?
             0f : CurrentDefaultGameTime; // pause or resume the game
 
-        if (spawnManager != null && spawnManager.PlayerFish != null) {
-            spawnManager.PlayerFish.gameObject.TryGetComponent(out EffectManager playerEffManager);
+        if (_playerProvider.PlayerCurrentFish != null) {
+            _playerProvider.PlayerCurrentFish.gameObject.TryGetComponent(out EffectManager playerEffManager);
             if (isPause && pauseExitButton != null)
                 //if (/*playerEffManager != null && */)
                 //can exist only if the player is not being pursued by enemies and has no active effects

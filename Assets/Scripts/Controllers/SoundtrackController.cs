@@ -19,8 +19,8 @@ public class SoundtrackController : MonoBehaviour {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         spawnManager.OnPlayerRespawn += ActivateNewTargerSong;
-        if (spawnManager.PlayerFish != null)//initial start mus
-            ActivateNewTargerSong(spawnManager.PlayerFish, false);
+        if (spawnManager.PlayerCurrentFish != null)//initial start mus
+            ActivateNewTargerSong(spawnManager.PlayerCurrentFish, false);
     }
 
     void ActivateNewTargerSong(Fish fish, bool isDeath) {

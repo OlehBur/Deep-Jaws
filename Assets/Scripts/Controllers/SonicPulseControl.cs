@@ -57,7 +57,7 @@ public class SonicPulseControl : MonoBehaviour {
 
         Transform fishParent = other.attachedRigidbody.transform;
 
-        if (triggerCollider.enabled && !other.isTrigger /*&& GameManager.IsSceneReady*/ && Vector3.Distance(spawnManager.PlayerFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
+        if (triggerCollider.enabled && !other.isTrigger /*&& GameManager.IsSceneReady*/ && Vector3.Distance(spawnManager.PlayerCurrentFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
             && fishParent.TryGetComponent(out EffectManager fem) && !playAnim && curentRechargeTime <= 0f) {
             playAnim = true;
             curentRechargeTime = PULSE_RECHARGE_TIME; // reset recharge time

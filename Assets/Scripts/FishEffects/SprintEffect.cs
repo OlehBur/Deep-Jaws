@@ -3,12 +3,12 @@ using UnityEngine;
 public class SprintEffect : Effect {
     GameObject trailObj;
     FishAnim fishAnim;
-    FishAdditionalCompManager fishAddComp;
+    VFXpoolManager fishAddComp;
     Vector3 trailLocalPos;
     Transform trailParent;
     const float SPRINT_SPEED_MULTIPLIER = 1.5f;
 
-    public SprintEffect(FishAdditionalCompManager fishAddComp, FishAnim fishAnim, Transform trailParent, Vector3 trailLocalPos) {
+    public SprintEffect(VFXpoolManager fishAddComp, FishAnim fishAnim, Transform trailParent, Vector3 trailLocalPos) {
         //this.trailObj = trailObj;
         this.fishAddComp = fishAddComp;
         this.trailLocalPos = trailLocalPos;

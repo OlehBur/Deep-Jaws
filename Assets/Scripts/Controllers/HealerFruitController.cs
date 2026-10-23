@@ -5,7 +5,7 @@ using UnityEngine;
 public class HealerFruitController : MonoBehaviour {
     [SerializeField] Collider fruitCollider;
     [SerializeField] AudioManager audioManager;
-    [SerializeField] FishAdditionalCompManager dishAddCompMangr;
+    [SerializeField] VFXpoolManager dishAddCompMangr;
     //[SerializeField] AudioSource audioSource;
     //[SerializeField] AudioClip healClip;
     [SerializeField] Light fruitLight;

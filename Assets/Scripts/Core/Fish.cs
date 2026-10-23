@@ -69,8 +69,8 @@ public class Fish : MonoBehaviour {
     //public float JawForwardOffset => jawForwardOffset;
     public float DeffaultAttackTime => Mathf.Min(MAX_ATTACK_INTERVAL, (1f / (float)Level) * ATTACK_INTERVAL_COEFFICIENT); // default attack time for fish
     public event Action<Vector3> OnFishUpdateSize;
-    public event Action<GameObject> OnFishLvlUp;
-    public event Action<GameObject, FishLevel, bool> OnFishDie;
+    public event Action<GameObject, FishLevel> OnFishLvlUp;
+    public event Action<GameObject, FishLevel> OnFishDie;
     /// <summary>
     /// for save new score and aute play bite animation
     /// </summary>
@@ -278,12 +278,12 @@ public class Fish : MonoBehaviour {
         gameObject.SetActive(false);
         IsAlreadySelected = false;
 
-        OnFishDie?.Invoke(gameObject, Level, IsPlayer);
+        OnFishDie?.Invoke(gameObject, Level);
     }
 
     public void UpdateGrowSize() {
         if (IsPlayer && Progress >= 1f && Level != GameStaticInfo.MAX_FISH_LEVEL) //player with max level will not grow
-            OnFishLvlUp?.Invoke(gameObject);
+            OnFishLvlUp?.Invoke(gameObject, Level);
 #if UNITY_ANDROID && !UNITY_EDITOR
         else if (IsPlayer && Level == GameStaticInfo.MAX_FISH_LEVEL && GameStaticInfo.Gamemode == GameMode.Hard && Progress >= KING_ABYSS_PROGRESS)
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_king_of_the_abyss);

@@ -45,8 +45,8 @@ public class ZoneController : MonoBehaviour {
 
     private void Start() {//work onlu once per game install (only for old players)
         spawnManager.OnPlayerRespawn += BiomeByLvlBehaviour;
-        if (spawnManager.PlayerFish != null)
-            BiomeByLvlBehaviour(spawnManager.PlayerFish, false);
+        if (spawnManager.PlayerCurrentFish != null)
+            BiomeByLvlBehaviour(spawnManager.PlayerCurrentFish, false);
 
         //Locale currentLocale = LocalizationSettings.SelectedLocale;
         //OnLanguageChanged(currentLocale);

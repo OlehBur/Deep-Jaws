@@ -62,9 +62,9 @@ public class CameraFollower : MonoBehaviour {
         this.spawnManager = spawnManager;
         spawnManager.OnPlayerRespawn += ResetPlayerTarget;
 
-        if (spawnManager.PlayerFish != null) {
-            target = spawnManager.PlayerFish.transform;
-            playerFish = spawnManager.PlayerFish;
+        if (spawnManager.PlayerCurrentFish != null) {
+            target = spawnManager.PlayerCurrentFish.transform;
+            playerFish = spawnManager.PlayerCurrentFish;
         }
 
         if (cameraObj != null)
