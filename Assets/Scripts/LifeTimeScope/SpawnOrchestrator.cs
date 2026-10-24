@@ -10,6 +10,9 @@ public class SpawnOrchestrator : MonoBehaviour/*IInitializable*/ {
     [Inject] private readonly MainmenuManager _mainmenuManager;
 
     [SerializeField] Transform fishPoolParent;
+    [SerializeField] Transform weakFishSpawnPointsParent;
+    [SerializeField] Transform strongFishSpawnPointsParent;
+    [SerializeField] Transform sharkSpawnPointsParent;
     [SerializeField] GameObject enemyDetectorPrefab;
 
     // VContainer construct!
@@ -21,7 +24,19 @@ public class SpawnOrchestrator : MonoBehaviour/*IInitializable*/ {
     //}
 
     public void /*Initialize*/Start() {
-        _enemyPoolService.InitPool(fishPoolParent);
-        _playerSpawnService.InitPool(fishPoolParent);
+        //init
+        _playerSpawnService.Init(fishPoolParent);
+
+        _enemyPoolService.Init(fishPoolParent);
+        //_enemyPoolService.SetPlayerProvider(_playerSpawnService);
+        _enemyPoolService.SetSpawnPoints(weakFishSpawnPointsParent, strongFishSpawnPointsParent, sharkSpawnPointsParent);
+
+        //first spawns
+        _playerSpawnService.InitialSpawnPrefabs();
+        _enemyPoolService.InitialSpawnPrefabs();
+    }
+
+    public void OnSceneExit() {
+        _playerSpawnService.SavePlayerData();
     }
 }

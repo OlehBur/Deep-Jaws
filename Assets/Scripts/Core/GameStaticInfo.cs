@@ -185,11 +185,12 @@ public static class GameStaticInfo {
     public const int AUTO_RESPAWN_TIME = 5;
 
     //pools
+    public const float HORIZONTAL_SPAWN_MAX_OFFSET = 6f;
     public const float FISH_SPAWN_HEINGT = 1.78f;
     public const int PUFFERFISH_SPAWN_COUNT = 20;
     public const int CUTTLEFISH_SPAWN_COUNT = 30;
     public const int DARTFISH_SPAWN_COUNT = 50;
-    public const int POOL_FISH_SIZE = 90;
+    public const int ENEMY_POOL_SIZE = 90;
     public const int PLAYER_POOL_SIZE = (int)(MAX_FISH_LEVEL - 1);//crab is uncounted
 
     public const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
@@ -230,6 +231,7 @@ public static class GameStaticInfo {
     public const string TAG_OBSTACLE = "Obstacle";
     public const string NAME_PLAYER = "Player ";
     public const string NAME_ENEMY = "Enemy ";
+    public const string NAME_PERMAMENT = "Permament ";
 
     /// <summary>
     /// RigidbodyConstraints for all fish ( rot: freze X and Z  pos: freeze Y )
@@ -299,18 +301,18 @@ public static class GameStaticInfo {
     public const int SINGULAR_SKIN_PRICE = 11111;
     public static int GetFreeSkinPrice(Skin skin) =>
         skin switch {
-            Skin.Porcelain => GameStaticInfo.PORCELAIN_SKIN_PRICE,
-            Skin.Zebra => GameStaticInfo.ZEBRA_SKIN_PRICE,
-            Skin.Checkerboard => GameStaticInfo.CHECKER_SKIN_PRICE,
-            Skin.Blinker => GameStaticInfo.BLINKER_SKIN_PRICE,
-            Skin.Cupid => GameStaticInfo.CUPID_SKIN_PRICE,
-            Skin.Fairylight => GameStaticInfo.FAIRYLIGHT_SKIN_PRICE,
-            Skin.Pixy => GameStaticInfo.PIXY_SKIN_PRICE,
-            Skin.Corrosion => GameStaticInfo.COROSSION_SKIN_PRICE,
-            Skin.Sun => GameStaticInfo.SUN_SKIN_PRICE,
-            Skin.Rainbow => GameStaticInfo.RAINBOW_SKIN_PRICE,
-            Skin.Cosmo => GameStaticInfo.COSMO_SKIN_PRICE,
-            Skin.Singularity => GameStaticInfo.SINGULAR_SKIN_PRICE,
+            Skin.Porcelain => PORCELAIN_SKIN_PRICE,
+            Skin.Zebra => ZEBRA_SKIN_PRICE,
+            Skin.Checkerboard => CHECKER_SKIN_PRICE,
+            Skin.Blinker => BLINKER_SKIN_PRICE,
+            Skin.Cupid => CUPID_SKIN_PRICE,
+            Skin.Fairylight => FAIRYLIGHT_SKIN_PRICE,
+            Skin.Pixy => PIXY_SKIN_PRICE,
+            Skin.Corrosion => COROSSION_SKIN_PRICE,
+            Skin.Sun => SUN_SKIN_PRICE,
+            Skin.Rainbow => RAINBOW_SKIN_PRICE,
+            Skin.Cosmo => COSMO_SKIN_PRICE,
+            Skin.Singularity => SINGULAR_SKIN_PRICE,
             Skin.Invert => INVERT_SKIN_PRICE,
             _ => -1
         } /*/ 100*/;
@@ -340,6 +342,13 @@ public static class GameStaticInfo {
                Mathf.Abs(a.g - b.g) < tolerance &&
                Mathf.Abs(a.b - b.b) < tolerance &&
                Mathf.Abs(a.a - b.a) < tolerance;
+    }
+
+    public static Vector3 RandomXZOffset(float maxOffset = HORIZONTAL_SPAWN_MAX_OFFSET) {
+        float offsetMultiplierX = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
+        float offsetMultiplierZ = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
+
+        return new Vector3(offsetMultiplierX * maxOffset, 0, offsetMultiplierZ * maxOffset);
     }
 
     static bool TryGetFishFromPool(GameObject fishObject, GameObject[] pool, Fish[] fishPool, out Fish fish) {

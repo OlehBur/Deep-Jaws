@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+//using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -25,9 +25,9 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     [SerializeField] GameObject dartfishPrefab;
 
     [Header("Prefabs Spawnpoints")]  //spawn  
-    [SerializeField] Transform weakFishSpawnPointsParent;
-    [SerializeField] Transform strongFishSpawnPointsParent;
-    [SerializeField] Transform sharkSpawnPointsParent;
+    //[SerializeField] Transform weakFishSpawnPointsParent;
+    //[SerializeField] Transform strongFishSpawnPointsParent;
+    //[SerializeField] Transform sharkSpawnPointsParent;
     [SerializeField] Transform pufferfishPointsParent;
     [SerializeField] Transform cuttlefishPointsParent;
 
@@ -68,7 +68,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         //    GameStaticInfo.INK_PARTICLES_POOL_CNT);
 
         
-        InitPool();//init global enemy fishes pool
+        //InitPool();//init global enemy fishes pool
         //InitPlayerPool();
 
         DefaultSpawnAllPrefabs();
@@ -127,16 +127,16 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //        fishSkinManager.InitSkin(renderer, selectedSkin, fish.Level);
     //}
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void PrefabNamingTaging(GameObject prefab, FishLevel level, bool isPlayer = false) {
-        string name = isPlayer ? GameStaticInfo.NAME_PLAYER : GameStaticInfo.NAME_ENEMY;
-        string tag = isPlayer ? GameStaticInfo.TAG_PLAYER : GameStaticInfo.TAG_ENTITY;
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //void PrefabNamingTaging(GameObject prefab, FishLevel level, bool isPlayer = false) {
+    //    string name = isPlayer ? GameStaticInfo.NAME_PLAYER : GameStaticInfo.NAME_ENEMY;
+    //    string tag = isPlayer ? GameStaticInfo.TAG_PLAYER : GameStaticInfo.TAG_ENTITY;
 
-        prefab.name = name + level.ToString();
-        prefab.tag = tag;
-        foreach (Transform t in prefab.transform) //for bubble collider
-            t.gameObject.tag = tag;
-    }
+    //    prefab.name = name + level.ToString();
+    //    prefab.tag = tag;
+    //    foreach (Transform t in prefab.transform) //for bubble collider
+    //        t.gameObject.tag = tag;
+    //}
 
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //void EnableAutoScalerComponent(GameObject toPrefab) {
@@ -151,62 +151,62 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //    }
     //}
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void InitPool() {
-        GameObject prefab;
-        Fish enemyFish;
-        for (int i = 0; i <= (int)GameStaticInfo.MAX_FISH_LEVEL; i++)
-            for (int j = 0; j < GameStaticInfo.POOL_FISH_SIZE; j++) {
-                prefab = Instantiate(prefabs[i], fishPoolParent);
-                globalPool_Objects[i, j] = prefab;
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //void InitPool() {
+    //    GameObject prefab;
+    //    Fish enemyFish;
+    //    for (int i = 0; i <= (int)GameStaticInfo.MAX_FISH_LEVEL; i++)
+    //        for (int j = 0; j < GameStaticInfo.POOL_FISH_SIZE; j++) {
+    //            prefab = Instantiate(prefabs[i], fishPoolParent);
+    //            globalPool_Objects[i, j] = prefab;
 
-                PrefabInitFishAnimAndEffectManagers(prefab, out FishAnim fishAnim);
+    //            PrefabInitFishAnimAndEffectManagers(prefab, out FishAnim fishAnim);
 
-                enemyFish = prefab.GetComponent<Fish>();
-                globalPool_Components[i, j] = enemyFish;
-                enemyFish.OnFishDie += FishDieAct;
+    //            enemyFish = prefab.GetComponent<Fish>();
+    //            globalPool_Components[i, j] = enemyFish;
+    //            enemyFish.OnFishDie += FishDieAct;
 
-                prefab.SetActive(false);
-            }
-        //Debug.LogWarning("mega pool enable and spawn disable");
-    }
+    //            prefab.SetActive(false);
+    //        }
+    //    //Debug.LogWarning("mega pool enable and spawn disable");
+    //}
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void PrefabInitFishAnimAndEffectManagers(GameObject prefab, out FishAnim fishAnim, bool isPlayer = false) {
-        if (prefab.TryGetComponent(out fishAnim) && prefab.TryGetComponent(out EffectManager effectManager)) {
-            if (isPlayer) {
-                fishAnim.Init(audioManager, effectManager, fishAdditionalComponentManager);
-                effectManager.Init(audioManager, fishAdditionalComponentManager);
-            }
-            else {
-                fishAnim.Init(null, effectManager, fishAdditionalComponentManager);
-                effectManager.Init(null, fishAdditionalComponentManager);
-            }
-        }
-    }
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //void PrefabInitFishAnimAndEffectManagers(GameObject prefab, out FishAnim fishAnim, bool isPlayer = false) {
+    //    if (prefab.TryGetComponent(out fishAnim) && prefab.TryGetComponent(out EffectManager effectManager)) {
+    //        if (isPlayer) {
+    //            fishAnim.Init(audioManager, effectManager, fishAdditionalComponentManager);
+    //            effectManager.Init(audioManager, fishAdditionalComponentManager);
+    //        }
+    //        else {
+    //            fishAnim.Init(null, effectManager, fishAdditionalComponentManager);
+    //            effectManager.Init(null, fishAdditionalComponentManager);
+    //        }
+    //    }
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="alreadyDeadObj">null if init spawn</param>
-    /// <param name="level"></param>
-    /// <param name="index"></param>
-    /// <returns></returns>
-    GameObject GetFishFromPool(GameObject alreadyDeadObj, int level, out int index) {
-        index = -1;
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="alreadyDeadObj">null if init spawn</param>
+    ///// <param name="level"></param>
+    ///// <param name="index"></param>
+    ///// <returns></returns>
+    //GameObject GetFishFromPool(GameObject alreadyDeadObj, int level, out int index) {
+    //    index = -1;
 
-        for (int i = 0; i < GameStaticInfo.POOL_FISH_SIZE; i++) {
-            GameObject obj = globalPool_Objects[level, i];
+    //    for (int i = 0; i < GameStaticInfo.POOL_FISH_SIZE; i++) {
+    //        GameObject obj = globalPool_Objects[level, i];
 
-            if (!obj.activeInHierarchy && obj != alreadyDeadObj && !globalPool_Components[level, i].IsAlreadySelected) {
-                index = i;
-                globalPool_Components[level, i].IsAlreadySelected = true;
+    //        if (!obj.activeInHierarchy && obj != alreadyDeadObj && !globalPool_Components[level, i].IsAlreadySelected) {
+    //            index = i;
+    //            globalPool_Components[level, i].IsAlreadySelected = true;
 
-                return obj;
-            }
-        }
-        return null;
-    }
+    //            return obj;
+    //        }
+    //    }
+    //    return null;
+    //}
 
     //save data
     private void /*OnApplicationQuit*/OnDisable() {
@@ -221,7 +221,7 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         UnSubscribeFishesDieAct(dartfishPool_FishComponents, GameStaticInfo.DARTFISH_SPAWN_COUNT);
 
         for (int i = 0; i <= (int)GameStaticInfo.MAX_FISH_LEVEL; i++)
-            for (int j = 0; j < GameStaticInfo.POOL_FISH_SIZE; j++)
+            for (int j = 0; j < GameStaticInfo.ENEMY_POOL_SIZE; j++)
                 globalPool_Components[i, j].OnFishDie -= FishDieAct;
     }
 
@@ -230,12 +230,12 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             pool[i].OnFishDie -= FishDieAct;
     }
 
-    public void OnSceneExit() {
-        SavePlayerData();
-    }
+    //public void OnSceneExit() {
+    //    SavePlayerData();
+    //}
 
-    /// <summary>
-    /// respawn all +2 lvl fishes depending on player lvl after hes death
+    ///// <summary>
+    ///// respawn all +2 lvl fishes depending on player lvl after hes death
     ///// </summary>
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //void RespawnEntitiesMap(FishLevel playerFishLVL) {
@@ -293,26 +293,26 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 #endif
     }
 
-    void SpawnEnemyFish(int visPoolIndex, int lvl, bool isRandomPos = false) {
-        GameObject enemyPrefab;
+    //void SpawnEnemyFish(int visPoolIndex, int lvl, bool isRandomPos = false) {
+    //    GameObject enemyPrefab;
 
-        enemyPrefab = GetFishFromPool(visible_poolFishObjects[visPoolIndex], lvl, out int globalIndex);//Instantiate(prefabs[lvl], GetRandSpawnPosition(lvl, isRandomPos), Quaternion.identity);
-        enemyPrefab.transform.position = GetRandSpawnPosition(lvl, isRandomPos);
+    //    enemyPrefab = GetFishFromPool(visible_poolFishObjects[visPoolIndex], lvl, out int globalIndex);//Instantiate(prefabs[lvl], GetRandSpawnPosition(lvl, isRandomPos), Quaternion.identity);
+    //    enemyPrefab.transform.position = GetRandSpawnPosition(lvl, isRandomPos);
 
-        FishControl enemyControl = enemyPrefab.GetComponent<FishControl>();
-        Fish enemyFish = globalPool_Components[lvl, globalIndex];//enemyPrefab.GetComponent<Fish>();
-        enemyFish.IsPlayer = false;
-        /*enemyPrefab.GetComponent<FishControl>()*/
-        enemyFish.SetRandomProgress(); //change progress every respawn
-        enemyControl.Init(this/*, enemyFish*/);
+    //    FishControl enemyControl = enemyPrefab.GetComponent<FishControl>();
+    //    Fish enemyFish = globalPool_Components[lvl, globalIndex];//enemyPrefab.GetComponent<Fish>();
+    //    enemyFish.IsPlayer = false;
+    //    /*enemyPrefab.GetComponent<FishControl>()*/
+    //    enemyFish.SetRandomProgress(); //change progress every respawn
+    //    enemyControl.Init(this/*, enemyFish*/);
 
-        PrefabNamingTaging(enemyPrefab, enemyFish.Level);
+    //    PrefabNamingTaging(enemyPrefab, enemyFish.Level);
 
-        visible_poolFishComponents[visPoolIndex] = enemyFish;
-        visible_poolFishObjects[visPoolIndex] = enemyPrefab;
+    //    visible_poolFishComponents[visPoolIndex] = enemyFish;
+    //    visible_poolFishObjects[visPoolIndex] = enemyPrefab;
 
-        enemyPrefab.SetActive(true);
-    }
+    //    enemyPrefab.SetActive(true);
+    //}
 
     /// <summary>
     /// deactivates and respawn prefab
@@ -346,14 +346,14 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
             RespawnPermamentFish(visIndex, dartfishPool_Objects, dartfishPool_FishComponents, spawnPoints);
             break;
 
-            default://others default fishes & player
+            //default://others default fishes & player
 
-            if (!isPlayer) {
-                visIndex = Array.IndexOf(visible_poolFishObjects, prefab);
+            //if (!isPlayer) {
+            //    visIndex = Array.IndexOf(visible_poolFishObjects, prefab);
 
-                if (visIndex >= 0)
-                    RespawnEnemy(visIndex, isDie);
-            }
+            //    if (visIndex >= 0)
+            //        RespawnEnemy(visIndex, isDie);
+            //}
             //else {//player
             //    //wait for retry\revive buttons touched & ad watch
             //    SaveDataForDelayPlayerRespawn();
@@ -380,67 +380,67 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
     //    _playerProg = PlayerCurrentFish.Progress;
     //}
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int GetRandSpawnLevel() {
-        if (PlayerCurrentFish == null)
-            return (int)GameStaticInfo.PLAYER_INIT_LVL;
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //private int GetRandSpawnLevel() {
+    //    if (PlayerCurrentFish == null)
+    //        return (int)GameStaticInfo.PLAYER_INIT_LVL;
 
-        const int ALLOWED_LVLS_CNT = 3;
-        int[] allowedLevels = new int[ALLOWED_LVLS_CNT] {
-            Math.Max((int) PlayerCurrentFish.Level - 1, 0),
-            (int) PlayerCurrentFish.Level,
-            Math.Min((int)PlayerCurrentFish.Level + 1, (int)GameStaticInfo.MAX_FISH_LEVEL)
-        };
-        float random = UnityEngine.Random.value;//0 to 1
-        float currentWeight = 0f;
-        float[] spawnWeight = (PlayerCurrentFish.Level == FishLevel.SeaBass) ?
-            SPAWN_WEIGHTS_EASY_START : SPAWN_WEIGHTS_EASY;//easy enemies for beginner players
-                                                          //weight by gamemode
+    //    const int ALLOWED_LVLS_CNT = 3;
+    //    int[] allowedLevels = new int[ALLOWED_LVLS_CNT] {
+    //        Math.Max((int) PlayerCurrentFish.Level - 1, 0),
+    //        (int) PlayerCurrentFish.Level,
+    //        Math.Min((int)PlayerCurrentFish.Level + 1, (int)GameStaticInfo.MAX_FISH_LEVEL)
+    //    };
+    //    float random = UnityEngine.Random.value;//0 to 1
+    //    float currentWeight = 0f;
+    //    float[] spawnWeight = (PlayerCurrentFish.Level == FishLevel.SeaBass) ?
+    //        SPAWN_WEIGHTS_EASY_START : SPAWN_WEIGHTS_EASY;//easy enemies for beginner players
+    //                                                      //weight by gamemode
 
-        if (GameStaticInfo.Gamemode == GameMode.None) {
-            Debug.LogWarning("Activate fast game scene start!");
+    //    if (GameStaticInfo.Gamemode == GameMode.None) {
+    //        Debug.LogWarning("Activate fast game scene start!");
 
-            if (ProgressSaver.IsWorldDataExist)
-                GameStaticInfo.Gamemode = ProgressSaver.LoadWorldData().gameMode;
+    //        if (ProgressSaver.IsWorldDataExist)
+    //            GameStaticInfo.Gamemode = ProgressSaver.LoadWorldData().gameMode;
 
-            if (GameStaticInfo.Gamemode == GameMode.None) {
-                GameStaticInfo.Gamemode = GameMode.Easy;
-                Debug.LogWarning("Gamemode selection System doesnt work properly!");
-            }
-        }
-        spawnWeight = GameStaticInfo.Gamemode switch {
-            GameMode.Easy => spawnWeight,
-            GameMode.Medium => SPAWN_WEIGHTS_MEDIUM,
-            GameMode.Hard => SPAWN_WEIGHTS_HARD,
-            _ => SPAWN_WEIGHTS_EASY,
-        };
+    //        if (GameStaticInfo.Gamemode == GameMode.None) {
+    //            GameStaticInfo.Gamemode = GameMode.Easy;
+    //            Debug.LogWarning("Gamemode selection System doesnt work properly!");
+    //        }
+    //    }
+    //    spawnWeight = GameStaticInfo.Gamemode switch {
+    //        GameMode.Easy => spawnWeight,
+    //        GameMode.Medium => SPAWN_WEIGHTS_MEDIUM,
+    //        GameMode.Hard => SPAWN_WEIGHTS_HARD,
+    //        _ => SPAWN_WEIGHTS_EASY,
+    //    };
 
-        for (int i = 0; i < ALLOWED_LVLS_CNT; i++) {
-            currentWeight += spawnWeight[i];
+    //    for (int i = 0; i < ALLOWED_LVLS_CNT; i++) {
+    //        currentWeight += spawnWeight[i];
 
-            if (random < currentWeight)
-                return allowedLevels[i];
-        }
+    //        if (random < currentWeight)
+    //            return allowedLevels[i];
+    //    }
 
-        return allowedLevels[0];
-    }
+    //    return allowedLevels[0];
+    //}
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DefaultSpawnAllPrefabs() {
-        int currnentRandLvl = 0;
+        //int currnentRandLvl = 0;
 
-        //spawn player from save
-        if (_savedWorldData != null)
-            PlayerCurrentFish = SpawnPlayerFish(_savedWorldData.playerPosition, _savedWorldData.playerRotation, true, (int)_savedWorldData.playerLevel, _savedWorldData.playerProgress);
-        else//for begin
-            PlayerCurrentFish = SpawnPlayerFish(_playerInitSpawnPos, Quaternion.identity, false);
+        ////spawn player from save
+        //if (_savedWorldData != null)
+        //    PlayerCurrentFish = SpawnPlayerFish(_savedWorldData.playerPosition, _savedWorldData.playerRotation, true, (int)_savedWorldData.playerLevel, _savedWorldData.playerProgress);
+        //else//for begin
+        //    PlayerCurrentFish = SpawnPlayerFish(_playerInitSpawnPos, Quaternion.identity, false);
 
-        OnPlayerRespawn?.Invoke(PlayerCurrentFish, false);
+        //OnPlayerRespawn?.Invoke(PlayerCurrentFish, false);
 
-        for (int i = 0; i < GameStaticInfo.POOL_FISH_SIZE; i++) {
-            currnentRandLvl = GetRandSpawnLevel();
-            SpawnEnemyFish(i, currnentRandLvl, _savedWorldData == null);
-        }
+        //for (int i = 0; i < GameStaticInfo.POOL_FISH_SIZE; i++) {
+        //    currnentRandLvl = GetRandSpawnLevel();
+        //    SpawnEnemyFish(i, currnentRandLvl, _savedWorldData == null);
+        //}
 
         //spawn Pufferfish
         InitSpawnPermamentFishes(pufferfishPrefab, pufferfishPointsParent /*pufferfishPoints*/, pufferfishPool_Objects, pufferfishPool_FishComponents, GameStaticInfo.PUFFERFISH_SPAWN_COUNT);
@@ -505,24 +505,24 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
         }
     }
 
-    /// <summary>
-    /// Fish (enemy) get here after death)
-    /// </summary>
-    /// <param name="prefab"></param>
-    private void RespawnEnemy(int visIndex, bool isDie = true) {//Attempted to realize spawn by weight respawn
-        Fish currentFish = visible_poolFishComponents[visIndex];
+    ///// <summary>
+    ///// Fish (enemy) get here after death)
+    ///// </summary>
+    ///// <param name="prefab"></param>
+    //private void RespawnEnemy(int visIndex, bool isDie = true) {//Attempted to realize spawn by weight respawn
+    //    Fish currentFish = visible_poolFishComponents[visIndex];
 
-        //spawn die particles
-        if (currentFish.IsVisible) {
-            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
-            fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
-        }
-        int currnentRandLvl = GetRandSpawnLevel();
+    //    //spawn die particles
+    //    if (currentFish.IsVisible) {
+    //        fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
+    //        fishAdditionalComponentManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
+    //    }
+    //    int currnentRandLvl = GetRandSpawnLevel();
 
-        visible_poolFishComponents[visIndex] = null;
-        visible_poolFishObjects[visIndex] = null;
-        SpawnEnemyFish(visIndex, currnentRandLvl, false);
-    }
+    //    visible_poolFishComponents[visIndex] = null;
+    //    visible_poolFishObjects[visIndex] = null;
+    //    SpawnEnemyFish(visIndex, currnentRandLvl, false);
+    //}
 
     //public void RespawnPlayer(bool isDie, bool isRevive = false) {
     //    int playerLevel = (int)PlayerCurrentFish.Level;
@@ -577,52 +577,52 @@ public class SpawnManager : MonoBehaviour //with ObjectPool
 
     }
 
-    /// <summary>
-    /// повертає позицію рандомну найдальшу від гравця позицію для спавна ворогів у певному радіусі, враховуючи спавн точки для різних типів риб за рівнем 
-    /// якщо відповідної близької точки не знайдено, то повертає Vector3.one або -Vector3.one відповідно до необхідності більшого чи меншого рівня спавну риби
-    /// returns a random spawn position farthest from the player for spawning enemy in some max radius, considering spawn points for different types of fish by level
-    /// if no suitable spawn point found, returns Vector3.one or -Vector3.one depending on the need for a higher or lower level of fish spawn
-    /// </summary>
-    /// <param name="lvl"></param>
-    /// <returns></returns>
-    private Vector3 GetRandSpawnPosition(int lvl, bool isRandomPos = false) {//mwx lvl - 9
-                                                                             //const float MAX_DISTANCE_FROM_PLAYER = 200f; //to avoid spawn too far to player
-        const float SPAWN_POINTS_WEIGHT = 0.33f; //to get index in range [0; 2] for spawn points
-        const float WEIGHT_FIXER = 0.01f; //to control some fish spawn points distribution
-        float distanceToPlayer = 0f;
-        int currentSpawnPointIndex = (int)(lvl * SPAWN_POINTS_WEIGHT + WEIGHT_FIXER);
-        Vector3 playerPos = PlayerCurrentFish == null ? Vector3.zero : PlayerCurrentFish.transform.position;
+    ///// <summary>
+    ///// повертає позицію рандомну найдальшу від гравця позицію для спавна ворогів у певному радіусі, враховуючи спавн точки для різних типів риб за рівнем 
+    ///// якщо відповідної близької точки не знайдено, то повертає Vector3.one або -Vector3.one відповідно до необхідності більшого чи меншого рівня спавну риби
+    ///// returns a random spawn position farthest from the player for spawning enemy in some max radius, considering spawn points for different types of fish by level
+    ///// if no suitable spawn point found, returns Vector3.one or -Vector3.one depending on the need for a higher or lower level of fish spawn
+    ///// </summary>
+    ///// <param name="lvl"></param>
+    ///// <returns></returns>
+    //private Vector3 GetRandSpawnPosition(int lvl, bool isRandomPos = false) {//mwx lvl - 9
+    //                                                                         //const float MAX_DISTANCE_FROM_PLAYER = 200f; //to avoid spawn too far to player
+    //    const float SPAWN_POINTS_WEIGHT = 0.33f; //to get index in range [0; 2] for spawn points
+    //    const float WEIGHT_FIXER = 0.01f; //to control some fish spawn points distribution
+    //    float distanceToPlayer = 0f;
+    //    int currentSpawnPointIndex = (int)(lvl * SPAWN_POINTS_WEIGHT + WEIGHT_FIXER);
+    //    Vector3 playerPos = PlayerCurrentFish == null ? Vector3.zero : PlayerCurrentFish.transform.position;
 
-        Transform/*[]*/ spawnPoints = currentSpawnPointIndex switch {
-            0 => weakFishSpawnPointsParent/*weakFishSpawnPoints*/,
-            1 => strongFishSpawnPointsParent/*strongFishSpawnPoints*/,
-            2 => sharkSpawnPointsParent/*sharkSpawnPoints*/,
-            _ => weakFishSpawnPointsParent /*weakFishSpawnPoints*/
-        };
+    //    Transform/*[]*/ spawnPoints = currentSpawnPointIndex switch {
+    //        0 => weakFishSpawnPointsParent/*weakFishSpawnPoints*/,
+    //        1 => strongFishSpawnPointsParent/*strongFishSpawnPoints*/,
+    //        2 => sharkSpawnPointsParent/*sharkSpawnPoints*/,
+    //        _ => weakFishSpawnPointsParent /*weakFishSpawnPoints*/
+    //    };
 
-        int pointsMaxInd = spawnPoints.childCount/*Length*/ - 1;
-        int index = (int)(UnityEngine.Random.value * pointsMaxInd);
-        if (isRandomPos) //initial spawn in random position
-            return spawnPoints.GetChild(index).position + RandomXZOffset();
+    //    int pointsMaxInd = spawnPoints.childCount/*Length*/ - 1;
+    //    int index = (int)(UnityEngine.Random.value * pointsMaxInd);
+    //    if (isRandomPos) //initial spawn in random position
+    //        return spawnPoints.GetChild(index).position + RandomXZOffset();
 
-        //rand spawn position farthest from player by distance
-        for (int i = 0; i <= pointsMaxInd; i++) {//max attempts to find suitable spawn point
-            index = (int)(UnityEngine.Random.value * pointsMaxInd);
-            distanceToPlayer = Vector3.Distance(/*pool[PLAYER_INDEX]*/playerPos, spawnPoints.GetChild(index).position);
+    //    //rand spawn position farthest from player by distance
+    //    for (int i = 0; i <= pointsMaxInd; i++) {//max attempts to find suitable spawn point
+    //        index = (int)(UnityEngine.Random.value * pointsMaxInd);
+    //        distanceToPlayer = Vector3.Distance(/*pool[PLAYER_INDEX]*/playerPos, spawnPoints.GetChild(index).position);
 
-            if (distanceToPlayer < GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW/* && distanceToPlayer < MAX_DISTANCE_FROM_PLAYER*/)
-                continue;
+    //        if (distanceToPlayer < GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW/* && distanceToPlayer < MAX_DISTANCE_FROM_PLAYER*/)
+    //            continue;
 
-            return spawnPoints.GetChild(index).position + RandomXZOffset();
-        }
+    //        return spawnPoints.GetChild(index).position + RandomXZOffset();
+    //    }
 
-        return spawnPoints.GetChild(index).position + RandomXZOffset();
-    }
+    //    return spawnPoints.GetChild(index).position + RandomXZOffset();
+    //}
 
-    Vector3 RandomXZOffset(float maxOffset = 6) {
-        float offsetMultiplierX = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
-        float offsetMultiplierZ = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
+    //Vector3 RandomXZOffset(float maxOffset = 6) {
+    //    float offsetMultiplierX = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
+    //    float offsetMultiplierZ = (UnityEngine.Random.value - .5f) * 2f; //to get coefficient in range [-1, 1]
 
-        return new Vector3(offsetMultiplierX * maxOffset, 0, offsetMultiplierZ * maxOffset);
-    }
+    //    return new Vector3(offsetMultiplierX * maxOffset, 0, offsetMultiplierZ * maxOffset);
+    //}
 }

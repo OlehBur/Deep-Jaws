@@ -4,16 +4,7 @@ using VContainer;
 using VContainer.Unity;
 
 
-public interface IPlayerPoolService {
-    Fish PlayerCurrentFish { get; }
-    event Action<Fish, bool> OnPlayerRespawn;
-    event Action OnPlayerDied;
-    event Action<FishLevel> OnPlayerLVLup;
-
-    void InitPool(Transform fishPoolParent, GameObject enemyDetectorPrefab);
-}
-
-public class PlayerPoolService : IPlayerPoolService {
+public class PlayerPoolService : PoolServise, IPlayerPoolService {
     private GameObject[] _playerPool;
     private Fish[] _playerPoolComp;
     //private ObjectPool<GameObject> _playerPool;
@@ -21,18 +12,13 @@ public class PlayerPoolService : IPlayerPoolService {
     private Vector3 _playerPos;
     private Quaternion _playerRot;
     private float _playerProg;
-    private WorldData _savedWorldData;
     private Vector3 _playerInitSpawnPos;
-    private IObjectResolver _resolver;
-    private Transform _fishPoolParent;
     private EnemyDetector _enemyDetector;
 
-    private readonly FishPrefabsInfo _fishPrefabs;
-    private readonly AudioManager _audioManager;
-    private readonly VFXpoolManager _fishAdditionalCompManager;
+    //private readonly FishPrefabsInfo _fishPrefabs;
+    //private readonly AudioManager _audioManager;
+    private readonly VFXpoolManager _vfxPoolManager;
     private readonly FishSkinManager _fishSkinManager;
-
-    IObjectResolver resolver;
 
     public event Action<Fish, bool> OnPlayerRespawn;//bool - is respawn after death
     public event Action OnPlayerDied;
@@ -41,38 +27,40 @@ public class PlayerPoolService : IPlayerPoolService {
     public Fish PlayerCurrentFish { get; private set; }
 
     [Inject]
-    public PlayerPoolService(FishPrefabsInfo fishPrefabs, AudioManager audioManager,
-        VFXpoolManager fishAdditionalCompManager, FishSkinManager fishSkinManager) {
+    public PlayerPoolService(FishPrefabsInfo fishPrefabs,/* AudioManager audioManager,*/
+        VFXpoolManager vfxPoolManager, FishSkinManager fishSkinManager) : base(fishPrefabs) {
         _savedWorldData = ProgressSaver.LoadWorldData();// ProgressSaver.IsWorldDataExist() ?             ProgressSaver.LoadWorldData() : new WorldData();//load save data if exists
-        _fishPrefabs = fishPrefabs;
-        _audioManager = audioManager;
-        _fishAdditionalCompManager = fishAdditionalCompManager;
+        //_fishPrefabs = fishPrefabs;
+        //_audioManager = audioManager;
+        _vfxPoolManager = vfxPoolManager;
         _fishSkinManager = fishSkinManager;
 
         _playerInitSpawnPos = Vector3.up * GameStaticInfo.FISH_SPAWN_HEINGT;//in center map
         //InitPlayerPool(fishPrefabs, fishPoolParent, audioManager, fishAdditionalCompManager, fishSkinManager);
     }
 
-    public void InitPool(Transform fishPoolParent, GameObject enemyDetectorPrefab) {
+    public void SpawnPlayerEnemyDetector(GameObject enemyDetectorPrefab) =>
+        _enemyDetector = _resolver.Instantiate(enemyDetectorPrefab, _fishPoolParent).GetComponent<EnemyDetector>();
+
+    public void Init(Transform fishPoolParent) {
         _fishPoolParent = fishPoolParent;
         _playerPool = new GameObject[GameStaticInfo.PLAYER_POOL_SIZE];
         _playerPoolComp = new Fish[GameStaticInfo.PLAYER_POOL_SIZE];
-        _enemyDetector = resolver.Instantiate(enemyDetectorPrefab, fishPoolParent).GetComponent<EnemyDetector>();
 
         for (int playerInd = 0, prefabInd = 1; playerInd < GameStaticInfo.PLAYER_POOL_SIZE; playerInd++, prefabInd++) {
 
-            GameObject playerPrefab = resolver.Instantiate(_fishPrefabs.GetFishPrefabByType((FishLevel)prefabInd), fishPoolParent);
-            //FishControl fishControl = playerPrefab.GetComponent<FishControl>();
+            GameObject playerPrefab = _resolver.Instantiate(_fishPrefabs.GetFishPrefabByType((FishLevel)prefabInd), _fishPoolParent);
+            FishControl fishControl = playerPrefab.GetComponent<FishControl>();
             Fish newPlayerFish = playerPrefab.GetComponent<Fish>();// fishControl.Fish;
             newPlayerFish.IsPlayer = true;
             newPlayerFish.OnFishDie += FishDieAct;
             newPlayerFish.OnFishLvlUp += PlayerLvlUpAct;
-            //fishControl.Init(this/*, newPlayerFish*/);
+            fishControl.Init(/*this*//*, newPlayerFish*/);
 
             _playerPool[playerInd] = playerPrefab;
             _playerPoolComp[playerInd] = newPlayerFish;
 
-            PrefabNamingTaging(playerPrefab, newPlayerFish.Level);
+            PrefabNamingTaging(playerPrefab, newPlayerFish.Level, GameStaticInfo.NAME_PLAYER, GameStaticInfo.TAG_PLAYER);
             if (playerPrefab.TryGetComponent(out FishAnim fishAnim))
                 fishAnim.Init();
             //PrefabInitFishAnimAndEffectManagers(playerPrefab, _audioManager, _fishAdditionalCompManager, out FishAnim fishAnim);
@@ -83,13 +71,18 @@ public class PlayerPoolService : IPlayerPoolService {
         }
     }
 
-    void PrefabNamingTaging(GameObject prefab, FishLevel level) {
-        prefab.name = GameStaticInfo.NAME_PLAYER + level.ToString();
-        prefab.tag = GameStaticInfo.TAG_PLAYER;
-
-        foreach (Transform t in prefab.transform) //for bubble collider
-            t.gameObject.tag = prefab.tag;
+    public bool TryGetFish(GameObject fishObject, out Fish fish) {
+        int index = Array.IndexOf(_playerPool, fishObject);
+        if (index < 0) {
+            fish = null;
+            return false;
+        }
+        else {
+            fish = _playerPoolComp[index];
+            return true;
+        }
     }
+
 
     //void PrefabInitFishAnimAndEffectManagers(GameObject prefab, AudioManager audioManager, FishAdditionalCompManager fishAdditionalComponentManager, out FishAnim fishAnim) {
     //    if (prefab.TryGetComponent(out fishAnim) /*&& prefab.TryGetComponent(out EffectManager effectManager)*/) {
@@ -102,7 +95,7 @@ public class PlayerPoolService : IPlayerPoolService {
         RespawnPrefab(level, true);
 
     void PlayerLvlUpAct(GameObject gameObject, FishLevel level) =>
-            RespawnPrefab(level, false);//true - only plyer event
+        RespawnPrefab(level, false);//true - only plyer event
 
 
 
@@ -169,6 +162,15 @@ public class PlayerPoolService : IPlayerPoolService {
         _playerProg = PlayerCurrentFish.Progress;
     }
 
+    public void InitialSpawnPrefabs() {
+        if (_savedWorldData != null) //continue
+            PlayerCurrentFish = SpawnPlayerFish(_savedWorldData.playerPosition, _savedWorldData.playerRotation, true, (int)_savedWorldData.playerLevel, _savedWorldData.playerProgress);
+        else//new game
+            PlayerCurrentFish = SpawnPlayerFish(_playerInitSpawnPos, Quaternion.identity, false);
+
+        OnPlayerRespawn?.Invoke(PlayerCurrentFish, false);
+    }
+
 
     Fish SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
         //playerLvl = (int)FishLevel.Mackerel;
@@ -198,7 +200,7 @@ public class PlayerPoolService : IPlayerPoolService {
 #if UNITY_ANDROID && !UNITY_EDITOR
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_here_we_go_again);
 #endif
-            RespawnEntitiesMap(playerFishBuffer.Level);
+            RespawnEntities(playerFishBuffer.Level);
         }
         else {
             if (isLoadFromSave)
