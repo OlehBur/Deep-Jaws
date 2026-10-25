@@ -1,4 +1,5 @@
 using UnityEngine;
+using VContainer;
 
 
 /// <summary>
@@ -8,17 +9,19 @@ public class JellyfishController : MonoBehaviour {
     [SerializeField] Transform waypoints;
     [SerializeField] float speed;
     [SerializeField] float maxRandYOffsetMultiplier;
-    private float[] maxRandYOffsetMultipliers;
+    [SerializeField] float coldownTime;
+
     private const float MOVEMENT_EPSILON = 0.1f;
     private const float ROTATION_EPSILON = 1e-4f;
-    private int[] currentPointId;
-    private float[] initYSinOffset;
 
-    private Collider[] jellyColliders;
-    private bool isJellyColliderActive;
-    [SerializeField] AudioManager audioManager;
-    [SerializeField] float coldownTime;
-    private float currentColdown;
+    private float[] _maxRandYOffsetMultipliers;
+    private int[] _currentPointId;
+    private float[] _initYSinOffset;
+    private Collider[] _jellyColliders;
+    private bool _isJellyColliderActive;
+    private float _currentColdown;
+
+    [Inject] private readonly IAudioManager _audioManager;
 
 
     void Awake() {
@@ -28,23 +31,23 @@ public class JellyfishController : MonoBehaviour {
     //call from game manager
     void InitMovementArrays() {
         int jellyfishCnt = transform.childCount;
-        currentPointId = new int[jellyfishCnt];
-        initYSinOffset = new float[jellyfishCnt];
-        maxRandYOffsetMultipliers = new float[jellyfishCnt];
+        _currentPointId = new int[jellyfishCnt];
+        _initYSinOffset = new float[jellyfishCnt];
+        _maxRandYOffsetMultipliers = new float[jellyfishCnt];
 
         if (IsJellifishHasBehaviour()) {//jelly fish has coldown and has effects etc.
-            currentColdown = 0f;//in case if player spawn in jellyfish
-            jellyColliders = new Collider[jellyfishCnt];
+            _currentColdown = 0f;//in case if player spawn in jellyfish
+            _jellyColliders = new Collider[jellyfishCnt];
         }
 
         for (int i = 0; i < jellyfishCnt; i++) {
-            currentPointId[i] = GetClosetPointId(transform.GetChild(i).position);
-            initYSinOffset[i] = Random.value * Mathf.PI;
-            maxRandYOffsetMultipliers[i] = Random.value * maxRandYOffsetMultiplier;
+            _currentPointId[i] = GetClosetPointId(transform.GetChild(i).position);
+            _initYSinOffset[i] = Random.value * Mathf.PI;
+            _maxRandYOffsetMultipliers[i] = Random.value * maxRandYOffsetMultiplier;
 
             if (IsJellifishHasBehaviour()) {
-                jellyColliders[i] = transform.GetChild(i).GetComponent<Collider>();
-                jellyColliders[i].enabled = false;
+                _jellyColliders[i] = transform.GetChild(i).GetComponent<Collider>();
+                _jellyColliders[i].enabled = false;
             }
         }
     }
@@ -74,7 +77,7 @@ public class JellyfishController : MonoBehaviour {
     }
 
     void Update() {
-        if (!isJellyColliderActive && IsJellifishHasBehaviour())
+        if (!_isJellyColliderActive && IsJellifishHasBehaviour())
             PoisonColdownBeh();
 
         if (waypoints != null)
@@ -82,12 +85,12 @@ public class JellyfishController : MonoBehaviour {
     }
 
     void PoisonColdownBeh() {
-        currentColdown += DJTime.DeltaTime;
+        _currentColdown += DJTime.DeltaTime;
 
-        if (currentColdown > coldownTime) {
-            isJellyColliderActive = true;
-            SetActivateColliders(isJellyColliderActive);
-            currentColdown = 0;
+        if (_currentColdown > coldownTime) {
+            _isJellyColliderActive = true;
+            SetActivateColliders(_isJellyColliderActive);
+            _currentColdown = 0;
         }
     }
 
@@ -95,10 +98,10 @@ public class JellyfishController : MonoBehaviour {
         int jellyfishCnt = transform.childCount;
 
         for (int i = 0; i < jellyfishCnt; i++) {
-            Movement(ref currentPointId[i],
+            Movement(ref _currentPointId[i],
                 transform.GetChild(i),
-                initYSinOffset[i],
-                maxRandYOffsetMultipliers[i]);
+                _initYSinOffset[i],
+                _maxRandYOffsetMultipliers[i]);
         }
     }
 
@@ -129,10 +132,10 @@ public class JellyfishController : MonoBehaviour {
 
     //cooldown and sound only for player fish
     private void OnTriggerStay(Collider other) {
-        if (isJellyColliderActive && !other.isTrigger && other.CompareTag(GameStaticInfo.TAG_PLAYER)) {
-            isJellyColliderActive = false;
-            SetActivateColliders(isJellyColliderActive);
-            audioManager.PlayVFX(VFX_clip.Hydra);
+        if (_isJellyColliderActive && !other.isTrigger && other.CompareTag(GameStaticInfo.TAG_PLAYER)) {
+            _isJellyColliderActive = false;
+            SetActivateColliders(_isJellyColliderActive);
+            _audioManager.PlayVFX(VFX_clip.Hydra);
         }
     }
 
@@ -140,7 +143,7 @@ public class JellyfishController : MonoBehaviour {
         int jellyfishCnt = transform.childCount;
 
         for (int i = 0; i < jellyfishCnt; i++)
-            jellyColliders[i].enabled = isActive;
+            _jellyColliders[i].enabled = isActive;
     }
 
     private void OnDrawGizmos() {

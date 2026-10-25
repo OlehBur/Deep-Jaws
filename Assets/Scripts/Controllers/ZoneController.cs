@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using VContainer;
 
 
 public enum ZoneType {
@@ -11,45 +12,23 @@ public enum ZoneType {
 }
 
 public class ZoneController : MonoBehaviour {
-    [SerializeField] SpawnManager spawnManager;
+    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] ZoneType zoneType;
     [SerializeField] Material zoneBarrierMat;
     [SerializeField] Collider barrierCollider;
     [SerializeField] PlayerUIController playerUIController;
-    //[SerializeField] LocalizedString morayWarnLocalizedString;
-    //[SerializeField] LocalizedString hammerheadWarnLocalizedString;
+
+    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+
     private static bool isBarrierAnimationActive { get; set; } = false;
     private const float BARRIER_TOUCH_ANIMATION_INTERVAL = 1.6f;
-    //private string fishLvlRequirMsg;
 
-    //void OnEnable() {
-    //    LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
-    //}
-
-    //private void OnDestroy() {
-    //    LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
-    //}
-
-    //void OnDisable() {
-    //    LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
-    //}
-
-    ////realtime reaction on changing locale
-    //void OnLanguageChanged(UnityEngine.Localization.Locale newLocale) {
-    //    fishLvlRequirMsg = zoneType switch {
-    //        ZoneType.AlgaesForest => morayWarnLocalizedString.GetLocalizedString(),
-    //        ZoneType.DeepCorals => hammerheadWarnLocalizedString.GetLocalizedString(),
-    //        _ => morayWarnLocalizedString.GetLocalizedString()
-    //    };
-    //}
 
     private void Start() {//work onlu once per game install (only for old players)
-        spawnManager.OnPlayerRespawn += BiomeByLvlBehaviour;
-        if (spawnManager.PlayerCurrentFish != null)
-            BiomeByLvlBehaviour(spawnManager.PlayerCurrentFish, false);
+        _playerFishPoolService.OnPlayerRespawn += BiomeByLvlBehaviour;
 
-        //Locale currentLocale = LocalizationSettings.SelectedLocale;
-        //OnLanguageChanged(currentLocale);
+        if (_playerFishPoolService.PlayerCurrentFish != null)
+            BiomeByLvlBehaviour(_playerFishPoolService.PlayerCurrentFish, false);
 
         zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, 0);//resert previous mat
     }

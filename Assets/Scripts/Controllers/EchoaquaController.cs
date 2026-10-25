@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 public class EchoaquaController : MonoBehaviour {
     [SerializeField] Image echoaquaShaderImg;
@@ -9,7 +10,6 @@ public class EchoaquaController : MonoBehaviour {
     [SerializeField] FishHeartbeatsManager heartbeatsManager;
     [SerializeField] PlayerUIController playerUIController;
     [SerializeField] Transform ecqhoMembraneCenter;
-    [SerializeField] AudioManager audioManager;
     [SerializeField] Animator echoaquaAnimator;
 
     private const string VIBRASES_ANIMATION_NAME = "Echoaqua_Vibrissaes";
@@ -20,22 +20,24 @@ public class EchoaquaController : MonoBehaviour {
     private const float PROGRESS_TRIGGER_FOR_COLLIDER = 0.4f;
     private static readonly int ProgressShaderID = Shader.PropertyToID("_Progress");
     private static readonly int ScanPosNormalizeShaderID = Shader.PropertyToID("_ScanPosNormalize");
-    private readonly WaitForSecondsRealtime waitForScanPreview = new WaitForSecondsRealtime(SCAN_PREVIEW_TIME);
 
-    private float cooldownTimer = 0f;
-    private Coroutine echoCoroutine;
-    private Material echoaquaShader;
+    [Inject] private readonly IAudioManager _audioManager;
+    private readonly WaitForSecondsRealtime _waitForScanPreview = new WaitForSecondsRealtime(SCAN_PREVIEW_TIME);
+
+    private float _cooldownTimer = 0f;
+    private Coroutine _echoCoroutine;
+    private Material _echoaquaShader;
 
     private void Start() {
-        echoaquaShader = echoaquaShaderImg.material;
+        _echoaquaShader = echoaquaShaderImg.material;
     }
 
     private void Update() {
         if (!vibrissaeColliders.activeInHierarchy) {
-            cooldownTimer += DJTime.UnscaledDeltaTime;
+            _cooldownTimer += DJTime.UnscaledDeltaTime;
 
-            if (cooldownTimer >= COOLDOWN_TIME) {
-                cooldownTimer = 0f;
+            if (_cooldownTimer >= COOLDOWN_TIME) {
+                _cooldownTimer = 0f;
                 echoaquaAnimator.Play(REVERSE_VIBRASES_ANIMATION_NAME, 1);
                 vibrissaeColliders.SetActive(true);
                 lightsVibrissaeParent.SetActive(true);
@@ -49,15 +51,15 @@ public class EchoaquaController : MonoBehaviour {
 
         Transform fishParent = other.attachedRigidbody.transform;
         if (!other.isTrigger && fishParent.CompareTag(GameStaticInfo.TAG_PLAYER)) {
-            if (echoCoroutine != null) {
-                StopCoroutine(echoCoroutine);
-                echoCoroutine = null;
+            if (_echoCoroutine != null) {
+                StopCoroutine(_echoCoroutine);
+                _echoCoroutine = null;
             }
 
-            echoaquaShader.SetFloat(ProgressShaderID, 0f);
+            _echoaquaShader.SetFloat(ProgressShaderID, 0f);
             vibrissaeColliders.SetActive(false);
             lightsVibrissaeParent.SetActive(false);
-            audioManager.PlayVFX(VFX_clip.Echo);
+            _audioManager.PlayVFX(VFX_clip.Echo);
 
             echoaquaAnimator.Play(MEMBRANE_ANIMATION_NAME, 0);
             echoaquaAnimator.Play(VIBRASES_ANIMATION_NAME, 1);
@@ -65,10 +67,10 @@ public class EchoaquaController : MonoBehaviour {
     }
 
     public void ActivateEcho() {
-        if (echoCoroutine != null)
-            StopCoroutine(echoCoroutine);
+        if (_echoCoroutine != null)
+            StopCoroutine(_echoCoroutine);
 
-        echoCoroutine = StartCoroutine(EchoProcessRoutine());
+        _echoCoroutine = StartCoroutine(EchoProcessRoutine());
     }
 
     private IEnumerator EchoProcessRoutine() {
@@ -80,18 +82,18 @@ public class EchoaquaController : MonoBehaviour {
 
         // def proggress 0 -> 1
         while (currentProgress < 1f) {
-            echoaquaShader.SetVector(ScanPosNormalizeShaderID, GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position, Camera.current)); //in case of movement player
+            _echoaquaShader.SetVector(ScanPosNormalizeShaderID, GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position, Camera.current)); //in case of movement player
             currentProgress += DJTime.UnscaledDeltaTime;
             //Debug.Log(currentProgress);
             if (!CameraFollower.Instance.IsMapViewActive && currentProgress >= PROGRESS_TRIGGER_FOR_COLLIDER) {
                 CameraFollower.Instance.IsMapViewActive = true;
             }
 
-            echoaquaShader.SetFloat(ProgressShaderID, Mathf.Min(currentProgress, 1f));
+            _echoaquaShader.SetFloat(ProgressShaderID, Mathf.Min(currentProgress, 1f));
             yield return null;
         }
 
-        yield return waitForScanPreview;
+        yield return _waitForScanPreview;
 
         // reset collider & ui activate
         CameraFollower.Instance.IsMapViewActive = false;
@@ -99,13 +101,13 @@ public class EchoaquaController : MonoBehaviour {
         // inverse prog 1 -> 0
         currentProgress = 0f;
         while (currentProgress > 0f) {
-            echoaquaShader.SetVector(ScanPosNormalizeShaderID, GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position, Camera.current)); //in case of movement player
+            _echoaquaShader.SetVector(ScanPosNormalizeShaderID, GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position, Camera.current)); //in case of movement player
             currentProgress -= /*PROGRESS_DELTA_SPEED*/DJTime.UnscaledDeltaTime;
-            echoaquaShader.SetFloat(ProgressShaderID, Mathf.Max(currentProgress, 0f));
+            _echoaquaShader.SetFloat(ProgressShaderID, Mathf.Max(currentProgress, 0f));
             yield return null;
         }
 
         heartbeatsManager.SetActivateShaderPreparation(false);
-        echoCoroutine = null;
+        _echoCoroutine = null;
     }
 }

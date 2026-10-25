@@ -1,31 +1,32 @@
-using Unity.VisualScripting;
+
 using UnityEngine;
+using VContainer;
 
 public class SonicPulseControl : MonoBehaviour {
     [SerializeField] Light lightIndicator;
     [SerializeField] Material blinkIndicatorMat;
     [SerializeField] Transform pulseTransform;
-    //[SerializeField] AudioSource pulseAudioSource;
-    [SerializeField] AudioManager audioManager;
     [SerializeField] Collider triggerCollider;
-    [SerializeField] SpawnManager spawnManager;
-    //private const float MAX_SCALE = 200;
-    //private const float PULSE_SCALE_MULTIPLIER = 2f;
-    private float curentRechargeTime = 0f; // current recharge time for pulse
+    
     private const float PULSE_RECHARGE_TIME = 30f; // time to recharge the pulse
-    private bool playAnim = false;
+
+    private float _curentRechargeTime = 0f; // current recharge time for pulse
+    private bool _playAnim = false;
+
+    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+    [Inject] private readonly IAudioManager _audioManager;
 
 
     private void Update() {
         if (triggerCollider != null && !triggerCollider.enabled) {
-            curentRechargeTime = curentRechargeTime - DJTime.DeltaTime; // decrease recharge time
+            _curentRechargeTime = _curentRechargeTime - DJTime.DeltaTime; // decrease recharge time
 
-            if (curentRechargeTime <= 0f)
+            if (_curentRechargeTime <= 0f)
                 triggerCollider.enabled = true;
         }
 
         IndicatorBlinking();
-        if (playAnim)
+        if (_playAnim)
             PulseScalingAnim();
 
     }
@@ -34,7 +35,7 @@ public class SonicPulseControl : MonoBehaviour {
         pulseTransform.localScale = pulseTransform.localScale + Vector3.one * GameStaticInfo.STUN_SONAR_SPEED * DJTime.DeltaTime;
 
         if (pulseTransform.localScale.x >= GameStaticInfo.STUN_SONAR_MAX_SCALE) {
-            playAnim = false;
+            _playAnim = false;
             pulseTransform.localScale = Vector3.zero;
         }
     }
@@ -42,7 +43,7 @@ public class SonicPulseControl : MonoBehaviour {
     void IndicatorBlinking() {
         const float EMISSION_SCALE = 2f;
         const float BLINKING_SPEED = 3f;
-        float isBlinking = (curentRechargeTime <= 0f) ?
+        float isBlinking = (_curentRechargeTime <= 0f) ?
             1f : 0f; // if pulse is ready to use, then blink
 
         float progress = Mathf.Sin(Time.time * BLINKING_SPEED) * .5f + .5f; //[0;1]
@@ -57,15 +58,14 @@ public class SonicPulseControl : MonoBehaviour {
 
         Transform fishParent = other.attachedRigidbody.transform;
 
-        if (triggerCollider.enabled && !other.isTrigger /*&& GameManager.IsSceneReady*/ && Vector3.Distance(spawnManager.PlayerCurrentFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
-            && fishParent.TryGetComponent(out EffectManager fem) && !playAnim && curentRechargeTime <= 0f) {
-            playAnim = true;
-            curentRechargeTime = PULSE_RECHARGE_TIME; // reset recharge time
+        if (triggerCollider.enabled && !other.isTrigger /*&& GameManager.IsSceneReady*/ && Vector3.Distance(_playerFishPoolService.PlayerCurrentFish.transform.position, transform.position) < GameStaticInfo.PLAYER_MAX_DISTANCE_ACTIVITY
+            && fishParent.TryGetComponent(out EffectManager fem) && !_playAnim && _curentRechargeTime <= 0f) {
+            _playAnim = true;
+            _curentRechargeTime = PULSE_RECHARGE_TIME; // reset recharge time
             triggerCollider.enabled = false;
             //Debug.Log("Bingo");
             //if (!pulseAudioSource.isPlaying)
-            audioManager.PlayVFX(VFX_clip.Ship);
-            //pulseAudioSource.PlayOneShot(pulseAudioSource.clip); // play the pulse sound effect witout pause or interrupt
+            _audioManager.PlayVFX(VFX_clip.Ship);
         }
     }
 

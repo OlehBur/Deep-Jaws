@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 
 public class StunInitiatorEffet : Effect {
-    private int collidedObjCnt = 0;
-    private Collider[] collideObjects = new Collider[15];
+    private int _collidedObjCnt = 0;
+    private Collider[] _collideObjects = new Collider[15];
 
 
     protected override void OnApply() {
-        type = FishEffectType.StunInitiator;
+        Type = FishEffectType.StunInitiator;
 
-        collidedObjCnt = Physics.OverlapSphereNonAlloc(targetFish.transform.position,
+        _collidedObjCnt = Physics.OverlapSphereNonAlloc(targetFish.transform.position,
             GameStaticInfo.STUN_SONAR_MAX_SCALE,
-            collideObjects,
-            GameStaticInfo.LAYER_MASK_ENTITY,
+            _collideObjects,
+            GameStaticInfo.GetEntityLayerMask(),
             QueryTriggerInteraction.Ignore);
 
-        for (int i = 0; i < collidedObjCnt; i++) {
-            Rigidbody victimRb = collideObjects[i].attachedRigidbody;
+        for (int i = 0; i < _collidedObjCnt; i++) {
+            Rigidbody victimRb = _collideObjects[i].attachedRigidbody;
 
-            if (collideObjects[i] != null && victimRb != null
+            if (_collideObjects[i] != null && victimRb != null
                 && victimRb.gameObject != targetFish.gameObject) {
                 if (victimRb.TryGetComponent(out EffectManager effectManager))
                     effectManager.ApplyEffect(FishEffectType.Stun, /*Duration*/GameStaticInfo.STUN_DEFAULT_DURATION);
@@ -30,7 +30,7 @@ public class StunInitiatorEffet : Effect {
             }
         }
         //Debug.Log(collidedObjCnt);
-        if (collidedObjCnt > 0)//previous collided objects if the effect has not expired, but refreshed
+        if (_collidedObjCnt > 0)//previous collided objects if the effect has not expired, but refreshed
             ClearCollidedObjects();
     }
 
@@ -41,9 +41,9 @@ public class StunInitiatorEffet : Effect {
     }
 
     void ClearCollidedObjects() {
-        for (int i = 0; i < collidedObjCnt; i++)
-            collideObjects[i] = null;
-        collidedObjCnt = 0;
+        for (int i = 0; i < _collidedObjCnt; i++)
+            _collideObjects[i] = null;
+        _collidedObjCnt = 0;
     }
 
     //void OnDrawGizmos() {

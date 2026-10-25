@@ -3,7 +3,7 @@ using VContainer;
 using VContainer.Unity;
 
 
-public enum FishComponentType {
+public enum FishVFX {
     ShieldBubble,
     PlayerSprintLine,
     PlayerHealParticle,
@@ -11,11 +11,17 @@ public enum FishComponentType {
     DeadBubblesParticle,
     BiteParticle,
     SkeletonParticle,
-    InkParticles
+    InkParticles,
+    BubblesLvlUp
 }
 
+public interface IVFXPoolService {
+    GameObject ActivateObjectFromPool(FishVFX type, Transform parent,
+        Vector3 localPositon, Vector3 localScale, Quaternion locRotation);
+    BubbleShieldWrapper ActivateShieldFromPool(Transform parent, Vector3 localPositon);
+}
 
-public class VFXpoolManager : IInitializable/*MonoBehaviour*/ {
+public class VFXPoolService : IInitializable, IVFXPoolService/*MonoBehaviour*/ {
     //[SerializeField] Transform fishAddCompPoolParent;
     //[SerializeField] GameObject shieldBubblePrefab;
     //[SerializeField] GameObject spintLinePrefab;
@@ -25,18 +31,21 @@ public class VFXpoolManager : IInitializable/*MonoBehaviour*/ {
     //[SerializeField] GameObject skeletParticlePrefab;
     //[SerializeField] GameObject healParticlePrefab;
     //[SerializeField] GameObject inkParticlesPrefab;
-    [Inject] public VFXpoolManager(VFX_PrefabsInfo additionalComponentsInfo, Transform fishAddCompPoolParent) {
-        _additionalComponentsInfo = additionalComponentsInfo;
+
+    [Inject]
+    public VFXPoolService(VFX_PrefabsInfo vfxPrefabsInfo, Transform fishAddCompPoolParent, IPlayerFishPoolService playerPoolService) {
+        _additionalComponentsInfo = vfxPrefabsInfo;
         _fishAddCompPoolParent = fishAddCompPoolParent;
+        //_playerSpawnService = playerPoolService;
     }
 
     private IObjectResolver _resolver;
     private readonly VFX_PrefabsInfo _additionalComponentsInfo;
     private readonly Transform _fishAddCompPoolParent;
-    private readonly IPlayerPoolService _playerSpawnService;
-    private readonly IEnemyPoolService _enemyPoolService;
+    //private readonly IPlayerFishPoolService _playerSpawnService;
+    //private readonly IEnemyFishPoolService _enemyPoolService;
 
-    private /*GameObject*/BubbleShieldWrapper[] _shieldsPool;
+    private BubbleShieldWrapper[] _shieldsPool;
     private GameObject[] _sprintLinePool;
     private GameObject[] _whirlLinePool;
     private GameObject[] _deadBubblesPool;
@@ -44,17 +53,19 @@ public class VFXpoolManager : IInitializable/*MonoBehaviour*/ {
     private GameObject[] _skeletParticlePool;
     private GameObject[] _healParticlePool;
     private GameObject[] _inkParticlesPool;
+    private GameObject _lvlUpParticles;//only for player
 
 
-    public void Initialize() { 
+    public void Initialize() {
         InitPool(ref _shieldsPool, _additionalComponentsInfo.ShieldBubblePrefab, GameStaticInfo.SHIELDS_POOL_CNT);
         InitPool(ref _whirlLinePool, _additionalComponentsInfo.WhirlLinePrefab, GameStaticInfo.WHIRLE_POOL_CNT);
-        InitPool(ref _deadBubblesPool, _additionalComponentsInfo.DeadBubblesParticlPrefab, GameStaticInfo.DEAD_BUBBLES_POOL_CNT);
+        InitPool(ref _deadBubblesPool, _additionalComponentsInfo.SpawnBubblesParticlPrefab, GameStaticInfo.DEAD_BUBBLES_POOL_CNT);
         InitPool(ref _biteParticlePool, _additionalComponentsInfo.BiteParticlePrefab, GameStaticInfo.BITE_PARTICLES_POOL_CNT);
         InitPool(ref _skeletParticlePool, _additionalComponentsInfo.SkeletParticlePrefab, GameStaticInfo.SKELETON_PARTICLE_POOL_CNT);
         InitPool(ref _inkParticlesPool, _additionalComponentsInfo.InkParticlesPrefab, GameStaticInfo.INK_PARTICLES_POOL_CNT);
         InitPool(ref _sprintLinePool, _additionalComponentsInfo.SpintLinePrefab, GameStaticInfo.SPRINT_PARTICLES_POOL_MAX_CNT);//for player only and in case respwn
         InitPool(ref _healParticlePool, _additionalComponentsInfo.HealParticlePrefab, GameStaticInfo.HEAL_PARTICLES_POOL_MAX_CNT);//for player only
+        _lvlUpParticles = _resolver.Instantiate(_additionalComponentsInfo.LvlUpBubblesParticlPrefab, _fishAddCompPoolParent);
     }
 
     void InitPool(ref GameObject[] pool, GameObject prefab, int count) {
@@ -78,33 +89,36 @@ public class VFXpoolManager : IInitializable/*MonoBehaviour*/ {
         }
     }
 
-    public GameObject ActivateObjectFromPool(FishComponentType type, Transform parent, Vector3 localPositon, Vector3 localScale, Quaternion locRotation) {
+    public GameObject ActivateObjectFromPool(FishVFX type, Transform parent, Vector3 localPositon, Vector3 localScale, Quaternion locRotation) {
         GameObject objToActivate = null;
 
         switch (type) {
             //case FishComponentType.ShieldBubble:
             //GetInactiveObjectFromPool(shieldsPool, out objToActivate);
             //break;
-            case FishComponentType.DeadBubblesParticle:
+            case FishVFX.DeadBubblesParticle:
             GetInactiveObjectFromPool(_deadBubblesPool, out objToActivate);
             break;
-            case FishComponentType.BiteParticle:
+            case FishVFX.BiteParticle:
             GetInactiveObjectFromPool(_biteParticlePool, out objToActivate);
             break;
-            case FishComponentType.SkeletonParticle:
+            case FishVFX.SkeletonParticle:
             GetInactiveObjectFromPool(_skeletParticlePool, out objToActivate);
             break;
-            case FishComponentType.PlayerSprintLine:
+            case FishVFX.PlayerSprintLine:
             GetInactiveObjectFromPool(_sprintLinePool, out objToActivate);
             break;
-            case FishComponentType.PlayerHealParticle:
+            case FishVFX.PlayerHealParticle:
             GetInactiveObjectFromPool(_healParticlePool, out objToActivate);
             break;
-            case FishComponentType.WhirlLine:
+            case FishVFX.WhirlLine:
             GetInactiveObjectFromPool(_whirlLinePool, out objToActivate);
             break;
-            case FishComponentType.InkParticles:
+            case FishVFX.InkParticles:
             GetInactiveObjectFromPool(_inkParticlesPool, out objToActivate);
+            break;
+            case FishVFX.BubblesLvlUp:
+            objToActivate = _lvlUpParticles;
             break;
             default:
             Debug.LogWarning("ActivateObjectFromPool don`n have type: " + type);
@@ -115,7 +129,7 @@ public class VFXpoolManager : IInitializable/*MonoBehaviour*/ {
         objToActivate.transform.localPosition = localPositon;
         objToActivate.transform.localScale = localScale;
         objToActivate.transform.localRotation = locRotation;
-        if (type == FishComponentType.BiteParticle)
+        if (type == FishVFX.BiteParticle)
             objToActivate.transform.SetParent(null, true);
         objToActivate.SetActive(true);
 

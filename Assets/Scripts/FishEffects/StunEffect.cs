@@ -1,19 +1,19 @@
 using UnityEngine;
 
 public class StunEffect : Effect {
-    private Rigidbody rb;
+    private Rigidbody _rb;
 
 
     public StunEffect(Rigidbody rb) {
-        this.rb = rb;
-        type = FishEffectType.Stun;
+        _rb = rb;
+        Type = FishEffectType.Stun;
     }
 
     protected override void OnApply() {
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        _rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     protected override void OnExpire() {
-        rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;
+        _rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;
     }
 }

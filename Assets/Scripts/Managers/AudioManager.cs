@@ -19,10 +19,23 @@ public enum VFX_clip {
     BubblePop
 }
 
+
+public interface IAudioManager {
+    public float MasterVolume { get; }
+    public float MusicVolume { get; }
+    public float SFXVolume { get; }
+    public AudioSource PlayerAudioSource { get; }
+
+    
+    public void PlayVFX(VFX_clip clipType);
+    public void SaveAudioData();
+}
+
+
 /// <summary>
 /// read and write audio settings, save and load them, update audio mixer parameters
 /// </summary>
-public class AudioManager : MonoBehaviour {
+public class AudioManager : MonoBehaviour, IAudioManager {
     [SerializeField] AudioMixer audioMixer; // Reference to the AudioMixer asset
     [SerializeField] Slider masterSlider;// Slider for master volume control
     [SerializeField] Slider musicSlider;// Slider for music volume control
@@ -34,7 +47,7 @@ public class AudioManager : MonoBehaviour {
 
 
     [SerializeField] AudioSource vfxGameAudioSource;
-    [field: SerializeField] public AudioSource PlayerAudioSource{get; private set;}
+    [field: SerializeField] public AudioSource PlayerAudioSource { get; private set; }
     [SerializeField] AudioClip pearlSoundClip;
     [SerializeField] AudioClip fishBiteClip;
     //[SerializeField] AudioClip fishCurrentClip;

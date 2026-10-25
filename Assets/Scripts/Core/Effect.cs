@@ -20,7 +20,7 @@ public abstract class Effect {
     /// value of effect duration in seconds (must be > 1s, because beacause)
     /// </summary>
     public float Duration { get; private set; }
-    public FishEffectType Type { get; private set; }
+    public FishEffectType Type { get; protected set; }
 
     public float LeftTime { get; private set; } // remaining time of the effect
     protected Fish targetFish;

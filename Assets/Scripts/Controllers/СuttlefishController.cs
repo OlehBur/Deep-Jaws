@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 
 /// <summary>
@@ -13,18 +14,19 @@ public class СuttlefishController : MonoBehaviour {
     [SerializeField] Transform rotationTransform;
 
     private MaterialPropertyBlock matPropBlock;
-    private AudioManager audioManager;
     //private int OVERLAP_LAYER_MASK;
     private Collider[] hitObjects = new Collider[10];
     private Color prev_targetColor = Color.black;
     private Color targetColor = Color.black;
     private bool isAllowOverlapping = true;
     private bool isNeedReverseProgress = false;
-    private VFXpoolManager fishAddComp;
     private float curentPoisonCooldown = 0f;
 
-    private static readonly WaitForSeconds SHADER_UPD_WAIT = new WaitForSeconds(SHADER_UPDATE_INTERVAL);
+    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
+    [Inject] private readonly IVFXPoolService _vfxService;
 
+    private static readonly WaitForSeconds SHADER_UPD_WAIT = new WaitForSeconds(SHADER_UPDATE_INTERVAL);
     private static readonly Dictionary<string, Color> tagColors = new() {
     { "Gray", Color.gray },
     { "Green", Color.green },
@@ -42,10 +44,10 @@ public class СuttlefishController : MonoBehaviour {
     private const float POISON_COOLDOWN = 10f;
 
 
-    public void Init(AudioManager audioManager, VFXpoolManager fishAddComp) {
-        this.audioManager = audioManager;
-        this.fishAddComp = fishAddComp;
-    }
+    //public void Init(AudioManager audioManager, VFXpoolService fishAddComp) {
+    //    this._audioManager = audioManager;
+    //    this._vfxService = fishAddComp;
+    //}
 
     private void Awake() {
         //shaderMat = mesh.material;
@@ -104,17 +106,17 @@ public class СuttlefishController : MonoBehaviour {
 
         GameObject parentFishObj = other.attachedRigidbody.gameObject;
 
-        if (curentPoisonCooldown == 0 && fish.IsVisible && GameStaticInfo.TryGetFish(parentFishObj, out Fish enemyFish)
+        if (curentPoisonCooldown == 0 && fish.IsVisible && _spawnOrchestrator.TryGetFish(parentFishObj, out Fish enemyFish)
     && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) {
-            audioManager.PlayVFX(VFX_clip.Cuttlefish);
-            curentPoisonCooldown = POISON_COOLDOWN;
 
-            fishAddComp.ActivateObjectFromPool(FishComponentType.InkParticles, transform.parent, transform.localPosition, Vector3.one, rotationTransform.rotation/*, transform.rotation*/);
+            _audioManager.PlayVFX(VFX_clip.Cuttlefish);
+            curentPoisonCooldown = POISON_COOLDOWN;
+            _vfxService.ActivateObjectFromPool(FishVFX.InkParticles, transform.parent, transform.localPosition, Vector3.one, rotationTransform.rotation/*, transform.rotation*/);
         }
     }
 
     void Overlapping() {
-        int count = Physics.OverlapSphereNonAlloc(transform.position, OVERLAP_RADIUS, hitObjects, /*OVERLAP_LAYER_MASK*/GameStaticInfo.CUTTLEFISH_OVERLAP_LAYER_MASK);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, OVERLAP_RADIUS, hitObjects, /*OVERLAP_LAYER_MASK*/GameStaticInfo.GetCuttlefishOverlapLayerMask());
 
         Collider nearest = null;
         float minDist = float.MaxValue;

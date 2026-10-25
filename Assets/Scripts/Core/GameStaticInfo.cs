@@ -220,8 +220,9 @@ public static class GameStaticInfo {
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
     public const string LAYER_OBSTACLE = "Obstacle";
     public const string LAYER_CAMERA_AVOID_COLLIDERS = "AvoidDynamicCameraColliders";
-    public static int LAYER_MASK_ENTITY => LayerMask.GetMask(LAYER_ENTITY);//layer id for entities
-    public static int CUTTLEFISH_OVERLAP_LAYER_MASK => LayerMask.GetMask("Default", "Obstacle");
+    public static int GetEntityLayerMask() => LayerMask.GetMask(LAYER_ENTITY);//layer id for entities
+    public static int GetCuttlefishOverlapLayerMask() => LayerMask.GetMask("Default", "Obstacle");
+    public static int GetEntityLayerID() => LayerMask.NameToLayer("Entity");
     public const string TAG_SPAWN_ZONE = "SpawnZone";
     public const string TAG_BUBBLESHIELD = "Shield";
     public const string TAG_PLAYER = "Player";
@@ -232,6 +233,7 @@ public static class GameStaticInfo {
     public const string NAME_PLAYER = "Player ";
     public const string NAME_ENEMY = "Enemy ";
     public const string NAME_PERMAMENT = "Permament ";
+
 
     /// <summary>
     /// RigidbodyConstraints for all fish ( rot: freze X and Z  pos: freeze Y )
@@ -328,14 +330,14 @@ public static class GameStaticInfo {
         return new Vector2(viewportPos.x, viewportPos.y);
     }
 
-    public static bool TryGetFish(GameObject fishObject, out Fish fish) {
-        //Debug.LogWarning("Player inviolability Activated!");
-        return TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
-            TryGetFishFromPool(fishObject, SpawnManager.visible_poolFishObjects, SpawnManager.visible_poolFishComponents, out fish) ||//default enemies
-            TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager.cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
-            TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish) || //dartfish
-            TryGetFishFromPool(fishObject, SpawnManager.dartfishPool_Objects, SpawnManager.dartfishPool_FishComponents, out fish);
-    }
+    //public static bool TryGetFish(GameObject fishObject, out Fish fish) {
+    //    //Debug.LogWarning("Player inviolability Activated!");
+    //    return TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
+    //        TryGetFishFromPool(fishObject, SpawnManager.visible_poolFishObjects, SpawnManager.visible_poolFishComponents, out fish) ||//default enemies
+    //        TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager. cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
+    //        TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish) || //dartfish
+    //        TryGetFishFromPool(fishObject, SpawnManager.dartfishPool_Objects, SpawnManager.dartfishPool_FishComponents, out fish);
+    //}
 
     public static bool Approximately(Color a, Color b, float tolerance = 0.01f) {
         return Mathf.Abs(a.r - b.r) < tolerance &&

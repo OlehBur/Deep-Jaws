@@ -1,21 +1,28 @@
 using UnityEngine;
+using VContainer;
 
 public class PufferfishController : MonoBehaviour {
     /*[SerializeField]*/
     //[SerializeField] AudioSource audioSource;
-    private AudioManager audioManager;
+    //private AudioManager audioManager;
     [SerializeField] Animator animator;
+
+    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
+
     private const string PUFFERFISH_BLOW_ANIMATION = "PufferfishBlow";
     private const string PUFFERFISH_REVERSE_BLOW_ANIMATION = "PufferfishBlow_reverse";
-    private float currentTimeCollision = 0f;
     private const float BITE_INTERVAL = 1f;
     private const int DAMAGE_CNT = 5;
-    private bool startedAnimation = false;
+
+    private float _currentTimeCollision = 0f;
+    private bool _startedAnimation = false;
 
 
-    public void Init(AudioManager audioManager) {
-        this.audioManager = audioManager;
-    }
+
+    //public void Init(AudioManager audioManager) {
+    //    this.audioManager = audioManager;
+    //}
 
     private void OnTriggerEnter(Collider other) {
         if (other.attachedRigidbody == null)
@@ -24,12 +31,12 @@ public class PufferfishController : MonoBehaviour {
         GameObject victimObj = other.attachedRigidbody.gameObject;
 
         //Debug.Log(spawnManager);
-        if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
-            && fish.IsVisible && fish.Level != FishLevel.Pufferfish && !startedAnimation /*&& !audioSource.isPlaying*/) {
+        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
+            && fish.IsVisible && fish.Level != FishLevel.Pufferfish && !_startedAnimation /*&& !audioSource.isPlaying*/) {
 
             animator.Play(PUFFERFISH_BLOW_ANIMATION);
-            audioManager?.PlayVFX(VFX_clip.Pufferfish);
-            startedAnimation = true;
+            _audioManager?.PlayVFX(VFX_clip.Pufferfish);
+            _startedAnimation = true;
             //audioSource.PlayOneShot(audioSource.clip);
         }
     }
@@ -40,9 +47,9 @@ public class PufferfishController : MonoBehaviour {
 
         GameObject victimObj = other.attachedRigidbody.gameObject;
 
-        if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
-            && fish.IsVisible && fish.Level != FishLevel.Pufferfish && startedAnimation) {
-            startedAnimation = false;
+        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
+            && fish.IsVisible && fish.Level != FishLevel.Pufferfish && _startedAnimation) {
+            _startedAnimation = false;
             animator.Play(PUFFERFISH_REVERSE_BLOW_ANIMATION);
         }
     }
@@ -52,8 +59,8 @@ public class PufferfishController : MonoBehaviour {
             return;
 
         GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
-        if (!collision.collider.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD) 
-            /*&& victimObj != null */&& GameStaticInfo.TryGetFish(victimObj, out Fish fish)
+        if (!collision.collider.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD)
+            /*&& victimObj != null */&& _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
             && fish.Level != FishLevel.Pufferfish)
             fish.TakeDamage(DAMAGE_CNT);
     }
@@ -63,12 +70,12 @@ public class PufferfishController : MonoBehaviour {
             return;
 
         GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
-        if (/*victimObj != null &&*/ GameStaticInfo.TryGetFish(victimObj, out Fish fish)
+        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
             && fish.Level != FishLevel.Pufferfish) {
-            currentTimeCollision += DJTime.FixedDeltaTime;
+            _currentTimeCollision += DJTime.FixedDeltaTime;
 
-            if (currentTimeCollision > BITE_INTERVAL) {
-                currentTimeCollision = 0f;
+            if (_currentTimeCollision > BITE_INTERVAL) {
+                _currentTimeCollision = 0f;
                 fish.TakeDamage(DAMAGE_CNT);
             }
         }

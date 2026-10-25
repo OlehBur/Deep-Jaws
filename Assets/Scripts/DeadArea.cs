@@ -1,9 +1,10 @@
 using UnityEngine;
+using VContainer;
 
 
 // kill and respawn fish that entered the dead area
 public class DeadArea : MonoBehaviour {
-    //[SerializeField] SpawnManager spawnManager;
+    [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
 
     private void OnTriggerExit(Collider other) {
         if (other.attachedRigidbody == null)
@@ -13,7 +14,7 @@ public class DeadArea : MonoBehaviour {
 
         if (victimObj.layer == LayerMask.NameToLayer("Entity")) {
             Fish fish;
-            GameStaticInfo.TryGetFish(victimObj, out fish);
+            _spawnOrchestrator.TryGetFish(victimObj, out fish);
 
             fish.Die();// fish die if it enters the dead area
         }

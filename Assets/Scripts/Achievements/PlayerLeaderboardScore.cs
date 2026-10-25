@@ -1,22 +1,25 @@
 using System;
 using UnityEngine;
+using VContainer;
 
 
 public class PlayerLeaderboardScore : MonoBehaviour {
-    private SpawnManager spawnManager;
-    private Fish player;
+    [Inject] private readonly IPlayerFishPoolService _playerPoolService;
+
+    private Fish _player;
 
     public static long Score { get; private set; } = 0;
+    private static int EasyDeaths { get; set; }
     public static event Action<long> OnChanged;
 
-    private static int EasyDeaths { get; set; }
     private const string DEATHS_KEY = "Deaths";
 
 
-    public void Init(SpawnManager spawnManager) {
-        this.spawnManager = spawnManager;
-        PlayerReconnect(spawnManager.PlayerCurrentFish, false);
-        spawnManager.OnPlayerRespawn += PlayerReconnect;
+
+    public void Init(/*SpawnManager spawnManager*/) {
+        //this.spawnManager = spawnManager;
+        PlayerReconnect(_playerPoolService.PlayerCurrentFish, false);
+        _playerPoolService.OnPlayerRespawn += PlayerReconnect;
         EasyDeaths = PlayerPrefs.GetInt(DEATHS_KEY, 0);
         //Debug.LogWarning("Deaths: " + EasyDeaths);
     }
@@ -26,10 +29,10 @@ public class PlayerLeaderboardScore : MonoBehaviour {
         //Debug.LogWarning("Player ref: "+player);
 
         if (isDie) {
-            if (/*this.player != null &&*/ this.player != player) {//not same fish & not first init (is die never = true on first init)
-                this.player.OnFishEat -= OnScoreAdd;
-                this.player = player;
-                this.player.OnFishEat += OnScoreAdd;
+            if (/*this.player != null &&*/ _player != player) {//not same fish & not first init (is die never = true on first init)
+                _player.OnFishEat -= OnScoreAdd;
+                _player = player;
+                _player.OnFishEat += OnScoreAdd;
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -45,14 +48,14 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 #endif
         }
         else {
-            if (this.player == null) {//first init 
-                this.player = player;
-                this.player.OnFishEat += OnScoreAdd;
+            if (_player == null) {//first init 
+                _player = player;
+                _player.OnFishEat += OnScoreAdd;
             }
             else {//new fish (lvl up)   this.player != null
-                this.player.OnFishEat -= OnScoreAdd;
-                this.player = player;
-                this.player.OnFishEat += OnScoreAdd;
+                _player.OnFishEat -= OnScoreAdd;
+                _player = player;
+                _player.OnFishEat += OnScoreAdd;
             }
         }
     }
@@ -94,10 +97,10 @@ public class PlayerLeaderboardScore : MonoBehaviour {
         PlayerPrefs.SetInt(DEATHS_KEY, EasyDeaths);
         //Debug.LogWarning("Deaths: " + easyDeaths);
 
-        if (player != null)
-            player.OnFishEat -= OnScoreAdd;
-        if (spawnManager != null)
-            spawnManager.OnPlayerRespawn -= PlayerReconnect;
+        if (_player != null)
+            _player.OnFishEat -= OnScoreAdd;
+        if (_playerPoolService != null)
+            _playerPoolService.OnPlayerRespawn -= PlayerReconnect;
     }
 
     /*LederboardKey*/

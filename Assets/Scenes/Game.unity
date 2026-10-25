@@ -15627,7 +15627,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8456e0342a8e17d41a88eb2524eb5339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnManager: {fileID: 1167468958}
   zoneType: 1
   zoneBarrierMat: {fileID: 2100000, guid: b511334f07ec9f34c9325c219f645ea1, type: 2}
   barrierCollider: {fileID: 117250439}
@@ -42898,7 +42897,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486a967a6bb91c54e9fdd176915422f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  spawnManager: {fileID: 1167468958}
   soundtrackSource: {fileID: 330585548}
   coralRocksSound: {fileID: 8300000, guid: dea8700cf06676345a215fecad7087b5, type: 3}
   algaeForestSound: {fileID: 8300000, guid: 52948a034393a8649891515db592969b, type: 3}
@@ -47293,7 +47291,6 @@ MonoBehaviour:
   poisonIcon: {fileID: 1786879851}
   blindnessIcon: {fileID: 214357369}
   sprintButton: {fileID: 781056252}
-  audioManager: {fileID: 1167468960}
   mainVolume: {fileID: 1705932730}
   coralReefClear:
     m_TableReference:
@@ -49843,7 +49840,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1167468962}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerLeaderboardScore, Assembly-CSharp
         m_MethodName: OnPauseMenuOpen
         m_Mode: 1
@@ -70994,7 +70991,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8456e0342a8e17d41a88eb2524eb5339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnManager: {fileID: 1167468958}
   zoneType: 0
   zoneBarrierMat: {fileID: 2100000, guid: b511334f07ec9f34c9325c219f645ea1, type: 2}
   barrierCollider: {fileID: 550821531}
@@ -72742,7 +72738,6 @@ MonoBehaviour:
   waypoints: {fileID: 1268642478}
   speed: 0.65
   maxRandYOffsetMultiplier: 2
-  audioManager: {fileID: 1167468960}
   coldownTime: 10
 --- !u!114 &563928595
 MonoBehaviour:
@@ -78486,7 +78481,6 @@ MonoBehaviour:
   waypoints: {fileID: 1752348669}
   speed: 1.2
   maxRandYOffsetMultiplier: 1
-  audioManager: {fileID: 1167468960}
   coldownTime: 4
 --- !u!114 &611701240
 MonoBehaviour:
@@ -94542,17 +94536,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a53131563c6d2a641876df9cb2357dae, type: 3}
---- !u!114 &735708656 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2366145466450645222, guid: a53131563c6d2a641876df9cb2357dae, type: 3}
-  m_PrefabInstance: {fileID: 735708655}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bed1b0f74f0b7a4cb2973be686e8a60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &735708657 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7877056522928886271, guid: a53131563c6d2a641876df9cb2357dae, type: 3}
@@ -119950,7 +119933,7 @@ PrefabInstance:
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1167468962}
+      objectReference: {fileID: 0}
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
@@ -140866,7 +140849,6 @@ MonoBehaviour:
   waypoints: {fileID: 1596635929}
   speed: 1.5
   maxRandYOffsetMultiplier: 2.31
-  audioManager: {fileID: 1167468960}
   coldownTime: 0
 --- !u!1 &1116078530
 GameObject:
@@ -147003,7 +146985,6 @@ GameObject:
   - component: {fileID: 1167468958}
   - component: {fileID: 1167468960}
   - component: {fileID: 1167468961}
-  - component: {fileID: 1167468962}
   - component: {fileID: 1167468964}
   - component: {fileID: 1167468965}
   m_Layer: 0
@@ -147035,14 +147016,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1167468956}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7aae0d77681b7e4c8d1d964a9a1082f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fishSkinManager: {fileID: 11400000, guid: 9b9c06ba6e81b3244bcd39c2bbd353ad, type: 2}
-  fishAdditionalComponentManager: {fileID: 1167468964}
-  audioManager: {fileID: 1167468960}
   mainmenuManager: {fileID: 1167468961}
   gameManager: {fileID: 1167468959}
   fishPoolParent: {fileID: 1632840716}
@@ -147060,15 +147039,9 @@ MonoBehaviour:
   pufferfishPrefab: {fileID: 4408029418071078942, guid: b42b068f8ca9d6d438ea6feebe8f15e2, type: 3}
   cuttlefishPrefab: {fileID: 1912158170256893060, guid: b60afb4145852294b8a3f6c101c99baf, type: 3}
   dartfishPrefab: {fileID: 4749481652400608831, guid: 4869372fa718d8d4ba46b04bbff834f6, type: 3}
-  weakFishSpawnPointsParent: {fileID: 1675008562}
-  strongFishSpawnPointsParent: {fileID: 304880171}
-  sharkSpawnPointsParent: {fileID: 1472888206}
   pufferfishPointsParent: {fileID: 962995336}
   cuttlefishPointsParent: {fileID: 635425435}
-  playerSpawnParticles: {fileID: 1344281160}
-  enemySkeletonParticle: {fileID: 7320630401195504716, guid: a396b796a566dea4a9f4f9aa91488793, type: 3}
-  enemyDieParticles: {fileID: 5900229714580445078, guid: 4bc5644134071a6418939fb199880778, type: 3}
-  enemyDetector: {fileID: 735708656}
+  spawnParticles: {fileID: 5900229714580445078, guid: 4bc5644134071a6418939fb199880778, type: 3}
 --- !u!114 &1167468959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147082,7 +147055,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraFollower: {fileID: 1129943388}
-  spawnManager: {fileID: 1167468958}
   fishHeartbeatsManager: {fileID: 244498571}
   jellyfishControllerArray:
   - {fileID: 563928594}
@@ -147090,7 +147062,7 @@ MonoBehaviour:
   - {fileID: 1391142424}
   - {fileID: 1115875979}
   playerEffectsUI: {fileID: 365168275}
-  playerLeaderboardScore: {fileID: 1167468962}
+  playerLeaderboardScore: {fileID: 1167468964}
   pauseExitButton: {fileID: 867708230}
   gameCanvas: {fileID: 1299031758}
 --- !u!114 &1167468960
@@ -147133,7 +147105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d70299022678fd4e8c7b346e6515236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioManager: {fileID: 1167468960}
   graphicManager: {fileID: 1167468965}
   loadingPanel: {fileID: 1944758229}
   sceneLoader: {fileID: 1365067461}
@@ -147169,13 +147140,12 @@ MonoBehaviour:
   gameManager: {fileID: 1167468959}
   pauseButton: {fileID: 384643180}
   pauseWnd: {fileID: 1536686831}
-  spawnManager: {fileID: 1167468958}
   respawnWnd: {fileID: 1948432453}
   demoFinMsg: {fileID: 600630179477368534}
   references:
     version: 2
     RefIds: []
---- !u!114 &1167468962
+--- !u!114 &1167468964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147186,28 +147156,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16acc22b6d5a3c547865ef98294396b6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1167468964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167468956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307c53469454cdc4aa2f594f57fba106, type: 3}
-  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishAdditionalCompManager
-  fishAddCompPoolParent: {fileID: 1041597287}
-  shieldBubblePrefab: {fileID: 3843482164391400401, guid: 7a9a9e3e06b9440409c8c7e2fb9a01d5, type: 3}
-  spintLinePrefab: {fileID: 8764819932231879374, guid: b020b3a509e117a40872de7b50878137, type: 3}
-  whirlLinePrefab: {fileID: 2499911283021409207, guid: afd88b84ad930f145a944fed81cabd8e, type: 3}
-  deadBubblesParticlPrefab: {fileID: 5900229714580445078, guid: 4bc5644134071a6418939fb199880778, type: 3}
-  biteParticlePrefab: {fileID: 7205333905808350337, guid: 4a93876a52a22bb4eb1fa9fa4e1073f4, type: 3}
-  skeletParticlePrefab: {fileID: 7320630401195504716, guid: a396b796a566dea4a9f4f9aa91488793, type: 3}
-  healParticlePrefab: {fileID: 1344173358258605977, guid: 73c5c80031f9a144288a21878f7d4f2e, type: 3}
-  inkParticlesPrefab: {fileID: 6766427283436937323, guid: d76868dbfbbc69a47b8a825185da165b, type: 3}
 --- !u!114 &1167468965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167631,11 +167580,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1675008562}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1344281160 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 735071828938659050, guid: 4cc0f3b8d80ef2d43a7ae194581741a8, type: 3}
-  m_PrefabInstance: {fileID: 8210680853363908943}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1344601394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4585369454637778662, guid: 30ccafe1e4a27e14f8b7f5ea8eaf689a, type: 3}
@@ -174033,7 +173977,6 @@ MonoBehaviour:
   waypoints: {fileID: 1536581510}
   speed: 1.76
   maxRandYOffsetMultiplier: 0.83
-  audioManager: {fileID: 1167468960}
   coldownTime: 6
 --- !u!114 &1391142425
 MonoBehaviour:
@@ -218525,6 +218468,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2915485949150399495, guid: 9cfa50a83e95c9f4ea303c2662c78f58, type: 3}
   m_PrefabInstance: {fileID: 1732936925}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1733302805
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1733302807}
+  - component: {fileID: 1733302806}
+  m_Layer: 0
+  m_Name: LifeTimeScope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1733302806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733302805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c158b5af62c1341b8bc109fcfd2a99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::MainLifetimeScope
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects: []
+  fishPrefabs: {fileID: 11400000, guid: d1a4551f7ee85f240ba41e1caced6dc9, type: 2}
+  vfxPrefabsInfo: {fileID: 11400000, guid: 97fd59e347f31cc44a49eb97423dad57, type: 2}
+--- !u!4 &1733302807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733302805}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1733366400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -250473,7 +250466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df38e1eefaeb4546bcaa5f2d9ad6240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  spawnManager: {fileID: 1167468958}
   gui: {fileID: 1167468961}
 --- !u!1001 &1997131831
 PrefabInstance:
@@ -277832,6 +277824,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1167468957}
+  - {fileID: 1733302807}
   - {fileID: 1996102942}
   - {fileID: 136486432}
   - {fileID: 410087041}

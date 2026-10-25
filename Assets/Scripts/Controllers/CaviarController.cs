@@ -1,39 +1,48 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using VContainer;
 
 public class CaviarController : MonoBehaviour {
-    [SerializeField] SpawnManager spawnManager;
+    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject caviarModel;
+
+    [Inject] private readonly IPlayerFishPoolService _playeyPoolService;
+    [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
+
+    private float _wavingAplitude;
+
     private const float WAVING_SPEED = 1.2f;
-    private /*const*/ float WAVING_AMPLITUDE;
+    private float _current_reEnablerTime = 0f;
+    private float _defaultY;
+    private float _randinInitProgress;
+
     private const float MAX_REENABLE_TIME = 300f; // max time to re-enable the caviar object
-    private float current_reEnablerTime = 0f;
-    private float defaultY;
-    private float randinInitProgress;
     private const string KEY_STR = "caviar_time_";
-    private static int PlayerEatedCaviarCnt { get; set; }
     private const int MAX_CAVIAR_EATEN_CNT = 35;//to trigger achievement Gourmet
+
+    private static int PlayerEatedCaviarCnt { get; set; }
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        WAVING_AMPLITUDE = (1.3f - transform.localScale.x) * .5f;
-        defaultY = transform.localPosition.y;
-        randinInitProgress = Random.Range(0f, 360f);
-        current_reEnablerTime = PlayerPrefs.GetFloat(KEY_STR + gameObject.name, 0f);
-        caviarModel.SetActive(current_reEnablerTime == 0f);
+        _wavingAplitude = (1.3f - transform.localScale.x) * .5f;
+        _defaultY = transform.localPosition.y;
+        _randinInitProgress = Random.Range(0f, 360f);
+        _current_reEnablerTime = PlayerPrefs.GetFloat(KEY_STR + gameObject.name, 0f);
+        caviarModel.SetActive(_current_reEnablerTime == 0f);
     }
 
     // Update is called once per frame
     void Update() {
-        float y = Mathf.Sin((Time.time + randinInitProgress) * WAVING_SPEED) * WAVING_AMPLITUDE;
-        transform.localPosition = new Vector3(transform.localPosition.x, defaultY + y, transform.localPosition.z);
+        float y = Mathf.Sin((Time.time + _randinInitProgress) * WAVING_SPEED) * _wavingAplitude;
+        transform.localPosition = new Vector3(transform.localPosition.x, _defaultY + y, transform.localPosition.z);
 
         if (!caviarModel.activeInHierarchy)
-            if (current_reEnablerTime >= MAX_REENABLE_TIME)
+            if (_current_reEnablerTime >= MAX_REENABLE_TIME)
                 ActivateCaviar();
             else
-                current_reEnablerTime += DJTime.DeltaTime;
+                _current_reEnablerTime += DJTime.DeltaTime;
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -44,7 +53,7 @@ public class CaviarController : MonoBehaviour {
 
         if (caviarModel.activeInHierarchy && other.isTrigger//only mouth (trigger collider)
             && parentFish.CompareTag("Player")
-            && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)) {
+            && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out Fish fish)) {
             fish.FeedCaviar();
 
             ++PlayerEatedCaviarCnt;
@@ -55,22 +64,22 @@ public class CaviarController : MonoBehaviour {
 #endif
 
             caviarModel.SetActive(false);//disable caviar object
-            current_reEnablerTime = 0f;
+            _current_reEnablerTime = 0f;
         }
     }
 
     void OnDestroy() {
-        PlayerPrefs.SetFloat(KEY_STR + gameObject.name, current_reEnablerTime);
+        PlayerPrefs.SetFloat(KEY_STR + gameObject.name, _current_reEnablerTime);
     }
 
     void ActivateCaviar() {
-        if (spawnManager.PlayerCurrentFish == null)
+        if (_playeyPoolService.PlayerCurrentFish == null)
             return;
 
-        if (Vector3.Distance(spawnManager.PlayerCurrentFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
+        if (Vector3.Distance(_playeyPoolService.PlayerCurrentFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
             /*gameObject*/
             caviarModel.SetActive(true);
         else
-            current_reEnablerTime = 0f;
+            _current_reEnablerTime = 0f;
     }
 }

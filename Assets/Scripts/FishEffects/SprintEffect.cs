@@ -1,28 +1,31 @@
 using UnityEngine;
 
 public class SprintEffect : Effect {
-    GameObject trailObj;
-    FishAnim fishAnim;
-    VFXpoolManager fishAddComp;
-    Vector3 trailLocalPos;
-    Transform trailParent;
+    private GameObject trailObj;
+
+    private readonly FishAnim _fishAnim;
+    private readonly Vector3 _trailLocalPos;
+    private readonly Transform _trailParent;
+    private readonly IVFXPoolService _vfxPoolService;
+
     const float SPRINT_SPEED_MULTIPLIER = 1.5f;
 
-    public SprintEffect(VFXpoolManager fishAddComp, FishAnim fishAnim, Transform trailParent, Vector3 trailLocalPos) {
+    public SprintEffect(IVFXPoolService fishAddComp, FishAnim fishAnim, Transform trailParent, Vector3 trailLocalPos) {
         //this.trailObj = trailObj;
-        this.fishAddComp = fishAddComp;
-        this.trailLocalPos = trailLocalPos;
-        this.fishAnim = fishAnim;
-        this.trailParent = trailParent;
-        type = FishEffectType.SprintSpeed;
+        _vfxPoolService = fishAddComp;
+        _trailLocalPos = trailLocalPos;
+        _fishAnim = fishAnim;
+        _trailParent = trailParent;
+
+        Type = FishEffectType.SprintSpeed;
     }
 
     protected override void OnApply() {
         //trailObj.SetActive(true);
-        trailObj = fishAddComp.ActivateObjectFromPool(FishComponentType.PlayerSprintLine, trailParent, trailLocalPos, Vector3.one, Quaternion.identity);
+        trailObj = _vfxPoolService.ActivateObjectFromPool(FishVFX.PlayerSprintLine, _trailParent, _trailLocalPos, Vector3.one, Quaternion.identity);
         targetFish.ChangeSpeedMultiplier(SPRINT_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
         //Debug.Log($"{target.name} has applied Speed Effect for {duration} s.");
-        fishAnim?.SprintAnimation(); // enable sprint animation boost
+        _fishAnim?.SprintAnimation(); // enable sprint animation boost
     }
 
     protected override void OnExpire() {
@@ -32,7 +35,7 @@ public class SprintEffect : Effect {
             trailObj.SetActive(false);
         targetFish.ChangeSpeedMultiplier(NORMAL_SPEED_MULTIPLIER, FishSpeedModifierType.Sprint);
         //Debug.Log($"{target.name} has expired Speed Effect after {duration} s.");
-        fishAnim?.SprintAnimation(false); // disable sprint animation speed
+        _fishAnim?.SprintAnimation(false); // disable sprint animation speed
     }
 }
 

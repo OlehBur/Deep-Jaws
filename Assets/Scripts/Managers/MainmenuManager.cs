@@ -8,12 +8,34 @@ using System.Runtime.CompilerServices;
 using VContainer; //  for Uri.EscapeDataString
 
 
+public interface IMainmenuManager {
+    void OnOpenGameInBrowser();
+    void OnOpenDemoFin();
+    void OnSanctuaryClick();
+    void OnGameModeSet(int gamemode);
+    void OnServicesButton(int buttonIndex);
+    void OnNewGameClick();
+    void OnSkipGuide();
+    void OnCompleteGuide();
+    void OnSureSaveExitGame();
+    void OnExitButtonClicked();
+
+    void ActivateNoInternetConnectionWnd(bool isActive);
+    void ActivateLoadingPanelWnd(bool isActive);
+    void ActivatePauseWnd(bool isActivate);
+    void DeactivateRespawnWnd();
+
+    void ResetAndReloadGame_Hard();
+    void ResetWorldData();
+    void ChangeSignInColor(bool isSignIn);
+    void OpenEmailClientForBugReport();
+}
+
 /// <summary>
 /// відповідає за активніть графічного інтерфейсу пов'язану з грою
 /// responsible for the activity of the graphical interface related to the game
 /// </summary>
-public class MainmenuManager : MonoBehaviour {
-    [SerializeField] AudioManager audioManager;
+public class MainmenuManager : MonoBehaviour, IMainmenuManager {
     [SerializeField] GraphicManager graphicManager;
     [SerializeField] GameObject loadingPanel;
 
@@ -46,26 +68,27 @@ public class MainmenuManager : MonoBehaviour {
     [SerializeField] GameManager gameManager;
     [SerializeField] GameObject pauseButton;
     [SerializeField] GameObject pauseWnd;
-    [SerializeField] SpawnManager spawnManager;
+    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] RespawnWnd respawnWnd;
     [SerializeField] GameObject demoFinMsg;
 
-    private bool isGMneedAnimation = true;
-    private bool isWorldDataExist = false;
-    private Color targetGMwndColor;
-    private Color targetLightGMcolor;
+    private bool _isGMneedAnimation = true;
+    private bool _isWorldDataExist = false;
+    private Color _targetGMwndColor;
+    private Color _targetLightGMcolor;
     //private GPG_Manager gpg_manager;
 
-    [Inject] private readonly PlayerPoolService playerSpawnService;
+    [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
+    [Inject] private readonly IAudioManager _audioManager;
 
-    private readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
-    private readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
-    private readonly Color HARD_GM_COLOR = new Color(0.6698113f, 0.09033603f, 0f, 1f);
-    private readonly Color LIGHT_DEFAULT_COLOR = new Color(1f, 0.8671192f, 0.504717f, 1f);
-    private readonly Color LIGHT_MEDIUM_COLOR = new Color(0.4544322f, 0.4999117f, 0.8679245f, 1f);
-    private readonly Color LIGHT_HARD_COLOR = new Color(0f, 0f, 0f, 1f);
-    private readonly Color failedSignInColor = new Color(1f, 0.4764151f, 0.4863637f, 1f);
-    private readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
+    private static readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
+    private static readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
+    private static readonly Color HARD_GM_COLOR = new Color(0.6698113f, 0.09033603f, 0f, 1f);
+    private static readonly Color LIGHT_DEFAULT_COLOR = new Color(1f, 0.8671192f, 0.504717f, 1f);
+    private static readonly Color LIGHT_MEDIUM_COLOR = new Color(0.4544322f, 0.4999117f, 0.8679245f, 1f);
+    private static readonly Color LIGHT_HARD_COLOR = new Color(0f, 0f, 0f, 1f);
+    private static readonly Color failedSignInColor = new Color(1f, 0.4764151f, 0.4863637f, 1f);
+    private static readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
 
     //private const string LOCALE_PREF_KEY = "LocaleIndex";
     //private const string FPS_KEY = "FPS";
@@ -95,14 +118,14 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void Start() {
-        isWorldDataExist = ProgressSaver.IsWorldDataExist;
+        _isWorldDataExist = ProgressSaver.IsWorldDataExist;
 
         if (faderScene != null)        // Ensure the fader scene is not destroyed on load
             faderScene?.gameObject.SetActive(true);
 
         if (continueButton != null) {// Initialize the continue button visibility based on saved data
-            continueButton?.SetActive(isWorldDataExist);
-            GameStaticInfo.Gamemode = isWorldDataExist ?
+            continueButton?.SetActive(_isWorldDataExist);
+            GameStaticInfo.Gamemode = _isWorldDataExist ?
                 ProgressSaver.LoadWorldData().gameMode : GameMode.None;
         }
 
@@ -117,7 +140,7 @@ public class MainmenuManager : MonoBehaviour {
         if (pauseButton != null)
             pauseButton.SetActive(!GameManager.IsRunOnPC);
 
-        playerSpawnService.OnPlayerLVLup += (Level) => {
+        _playerSpawnService.OnPlayerLVLup += (Level) => {
             if (GameManager.IsPC_Demo() && Level >= FishLevel.Mackerel) {
                 gameManager.GameSetPause(true);
                 OnOpenDemoFin();
@@ -134,8 +157,8 @@ public class MainmenuManager : MonoBehaviour {
 
 
     private void OnEnable() {
-        if (playerSpawnService != null)
-            playerSpawnService.OnPlayerDied += ActivateRespawnWnd;
+        if (_playerSpawnService != null)
+            _playerSpawnService.OnFishDie += ActivateRespawnWnd;
 #if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
             GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
@@ -143,8 +166,8 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     private void OnDisable() {
-        if (playerSpawnService != null)
-            playerSpawnService.OnPlayerDied -= ActivateRespawnWnd;
+        if (_playerSpawnService != null)
+            _playerSpawnService.OnFishDie -= ActivateRespawnWnd;
 
 #if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
@@ -168,8 +191,8 @@ public class MainmenuManager : MonoBehaviour {
             Application.OpenURL(GAME_FULL_URL);
 
     public void OnOpenDemoFin() {
-        audioManager.PlayVFX(VFX_clip.BubblePop);
-        audioManager.PlayerAudioSource.Stop();
+        _audioManager.PlayVFX(VFX_clip.BubblePop);
+        _audioManager.PlayerAudioSource.Stop();
         demoFinMsg.SetActive(true);
     }
 
@@ -194,7 +217,7 @@ public class MainmenuManager : MonoBehaviour {
     }
 #endif
 
-    void ActivateRespawnWnd() {
+    void ActivateRespawnWnd(Fish f) {
 #if UNITY_ANDROID
         if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
             ResetAndReloadGame_Hard();
@@ -251,8 +274,8 @@ public class MainmenuManager : MonoBehaviour {
 
     IEnumerator ChangeColorGMwnd() {
         //Debug.Log("gm changing color started");
-        while (gameModeWndBackground.color != targetGMwndColor) {
-            gameModeWndBackground.color = Color.Lerp(gameModeWndBackground.color, targetGMwndColor, DJTime.DeltaTime);
+        while (gameModeWndBackground.color != _targetGMwndColor) {
+            gameModeWndBackground.color = Color.Lerp(gameModeWndBackground.color, _targetGMwndColor, DJTime.DeltaTime);
             yield return null;
         }
 
@@ -260,8 +283,8 @@ public class MainmenuManager : MonoBehaviour {
     }
 
     IEnumerator ChangeColorGMmainMenu() {
-        while (mainMenuLight.color != targetLightGMcolor) {
-            mainMenuLight.color = Color.Lerp(mainMenuLight.color, targetLightGMcolor, DJTime.DeltaTime);
+        while (mainMenuLight.color != _targetLightGMcolor) {
+            mainMenuLight.color = Color.Lerp(mainMenuLight.color, _targetLightGMcolor, DJTime.DeltaTime);
             yield return null;
         }
     }
@@ -269,14 +292,14 @@ public class MainmenuManager : MonoBehaviour {
     public void OnGameModeSet(int gamemode) {
         GameStaticInfo.Gamemode = (GameMode)gamemode;
 
-        targetGMwndColor = GameStaticInfo.Gamemode switch {
+        _targetGMwndColor = GameStaticInfo.Gamemode switch {
             GameMode.Easy => EASY_GM_COLOR,
             GameMode.Medium => MEDIUM_GM_COLOR,
             GameMode.Hard => HARD_GM_COLOR,
             _ => Color.white
         };
 
-        targetLightGMcolor = GameStaticInfo.Gamemode switch {
+        _targetLightGMcolor = GameStaticInfo.Gamemode switch {
             GameMode.Easy => LIGHT_DEFAULT_COLOR,
             GameMode.Medium => LIGHT_MEDIUM_COLOR,
             GameMode.Hard => LIGHT_HARD_COLOR,
@@ -291,9 +314,9 @@ public class MainmenuManager : MonoBehaviour {
         //PlayerPrefs.SetInt("GameMode", gamemode);
         //Debug.Log("DELETED WORDL AUTO SAVE");
 
-        if (isGMneedAnimation) {
+        if (_isGMneedAnimation) {
             gmWndAnimator.SetTrigger("Anim");
-            isGMneedAnimation = false;
+            _isGMneedAnimation = false;
         }
     }
 
@@ -317,7 +340,7 @@ public class MainmenuManager : MonoBehaviour {
 
     //open ar u sur wnd if player already has saved game data
     public void OnNewGameClick() {
-        if (isWorldDataExist)
+        if (_isWorldDataExist)
             areUSureWnd?.SetActive(true);
         else
             gamemodeWnd.SetActive(true);
@@ -333,7 +356,7 @@ public class MainmenuManager : MonoBehaviour {
     public void ResetWorldData() {
         PlayerLeaderboardScore.LoadSavedData();
         PlayerPrefs.DeleteAll();//delete all player prefs data 
-        audioManager.SaveAudioData(); // Save current audio settings
+        _audioManager.SaveAudioData(); // Save current audio settings
         graphicManager.SaveGraphicsData(); // Save current graphic settings
         PlayerLeaderboardScore.SaveLoadedData();
         ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();

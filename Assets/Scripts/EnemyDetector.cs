@@ -1,4 +1,5 @@
 using UnityEngine;
+using VContainer;
 
 
 /// <summary>
@@ -8,36 +9,44 @@ using UnityEngine;
 public class EnemyDetector : MonoBehaviour {
     [SerializeField] GameTips gameTips;
     [SerializeField] GameObject pointer;
+
+    [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
+
     private const float DETECTOR_RADIUS_MULTIPLIER = 1.8f; // multiplier for the detector radius to give the player a little advantage
-    private float DETECTOR_RADIUS => (playerFish != null) ? 18f : playerFish.DefaultInfo.ResponseRadius * DETECTOR_RADIUS_MULTIPLIER;//a value larger than the maximum response radius in the some fishes (12), to give the player a little advantage)))
-    private Collider[] colliders = new Collider[5];
-    private Fish playerFish;
+    private float GetDetectorRadius ()=> (_playerFish != null) ?
+        18f : _playerFish.DefaultInfo.ResponseRadius * DETECTOR_RADIUS_MULTIPLIER;//a value larger than the maximum response radius in the some fishes (12), to give the player a little advantage)))
+
+    private Collider[] _colliders = new Collider[5];
+    private Fish _playerFish;
+
+
 
     public void Init(Fish playerFish) {
-        this.playerFish = playerFish;
+        _playerFish = playerFish;
     }
 
     void Update() {
-        if (playerFish != null && playerFish.IsActive) {
-            int cnt = Physics.OverlapSphereNonAlloc(playerFish.transform.position, DETECTOR_RADIUS, colliders, GameStaticInfo.LAYER_MASK_ENTITY);
+        if (_playerFish != null && _playerFish.IsActive) {
+            float minDistance = GetDetectorRadius();
+            int cnt = Physics.OverlapSphereNonAlloc(_playerFish.transform.position, minDistance, _colliders, GameStaticInfo.GetEntityLayerMask());
+            
             if (cnt > 0) {
-                float minDistance = DETECTOR_RADIUS;
                 Vector3 closestEnemyPos = Vector3.zero;
                 Fish enemyFish = null;
 
                 for (int i = 0; i < cnt; i++) {
-                    if (colliders[i] == null)
+                    if (_colliders[i] == null)
                         continue;
 
-                    GameStaticInfo.TryGetFish(colliders[i].transform.parent.gameObject, out enemyFish);
-                    if (enemyFish == null || enemyFish == playerFish)
+                    _spawnOrchestrator.TryGetFish(_colliders[i].transform.parent.gameObject, out enemyFish);
+                    if (enemyFish == null || enemyFish == _playerFish)
                         continue;
 
-                    bool isLegimate = enemyFish.IsLegitimateTarget(playerFish);
+                    bool isLegimate = enemyFish.IsLegitimateTarget(_playerFish);
                     //Debug.Log("Danger: " + isLegimate + ", cnt targets: " + cnt);
 
                     if (isLegimate) {
-                        float distance = Vector3.Distance(playerFish./*Rb*/transform.position, enemyFish.transform.position);
+                        float distance = Vector3.Distance(_playerFish./*Rb*/transform.position, enemyFish.transform.position);
                         if (distance < minDistance) {
                             minDistance = distance;
                             closestEnemyPos = enemyFish.transform.position;
@@ -45,7 +54,7 @@ public class EnemyDetector : MonoBehaviour {
                     }
                 }
 
-                if (minDistance != DETECTOR_RADIUS) {
+                if (minDistance != GetDetectorRadius()) {
                     Vector3 lookPosInHorizontal = new Vector3(closestEnemyPos.x, /*playerFish.*/transform.position.y, closestEnemyPos.z);
 
                     transform.LookAt(lookPosInHorizontal, Vector3.up);
@@ -64,10 +73,4 @@ public class EnemyDetector : MonoBehaviour {
             }
         }
     }
-
-    //bool IsPlayerWeaker(Fish enemyFish) {
-    //    return enemyFish.Level > playerFish.Level ||
-    //           (enemyFish.Level == playerFish.Level && enemyFish.Progress > playerFish.Progress// enemy fish at the same level with higher progress attacks only if it is a shark
-    //           && enemyFish.Level >= GameStaticInfo.SHARK_INDEX_BARRIER);
-    //}
 }

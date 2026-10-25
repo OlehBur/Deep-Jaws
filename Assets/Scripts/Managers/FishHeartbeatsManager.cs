@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 
 
@@ -17,25 +18,31 @@ public class FishHeartbeatsManager : MonoBehaviour {
     [SerializeField] GameObject shaderCamerasParent;
     [SerializeField] Image uiShaderVisualize;
 
-    private SpawnManager spawnManager;
-    private ParticleSystem[] fishHeartbeatsParticlesPool;
+    //private SpawnManager spawnManager;
+    private ParticleSystem[] _fishHeartbeatsParticlesPool;
+    private Coroutine _heartBeatParticleCorutine = null;
 
-    private readonly Color WEAK_ENEMY_COLOR = Color.green;
-    private readonly Color SAME_ENEMY_COLOR = Color.yellow;
-    private readonly Color UNBEATABLE_ENEMY_COLOR = Color.orange;
-    private readonly Color STRONG_ENEMY_COLOR = Color.red;
-    private readonly Color UNKNOWN_ENEMY_COLOR = Color.blue;
-    private readonly Color PLAYER_COLOR = new Color(.0f, .9f, 1f, 1f);
+    [Inject] private readonly IEnemyFishPoolService _enemyPoolService;
+    [Inject] private readonly IPermamentFishPoolService _permamentFishPoolService;
+    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+    private readonly WaitForSecondsRealtime _waitForParticleUpd = new WaitForSecondsRealtime(HERTBEAT_PARTICLES_UPDATE_INTERVAL);
+
+    private static readonly Color WEAK_ENEMY_COLOR = Color.green;
+    private static readonly Color SAME_ENEMY_COLOR = Color.yellow;
+    private static readonly Color UNBEATABLE_ENEMY_COLOR = Color.orange;
+    private static readonly Color STRONG_ENEMY_COLOR = Color.red;
+    private static readonly Color UNKNOWN_ENEMY_COLOR = Color.blue;
+    private static readonly Color PLAYER_COLOR = new Color(.0f, .9f, 1f, 1f);
 
     private const int TEXTURE_SIZE_DIVIDER = 4; //â big texture resolution is expensive for mobile devices
     private const float HERTBEAT_PARTICLES_UPDATE_INTERVAL = 0.05f;
-    private readonly WaitForSecondsRealtime waitForParticleUpd = new WaitForSecondsRealtime(HERTBEAT_PARTICLES_UPDATE_INTERVAL);
-    private Coroutine heartBeatParticleCorutine = null;
 
 
-    public void Init(SpawnManager spawnManager) {
-        this.spawnManager = spawnManager;
-        /*heartbeatParent.*/gameObject.SetActive(false);
+
+    public void Init(/*SpawnManager spawnManager*/) {
+        //this.spawnManager = spawnManager;
+        /*heartbeatParent.*/
+        gameObject.SetActive(false);
         ReInitPool();
         InitRenderTextureSize(defaultView);
         InitRenderTextureSize(heartbeatView);
@@ -52,72 +59,67 @@ public class FishHeartbeatsManager : MonoBehaviour {
     }
 
     void ReInitPool() {
-        if (fishHeartbeatsParticlesPool == null)
-            fishHeartbeatsParticlesPool = new ParticleSystem[SpawnManager.POOL_SIZE + SpawnManager.PUFFERFISH_SPAWN_COUNT + SpawnManager.CUTTLEFISH_SPAWN_COUNT + SpawnManager.DARTFISH_SPAWN_COUNT + spawnManager.PlayerPoolSize];
-        FishLevel playerLevel = spawnManager.PlayerCurrentFish.Level;
+        if (_fishHeartbeatsParticlesPool == null)
+            _fishHeartbeatsParticlesPool = new ParticleSystem[_enemyPoolService.Count + _permamentFishPoolService.Count + _playerFishPoolService.Count];
+        FishLevel playerLevel = _playerFishPoolService.PlayerCurrentFish.Level;
         ParticleSystem.MainModule particleMainModule;
 
         int index = 0;
         //Debug.LogWarning("HeartBeatDisabled");
-        foreach (Fish fish in SpawnManager.visible_poolFishComponents/*pool_FishComp*/)
+        foreach (Fish fish in _enemyPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
-        foreach (Fish fish in SpawnManager.pufferfishPool_FishComponents)
+        foreach (Fish fish in _permamentFishPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
-        foreach (Fish fish in SpawnManager.cuttlefishPool_FishComponents)
-            InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
-
-        foreach (Fish fish in SpawnManager.playerPool_FishComponents)
-            InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
-
-        foreach (Fish fish in SpawnManager.dartfishPool_FishComponents)
+        foreach (Fish fish in _playerFishPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
     }
 
     void InitParticleByFish(Fish fish, ref int index, ref ParticleSystem.MainModule particleMainModule, FishLevel playerLevel) {
         Color enemyFishColor = UNKNOWN_ENEMY_COLOR;
 
-        if (fishHeartbeatsParticlesPool[index] == null) {
-            fishHeartbeatsParticlesPool[index] = Instantiate(heartbeatPrefab,
+        if (_fishHeartbeatsParticlesPool[index] == null) {
+            _fishHeartbeatsParticlesPool[index] = Instantiate(heartbeatPrefab,
                 fish.transform.position, Quaternion.identity, /*heartbeatParent*/transform);
-            fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
+            _fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
         }
         else {
             //Debug.Log("heartbeat optimize reuse");
-            fishHeartbeatsParticlesPool[index].transform.position = fish.transform.position;
+            _fishHeartbeatsParticlesPool[index].transform.position = fish.transform.position;
         }
 
         if (fish.IsActive) {
-            particleMainModule = fishHeartbeatsParticlesPool[index].main;
+            particleMainModule = _fishHeartbeatsParticlesPool[index].main;
             enemyFishColor = (fish.Level <= GameStaticInfo.UNBEATABLE_FISH_LVL) ? UNBEATABLE_ENEMY_COLOR :
                 (fish.Level == playerLevel) ? SAME_ENEMY_COLOR :
                 (fish.Level < playerLevel) ? WEAK_ENEMY_COLOR :
                     STRONG_ENEMY_COLOR;
 
-            enemyFishColor = (fish == spawnManager.PlayerCurrentFish) ?
+            enemyFishColor = (fish == _playerFishPoolService.PlayerCurrentFish) ?
                 PLAYER_COLOR : enemyFishColor;
 
             particleMainModule.startColor = enemyFishColor;
-            fishHeartbeatsParticlesPool[index].gameObject.SetActive(true);
+            _fishHeartbeatsParticlesPool[index].gameObject.SetActive(true);
         }
         else
-            fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
+            _fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
 
         ++index;
     }
 
     public void SetActivateShaderPreparation(bool isActivate) {
-        if (isActivate && heartBeatParticleCorutine == null) {
+        if (isActivate && _heartBeatParticleCorutine == null) {
             gameObject.SetActive(true);
-            heartBeatParticleCorutine = StartCoroutine(HeartBeatParticles());
+            _heartBeatParticleCorutine = StartCoroutine(HeartBeatParticles());
             //InvokeRepeating(nameof(ReInitPool), 0f, HERTBEAT_PARTICLES_UPDATE_INTERVAL);
         }
         else
             StopCoroutine(HeartBeatParticles());
         //CancelInvoke(nameof(ReInitPool));
 
-        /*heartbeatParent.*/gameObject.SetActive(isActivate);
+        /*heartbeatParent.*/
+        gameObject.SetActive(isActivate);
         shaderCamerasParent.SetActive(isActivate);
         uiShaderVisualize.enabled = isActivate;
 
@@ -127,19 +129,17 @@ public class FishHeartbeatsManager : MonoBehaviour {
     IEnumerator HeartBeatParticles() {
         while (true) {
             ReInitPool();
-            yield return waitForParticleUpd;
+            yield return _waitForParticleUpd;
         }
     }
 
     void RemoveEntityFromCamera(bool isRemove) {
-        int layer;
-        if (isRemove) {
-            layer = LayerMask.NameToLayer("Entity");//subtract layer
-            Camera.main.cullingMask &= ~(1 << layer);
-        }
-        else {
-            layer = LayerMask.NameToLayer("Entity");//add layer
-            Camera.main.cullingMask |= (1 << layer);
-        }
+        int layer = GameStaticInfo.GetEntityLayerID();
+
+        if (isRemove)
+            Camera.main.cullingMask &= ~(1 << layer);//subtract layer
+        else
+            Camera.main.cullingMask |= (1 << layer);//add layer
     }
+
 }

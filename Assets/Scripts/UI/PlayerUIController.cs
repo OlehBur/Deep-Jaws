@@ -8,6 +8,7 @@ using UnityEngine.Localization;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using VContainer;
 
 
 /// <summary>
@@ -32,13 +33,9 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] Image poisonIcon;
     [SerializeField] Image blindnessIcon;
     [SerializeField] Button sprintButton; // button for sprint effect activation
-                                          //[SerializeField] AudioClip damageAudio;
-    [SerializeField] AudioManager audioManager;
 
     [Header("Overlays")]
     [SerializeField] Volume mainVolume;
-    //[SerializeField] Image zoneOverlay;
-    //[SerializeField] TextMeshProUGUI zoneOverlayMsg;
     [SerializeField] LocalizedString coralReefClear;
     [SerializeField] LocalizedString seaweedClear;
 
@@ -100,36 +97,38 @@ public class PlayerUIController : MonoBehaviour {
         iconsPositionsMultipliers6,
         iconsPositionsMultipliers7
     };
+    private static readonly WaitForSecondsRealtime OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL);
+    private static readonly WaitForSecondsRealtime FOUR_SECONDS_WAIT = new WaitForSecondsRealtime(4f);
+    private static readonly Color VIGNETTE_DEFAULT_COLOR = Color.black;
+    private static readonly Color VIGNETTE_DAMAGE_COLOR = Color.red;
+
+    //private SpawnManager _spawnManager;
+    private EffectManager _playerEffectManager;
+    private float _currentSprintCooldownTime = 0;
+    private Fish _playerFish; // reference to the player fish component
+    //private Coroutine _zoneCoroutine;
+    private Vignette _vignette = null;
+    private LensDistortion _lensDistortion = null;
+    private ChromaticAberration _chromaticAberration = null;
+    private ColorAdjustments _colorAdjustments = null;
+    private DepthOfField _depthOfField = null;
+    private Coroutine _damageCoroutine;
+    private Coroutine _stunCoroutine;
+    private Coroutine _poisonCoroutine;
+    private Coroutine _freezeCoroutine;
+    private Coroutine _blindnessCoroutine;
+
+    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+    private readonly Dictionary<FishEffectType, RectTransform> _effectsSlotsMatch 
+        = new Dictionary<FishEffectType, RectTransform> { };//private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
+
     public const float VIEW_HUD_TIME = 1f;
     public const float VIEW_HEALTH_TIME = 2f;
     public const float VIEW_JAW_TIME = .8f;
     public const float FADE_HUD_TIME = 1.5f;
-
-    private SpawnManager spawnManager;
-    private EffectManager playerEffectManager;
-    private float currentSprintCooldownTime = 0;
-    private Fish playerFish; // reference to the player fish component
-    private Coroutine zoneCoroutine;
-
-    private Vignette vignette = null;
-    private LensDistortion lensDistortion = null;
-    private ChromaticAberration chromaticAberration = null;
-    private ColorAdjustments colorAdjustments = null;
-    private DepthOfField depthOfField = null;
-    private Coroutine damageCoroutine;
-    private Coroutine stunCoroutine;
-    private Coroutine poisonCoroutine;
-    private Coroutine freezeCoroutine;
-    private Coroutine blindnessCoroutine;
-
-    private readonly Color VIGNETTE_DEFAULT_COLOR = Color.black;
-    private readonly Color VIGNETTE_DAMAGE_COLOR = Color.red;
     private const float VIGNETTE_INTENS_DAMAGE = 0.56f;
     private const float VIGNETTE_INTENS_DEFAULT = 0.417f;
-    private readonly Dictionary<FishEffectType, RectTransform> effectsSlotsMatch = new Dictionary<FishEffectType, RectTransform> { };//private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
-    private static readonly WaitForSecondsRealtime OVERLAY_UPD_WAIT = new WaitForSecondsRealtime(OVERLAYS_UPDATE_INTERVAL);
-    private static readonly WaitForSecondsRealtime FOUR_SECONDS_WAIT = new WaitForSecondsRealtime(4f);
-
     private const string DEFAULT_FISH_ICONS_PARENT_NAME = "effects_icons";
     private const float SPRINT_BUTTON_COOLDOWN = 20f;
     private const float SPRINT_EFFECT_DURATION = 5f;
@@ -157,19 +156,19 @@ public class PlayerUIController : MonoBehaviour {
     private const float DEPTHOFFIELD_MIN_STARTEND = 0f;
 
 
-    public void Init(SpawnManager sp) {
-        spawnManager = sp;
+    public void Init(/*SpawnManager sp*/) {
+        //_spawnManager = sp;
         //Debug.LogWarning(spawnManager);
 
-        effectsSlotsMatch[FishEffectType.Shield] = shieldIcon.transform.parent.GetComponent<RectTransform>();
-        effectsSlotsMatch[FishEffectType.Stun] = stunIcon.transform.parent.GetComponent<RectTransform>();
-        effectsSlotsMatch[FishEffectType.SprintSpeed] = sprintIcon.transform.parent.GetComponent<RectTransform>();
-        effectsSlotsMatch[FishEffectType.CurrentSpeed] = currentIcon.transform.parent.GetComponent<RectTransform>();
-        effectsSlotsMatch[FishEffectType.FreezeTime] = timeIcon.transform.parent.GetComponent<RectTransform>();
-        effectsSlotsMatch[FishEffectType.Poison] = poisonIcon.transform.parent.GetComponent<RectTransform>();
-        effectsSlotsMatch[FishEffectType.Blindness] = blindnessIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.Shield] = shieldIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.Stun] = stunIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.SprintSpeed] = sprintIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.CurrentSpeed] = currentIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.FreezeTime] = timeIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.Poison] = poisonIcon.transform.parent.GetComponent<RectTransform>();
+        _effectsSlotsMatch[FishEffectType.Blindness] = blindnessIcon.transform.parent.GetComponent<RectTransform>();
 
-        spawnManager.OnPlayerRespawn += PlayerReConnect;
+        _playerFishPoolService.OnPlayerRespawn += PlayerReConnect;
         PlayerLeaderboardScore.OnChanged += UpdateScoreInfo;
         SettingsUI.OnHudHideChanged += UpdateHUDbars;
 
@@ -183,23 +182,23 @@ public class PlayerUIController : MonoBehaviour {
         }
 
         if (mainVolume.sharedProfile.TryGet(out Vignette vignette))
-            this.vignette = vignette;
+            this._vignette = vignette;
         if (mainVolume.sharedProfile.TryGet(out LensDistortion lensDistortion))
-            this.lensDistortion = lensDistortion;
+            this._lensDistortion = lensDistortion;
         if (mainVolume.sharedProfile.TryGet(out ChromaticAberration chromaticAberration))
-            this.chromaticAberration = chromaticAberration;
+            this._chromaticAberration = chromaticAberration;
         if (mainVolume.sharedProfile.TryGet(out ColorAdjustments colorAdjustments))
-            this.colorAdjustments = colorAdjustments;
+            this._colorAdjustments = colorAdjustments;
         if (mainVolume.sharedProfile.TryGet(out DepthOfField depthOfField)) {
-            this.depthOfField = depthOfField;
-            this.depthOfField.mode.value = DepthOfFieldMode.Gaussian;
-            this.depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
-            this.depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
+            this._depthOfField = depthOfField;
+            this._depthOfField.mode.value = DepthOfFieldMode.Gaussian;
+            this._depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+            this._depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
         }
     }
 
     private void Start() {
-        PlayerReConnect(spawnManager.PlayerCurrentFish, false);//in start for access to objects corutines etc.
+        PlayerReConnect(_playerFishPoolService.PlayerCurrentFish, false);//in start for access to objects corutines etc.
     }
 
     void OnEnable() {
@@ -221,24 +220,24 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void ResetVisualEffects() {
-        if (vignette != null) {
-            vignette.intensity.value = VIGNETTE_INTENS_DEFAULT;
-            vignette.color.value = VIGNETTE_DEFAULT_COLOR;
+        if (_vignette != null) {
+            _vignette.intensity.value = VIGNETTE_INTENS_DEFAULT;
+            _vignette.color.value = VIGNETTE_DEFAULT_COLOR;
         }
-        if (lensDistortion != null) {
-            lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
-            lensDistortion.center.value = Vector2.one * LENS_DISORTION_OFFSET_CENTER;
-            lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
+        if (_lensDistortion != null) {
+            _lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
+            _lensDistortion.center.value = Vector2.one * LENS_DISORTION_OFFSET_CENTER;
+            _lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
         }
-        if (chromaticAberration != null) {
-            chromaticAberration.intensity.value = CHROMATICABERRATION_DEFAULT_INTENSITY;
+        if (_chromaticAberration != null) {
+            _chromaticAberration.intensity.value = CHROMATICABERRATION_DEFAULT_INTENSITY;
         }
-        if (colorAdjustments != null) {
-            colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
-            colorAdjustments.saturation.value = COLORADJUSTMENTS_DEFAULT_SATURATION;
+        if (_colorAdjustments != null) {
+            _colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
+            _colorAdjustments.saturation.value = COLORADJUSTMENTS_DEFAULT_SATURATION;
         }
-        if (depthOfField != null) {
-            depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+        if (_depthOfField != null) {
+            _depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
         }
     }
 
@@ -258,14 +257,14 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     public void OnSpintButtonClick() {
-        playerEffectManager.ApplyEffect(FishEffectType.SprintSpeed, SPRINT_EFFECT_DURATION);
+        _playerEffectManager.ApplyEffect(FishEffectType.SprintSpeed, SPRINT_EFFECT_DURATION);
         sprintButton.interactable = false; // disable the button after applying the effect
-        currentSprintCooldownTime = 0f; // reset the cooldown timer
+        _currentSprintCooldownTime = 0f; // reset the cooldown timer
     }
 
     //deactivates icons visualized above the fish , since the player has a more detailed visualization in the interface
     void DisactivateDefaultIcons() {
-        GameObject child = playerEffectManager.transform.Find(DEFAULT_FISH_ICONS_PARENT_NAME).gameObject;
+        GameObject child = _playerEffectManager.transform.Find(DEFAULT_FISH_ICONS_PARENT_NAME).gameObject;
         child.SetActive(false);
 
         if (shieldIcon == null)//or eny other (only for editor debug)
@@ -285,8 +284,8 @@ public class PlayerUIController : MonoBehaviour {
         //activate and draw progress for all effects icons that have player
         EffectsProgressReset(); // reset all icons progress
 
-        if (playerEffectManager != null && playerEffectManager.ActiveEffects.Count > 0)
-            foreach (KeyValuePair<FishEffectType, Effect> eff in playerEffectManager.ActiveEffects)
+        if (_playerEffectManager != null && _playerEffectManager.ActiveEffects.Count > 0)
+            foreach (KeyValuePair<FishEffectType, Effect> eff in _playerEffectManager.ActiveEffects)
                 if (eff.Value == null || !eff.Value.Enabled)
                     EffectsBehaviour(eff.Key, false);
                 else  //!null & enabled
@@ -308,7 +307,7 @@ public class PlayerUIController : MonoBehaviour {
     }
 
     void UpdateProgressInfo(ProgressArgs args = null) {
-        int lvlProgress = (int)(playerFish.Progress * GameStaticInfo.PERCENT_MULTIPLIER);
+        int lvlProgress = (int)(_playerFish.Progress * GameStaticInfo.PERCENT_MULTIPLIER);
         if (growthBar.Coroutine != null)
             StopCoroutine(growthBar.Coroutine);
 
@@ -318,22 +317,22 @@ public class PlayerUIController : MonoBehaviour {
             growthBar.ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
 
         growthBar.progress.text = lvlProgress.ToString();
-        growthBar.GetProgress(playerFish.Level).fillAmount = playerFish.Progress;
+        growthBar.GetProgress(_playerFish.Level).fillAmount = _playerFish.Progress;
 
         if (args != null && args.IsCaviarEaten)
             gameTips.OnEffectTip();
     }
 
     void UpdateHealthInfo() {
-        float health = playerFish.Health;
+        float health = _playerFish.Health;
         if (health < 0)
             health = 0f;
         if (healthBar.Coroutine != null)
             StopCoroutine(healthBar.Coroutine);
 
         healthBar.currProgress.text = health.ToString();
-        healthBar.maxProgress.text = playerFish.DefaultInfo.MaxHealth.ToString();
-        healthBar.filler.fillAmount = (float)playerFish.Health / playerFish.DefaultInfo.MaxHealth;
+        healthBar.maxProgress.text = _playerFish.DefaultInfo.MaxHealth.ToString();
+        healthBar.filler.fillAmount = (float)_playerFish.Health / _playerFish.DefaultInfo.MaxHealth;
 
         if (gameObject.activeInHierarchy)
             healthBar.Coroutine = StartCoroutine(healthBar.Animation(healthBar.filler.fillAmount));
@@ -360,19 +359,19 @@ public class PlayerUIController : MonoBehaviour {
         if (sprintButton.interactable)
             return;
 
-        if (currentSprintCooldownTime >= SPRINT_BUTTON_COOLDOWN) {
+        if (_currentSprintCooldownTime >= SPRINT_BUTTON_COOLDOWN) {
             sprintButton.interactable = true;
-            currentSprintCooldownTime = 0f;
+            _currentSprintCooldownTime = 0f;
             sprintButton.image.fillAmount = 1f; // reset the button fill amount
             SetSprintProgressPC(1f);
 
             sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, 1f);
         }
         else {
-            sprintButton.image.fillAmount = currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
+            sprintButton.image.fillAmount = _currentSprintCooldownTime / SPRINT_BUTTON_COOLDOWN;
             SetSprintProgressPC(sprintButton.image.fillAmount);
             sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, SPRINT_PROGRESS_PC_LOADING_ALPHA);
-            currentSprintCooldownTime += DJTime.UnscaledDeltaTime;
+            _currentSprintCooldownTime += DJTime.UnscaledDeltaTime;
         }
     }
 
@@ -447,39 +446,39 @@ public class PlayerUIController : MonoBehaviour {
 
     void ActivateDamageOverlay() {
         //damageOverlay.gameObject.SetActive(true);
-        audioManager.PlayVFX(VFX_clip.Damage);
+        _audioManager.PlayVFX(VFX_clip.Damage);
         //StartCoroutine(OverlayFader(damageOverlay, FishEffectType.None));
-        if (damageCoroutine != null)
-            StopCoroutine(damageCoroutine);
-        damageCoroutine = StartCoroutine(DamageVignette());
+        if (_damageCoroutine != null)
+            StopCoroutine(_damageCoroutine);
+        _damageCoroutine = StartCoroutine(DamageVignette());
     }
 
     IEnumerator DamageVignette() {
         float deltaSmooth = 0;
         float normDelta = 0;
-        vignette.color.value = VIGNETTE_DAMAGE_COLOR;
-        vignette.intensity.value = VIGNETTE_INTENS_DAMAGE;
+        _vignette.color.value = VIGNETTE_DAMAGE_COLOR;
+        _vignette.intensity.value = VIGNETTE_INTENS_DAMAGE;
 
         while (deltaSmooth < EFFECTS_FADE_DURATION) {
             deltaSmooth += DJTime.UnscaledDeltaTime;
             normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
 
-            vignette.color.value = Color.Lerp(VIGNETTE_DAMAGE_COLOR, VIGNETTE_DEFAULT_COLOR, normDelta);
-            vignette.intensity.value = Mathf.Lerp(VIGNETTE_INTENS_DAMAGE, VIGNETTE_INTENS_DEFAULT, normDelta);
+            _vignette.color.value = Color.Lerp(VIGNETTE_DAMAGE_COLOR, VIGNETTE_DEFAULT_COLOR, normDelta);
+            _vignette.intensity.value = Mathf.Lerp(VIGNETTE_INTENS_DAMAGE, VIGNETTE_INTENS_DEFAULT, normDelta);
 
             yield return null;
         }
 
-        vignette.color.value = VIGNETTE_DEFAULT_COLOR;
-        vignette.intensity.value = VIGNETTE_INTENS_DEFAULT;
-        damageCoroutine = null;
+        _vignette.color.value = VIGNETTE_DEFAULT_COLOR;
+        _vignette.intensity.value = VIGNETTE_INTENS_DEFAULT;
+        _damageCoroutine = null;
     }
 
     IEnumerator FreezeTimeEffect() {
         bool isFreeze = true;
         float deltaSmooth = 0;
         float normDelta = 0;
-        chromaticAberration.intensity.value = CHROMATICABERRATION_MAX_INTENSITY;
+        _chromaticAberration.intensity.value = CHROMATICABERRATION_MAX_INTENSITY;
 
         //while (deltaSmooth < EFFECTS_FADE_DURATION) {
         //    deltaSmooth += DJTime.UnscaledDeltaTime;
@@ -492,8 +491,8 @@ public class PlayerUIController : MonoBehaviour {
         //chromaticAberration.intensity.value = CHROMATICABERRATION_MAX_INTENSITY;
 
         while (isFreeze) {
-            isFreeze = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.FreezeTime)
-                && playerEffectManager.ActiveEffects[FishEffectType.FreezeTime].Enabled;
+            isFreeze = _playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.FreezeTime)
+                && _playerEffectManager.ActiveEffects[FishEffectType.FreezeTime].Enabled;
             yield return null;
         }
 
@@ -501,13 +500,13 @@ public class PlayerUIController : MonoBehaviour {
             deltaSmooth += DJTime.UnscaledDeltaTime;
             normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
 
-            chromaticAberration.intensity.value = Mathf.Lerp(CHROMATICABERRATION_MAX_INTENSITY, CHROMATICABERRATION_DEFAULT_INTENSITY, normDelta);
+            _chromaticAberration.intensity.value = Mathf.Lerp(CHROMATICABERRATION_MAX_INTENSITY, CHROMATICABERRATION_DEFAULT_INTENSITY, normDelta);
 
             yield return null;
         }
 
-        chromaticAberration.intensity.value = CHROMATICABERRATION_DEFAULT_INTENSITY;
-        freezeCoroutine = null;
+        _chromaticAberration.intensity.value = CHROMATICABERRATION_DEFAULT_INTENSITY;
+        _freezeCoroutine = null;
     }
 
     IEnumerator BlindnessEffect() {
@@ -516,26 +515,26 @@ public class PlayerUIController : MonoBehaviour {
         float deltaSmooth = 0;
         float normDelta = 0;
 
-        colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
-        depthOfField.gaussianStart.value = DEPTHOFFIELD_MIN_STARTEND;
-        depthOfField.gaussianEnd.value = DEPTHOFFIELD_MIN_STARTEND;
+        _colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
+        _depthOfField.gaussianStart.value = DEPTHOFFIELD_MIN_STARTEND;
+        _depthOfField.gaussianEnd.value = DEPTHOFFIELD_MIN_STARTEND;
 
         while (deltaSmooth < EFFECTS_FADE_DURATION) {
             deltaSmooth += DJTime.UnscaledDeltaTime;
             hueShift = Mathf.Sin(Time.time) * COLORADJUSTMENTS_RANGE_HUE_MULT;
-            colorAdjustments.hueShift.value = hueShift;
-            colorAdjustments.saturation.value = Mathf.Lerp(COLORADJUSTMENTS_DEFAULT_SATURATION, COLORADJUSTMENTS_MAX_SATURATION, normDelta);
+            _colorAdjustments.hueShift.value = hueShift;
+            _colorAdjustments.saturation.value = Mathf.Lerp(COLORADJUSTMENTS_DEFAULT_SATURATION, COLORADJUSTMENTS_MAX_SATURATION, normDelta);
 
             yield return null;
         }
-        colorAdjustments.saturation.value = COLORADJUSTMENTS_MAX_SATURATION;
+        _colorAdjustments.saturation.value = COLORADJUSTMENTS_MAX_SATURATION;
 
         while (isBlindness) {
-            isBlindness = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Blindness)
-                && playerEffectManager.ActiveEffects[FishEffectType.Blindness].Enabled;
+            isBlindness = _playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Blindness)
+                && _playerEffectManager.ActiveEffects[FishEffectType.Blindness].Enabled;
 
             hueShift = Mathf.Sin(Time.time) * COLORADJUSTMENTS_RANGE_HUE_MULT;
-            colorAdjustments.hueShift.value = hueShift;
+            _colorAdjustments.hueShift.value = hueShift;
 
             yield return null;
         }
@@ -546,19 +545,19 @@ public class PlayerUIController : MonoBehaviour {
             normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
             hueShift = Mathf.Lerp(hueShift, COLORADJUSTMENTS_DEFAULT_HUE, normDelta);
 
-            colorAdjustments.hueShift.value = hueShift;
-            colorAdjustments.saturation.value = Mathf.Lerp(COLORADJUSTMENTS_MAX_SATURATION, COLORADJUSTMENTS_DEFAULT_SATURATION, normDelta);
-            depthOfField.gaussianStart.value = Mathf.Lerp(DEPTHOFFIELD_MIN_STARTEND, DEPTHOFFIELD_DEFAULT_START, normDelta);
-            depthOfField.gaussianEnd.value = Mathf.Lerp(DEPTHOFFIELD_MIN_STARTEND, DEPTHOFFIELD_DEFAULT_END, normDelta);
+            _colorAdjustments.hueShift.value = hueShift;
+            _colorAdjustments.saturation.value = Mathf.Lerp(COLORADJUSTMENTS_MAX_SATURATION, COLORADJUSTMENTS_DEFAULT_SATURATION, normDelta);
+            _depthOfField.gaussianStart.value = Mathf.Lerp(DEPTHOFFIELD_MIN_STARTEND, DEPTHOFFIELD_DEFAULT_START, normDelta);
+            _depthOfField.gaussianEnd.value = Mathf.Lerp(DEPTHOFFIELD_MIN_STARTEND, DEPTHOFFIELD_DEFAULT_END, normDelta);
 
             yield return null;
         }
 
-        depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
-        depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
-        colorAdjustments.saturation.value = COLORADJUSTMENTS_DEFAULT_SATURATION;
-        colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
-        blindnessCoroutine = null;
+        _depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+        _depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
+        _colorAdjustments.saturation.value = COLORADJUSTMENTS_DEFAULT_SATURATION;
+        _colorAdjustments.hueShift.value = COLORADJUSTMENTS_DEFAULT_HUE;
+        _blindnessCoroutine = null;
     }
 
     IEnumerator StunEffect() {
@@ -576,23 +575,23 @@ public class PlayerUIController : MonoBehaviour {
             x = Mathf.Cos(time) * LENS_DISORTION_OFFSET_MULT * normDelta;
             y = Mathf.Sin(time) * LENS_DISORTION_OFFSET_MULT * normDelta;
 
-            lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_INTENS, LENS_DISORTION_MAX_INTENS, normDelta);
-            lensDistortion.center.value = new Vector2(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
-            lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_SCALE, LENS_DISORTION_MAX_SCALE, normDelta);
+            _lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_INTENS, LENS_DISORTION_MAX_INTENS, normDelta);
+            _lensDistortion.center.value = new Vector2(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
+            _lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_SCALE, LENS_DISORTION_MAX_SCALE, normDelta);
 
             yield return null;
         }
 
         while (isStun) {
-            isStun = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Stun)
-                && playerEffectManager.ActiveEffects[FishEffectType.Stun].Enabled;
+            isStun = _playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Stun)
+                && _playerEffectManager.ActiveEffects[FishEffectType.Stun].Enabled;
 
             time = Time.time * LENS_DISORTION_OFFSET_SPEED;
             x = Mathf.Cos(time) * LENS_DISORTION_OFFSET_MULT;
             y = Mathf.Sin(time) * LENS_DISORTION_OFFSET_MULT;
-            lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
-            lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
-            lensDistortion.center.value = new Vector2(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
+            _lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
+            _lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
+            _lensDistortion.center.value = new Vector2(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
             yield return null;
         }
 
@@ -605,21 +604,21 @@ public class PlayerUIController : MonoBehaviour {
             x = Mathf.Lerp(x, 0f, normDelta);
             y = Mathf.Lerp(y, 0f, normDelta);
 
-            if (!playerEffectManager.ActiveEffects.TryGetValue(FishEffectType.Poison, out Effect effect)
+            if (!_playerEffectManager.ActiveEffects.TryGetValue(FishEffectType.Poison, out Effect effect)
                 || !effect.Enabled) {//so check if stun not active
-                lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
-                lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
+                _lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
+                _lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
             }
-            lensDistortion.center.value.Set(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
+            _lensDistortion.center.value.Set(LENS_DISORTION_OFFSET_CENTER + x, LENS_DISORTION_OFFSET_CENTER + y);
 
             yield return null;
         }
 
-        lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
-        lensDistortion.center.value.Set(LENS_DISORTION_OFFSET_CENTER, LENS_DISORTION_OFFSET_CENTER);
-        lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
+        _lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
+        _lensDistortion.center.value.Set(LENS_DISORTION_OFFSET_CENTER, LENS_DISORTION_OFFSET_CENTER);
+        _lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
 
-        stunCoroutine = null;
+        _stunCoroutine = null;
     }
 
     IEnumerator PoisonEffect() {
@@ -632,22 +631,22 @@ public class PlayerUIController : MonoBehaviour {
             deltaSmooth += DJTime.UnscaledDeltaTime;
             normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
 
-            lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_INTENS, LENS_DISORTION_MAX_INTENS, normDelta);
-            lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_SCALE, LENS_DISORTION_MAX_SCALE, normDelta);
+            _lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_INTENS, LENS_DISORTION_MAX_INTENS, normDelta);
+            _lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_DEFAULT_SCALE, LENS_DISORTION_MAX_SCALE, normDelta);
 
             yield return null;
         }
 
         while (isPoison) {
-            isPoison = playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Poison)
-                && playerEffectManager.ActiveEffects[FishEffectType.Poison].Enabled;
-            lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
-            lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
+            isPoison = _playerEffectManager.ActiveEffects.ContainsKey(FishEffectType.Poison)
+                && _playerEffectManager.ActiveEffects[FishEffectType.Poison].Enabled;
+            _lensDistortion.intensity.value = LENS_DISORTION_MAX_INTENS;
+            _lensDistortion.scale.value = LENS_DISORTION_MAX_SCALE;
             yield return null;
         }
 
         //smooth fade
-        if (!playerEffectManager.ActiveEffects.TryGetValue(FishEffectType.Stun, out Effect effect)
+        if (!_playerEffectManager.ActiveEffects.TryGetValue(FishEffectType.Stun, out Effect effect)
                 || !effect.Enabled) {//poison and stun use same lens distortion//so check if stun not active
 
             deltaSmooth = 0f;
@@ -655,15 +654,15 @@ public class PlayerUIController : MonoBehaviour {
                 deltaSmooth += DJTime.UnscaledDeltaTime;
                 normDelta = deltaSmooth / EFFECTS_FADE_DURATION;
 
-                lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
-                lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
+                _lensDistortion.intensity.value = Mathf.Lerp(LENS_DISORTION_MAX_INTENS, LENS_DISORTION_DEFAULT_INTENS, normDelta);
+                _lensDistortion.scale.value = Mathf.Lerp(LENS_DISORTION_MAX_SCALE, LENS_DISORTION_DEFAULT_SCALE, normDelta);
                 yield return null;
             }
         }
-        lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
-        lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
+        _lensDistortion.intensity.value = LENS_DISORTION_DEFAULT_INTENS;
+        _lensDistortion.scale.value = LENS_DISORTION_DEFAULT_SCALE;
 
-        poisonCoroutine = null;
+        _poisonCoroutine = null;
     }
 
     IEnumerator OverlayFader(Image overlay, FishEffectType type, float updateInterval = OVERLAYS_UPDATE_VALUE, TextMeshProUGUI textElement = null, bool isLongDuration = false) {
@@ -685,32 +684,32 @@ public class PlayerUIController : MonoBehaviour {
 
     void PlayerReConnect(Fish fish, bool isDie) {
         //Debug.LogWarning("PlayerRespawn");
-        if (playerFish != null && playerEffectManager != null) {
-            playerFish.OnProgressChanged -= UpdateProgressInfo;
-            playerFish.OnHealthChanged -= UpdateHealthInfo;
-            playerFish.OnFishDamage -= ActivateDamageOverlay;
-            playerEffectManager.OnEffectChanges -= EffectsBehaviour;
+        if (_playerFish != null && _playerEffectManager != null) {
+            _playerFish.OnProgressChanged -= UpdateProgressInfo;
+            _playerFish.OnHealthChanged -= UpdateHealthInfo;
+            _playerFish.OnFishDamage -= ActivateDamageOverlay;
+            _playerEffectManager.OnEffectChanges -= EffectsBehaviour;
         }
 
         if (/*spawnManager == null || spawnManager.PlayerFish == null ||*/
             fish == null || sprintProgressPC == null || sprintButton == null)//for debug
             return;
 
-        playerFish = fish;
-        playerEffectManager = fish.GetComponent<EffectManager>(); //get player transform
+        _playerFish = fish;
+        _playerEffectManager = fish.GetComponent<EffectManager>(); //get player transform
 
         //syubscribe to events of the new player fish
-        playerFish.OnProgressChanged += UpdateProgressInfo;
-        playerFish.OnHealthChanged += UpdateHealthInfo;
-        playerFish.OnFishDamage += ActivateDamageOverlay;
-        playerEffectManager.OnEffectChanges += EffectsBehaviour;
+        _playerFish.OnProgressChanged += UpdateProgressInfo;
+        _playerFish.OnHealthChanged += UpdateHealthInfo;
+        _playerFish.OnFishDamage += ActivateDamageOverlay;
+        _playerEffectManager.OnEffectChanges += EffectsBehaviour;
 
         sprintButton.interactable = true;
         sprintButton.image.fillAmount = 1f; // reset the button fill amount
                                             //sprintProgressPC.transform.localScale = Vector3.one;//fillAmount = 1f;
         SetSprintProgressPC(1);
         sprintProgressImage.color = new Color(sprintProgressImage.color.r, sprintProgressImage.color.g, sprintProgressImage.color.b, 1f);
-        currentSprintCooldownTime = 0f;
+        _currentSprintCooldownTime = 0f;
 
         DisactivateDefaultIcons();
         EffectsProgressReset();
@@ -722,7 +721,7 @@ public class PlayerUIController : MonoBehaviour {
 
         //upd icons pos of spawn effects
         foreach (FishEffectType effectType in Enum.GetValues(typeof(FishEffectType)))
-            if (playerEffectManager.ActiveEffects.TryGetValue(effectType, out Effect value) && value != null)
+            if (_playerEffectManager.ActiveEffects.TryGetValue(effectType, out Effect value) && value != null)
                 EffectsBehaviour(effectType, true);
 
         UpdateHUDbars();
@@ -734,10 +733,10 @@ public class PlayerUIController : MonoBehaviour {
                 gameTips.OnStageTip();
             else if (fish.Level == FishLevel.Moray)
                 gameTips.OnClearCoralTip();
-                //ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
+            //ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
             else if (fish.Level == FishLevel.HammerShark)
                 gameTips.OnClearSeaweedTip();
-                //ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
+            //ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
 
         }
     }
@@ -797,16 +796,16 @@ public class PlayerUIController : MonoBehaviour {
 
         const float MAX_EFFECTS_CNT = 5; // max effects count that can be displayed in the UI
                                          //repos
-        int effectsCnt = playerEffectManager.GetActiveEffectCnt(TypeEffects.VisibleUI)/*activeEffects.Count*/;
+        int effectsCnt = _playerEffectManager.GetActiveEffectCnt(TypeEffects.VisibleUI)/*activeEffects.Count*/;
 
         if (!isAdded)//if effect expires - hide icon
-            effectsSlotsMatch[type].gameObject.SetActive(false);
+            _effectsSlotsMatch[type].gameObject.SetActive(false);
 
         if (effectsCnt > 0) {//reposing
             int effectIconInd = 0;
-            foreach (FishEffectType currType in playerEffectManager.ActiveEffects.Keys) {
+            foreach (FishEffectType currType in _playerEffectManager.ActiveEffects.Keys) {
                 if (!EffectManager.IsVisibleEffect(currType, true)
-                    || playerEffectManager.ActiveEffects[currType] == null || !playerEffectManager.ActiveEffects[currType].Enabled)
+                    || _playerEffectManager.ActiveEffects[currType] == null || !_playerEffectManager.ActiveEffects[currType].Enabled)
                     continue;
 
                 //Debug.Log(effectsCnt - 1 + " " + effectIconInd);
@@ -816,7 +815,7 @@ public class PlayerUIController : MonoBehaviour {
                 //Debug.LogWarning(iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].x + " "
                 //+ iconsPositionsMultipliers[effectsCnt - 1][effectIconInd].y);
 
-                effectsSlotsMatch[currType].anchoredPosition = newPos;
+                _effectsSlotsMatch[currType].anchoredPosition = newPos;
 
                 effectIconInd = (effectIconInd + 1 < MAX_EFFECTS_CNT) ? ++effectIconInd : /*--*/effectIconInd;
             }
@@ -833,21 +832,21 @@ public class PlayerUIController : MonoBehaviour {
 
         //if (currentOverlay != null) {
         if (isAdded) {
-            if (type == FishEffectType.Stun && stunCoroutine == null)
-                stunCoroutine = StartCoroutine(StunEffect());
-            else if (type == FishEffectType.Poison && poisonCoroutine == null)
-                poisonCoroutine = StartCoroutine(PoisonEffect());
-            else if (type == FishEffectType.FreezeTime && freezeCoroutine == null)
-                freezeCoroutine = StartCoroutine(FreezeTimeEffect());
-            else if (type == FishEffectType.Blindness && blindnessCoroutine == null)
-                blindnessCoroutine = StartCoroutine(BlindnessEffect());
+            if (type == FishEffectType.Stun && _stunCoroutine == null)
+                _stunCoroutine = StartCoroutine(StunEffect());
+            else if (type == FishEffectType.Poison && _poisonCoroutine == null)
+                _poisonCoroutine = StartCoroutine(PoisonEffect());
+            else if (type == FishEffectType.FreezeTime && _freezeCoroutine == null)
+                _freezeCoroutine = StartCoroutine(FreezeTimeEffect());
+            else if (type == FishEffectType.Blindness && _blindnessCoroutine == null)
+                _blindnessCoroutine = StartCoroutine(BlindnessEffect());
         }
         else
             return;
     }
 
     public void OnDestroy() {
-        PlayerReConnect(playerFish, false);
+        PlayerReConnect(_playerFish, false);
         PlayerLeaderboardScore.OnChanged -= UpdateScoreInfo;
         SettingsUI.OnHudHideChanged -= UpdateHUDbars;
         StopAllCoroutines();

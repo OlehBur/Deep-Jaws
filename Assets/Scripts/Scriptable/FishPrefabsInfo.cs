@@ -2,19 +2,19 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "FishPrefabs", menuName = "Scriptable Objects/FishPrefabs")]
 public class FishPrefabsInfo : ScriptableObject {
-    [field: SerializeField] public GameObject Pufferfish { get; }
-    [field: SerializeField] public GameObject Cuttlefish { get; }
-    [field: SerializeField] public GameObject Dartfish { get; }
-    [field: SerializeField] public GameObject Crab { get; }
-    [field: SerializeField] public GameObject SeaBass { get; }
-    [field: SerializeField] public GameObject Mackerel { get; }
-    [field: SerializeField] public GameObject Moray { get; }
-    [field: SerializeField] public GameObject Lionfish { get; }
-    [field: SerializeField] public GameObject Barracuda { get; }
-    [field: SerializeField] public GameObject Tuna { get; }
-    [field: SerializeField] public GameObject HammerShark { get; }
-    [field: SerializeField] public GameObject TigerShark { get; }
-    [field: SerializeField] public GameObject WhiteShark { get; }
+    [field: SerializeField] public GameObject Pufferfish { get; private set; }
+    [field: SerializeField] public GameObject Cuttlefish { get; private set; }
+    [field: SerializeField] public GameObject Dartfish { get; private set; }
+    [field: SerializeField] public GameObject Crab { get; private set; }
+    [field: SerializeField] public GameObject SeaBass { get; private set; }
+    [field: SerializeField] public GameObject Mackerel { get; private set; }
+    [field: SerializeField] public GameObject Moray { get; private set; }
+    [field: SerializeField] public GameObject Lionfish { get; private set; }
+    [field: SerializeField] public GameObject Barracuda { get; private set; }
+    [field: SerializeField] public GameObject Tuna { get; private set; }
+    [field: SerializeField] public GameObject HammerShark { get; private set; }
+    [field: SerializeField] public GameObject TigerShark { get; private set; }
+    [field: SerializeField] public GameObject WhiteShark { get; private set; }
 
     //[field: SerializeField] public Fish PufferfishComp { get; }
     //[field: SerializeField] public Fish CuttlefishComp { get; }

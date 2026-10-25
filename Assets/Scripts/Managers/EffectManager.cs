@@ -42,8 +42,8 @@ public class EffectManager : MonoBehaviour {
     //private FishAdditionalCompManager _fishAdditionalComponentManager;
     private Vector3 _prevPos;
 
-    [Inject] private readonly AudioManager _audioManager;
-    [Inject] private readonly VFXpoolManager _fishAddCompMngr;
+    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IVFXPoolService _vfxPoolService;
 
     private const float X_OFFSET_DOUBLE = .6f;
     private const float X_OFFSET_TRIPLE = 1.2f;
@@ -288,7 +288,7 @@ public class EffectManager : MonoBehaviour {
             return null;
 
         ShieldEffect shieldEffect = new(_audioManager,
-            _fishAddCompMngr,
+            _vfxPoolService,
             rotationTransform,
             fish.DefaultInfo.ShieldLocPos,
             fish.DefaultInfo.ShieldVisualScale);
@@ -297,7 +297,7 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateCurrentEffect() {
-        CurrentEffect speedEffect = new(_fishAddCompMngr, rotationTransform, fish.DefaultInfo.WhirlLocPos);
+        CurrentEffect speedEffect = new(_vfxPoolService, rotationTransform, fish.DefaultInfo.WhirlLocPos);
 
         if (_speedEffectSource != null)//not null only for player
             _speedEffectSource.enabled = true;
@@ -306,7 +306,7 @@ public class EffectManager : MonoBehaviour {
     }
 
     private Effect CreateSprintEffect() {
-        SprintEffect sprintEffect = new(_fishAddCompMngr, fishAnim, rotationTransform, fish.DefaultInfo.WhirlLocPos);
+        SprintEffect sprintEffect = new(_vfxPoolService, fishAnim, rotationTransform, fish.DefaultInfo.WhirlLocPos);
 
         if (_speedEffectSource != null)
             _speedEffectSource.enabled = true;

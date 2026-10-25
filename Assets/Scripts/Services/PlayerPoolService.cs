@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
 
-public class PlayerPoolService : PoolServise, IPlayerPoolService {
+public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
     private GameObject[] _playerPool;
     private Fish[] _playerPoolComp;
     //private ObjectPool<GameObject> _playerPool;
@@ -17,27 +19,38 @@ public class PlayerPoolService : PoolServise, IPlayerPoolService {
 
     //private readonly FishPrefabsInfo _fishPrefabs;
     //private readonly AudioManager _audioManager;
-    private readonly VFXpoolManager _vfxPoolManager;
+    //private readonly VFXpoolManager _vfxPoolManager;
     private readonly FishSkinManager _fishSkinManager;
 
     public event Action<Fish, bool> OnPlayerRespawn;//bool - is respawn after death
-    public event Action OnPlayerDied;
+    public event Action<Fish> OnFishDie;
     public event Action<FishLevel> OnPlayerLVLup;
 
     public Fish PlayerCurrentFish { get; private set; }
 
+    public int Count => _playerPoolComp.Length;
+
+
     [Inject]
     public PlayerPoolService(FishPrefabsInfo fishPrefabs,/* AudioManager audioManager,*/
-        VFXpoolManager vfxPoolManager, FishSkinManager fishSkinManager) : base(fishPrefabs) {
+        /*VFXpoolManager vfxPoolManager,*/ FishSkinManager fishSkinManager) : base(fishPrefabs) {
         _savedWorldData = ProgressSaver.LoadWorldData();// ProgressSaver.IsWorldDataExist() ?             ProgressSaver.LoadWorldData() : new WorldData();//load save data if exists
         //_fishPrefabs = fishPrefabs;
         //_audioManager = audioManager;
-        _vfxPoolManager = vfxPoolManager;
+        //_vfxPoolManager = vfxPoolManager;
         _fishSkinManager = fishSkinManager;
 
         _playerInitSpawnPos = Vector3.up * GameStaticInfo.FISH_SPAWN_HEINGT;//in center map
         //InitPlayerPool(fishPrefabs, fishPoolParent, audioManager, fishAdditionalCompManager, fishSkinManager);
     }
+
+    public Fish GetAt(int index) => _playerPoolComp[index];
+
+    public IEnumerator<Fish> GetEnumerator() {
+        for (int i = 0; i < _playerPoolComp.Length; i++)
+            yield return _playerPoolComp[i];
+    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void SpawnPlayerEnemyDetector(GameObject enemyDetectorPrefab) =>
         _enemyDetector = _resolver.Instantiate(enemyDetectorPrefab, _fishPoolParent).GetComponent<EnemyDetector>();
@@ -104,7 +117,7 @@ public class PlayerPoolService : PoolServise, IPlayerPoolService {
         //wait for retry\revive buttons touched & ad watch
         SaveDataForDelayPlayerRespawn();
         if (isDie)
-            OnPlayerDied?.Invoke();
+            OnFishDie?.Invoke(PlayerCurrentFish);
         else {
             OnPlayerLVLup?.Invoke(level);
             RespawnPlayer(false); // lvl up
@@ -200,19 +213,17 @@ public class PlayerPoolService : PoolServise, IPlayerPoolService {
 #if UNITY_ANDROID && !UNITY_EDITOR
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_here_we_go_again);
 #endif
-            RespawnEntities(playerFishBuffer.Level);
+            //RespawnEntities(playerFishBuffer.Level);
         }
         else {
             if (isLoadFromSave)
                 playerFishBuffer.CopyData(_savedWorldData.playerHealth, _savedWorldData.playerProgress);//copy data like health and progress from save
-            else
-                CheckPlayerLvlAchievements((FishLevel)playerLvl);//if current player respawn not called from save, check achievements maybe new lvl reached 
+            //else
+            //    CheckPlayerLvlAchievements((FishLevel)playerLvl);//if current player respawn not called from save, check achievements maybe new lvl reached 
         }
         EnableAutoScalerComponent(playerPrefab);
 
         playerPrefab.SetActive(true);
-        playerSpawnParticles.transform.position = coords;
-        playerSpawnParticles.SetActive(true);//auto play on awake                  
 
         return playerFishBuffer;
     }

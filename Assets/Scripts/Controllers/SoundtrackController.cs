@@ -1,15 +1,17 @@
 using System.Collections;
 using UnityEngine;
+using VContainer;
 
 public class SoundtrackController : MonoBehaviour {
-    [SerializeField] SpawnManager spawnManager;
+    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] AudioSource soundtrackSource;
     [SerializeField] AudioClip coralRocksSound;
     [SerializeField] AudioClip algaeForestSound;
     [SerializeField] AudioClip deepCoralsSound;
 
-    private Coroutine fadeVolumeChangeSoundCoroutine = null;
-    //private AudioClip targetClip;
+    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+
+    private Coroutine _fadeVolumeChangeSoundCoroutine = null;
 
     private const FishLevel ALGAE_FOREST_TRIGGER = FishLevel.Moray;
     private const FishLevel DEEP_CORALS_TRIGGER = FishLevel.HammerShark;
@@ -18,9 +20,10 @@ public class SoundtrackController : MonoBehaviour {
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        spawnManager.OnPlayerRespawn += ActivateNewTargerSong;
-        if (spawnManager.PlayerCurrentFish != null)//initial start mus
-            ActivateNewTargerSong(spawnManager.PlayerCurrentFish, false);
+        _playerFishPoolService.OnPlayerRespawn += ActivateNewTargerSong;
+
+        if (_playerFishPoolService.PlayerCurrentFish != null)//initial start mus
+            ActivateNewTargerSong(_playerFishPoolService.PlayerCurrentFish, false);
     }
 
     void ActivateNewTargerSong(Fish fish, bool isDeath) {
@@ -36,10 +39,10 @@ public class SoundtrackController : MonoBehaviour {
         if (target == soundtrackSource.clip)
             return;
 
-        if (fadeVolumeChangeSoundCoroutine != null)
-            StopCoroutine(fadeVolumeChangeSoundCoroutine);
+        if (_fadeVolumeChangeSoundCoroutine != null)
+            StopCoroutine(_fadeVolumeChangeSoundCoroutine);
 
-        fadeVolumeChangeSoundCoroutine = StartCoroutine(SmoothSoundChange(target));
+        _fadeVolumeChangeSoundCoroutine = StartCoroutine(SmoothSoundChange(target));
     }
 
     IEnumerator SmoothSoundChange(AudioClip target) {

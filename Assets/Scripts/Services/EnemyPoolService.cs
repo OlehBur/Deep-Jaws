@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -16,27 +18,53 @@ public static class EnemyPoolExtensions {
 }
 
 
-public class EnemyPoolService : PoolServise, IEnemyPoolService {
+public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
     private GameObject[,] _enemyPool;
     private Fish[,] _enemyPoolComp;
     private Transform _weakFishSpawnPointsParent;
     private Transform _strongFishSpawnPointsParent;
     private Transform _sharkSpawnPointsParent;
-    private VFXpoolManager _vfxPoolManager;
+    //private VFXpoolService _vfxPoolManager;
+    public event Action<Fish> OnFishDie;
 
-    private readonly IPlayerPoolService _playerPoolProvider;
+    private readonly IPlayerFishPoolService _playerPoolProvider;
 
     private static readonly float[] SPAWN_WEIGHTS_EASY = { .5f, .35f, .15f };
     private static readonly float[] SPAWN_WEIGHTS_EASY_START = { .65f, .33f, .02f };
     private static readonly float[] SPAWN_WEIGHTS_MEDIUM = { .4f, .4f, .2f };
     private static readonly float[] SPAWN_WEIGHTS_HARD = { .34f, .33f, .33f };
 
+    private int _levels;
+    private int _perLevel;
+    public int Count => _levels * _perLevel;
+
 
     [Inject]
-    public EnemyPoolService(IPlayerPoolService playerPoolProvider, FishPrefabsInfo fishPrefabs, VFXpoolManager vfxPoolManager) : base(fishPrefabs) {
+    public EnemyPoolService(IPlayerFishPoolService playerPoolProvider, FishPrefabsInfo fishPrefabs/*, VFXpoolService vfxPoolManager*/) : base(fishPrefabs) {
         //_fishPrefabs = fishPrefabs;
         playerPoolProvider = _playerPoolProvider;
-        _vfxPoolManager = vfxPoolManager;
+        //_vfxPoolManager = vfxPoolManager;
+
+        _playerPoolProvider.OnPlayerRespawn += PlayerRespawnHandler;
+    }
+
+    public Fish GetAt(int index) {
+        int level = index / _perLevel;
+        int idx = index % _perLevel;
+
+        return _enemyPoolComp[level, idx];
+    }
+
+    public IEnumerator<Fish> GetEnumerator() {
+        for (int l = 0; l < _levels; l++)
+            for (int i = 0; i < _perLevel; i++)
+                yield return _enemyPoolComp[l, i];
+    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    void PlayerRespawnHandler(Fish playerFish, bool isDie) {
+        if (isDie)
+            RespawnAllEnemies();
     }
 
     public void Init(Transform fishPoolParent) {
@@ -59,6 +87,9 @@ public class EnemyPoolService : PoolServise, IEnemyPoolService {
                 prefab.SetActive(false);
             }
         //Debug.LogWarning("mega pool enable and spawn disable");
+
+        _levels = _enemyPoolComp.GetLength(0);
+        _perLevel = _enemyPoolComp.GetLength(1);
     }
 
     //public void SetPlayerProvider(IPlayerPoolService playerPoolProvider) =>
@@ -210,7 +241,6 @@ public class EnemyPoolService : PoolServise, IEnemyPoolService {
 
         if (prefabIndex >= 0 && enemyFish.IsVisible)
             RespawnEnemy(enemyFish, prefabIndex);
-
     }
 
     /*public*/
@@ -226,10 +256,11 @@ public class EnemyPoolService : PoolServise, IEnemyPoolService {
 
     public void RespawnEnemy(Fish currentFish, int index) {//Attempted to realize spawn by weight respawn
         //spawn die particles
-        if (currentFish.IsVisible) {
-            _vfxPoolManager.ActivateObjectFromPool(FishComponentType.SkeletonParticle, _fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
-            _vfxPoolManager.ActivateObjectFromPool(FishComponentType.DeadBubblesParticle, _fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
-        }
+        OnFishDie?.Invoke(currentFish);
+        //if (currentFish.IsVisible) {
+        //    _vfxPoolManager.ActivateObjectFromPool(FishVFX.SkeletonParticle, _fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
+        //    _vfxPoolManager.ActivateObjectFromPool(FishVFX.DeadBubblesParticle, _fishPoolParent, currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
+        //}
 
         //if (IsPlayerPoolProviderValid()) {
         FishLevel currnentRandLvl = GetRandSpawnLevel();

@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using Unity.Services.LevelPlay;
 using System.Threading.Tasks;
+using VContainer;
+using VContainer.Unity;
 
 
 public enum AdTarget {
@@ -17,8 +19,10 @@ public class GameAdsManager : MonoBehaviour {
     public static GameAdsManager Instance { get; private set; }
     public event Action<bool> OnAdButtonsInteractable;
 
-    [SerializeField] SpawnManager spawnManager;
+    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
+
+    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
 
     public bool IsAdStartShow { get; private set; } = false;
     public event Action OnDoubleShellsRewarded;
@@ -43,7 +47,7 @@ public class GameAdsManager : MonoBehaviour {
 #if UNITY_ANDROID
     private void Awake() {
         if (Instance != null && Instance != this) {
-            Instance.ReInitGameUI(spawnManager, gui);
+            Instance.ReInitGameUI(/*spawnManager,*/ gui);
             Destroy(gameObject);
             return;
         }
@@ -57,14 +61,16 @@ public class GameAdsManager : MonoBehaviour {
     //    this.gui = this.gui == null ? gui : this.gui;
     //    OnAdButtonsInteractable?.Invoke(true);
     //}
-    void ReInitGameUI(SpawnManager newSpawnManager, MainmenuManager newGui) {
-        spawnManager = newSpawnManager;
+    void ReInitGameUI(/*SpawnManager newSpawnManager,*/ MainmenuManager newGui) {
+        //spawnManager = newSpawnManager;
         gui = newGui;
 
         OnAdButtonsInteractable?.Invoke(true);
     }
 
     async void Start() {
+        SetInjects();
+
         await Task.Delay(2000);
 
         try {
@@ -77,6 +83,15 @@ public class GameAdsManager : MonoBehaviour {
         catch (Exception ex) {
             Debug.LogWarning($"[AdInit] LevelPlay init failed safely: {ex.Message}");
         }
+    }
+
+    void SetInjects() {
+        LifetimeScope scope = FindFirstObjectByType<LifetimeScope>();
+
+        if (scope == null)
+            return;
+
+        scope.Container.Inject(this);
     }
 
     bool IsInterstetialTime => Time.time - timeAfterInterstetial >= INTERSTETIAL_TIME_INTERVAL;
@@ -344,7 +359,7 @@ public class GameAdsManager : MonoBehaviour {
         if (adTarget == AdTarget.ExtraLife) {
             Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
             gui.DeactivateRespawnWnd();
-            spawnManager.RespawnPlayer(true, true);
+            _playerFishPoolService.RespawnPlayer(true, true);
             OnReviveRewarded?.Invoke();
         }
         else if (adTarget == AdTarget.DoubleShells)
@@ -366,7 +381,7 @@ public class GameAdsManager : MonoBehaviour {
     private void InterstitialRespawnBeh() {
         if (adTarget == AdTarget.JustRespawn) {
             gui.DeactivateRespawnWnd();
-            spawnManager.RespawnPlayer(true, false);
+            _playerFishPoolService.RespawnPlayer(true, false);
             //Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
 
             adTarget = AdTarget.None;

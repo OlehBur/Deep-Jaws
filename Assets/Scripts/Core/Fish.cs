@@ -347,7 +347,7 @@ public interface IFish {
     //float TimeToIdle { get; }
     EnemyState State { get; }
     //the fish relative to which the reaction occurs
-    Fish CurrentTarget { get; set; }
+    Fish CurrentTarget { get; }
 
     void FishProximity(Fish otherFish);
     /// <summary>

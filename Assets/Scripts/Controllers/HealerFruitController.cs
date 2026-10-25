@@ -1,24 +1,18 @@
 using UnityEngine;
+using VContainer;
 
 
 [RequireComponent(typeof(Collider))]
 public class HealerFruitController : MonoBehaviour {
     [SerializeField] Collider fruitCollider;
-    [SerializeField] AudioManager audioManager;
-    [SerializeField] VFXpoolManager dishAddCompMangr;
-    //[SerializeField] AudioSource audioSource;
-    //[SerializeField] AudioClip healClip;
     [SerializeField] Light fruitLight;
     [SerializeField] MeshRenderer fruitRender;
-    //[SerializeField] GameObject healParticle;
-    private Material fruitMaterial; // reference to the material for emission color
+
     private const float MATERIAL_EMISSION_SCALE = 10f; // scale for emission color
     private const float PROGGRESS_THRESHOLD = 0.95f; // threshold for progress calculation
     private const float PROGGRESS_MULTIPLIER = 1f / (1f - PROGGRESS_THRESHOLD);
-    private float lightIntensity;
     private const float GROWTH_SPEED = .02f;
     private const int HEAL_DIVIDER = 4; // how much health fish will get from the fruit
-    private Vector3 growthScale;
 
     private static readonly Vector3[] fishesHealParticleScales = new Vector3[] {
         Vector3.one, //crab only for corect indexing
@@ -33,11 +27,18 @@ public class HealerFruitController : MonoBehaviour {
         new Vector3(3f, 2.6f, 5f),//white shark
     };
 
+    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IVFXPoolService _vfxPoolService;
+    [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
+    private Material _fruitMaterial; // reference to the material for emission color
+    private float _lightIntensity;
+    private Vector3 _growthScale;
+
 
     void Awake() {
-        growthScale = transform.localScale;
-        lightIntensity = fruitLight.intensity;
-        fruitMaterial = fruitRender.material; // get the material from the renderer
+        _growthScale = transform.localScale;
+        _lightIntensity = fruitLight.intensity;
+        _fruitMaterial = fruitRender.material; // get the material from the renderer
         ReGrowth();
     }
 
@@ -45,13 +46,13 @@ public class HealerFruitController : MonoBehaviour {
     void Update() {
         const float MIN_MATERIAL_EMISSION = 0.2f; // minimum emission for the material
 
-        if (transform.localScale.x < growthScale.x) {
+        if (transform.localScale.x < _growthScale.x) {
             //fast light icreasing after threshold
-            float progress = Mathf.Max(0, transform.localScale.x / growthScale.x - PROGGRESS_THRESHOLD) * PROGGRESS_MULTIPLIER; // [0;1] gr after threshold
+            float progress = Mathf.Max(0, transform.localScale.x / _growthScale.x - PROGGRESS_THRESHOLD) * PROGGRESS_MULTIPLIER; // [0;1] gr after threshold
 
             transform.localScale += Vector3.one * GROWTH_SPEED * DJTime.DeltaTime;
-            fruitLight.intensity = Mathf.Lerp(fruitLight.intensity, lightIntensity, progress);
-            fruitMaterial.SetColor("_EmissionColor", Color.blue * Mathf.Max(MIN_MATERIAL_EMISSION, progress) * MATERIAL_EMISSION_SCALE);
+            fruitLight.intensity = Mathf.Lerp(fruitLight.intensity, _lightIntensity, progress);
+            _fruitMaterial.SetColor("_EmissionColor", Color.blue * Mathf.Max(MIN_MATERIAL_EMISSION, progress) * MATERIAL_EMISSION_SCALE);
         }
         else if (!fruitCollider.enabled)
             fruitCollider.enabled = true; //enable collider when fully grown
@@ -63,7 +64,7 @@ public class HealerFruitController : MonoBehaviour {
 
         Transform parentFish = other.attachedRigidbody.transform;
 
-        if (other.isTrigger && parentFish.CompareTag("Player") && GameStaticInfo.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
+        if (other.isTrigger && parentFish.CompareTag("Player") && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
             && parentFish.TryGetComponent(out FishAnim animManager)) {
 
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -73,21 +74,16 @@ public class HealerFruitController : MonoBehaviour {
                 GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_algae_are_beneficial_to_health);
 #endif
 
-            audioManager.PlayVFX(VFX_clip.Heal);
-            //audioSource.PlayOneShot(healClip);
+            _audioManager.PlayVFX(VFX_clip.Heal);
             fish.Heal(fish.DefaultInfo.MaxHealth / HEAL_DIVIDER);
             ReGrowth();
             animManager.ActivateBiteAnimation(false); // activate bite animation on fish
 
-            //healParticle.transform.localScale = other.transform.localScale;
-            //healParticle.transform.position = other.transform.position;
-            //healParticle.SetActive(true);//spawn particles
-            dishAddCompMangr.ActivateObjectFromPool(FishComponentType.PlayerHealParticle,
+            _vfxPoolService.ActivateObjectFromPool(FishVFX.PlayerHealParticle,
                 other.transform,
                 Vector3.zero,
                 MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale),
                 Quaternion.identity);
-            //Instantiate(healParticle, other.transform).transform.localScale = MulV3(fishesHealParticleScales[(int)fish.Level], other.transform.localScale);
         }
     }
 

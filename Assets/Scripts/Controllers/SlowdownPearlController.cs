@@ -1,11 +1,10 @@
 using System;
 using UnityEngine;
+using VContainer;
 
 public class SlowdownPearlController : MonoBehaviour {
     [SerializeField] Animator floawerAnimator;
-    [SerializeField] AudioManager audioManager;
     [SerializeField] Collider pearlCollider;
-    //[SerializeField] Collider flowerCollider;
     [SerializeField] MeshRenderer pearlMeshRenderer;
     [SerializeField] Light pearlLight;
     [SerializeField] GameObject freezeTimeParticles;
@@ -15,10 +14,13 @@ public class SlowdownPearlController : MonoBehaviour {
     private const float MAX_RESPAWN_TIME = 180f; //3 minutes
     private const float MAX_AXIS_ANGLE_DIR = 45f;
 
-    private Vector3 randomRotateDir;
     private static event Action OnPearlActivate;
     private static event Action OnPearlDeactivate;
     private static bool IsActivationInvokeStarted = false;
+
+    private Vector3 _randomRotateDir;
+
+    [Inject] private readonly IAudioManager _audioManager;
 
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -47,7 +49,7 @@ public class SlowdownPearlController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (pearlMeshRenderer.enabled)
-            transform.Rotate(randomRotateDir * DJTime.DeltaTime);
+            transform.Rotate(_randomRotateDir * DJTime.DeltaTime);
     }
 
     private void OnTriggerStay(Collider other) {
@@ -58,7 +60,7 @@ public class SlowdownPearlController : MonoBehaviour {
 
         if (parentFish.CompareTag("Player") && !other.isTrigger && parentFish.TryGetComponent(out FishAnim fam)) {
             fam.ActivateBiteAnimation(false);
-            audioManager.PlayVFX(VFX_clip.FreezeTime);
+            _audioManager.PlayVFX(VFX_clip.FreezeTime);
             //pearlAudioSource.PlayOneShot(pearlSoundClip);        
             OnPearlDeactivate?.Invoke();
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -89,7 +91,7 @@ public class SlowdownPearlController : MonoBehaviour {
             return;
         //Debug.LogWarning("ACTivate pearl " + gameObject.name);
         floawerAnimator.Play(FLOWER_ANIM_NAME);
-        randomRotateDir = new Vector3(
+        _randomRotateDir = new Vector3(
             UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR),
             UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR),
             UnityEngine.Random.Range(-MAX_AXIS_ANGLE_DIR, MAX_AXIS_ANGLE_DIR));

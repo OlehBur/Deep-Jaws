@@ -26,8 +26,8 @@ public class FishAnim : MonoBehaviour {
     private float matDefSprintSpeed; // default sprint speed in the material
     private float maxShapeRotationVal;
 
-    [Inject] private readonly AudioManager _audioManager;
-    [Inject] private readonly VFXpoolManager _fishAddCompMngr;
+    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IVFXPoolService _fishAddCompMngr;
 
     private const float BUBBLE_INIT_X_OFFSET = 0;
     private const float SPRINT_SPEED_MULTIPLIER = 2f; // multiplier for sprint speed
@@ -162,7 +162,7 @@ public class FishAnim : MonoBehaviour {
                 animator.SetTrigger(GameStaticInfo.BITE_ANIMATOR_TRIGGER); // play bite animation
 
             if (isNeedParticles) //for optimization
-                _fishAddCompMngr.ActivateObjectFromPool(FishComponentType.BiteParticle,
+                _fishAddCompMngr.ActivateObjectFromPool(FishVFX.BiteParticle,
                     editableTransform,
                     /*biteParticleLocPos*/fish.DefaultInfo.BiteParticleLocPos,
                     Vector3.one,

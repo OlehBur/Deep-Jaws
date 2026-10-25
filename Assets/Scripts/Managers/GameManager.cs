@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
+
+
 public class GameManager : MonoBehaviour {
     //[SerializeField] MainmenuManager mainmenuManager;
     [SerializeField] CameraFollower cameraFollower;
-    [SerializeField] SpawnManager spawnManager;
+    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] FishHeartbeatsManager fishHeartbeatsManager;
     [SerializeField] JellyfishController[] jellyfishControllerArray;
     [SerializeField] PlayerUIController playerEffectsUI;
@@ -17,8 +19,7 @@ public class GameManager : MonoBehaviour {
     /// </summary>
 
 
-    [Inject] private readonly IPlayerPoolService _playerProvider; 
-
+    [Inject] private readonly IPlayerFishPoolService _playerProvider;
 
     public static int ScreenMaxFramerate {
         get {
@@ -57,12 +58,11 @@ public class GameManager : MonoBehaviour {
         gameCanvas.SetActive(false);
         GameSetPause(true);//wait until the spawn manager finishes creating pools
 
-        spawnManager.Init();
-
-        cameraFollower.Init(spawnManager); // initialize the camera follower with the spawn manager
-        fishHeartbeatsManager.Init(spawnManager);
-        playerEffectsUI.Init(spawnManager);
-        playerLeaderboardScore.Init(spawnManager);
+        //spawnManager.Init();
+        cameraFollower.Init(); // initialize the camera follower with the spawn manager
+        fishHeartbeatsManager.Init();
+        playerEffectsUI.Init();
+        playerLeaderboardScore.Init();
         CurrentDefaultGameTime = DEFAULT_GAME_TIME;
 
         SetFixedDelta();
