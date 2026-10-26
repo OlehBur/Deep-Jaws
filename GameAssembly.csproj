@@ -65,8 +65,8 @@
     <Compile Include="Assets\Scripts\Debug_\AutoScalerToDef.cs" />
     <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Managers\HotSpringManager.cs" />
-    <Compile Include="Assets\Scripts\Core\FishSkinManager.cs" />
     <Compile Include="Assets\Scripts\Managers\FishHeartbeatsManager.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishAllInfo.cs" />
     <Compile Include="Assets\Scripts\Controllers\СuttlefishController.cs" />
     <Compile Include="Assets\Scripts\Controllers\SoundtrackController.cs" />
     <Compile Include="Assets\Scripts\Core\JoystickArea.cs" />
@@ -80,7 +80,6 @@
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\LicenseValidator.cs" />
     <Compile Include="Assets\Scripts\Scriptable\FishLocalized.cs" />
-    <Compile Include="Assets\Scripts\Controllers\GameTips.cs" />
     <Compile Include="Assets\Scripts\Sancturary\SanctuaryCameraChanger.cs" />
     <Compile Include="Assets\Scripts\Achievements\CantCatchAchieveTrig.cs" />
     <Compile Include="Assets\Scripts\Core\HudBars.cs" />
@@ -90,11 +89,11 @@
     <Compile Include="Assets\Scripts\Sancturary\FishAlmanacVisualizeUI.cs" />
     <Compile Include="Assets\Scripts\Managers\EffectManager.cs" />
     <Compile Include="Assets\Scripts\Sancturary\ProgressBar.cs" />
+    <Compile Include="Assets\Scripts\Controllers\CameraFollower.cs" />
     <Compile Include="Assets\Scripts\UI\GameResultWnd.cs" />
     <Compile Include="Assets\Scripts\Services\EnemyPoolService.cs" />
     <Compile Include="Assets\Scripts\UI\JoystickTouchPosition.cs" />
     <Compile Include="Assets\Scripts\Core\ProgressSaver.cs" />
-    <Compile Include="Assets\Scripts\CameraFollower.cs" />
     <Compile Include="Assets\Scripts\EnemyDetector.cs" />
     <Compile Include="Assets\Scripts\Achievements\NoEscapeAchieveTrig.cs" />
     <Compile Include="Assets\Scripts\Debug_\TestColliderMovement.cs" />
@@ -107,12 +106,14 @@
     <Compile Include="Assets\Scripts\Services\PermamentPoolService.cs" />
     <Compile Include="Assets\Scripts\Sancturary\ShellsBarVIsualize.cs" />
     <Compile Include="Assets\Scripts\FishEffects\EffectArea.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishSpriteInfo.cs" />
     <Compile Include="Assets\Scripts\Core\PoolServise.cs" />
     <Compile Include="Assets\Scripts\FishEffects\StopTimeEffect.cs" />
     <Compile Include="Assets\Scripts\Core\PlayerActionsInput.cs" />
     <Compile Include="Assets\Scripts\Managers\GamePurchaseManager.cs" />
     <Compile Include="Assets\Scripts\Core\DJTime.cs" />
     <Compile Include="Assets\Scripts\UI\PlayerUIController.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishSkinInfo.cs" />
     <Compile Include="Assets\Scripts\Controllers\FishAnim.cs" />
     <Compile Include="Assets\Scripts\Sancturary\BiomesVisualize.cs" />
     <Compile Include="Assets\Scripts\Controllers\PufferfishController.cs" />
@@ -130,9 +131,9 @@
     <Compile Include="Assets\Scripts\Debug_\FPS_Viewer.cs" />
     <Compile Include="Assets\Scripts\Debug_\ImageHsvAnim.cs" />
     <Compile Include="Assets\Scripts\FishEffects\PoisonEffect.cs" />
+    <Compile Include="Assets\Scripts\Services\GameTipsService.cs" />
     <Compile Include="Assets\Scripts\Controllers\HydraController.cs" />
-    <Compile Include="Assets\Scripts\LifeTimeScope\VFXpoolService.cs" />
-    <Compile Include="Assets\Scripts\Scriptable\FishInfoManager.cs" />
+    <Compile Include="Assets\Scripts\LifeTimeScope\VFXPoolService.cs" />
     <Compile Include="Assets\Scripts\Managers\GameAdsManager.cs" />
     <Compile Include="Assets\Scripts\Scriptable\VFX_PrefabsInfo.cs" />
     <Compile Include="Assets\Scripts\UI\PurchaseUIvisualizer.cs" />

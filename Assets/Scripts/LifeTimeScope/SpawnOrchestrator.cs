@@ -18,6 +18,8 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
     [SerializeField] Transform weakFishSpawnPointsParent;
     [SerializeField] Transform strongFishSpawnPointsParent;
     [SerializeField] Transform sharkSpawnPointsParent;
+    [SerializeField] Transform pufferSpawnPointsParent;
+    [SerializeField] Transform cuttleSpawnPointsParent;
     [SerializeField] GameObject enemyDetectorPrefab;
 
     // VContainer construct!
@@ -35,6 +37,7 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
         _enemyPoolService.Init(fishPoolParent);
         //_enemyPoolService.SetPlayerProvider(_playerSpawnService);
         _enemyPoolService.SetSpawnPoints(weakFishSpawnPointsParent, strongFishSpawnPointsParent, sharkSpawnPointsParent);
+        _permamentFishPoolService.SetSpawnPoints(weakFishSpawnPointsParent, strongFishSpawnPointsParent, sharkSpawnPointsParent, pufferSpawnPointsParent, cuttleSpawnPointsParent);
 
         //first spawns
         _playerSpawnService.InitialSpawnPrefabs();
@@ -75,9 +78,9 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
             _permamentFishPoolService.TryGetFish(fishObject, out fish);//cucttlefishes | dartfhis | pufferfish
     }
 
-    public void OnSceneExit() {
-        _playerSpawnService.SavePlayerData();
-    }
+    //public void OnSceneExit() {
+    //    _playerSpawnService.SavePlayerData();
+    //}
 
 
     void CheckPlayerLvlAchievements(FishLevel playerLvl) {

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 
 public class FishAlmanacVisualizeUI : MonoBehaviour {
-    [SerializeField] FishInfoManager fishInfoManager;
+    [SerializeField] FishAllInfo fishInfoManager;
     [SerializeField] TextMeshProUGUI fishName;
     [SerializeField] TextMeshProUGUI description;
     [SerializeField] TextMeshProUGUI health;

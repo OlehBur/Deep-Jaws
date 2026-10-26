@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class SanctuaryVisualizeUI : MonoBehaviour {
     [SerializeField] SanctuaryCameraChanger cameraChanger;
     [SerializeField] FishAlmanacVisualizeUI fishAlmanac;
-    [SerializeField] FishInfoManager fishInfoManager;
+    [SerializeField] FishSpriteInfo fishSpriteInfo;
 
     [SerializeField] GameObject biomesUI;
     [SerializeField] GameObject almanacUI;
@@ -112,7 +112,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     void UpdateResidentImagesPreview() {// only diff residents shows
         int lastSpriteIndex = 0;
         int residentInd = 0;
-        residentsImages[lastSpriteIndex].sprite = fishInfoManager.GetFishSprite(selectedBiome.Info.Requirements[residentInd]);
+        residentsImages[lastSpriteIndex].sprite = fishSpriteInfo.GetFishSprite(selectedBiome.Info.Requirements[residentInd]);
         residentsButtons[lastSpriteIndex].gameObject.SetActive(true);
         for (residentInd = 1; residentInd < selectedBiome.Level/*Info.Requirements.Length*/; residentInd++) {
             FishLevel newFish = selectedBiome.Info.Requirements[residentInd];
@@ -121,7 +121,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             if (newFish != previousFish)
                 ++lastSpriteIndex;
 
-            residentsImages[lastSpriteIndex].sprite = fishInfoManager.GetFishSprite(newFish);
+            residentsImages[lastSpriteIndex].sprite = fishSpriteInfo.GetFishSprite(newFish);
             residentsButtons[lastSpriteIndex].gameObject.SetActive(true);
         }
 

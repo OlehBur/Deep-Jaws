@@ -42,6 +42,7 @@ public class EffectManager : MonoBehaviour {
     //private FishAdditionalCompManager _fishAdditionalComponentManager;
     private Vector3 _prevPos;
 
+    //via resolver
     [Inject] private readonly IAudioManager _audioManager;
     [Inject] private readonly IVFXPoolService _vfxPoolService;
 

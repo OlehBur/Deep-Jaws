@@ -6,10 +6,10 @@ using VContainer;
 
 public class GameManager : MonoBehaviour {
     //[SerializeField] MainmenuManager mainmenuManager;
-    [SerializeField] CameraFollower cameraFollower;
+    //[SerializeField] CameraFollower cameraFollower;
     //[SerializeField] SpawnManager spawnManager;
     [SerializeField] FishHeartbeatsManager fishHeartbeatsManager;
-    [SerializeField] JellyfishController[] jellyfishControllerArray;
+    //[SerializeField] JellyfishController[] jellyfishControllerArray;
     [SerializeField] PlayerUIController playerEffectsUI;
     [SerializeField] PlayerLeaderboardScore playerLeaderboardScore;
     [SerializeField] Button pauseExitButton;
@@ -56,17 +56,17 @@ public class GameManager : MonoBehaviour {
         //Debug.LogWarning("Run On ANDROID Enanbled");
 
         gameCanvas.SetActive(false);
-        GameSetPause(true);//wait until the spawn manager finishes creating pools
+        //GameSetPause(true);//wait until the spawn manager finishes creating pools
 
         //spawnManager.Init();
-        cameraFollower.Init(); // initialize the camera follower with the spawn manager
-        fishHeartbeatsManager.Init();
-        playerEffectsUI.Init();
-        playerLeaderboardScore.Init();
+        //cameraFollower.Init(); // initialize the camera follower with the spawn manager
+        //fishHeartbeatsManager.Init();
+        //playerEffectsUI.Init();
+        //playerLeaderboardScore.Init();
         CurrentDefaultGameTime = DEFAULT_GAME_TIME;
 
         SetFixedDelta();
-        GameSetPause(false);
+        //GameSetPause(false);
 
         Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
         Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);

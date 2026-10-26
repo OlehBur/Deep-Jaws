@@ -384,7 +384,7 @@ public class FishControl : MonoBehaviour, IFish {
         Vector3 currentForward = rotationTransform.rotation * Vector3.forward;
 
         if (fishAnim != null && fishAnim.IsInited)
-            fishAnim?.RotateAnimation(rotationTransform.forward, currentForward, DJTime.FixedDeltaTime);//zero rotation
+            fishAnim.RotateAnimation(rotationTransform.forward, currentForward, DJTime.FixedDeltaTime);//zero rotation
     }
 
     public void FishProximity(Fish otherFish) {

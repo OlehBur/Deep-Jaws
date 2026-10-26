@@ -20,14 +20,17 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
     private Transform _cuttlefishPointsParent;
 
     public event Action<Fish> OnFishDie;
+    public event Action OnPoolInitialSpawnCompleted;
+    public bool IsInitialSpawnCompleted { get; private set; } = false;
 
     private readonly IPlayerFishPoolService _playerPoolProvider;
 
-    public int Count => _pufferfishPoolComp.Length + _cuttlefishPoolComp.Length + _dartfishPoolComp.Length;
+    public int Count => _pufferfishPoolComp == null ?
+        0 : _pufferfishPoolComp.Length + _cuttlefishPoolComp.Length + _dartfishPoolComp.Length;
 
 
     [Inject]
-    public PermamentPoolService(FishPrefabsInfo fishPrefabs, IPlayerFishPoolService playerPoolProvider) : base(fishPrefabs) {
+    public PermamentPoolService(FishPrefabsInfo fishPrefabs, IPlayerFishPoolService playerPoolProvider, IObjectResolver resolver) : base(fishPrefabs, resolver) {
         _playerPoolProvider = playerPoolProvider;
     }
 
@@ -60,6 +63,13 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
 
     public void Init(Transform fishPoolParent) {
         _fishPoolParent = fishPoolParent;
+
+        _pufferfishPool = new GameObject[GameStaticInfo.PUFFERFISH_SPAWN_COUNT];
+        _pufferfishPoolComp = new Fish[GameStaticInfo.PUFFERFISH_SPAWN_COUNT];
+        _cuttlefishPool = new GameObject[GameStaticInfo.CUTTLEFISH_SPAWN_COUNT];
+        _cuttlefishPoolComp = new Fish[GameStaticInfo.CUTTLEFISH_SPAWN_COUNT];
+        _dartfishPool = new GameObject[GameStaticInfo.DARTFISH_SPAWN_COUNT];
+        _dartfishPoolComp = new Fish[GameStaticInfo.DARTFISH_SPAWN_COUNT];
     }
 
     public void InitialSpawnPrefabs() {
@@ -89,6 +99,7 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
     /// <returns></returns>
     Transform GetRandSpawnPointsByFishLevel(FishLevel playerLvl) {
         Transform spawnPoints;
+
         switch (playerLvl) {
             case FishLevel.SeaBass:
             case FishLevel.Mackerel:
@@ -139,9 +150,25 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
             //try new rand spawn point
             spawnPointIndex = (int)(UnityEngine.Random.value * pointsMaxInd);//(spawnPointIndex + 1 == spPoints.Length) ? 0 : ++spawnPointIndex;
         }
+
+        IsInitialSpawnCompleted = true;
+        OnPoolInitialSpawnCompleted?.Invoke();
+    }
+
+    public bool IsSpawnPointsValid() {
+        if (_weakFishSpawnPointsParent == null || _sharkSpawnPointsParent == null
+            || _sharkSpawnPointsParent == null || _cuttlefishPointsParent == null || _pufferfishPointsParent == null) {
+            Debug.LogWarning("Spawn points are not initialized! It is not possible to select spawn positions; call SetSpawnPoints() to resolve the issue.");
+            return false;
+        }
+
+        return true;
     }
 
     void RespawnPermamentFish(int index, GameObject[] pool, Fish[] fishCompPool, Transform spPoints) {
+        if (!IsSpawnPointsValid())
+            return;
+
         int pointsCnt = spPoints.childCount - 1;
         int spawnPointIndex = (int)(UnityEngine.Random.value * pointsCnt);
         GameObject prefabInst = pool[index];

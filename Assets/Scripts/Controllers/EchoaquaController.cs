@@ -85,9 +85,8 @@ public class EchoaquaController : MonoBehaviour {
             _echoaquaShader.SetVector(ScanPosNormalizeShaderID, GameStaticInfo.WorldToNormalizeScreenPos(ecqhoMembraneCenter.position, Camera.current)); //in case of movement player
             currentProgress += DJTime.UnscaledDeltaTime;
             //Debug.Log(currentProgress);
-            if (!CameraFollower.Instance.IsMapViewActive && currentProgress >= PROGRESS_TRIGGER_FOR_COLLIDER) {
+            if (!CameraFollower.Instance.IsMapViewActive && currentProgress >= PROGRESS_TRIGGER_FOR_COLLIDER)
                 CameraFollower.Instance.IsMapViewActive = true;
-            }
 
             _echoaquaShader.SetFloat(ProgressShaderID, Mathf.Min(currentProgress, 1f));
             yield return null;

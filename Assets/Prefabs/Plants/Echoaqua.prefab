@@ -27,9 +27,9 @@ Transform:
   m_GameObject: {fileID: 77548762112061254}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.4300015, y: 4.290001, z: -4.6699963}
+  m_LocalPosition: {x: 2.55, y: 0.37, z: -3.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2735114992959934969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -44,7 +44,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.6675989, b: 0, a: 1}
-  m_Intensity: 10
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -188,9 +188,9 @@ Transform:
   m_GameObject: {fileID: 3452046441963735577}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.059998, y: 4.2599983, z: -0.51999664}
+  m_LocalPosition: {x: -3.84, y: 0.81, z: -0.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2735114992959934969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -205,7 +205,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.6675989, b: 0, a: 1}
-  m_Intensity: 10
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -471,9 +471,9 @@ Transform:
   m_GameObject: {fileID: 6536462343278530093}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.10999751, y: 4.91, z: 4.9700003}
+  m_LocalPosition: {x: 0.11, y: 1.07, z: 3.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2735114992959934969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -488,7 +488,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.6675989, b: 0, a: 1}
-  m_Intensity: 10
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -791,12 +791,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653bb29a3276afb4583f24f2c49e7fbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::EchoaquaController
-  echoaquaShader: {fileID: 2100000, guid: a458c6d77c1435844ad438eded72a0d0, type: 2}
+  echoaquaShaderImg: {fileID: 0}
   vibrissaeColliders: {fileID: 6152282260935014646}
   lightsVibrissaeParent: {fileID: 961930391190653180}
-  mapPreviewCollider: {fileID: 4032381203606102039}
   heartbeatsManager: {fileID: 0}
   playerUIController: {fileID: 0}
   ecqhoMembraneCenter: {fileID: 2790143937589919813}
-  audioManager: {fileID: 0}
   echoaquaAnimator: {fileID: 4771588531199084908}

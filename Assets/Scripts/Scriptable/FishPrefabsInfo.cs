@@ -15,6 +15,7 @@ public class FishPrefabsInfo : ScriptableObject {
     [field: SerializeField] public GameObject HammerShark { get; private set; }
     [field: SerializeField] public GameObject TigerShark { get; private set; }
     [field: SerializeField] public GameObject WhiteShark { get; private set; }
+    [field: SerializeField] public GameObject EnemyDetector { get; private set; }
 
     //[field: SerializeField] public Fish PufferfishComp { get; }
     //[field: SerializeField] public Fish CuttlefishComp { get; }

@@ -11,8 +11,9 @@ public abstract class PoolServise {
 
     protected /*readonly*/ FishPrefabsInfo _fishPrefabs;
 
-    public PoolServise(FishPrefabsInfo fishPrefabs) {
+    public PoolServise(FishPrefabsInfo fishPrefabs, IObjectResolver resolver) {
         _fishPrefabs = fishPrefabs;
+        _resolver = resolver;
     }
 
     public void PrefabNamingTaging(GameObject prefab, FishLevel level, string mainName, string tag) {

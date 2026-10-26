@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -21,29 +22,18 @@ public interface IVFXPoolService {
     BubbleShieldWrapper ActivateShieldFromPool(Transform parent, Vector3 localPositon);
 }
 
-public class VFXPoolService : IInitializable, IVFXPoolService/*MonoBehaviour*/ {
-    //[SerializeField] Transform fishAddCompPoolParent;
-    //[SerializeField] GameObject shieldBubblePrefab;
-    //[SerializeField] GameObject spintLinePrefab;
-    //[SerializeField] GameObject whirlLinePrefab;
-    //[SerializeField] GameObject deadBubblesParticlPrefab;
-    //[SerializeField] GameObject biteParticlePrefab;
-    //[SerializeField] GameObject skeletParticlePrefab;
-    //[SerializeField] GameObject healParticlePrefab;
-    //[SerializeField] GameObject inkParticlesPrefab;
-
+public class VFXPoolService : IInitializable, IVFXPoolService {
     [Inject]
-    public VFXPoolService(VFX_PrefabsInfo vfxPrefabsInfo, Transform fishAddCompPoolParent, IPlayerFishPoolService playerPoolService) {
+    public VFXPoolService(VFX_PrefabsInfo vfxPrefabsInfo,  IPlayerFishPoolService playerPoolService, IObjectResolver resolver) {
         _additionalComponentsInfo = vfxPrefabsInfo;
-        _fishAddCompPoolParent = fishAddCompPoolParent;
-        //_playerSpawnService = playerPoolService;
+        _resolver = resolver;
     }
 
+    private bool _isPoolsInitialized = false;
     private IObjectResolver _resolver;
+    private Transform _fishAddCompPoolParent;
+
     private readonly VFX_PrefabsInfo _additionalComponentsInfo;
-    private readonly Transform _fishAddCompPoolParent;
-    //private readonly IPlayerFishPoolService _playerSpawnService;
-    //private readonly IEnemyFishPoolService _enemyPoolService;
 
     private BubbleShieldWrapper[] _shieldsPool;
     private GameObject[] _sprintLinePool;
@@ -57,6 +47,11 @@ public class VFXPoolService : IInitializable, IVFXPoolService/*MonoBehaviour*/ {
 
 
     public void Initialize() {
+        if (_isPoolsInitialized)
+            return;
+
+        _fishAddCompPoolParent = _resolver.Instantiate(new("FishAddComponentPool"), null).transform;
+
         InitPool(ref _shieldsPool, _additionalComponentsInfo.ShieldBubblePrefab, GameStaticInfo.SHIELDS_POOL_CNT);
         InitPool(ref _whirlLinePool, _additionalComponentsInfo.WhirlLinePrefab, GameStaticInfo.WHIRLE_POOL_CNT);
         InitPool(ref _deadBubblesPool, _additionalComponentsInfo.SpawnBubblesParticlPrefab, GameStaticInfo.DEAD_BUBBLES_POOL_CNT);
@@ -66,6 +61,8 @@ public class VFXPoolService : IInitializable, IVFXPoolService/*MonoBehaviour*/ {
         InitPool(ref _sprintLinePool, _additionalComponentsInfo.SpintLinePrefab, GameStaticInfo.SPRINT_PARTICLES_POOL_MAX_CNT);//for player only and in case respwn
         InitPool(ref _healParticlePool, _additionalComponentsInfo.HealParticlePrefab, GameStaticInfo.HEAL_PARTICLES_POOL_MAX_CNT);//for player only
         _lvlUpParticles = _resolver.Instantiate(_additionalComponentsInfo.LvlUpBubblesParticlPrefab, _fishAddCompPoolParent);
+
+        _isPoolsInitialized = true;
     }
 
     void InitPool(ref GameObject[] pool, GameObject prefab, int count) {
@@ -91,6 +88,9 @@ public class VFXPoolService : IInitializable, IVFXPoolService/*MonoBehaviour*/ {
 
     public GameObject ActivateObjectFromPool(FishVFX type, Transform parent, Vector3 localPositon, Vector3 localScale, Quaternion locRotation) {
         GameObject objToActivate = null;
+
+        if (!_isPoolsInitialized)
+            Initialize();
 
         switch (type) {
             //case FishComponentType.ShieldBubble:

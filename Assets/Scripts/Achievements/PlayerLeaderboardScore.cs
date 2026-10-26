@@ -16,9 +16,8 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
 
 
-    public void Init(/*SpawnManager spawnManager*/) {
-        //this.spawnManager = spawnManager;
-        PlayerReconnect(_playerPoolService.PlayerCurrentFish, false);
+    void Start() {
+        //PlayerReconnect(_playerPoolService.PlayerCurrentFish, false);
         _playerPoolService.OnPlayerRespawn += PlayerReconnect;
         EasyDeaths = PlayerPrefs.GetInt(DEATHS_KEY, 0);
         //Debug.LogWarning("Deaths: " + EasyDeaths);

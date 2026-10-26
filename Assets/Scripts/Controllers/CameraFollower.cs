@@ -51,7 +51,7 @@ public class CameraFollower : MonoBehaviour {
         //DontDestroyOnLoad(gameObject);
     }
 
-    public void Init(/*SpawnManager spawnManager*/) {
+    void /*Init*/Start(/*SpawnManager spawnManager*/) {
         //this.spawnManager = spawnManager;
         _playerPoolService.OnPlayerRespawn += ResetPlayerTarget;
 

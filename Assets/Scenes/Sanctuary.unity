@@ -40961,7 +40961,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   cameraChanger: {fileID: 1823938861}
   fishAlmanac: {fileID: 1632457745}
-  fishInfoManager: {fileID: 11400000, guid: ce3c12ce0d2d2154ca71ecb5401135ab, type: 2}
+  fishSpriteInfo: {fileID: 11400000, guid: 1c5a2d6a589fc6a42aa1811bc4628aa5, type: 2}
   biomesUI: {fileID: 442210962}
   almanacUI: {fileID: 1632457741}
   shellsCnt: {fileID: 7012101}
@@ -48399,7 +48399,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d70299022678fd4e8c7b346e6515236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::MainmenuManager
-  audioManager: {fileID: 0}
   graphicManager: {fileID: 0}
   loadingPanel: {fileID: 1748791343}
   sceneLoader: {fileID: 0}
@@ -48432,7 +48431,6 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   pauseButton: {fileID: 0}
   pauseWnd: {fileID: 0}
-  spawnManager: {fileID: 0}
   respawnWnd: {fileID: 0}
   demoFinMsg: {fileID: 0}
   references:

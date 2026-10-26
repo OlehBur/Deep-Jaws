@@ -12,7 +12,20 @@ public enum TipType {
     DeepCoralBarrier
 }
 
-public class GameTips : MonoBehaviour {
+public interface IGameTip {
+    void OnDelayedVictimTip();
+    void OnEnemyTip();
+    void OnEffectTip();
+    void OnStageTip();
+    void OnClearCoralTip();
+    void OnClearSeaweedTip();
+    void OnAlgaesBarrierTip();
+    void OnDeepCoralsBarrierTip();
+    void OnCloseTips();
+
+}
+
+public class GameTipsService : MonoBehaviour, IGameTip {
     [SerializeField] GameObject victimTip;
     [SerializeField] GameObject enemyTip;
     [SerializeField] GameObject effectsTip;
@@ -24,75 +37,74 @@ public class GameTips : MonoBehaviour {
 
     private const float TIP_TIME_SCALE = .2f;
     private const float VICTIM_TIP_DELAY = 1f;
+    
+    private WorldData _worldData;
 
 
-    private WorldData worldData;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() {
-        worldData = ProgressSaver.IsWorldDataExist ?
+    void Awake () {
+        _worldData = ProgressSaver.IsWorldDataExist ?
             ProgressSaver.LoadWorldData() : new WorldData();
 
-        if (worldData.IsAllTipsShowed() || GameStaticInfo.Gamemode != GameMode.Easy)
+        if (_worldData.IsAllTipsShowed() || GameStaticInfo.Gamemode != GameMode.Easy)
             gameObject.SetActive(false);
         else
-            if (!worldData.isVictimTipShowed)
+            if (!_worldData.isVictimTipShowed)
             Invoke(nameof(OnDelayedVictimTip), VICTIM_TIP_DELAY);
     }
 
     public void OnDelayedVictimTip() {
-        worldData.isVictimTipShowed = true;
-        ProgressSaver.SaveData(worldData);
+        _worldData.isVictimTipShowed = true;
+        ProgressSaver.SaveData(_worldData);
 
         GameManager.ChangeGameTime(TIP_TIME_SCALE);
         victimTip.SetActive(true);
     }
 
-    public void OnEnemyTip() => ActivateStage(TipType.Enemy, worldData.isEnemyTipShowed);
-    public void OnEffectTip() => ActivateStage(TipType.Effects, worldData.isEffectTipShowed);
-    public void OnStageTip() => ActivateStage(TipType.StageUp, worldData.isStageTipShowed);
-    public void OnClearCoralTip() => ActivateStage(TipType.ClearCorals, worldData.isClearCoralsTipShowed, false);
-    public void OnClearSeaweedTip() => ActivateStage(TipType.ClearSeaweed, worldData.isClearSeaweedShowed, false);
-    public void OnAlgaesBarrierTip() => ActivateStage(TipType.AlgaesBarrier, worldData.isAlgaesBarrierTipShowed, false);
-    public void OnDeepCoralsBarrierTip() => ActivateStage(TipType.DeepCoralBarrier, worldData.isDeepCoralBarrierTipShowed, false);
+    public void OnEnemyTip() => ActivateStage(TipType.Enemy, _worldData.isEnemyTipShowed);
+    public void OnEffectTip() => ActivateStage(TipType.Effects, _worldData.isEffectTipShowed);
+    public void OnStageTip() => ActivateStage(TipType.StageUp, _worldData.isStageTipShowed);
+    public void OnClearCoralTip() => ActivateStage(TipType.ClearCorals, _worldData.isClearCoralsTipShowed, false);
+    public void OnClearSeaweedTip() => ActivateStage(TipType.ClearSeaweed, _worldData.isClearSeaweedShowed, false);
+    public void OnAlgaesBarrierTip() => ActivateStage(TipType.AlgaesBarrier, _worldData.isAlgaesBarrierTipShowed, false);
+    public void OnDeepCoralsBarrierTip() => ActivateStage(TipType.DeepCoralBarrier, _worldData.isDeepCoralBarrierTipShowed, false);
 
     void ActivateStage(TipType type, /*bool isSaveDepend = true,*/ bool isShowed, bool isGamemodeDepend = true) {
         bool condition = /*!isSaveDepend || */(gameObject.activeInHierarchy && !isShowed);
         condition = condition && (!isGamemodeDepend || GameStaticInfo.Gamemode == GameMode.Easy);
 
         if (condition /*worldData.isStageTipShowed*/) {
-            worldData = ProgressSaver.IsWorldDataExist ?//load other prop in case changing by others scripts
+            _worldData = ProgressSaver.IsWorldDataExist ?//load other prop in case changing by others scripts
                 ProgressSaver.LoadWorldData() : new WorldData();
 
             //worldData set
             switch (type) {
                 case TipType.Victim:
-                worldData.isVictimTipShowed = true;
+                _worldData.isVictimTipShowed = true;
                 break;
                 case TipType.Enemy:
-                worldData.isEnemyTipShowed = true;
+                _worldData.isEnemyTipShowed = true;
                 break;
                 case TipType.Effects:
-                worldData.isEffectTipShowed = true;
+                _worldData.isEffectTipShowed = true;
                 break;
                 case TipType.StageUp:
-                worldData.isStageTipShowed = true;
+                _worldData.isStageTipShowed = true;
                 break;
                 case TipType.ClearCorals:
-                worldData.isClearCoralsTipShowed = true;
+                _worldData.isClearCoralsTipShowed = true;
                 break;
                 case TipType.ClearSeaweed:
-                worldData.isClearSeaweedShowed = true;
+                _worldData.isClearSeaweedShowed = true;
                 break;
                 case TipType.AlgaesBarrier:
-                worldData.isAlgaesBarrierTipShowed = true;
+                _worldData.isAlgaesBarrierTipShowed = true;
                 break;
                 case TipType.DeepCoralBarrier:
-                worldData.isDeepCoralBarrierTipShowed = true;
+                _worldData.isDeepCoralBarrierTipShowed = true;
                 break;
             }
 
-            ProgressSaver.SaveData(worldData);
+            ProgressSaver.SaveData(_worldData);
 
             GameManager.ChangeGameTime(TIP_TIME_SCALE);
             GetTip(type).SetActive(true);

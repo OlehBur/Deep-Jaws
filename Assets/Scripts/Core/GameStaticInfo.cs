@@ -19,8 +19,8 @@ public enum FishLevel {
 
 public enum GameMode {
     Easy = 0,
-    Medium,
-    Hard,
+    Medium = 1,
+    Hard = 2,
     None
 }
 
@@ -191,7 +191,7 @@ public static class GameStaticInfo {
     public const int CUTTLEFISH_SPAWN_COUNT = 30;
     public const int DARTFISH_SPAWN_COUNT = 50;
     public const int ENEMY_POOL_SIZE = 90;
-    public const int PLAYER_POOL_SIZE = (int)(MAX_FISH_LEVEL - 1);//crab is uncounted
+    public const int PLAYER_POOL_SIZE = (int)MAX_FISH_LEVEL;
 
     public const float PLAYER_INIT_SHIELD_DURATION = 13f; //initial shield duration after player respawn
     public const int SHIELDS_POOL_CNT = 30; // POOL_SIZE/4

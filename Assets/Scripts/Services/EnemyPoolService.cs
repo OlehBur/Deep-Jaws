@@ -25,7 +25,10 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
     private Transform _strongFishSpawnPointsParent;
     private Transform _sharkSpawnPointsParent;
     //private VFXpoolService _vfxPoolManager;
+
     public event Action<Fish> OnFishDie;
+    public event Action OnPoolInitialSpawnCompleted;
+    public bool IsInitialSpawnCompleted { get; private set; } = false;
 
     private readonly IPlayerFishPoolService _playerPoolProvider;
 
@@ -40,9 +43,9 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
 
 
     [Inject]
-    public EnemyPoolService(IPlayerFishPoolService playerPoolProvider, FishPrefabsInfo fishPrefabs/*, VFXpoolService vfxPoolManager*/) : base(fishPrefabs) {
+    public EnemyPoolService(IPlayerFishPoolService playerPoolProvider, FishPrefabsInfo fishPrefabs, IObjectResolver resolver) : base(fishPrefabs, resolver) {
         //_fishPrefabs = fishPrefabs;
-        playerPoolProvider = _playerPoolProvider;
+        _playerPoolProvider = playerPoolProvider;
         //_vfxPoolManager = vfxPoolManager;
 
         _playerPoolProvider.OnPlayerRespawn += PlayerRespawnHandler;
@@ -70,10 +73,12 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
     public void Init(Transform fishPoolParent) {
         _fishPoolParent = fishPoolParent;
         _savedWorldData = ProgressSaver.LoadWorldData();
+        _enemyPool = new GameObject[(int)GameStaticInfo.MAX_FISH_LEVEL, GameStaticInfo.ENEMY_POOL_SIZE];
+        _enemyPoolComp = new Fish[(int)GameStaticInfo.MAX_FISH_LEVEL, GameStaticInfo.ENEMY_POOL_SIZE];
         GameObject prefab;
         Fish enemyFish;
 
-        for (FishLevel level = FishLevel.Crab; level <= GameStaticInfo.MAX_FISH_LEVEL; level++)
+        for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
             for (int j = 0; j < GameStaticInfo.ENEMY_POOL_SIZE; j++) {
                 prefab = _resolver.Instantiate(_fishPrefabs.GetFishPrefabByType(level), _fishPoolParent);
                 _enemyPool.Set(level, j, prefab);
@@ -108,13 +113,16 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
             currnentRandLvl = GetRandSpawnLevel();
             SpawnEnemyFish(currnentRandLvl, i, _savedWorldData == null);
         }
+
+        IsInitialSpawnCompleted = true;
+        OnPoolInitialSpawnCompleted?.Invoke();
     }
 
     public void RespawnAllEnemies(/*FishLevel playerFishLVL*/) {
         FishLevel playerFishLVL = _playerPoolProvider.PlayerCurrentFish.Level;
 
         //Debug.LogWarning("Disabled Reinit Entities map");
-        for (FishLevel level = FishLevel.Crab; level <= GameStaticInfo.MAX_FISH_LEVEL; level++)
+        for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
             for (int i = 0; i < GameStaticInfo.ENEMY_POOL_SIZE; i++) {
                 Fish enemyBuff = _enemyPoolComp.Get(level, i);
 
@@ -225,7 +233,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
     public bool TryGetFish(GameObject fishObject, out Fish fish) {
         fish = null;
 
-        for (FishLevel level = FishLevel.Crab; level <= GameStaticInfo.MAX_FISH_LEVEL; level++)
+        for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
             for (int i = 0; i < GameStaticInfo.ENEMY_POOL_SIZE; i++)
                 if (_enemyPool.Get(level, i) == fishObject) {
                     fish = _enemyPoolComp.Get(level, i);

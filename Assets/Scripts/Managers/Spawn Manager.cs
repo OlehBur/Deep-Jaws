@@ -10,7 +10,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour //with ObjectPool
 {
     [Header("Managers Dependencies")]
-    [SerializeField] FishSkinManager fishSkinManager;
+    [SerializeField] FishSkinInfo fishSkinManager;
     //[SerializeField] VFXPoolService fishAdditionalComponentManager;
     //[SerializeField] AudioManager _audioManager;
     [SerializeField] MainmenuManager mainmenuManager;

@@ -21,7 +21,6 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] InputActionReference cancelAction;
     [SerializeField] GameObject pauseMenu;
     [SerializeField] MainmenuManager mainmenu;
-    [SerializeField] GameTips gameTips;
 
     [Header("Icons for effects (UI)")]
     [SerializeField] RectTransform iconsParent;
@@ -118,6 +117,7 @@ public class PlayerUIController : MonoBehaviour {
     private Coroutine _freezeCoroutine;
     private Coroutine _blindnessCoroutine;
 
+    [Inject] private readonly IGameTip _gameTips;
     [Inject] private readonly IAudioManager _audioManager;
     [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
     private readonly Dictionary<FishEffectType, RectTransform> _effectsSlotsMatch 
@@ -134,7 +134,6 @@ public class PlayerUIController : MonoBehaviour {
     private const float SPRINT_EFFECT_DURATION = 5f;
     private const float OVERLAYS_UPDATE_INTERVAL = 0.1f;
     private const float OVERLAYS_UPDATE_VALUE = OVERLAYS_UPDATE_INTERVAL * .2f;
-    private const float OVERLAY_ZONE_UPDATE_INTERVAL = 0.05f;
     private const float SPRINT_PROGRESS_PC_LOADING_ALPHA = 0.3f;
 
     private const float LENS_DISORTION_MAX_INTENS = -0.7f;
@@ -156,7 +155,7 @@ public class PlayerUIController : MonoBehaviour {
     private const float DEPTHOFFIELD_MIN_STARTEND = 0f;
 
 
-    public void Init(/*SpawnManager sp*/) {
+    void Start(/*SpawnManager sp*/) {
         //_spawnManager = sp;
         //Debug.LogWarning(spawnManager);
 
@@ -182,22 +181,20 @@ public class PlayerUIController : MonoBehaviour {
         }
 
         if (mainVolume.sharedProfile.TryGet(out Vignette vignette))
-            this._vignette = vignette;
+            _vignette = vignette;
         if (mainVolume.sharedProfile.TryGet(out LensDistortion lensDistortion))
-            this._lensDistortion = lensDistortion;
+            _lensDistortion = lensDistortion;
         if (mainVolume.sharedProfile.TryGet(out ChromaticAberration chromaticAberration))
-            this._chromaticAberration = chromaticAberration;
+            _chromaticAberration = chromaticAberration;
         if (mainVolume.sharedProfile.TryGet(out ColorAdjustments colorAdjustments))
-            this._colorAdjustments = colorAdjustments;
+            _colorAdjustments = colorAdjustments;
         if (mainVolume.sharedProfile.TryGet(out DepthOfField depthOfField)) {
-            this._depthOfField = depthOfField;
-            this._depthOfField.mode.value = DepthOfFieldMode.Gaussian;
-            this._depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
-            this._depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
+            _depthOfField = depthOfField;
+            _depthOfField.mode.value = DepthOfFieldMode.Gaussian;
+            _depthOfField.gaussianStart.value = DEPTHOFFIELD_DEFAULT_START;
+            _depthOfField.gaussianEnd.value = DEPTHOFFIELD_DEFAULT_END;
         }
-    }
 
-    private void Start() {
         PlayerReConnect(_playerFishPoolService.PlayerCurrentFish, false);//in start for access to objects corutines etc.
     }
 
@@ -320,7 +317,7 @@ public class PlayerUIController : MonoBehaviour {
         growthBar.GetProgress(_playerFish.Level).fillAmount = _playerFish.Progress;
 
         if (args != null && args.IsCaviarEaten)
-            gameTips.OnEffectTip();
+            _gameTips.OnEffectTip();
     }
 
     void UpdateHealthInfo() {
@@ -730,12 +727,12 @@ public class PlayerUIController : MonoBehaviour {
 
         if (!isDie) {//lvl upgr & unlock new biomes
             if (fish.Level == FishLevel.Mackerel)
-                gameTips.OnStageTip();
+                _gameTips.OnStageTip();
             else if (fish.Level == FishLevel.Moray)
-                gameTips.OnClearCoralTip();
+                _gameTips.OnClearCoralTip();
             //ActivateZoneOverlay(coralReefClear.GetLocalizedString(), true);
             else if (fish.Level == FishLevel.HammerShark)
-                gameTips.OnClearSeaweedTip();
+                _gameTips.OnClearSeaweedTip();
             //ActivateZoneOverlay(seaweedClear.GetLocalizedString(), true);
 
         }
@@ -743,9 +740,9 @@ public class PlayerUIController : MonoBehaviour {
 
     public void ActivateBiomeTip(ZoneType type) {
         if (type == ZoneType.AlgaesForest)
-            gameTips.OnAlgaesBarrierTip();
+            _gameTips.OnAlgaesBarrierTip();
         else if (type == ZoneType.DeepCorals)
-            gameTips.OnDeepCoralsBarrierTip();
+            _gameTips.OnDeepCoralsBarrierTip();
     }
 
     void UpdateHUDbars() {

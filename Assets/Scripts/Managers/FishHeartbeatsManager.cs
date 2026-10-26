@@ -19,7 +19,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
     [SerializeField] Image uiShaderVisualize;
 
     //private SpawnManager spawnManager;
-    private ParticleSystem[] _fishHeartbeatsParticlesPool;
+    private ParticleSystem[] _fishHeartbeatsParticlesPool = null;
     private Coroutine _heartBeatParticleCorutine = null;
 
     [Inject] private readonly IEnemyFishPoolService _enemyPoolService;
@@ -39,14 +39,15 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
 
 
-    public void Init(/*SpawnManager spawnManager*/) {
-        //this.spawnManager = spawnManager;
-        /*heartbeatParent.*/
+    void Start() {
         gameObject.SetActive(false);
-        ReInitPool();
+        _enemyPoolService.OnPoolInitialSpawnCompleted += ReInitPool;
+        _permamentFishPoolService.OnPoolInitialSpawnCompleted += ReInitPool;
+        _playerFishPoolService.OnPoolInitialSpawnCompleted += ReInitPool;
         InitRenderTextureSize(defaultView);
         InitRenderTextureSize(heartbeatView);
         SetActivateShaderPreparation(false);
+        InitPool();
     }
 
     void InitRenderTextureSize(RenderTexture texture) {
@@ -58,36 +59,46 @@ public class FishHeartbeatsManager : MonoBehaviour {
         }
     }
 
+    bool IsAllPoolsAlreadySpawnedFish() =>
+        _enemyPoolService.IsInitialSpawnCompleted
+        && _permamentFishPoolService.IsInitialSpawnCompleted
+        && _playerFishPoolService.IsInitialSpawnCompleted;
+
     void ReInitPool() {
-        if (_fishHeartbeatsParticlesPool == null)
-            _fishHeartbeatsParticlesPool = new ParticleSystem[_enemyPoolService.Count + _permamentFishPoolService.Count + _playerFishPoolService.Count];
+        if (!IsAllPoolsAlreadySpawnedFish())
+            return;
+
         FishLevel playerLevel = _playerFishPoolService.PlayerCurrentFish.Level;
         ParticleSystem.MainModule particleMainModule;
 
         int index = 0;
         //Debug.LogWarning("HeartBeatDisabled");
+        foreach (Fish fish in _playerFishPoolService)
+            InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
+
         foreach (Fish fish in _enemyPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
         foreach (Fish fish in _permamentFishPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
-        foreach (Fish fish in _playerFishPoolService)
-            InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
+        //Debug.LogWarning(_playerFishPoolService.PlayerCurrentFish.Rb.position + "  " + _playerFishPoolService.PlayerCurrentFish.IsActive);
+    }
+
+    void InitPool() {
+        _fishHeartbeatsParticlesPool = new ParticleSystem[GameStaticInfo.ENEMY_POOL_SIZE];
+        for (int i = 0; i < _fishHeartbeatsParticlesPool.Length; i++)
+            if (_fishHeartbeatsParticlesPool[i] == null) {
+                _fishHeartbeatsParticlesPool[i] = Instantiate(heartbeatPrefab, transform);
+            }
     }
 
     void InitParticleByFish(Fish fish, ref int index, ref ParticleSystem.MainModule particleMainModule, FishLevel playerLevel) {
+        if (index >= _fishHeartbeatsParticlesPool.Length) {
+            //    Debug.LogError($"Index {index} out of bounds! Array size is {_fishHeartbeatsParticlesPool.Length}. Total entities mismatch!");
+            return;
+        }
         Color enemyFishColor = UNKNOWN_ENEMY_COLOR;
-
-        if (_fishHeartbeatsParticlesPool[index] == null) {
-            _fishHeartbeatsParticlesPool[index] = Instantiate(heartbeatPrefab,
-                fish.transform.position, Quaternion.identity, /*heartbeatParent*/transform);
-            _fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
-        }
-        else {
-            //Debug.Log("heartbeat optimize reuse");
-            _fishHeartbeatsParticlesPool[index].transform.position = fish.transform.position;
-        }
 
         if (fish.IsActive) {
             particleMainModule = _fishHeartbeatsParticlesPool[index].main;
@@ -100,29 +111,23 @@ public class FishHeartbeatsManager : MonoBehaviour {
                 PLAYER_COLOR : enemyFishColor;
 
             particleMainModule.startColor = enemyFishColor;
+            _fishHeartbeatsParticlesPool[index].transform.position = fish.transform.position;
             _fishHeartbeatsParticlesPool[index].gameObject.SetActive(true);
-        }
-        else
-            _fishHeartbeatsParticlesPool[index].gameObject.SetActive(false);
 
-        ++index;
+            ++index;
+        };
     }
 
     public void SetActivateShaderPreparation(bool isActivate) {
-        if (isActivate && _heartBeatParticleCorutine == null) {
-            gameObject.SetActive(true);
-            _heartBeatParticleCorutine = StartCoroutine(HeartBeatParticles());
-            //InvokeRepeating(nameof(ReInitPool), 0f, HERTBEAT_PARTICLES_UPDATE_INTERVAL);
-        }
-        else
-            StopCoroutine(HeartBeatParticles());
-        //CancelInvoke(nameof(ReInitPool));
+        if (_heartBeatParticleCorutine != null)
+            StopCoroutine(_heartBeatParticleCorutine);
 
-        /*heartbeatParent.*/
         gameObject.SetActive(isActivate);
+        if (isActivate)
+            _heartBeatParticleCorutine = StartCoroutine(HeartBeatParticles());
+
         shaderCamerasParent.SetActive(isActivate);
         uiShaderVisualize.enabled = isActivate;
-
         RemoveEntityFromCamera(isActivate);
     }
 

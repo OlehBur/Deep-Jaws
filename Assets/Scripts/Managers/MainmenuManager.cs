@@ -139,26 +139,28 @@ public class MainmenuManager : MonoBehaviour, IMainmenuManager {
 
         if (pauseButton != null)
             pauseButton.SetActive(!GameManager.IsRunOnPC);
+    }
 
-        _playerSpawnService.OnPlayerLVLup += (Level) => {
-            if (GameManager.IsPC_Demo() && Level >= FishLevel.Mackerel) {
-                gameManager.GameSetPause(true);
-                OnOpenDemoFin();
-            }
+    void PlayerLvlUpHandler(FishLevel level) {
+        if (GameManager.IsPC_Demo() && level >= FishLevel.Mackerel) {
+            gameManager.GameSetPause(true);
+            OnOpenDemoFin();
+        }
 
-            (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
-            if (!prem && !noadd) {//if doesnt have immunitet
-                if (/*gameAdsManager*/GameAdsManager.Instance.OnShowInterstitialAd()) //only if ad will be shown
-                    ActivatePauseWnd(true);
-            }
-        };
-
+        (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
+        if (!prem && !noadd) {//if doesnt have immunitet
+            if (/*gameAdsManager*/GameAdsManager.Instance.OnShowInterstitialAd()) //only if ad will be shown
+                ActivatePauseWnd(true);
+        }
     }
 
 
     private void OnEnable() {
-        if (_playerSpawnService != null)
+        if (_playerSpawnService != null) {
             _playerSpawnService.OnFishDie += ActivateRespawnWnd;
+            _playerSpawnService.OnPlayerLVLup += PlayerLvlUpHandler;
+        }
+
 #if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
             GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
@@ -166,8 +168,10 @@ public class MainmenuManager : MonoBehaviour, IMainmenuManager {
     }
 
     private void OnDisable() {
-        if (_playerSpawnService != null)
+        if (_playerSpawnService != null) {
             _playerSpawnService.OnFishDie -= ActivateRespawnWnd;
+            _playerSpawnService.OnPlayerLVLup += PlayerLvlUpHandler;
+        }
 
 #if UNITY_ANDROID
         if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
@@ -178,6 +182,11 @@ public class MainmenuManager : MonoBehaviour, IMainmenuManager {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void GameModeTitlesInit() {//init gamemode buttons        
+        if (GameStaticInfo.Gamemode == GameMode.None) {
+            Debug.LogWarning("Gamemode = None -> Activate gamemod auto-select (medium)");
+            GameStaticInfo.Gamemode = GameMode.Medium;
+        }
+
         if (gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
             foreach (GameObject tit in gamemodePauseTitles)
                 tit.SetActive(false);
@@ -232,6 +241,7 @@ public class MainmenuManager : MonoBehaviour, IMainmenuManager {
     }
 
     public void OnSureSaveExitGame() {
+        _playerSpawnService.SavePlayerData();
 #if UNITY_ANDROID
         gameResult.gameObject.SetActive(true);
 #else

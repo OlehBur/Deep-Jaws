@@ -2,8 +2,8 @@
 using UnityEngine.Rendering;
 
 
-[CreateAssetMenu(fileName = "FishSkinManager", menuName = "Scriptable Objects/FishSkinManager")]
-public class FishSkinManager : ScriptableObject {
+[CreateAssetMenu(fileName = "FishSkinInfo", menuName = "Scriptable Objects/FishSkinInfo")]
+public class FishSkinInfo : ScriptableObject {
     [Header("Default Skins")]
     [SerializeField] Material seabass;
     [SerializeField] Material mackerel;

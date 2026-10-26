@@ -22,6 +22,7 @@ public class GameAdsManager : MonoBehaviour {
     //[SerializeField] SpawnManager spawnManager;
     [SerializeField] MainmenuManager gui;
 
+    //self inject
     [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
 
     public bool IsAdStartShow { get; private set; } = false;
@@ -391,6 +392,9 @@ public class GameAdsManager : MonoBehaviour {
     private void OnDestroy() {
         LevelPlay.OnInitSuccess -= SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed -= SdkInitializationFailedEvent;
+
+        if (Instance == this)
+            Instance = null;
     }
 #endif
 }

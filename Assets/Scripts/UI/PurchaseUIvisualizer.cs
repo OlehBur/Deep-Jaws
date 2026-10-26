@@ -194,7 +194,7 @@ public class SkinsCards {
 
 
 public class PurchaseUIvisualizer : MonoBehaviour {
-    [SerializeField] FishSkinManager fishSkinManager;
+    [SerializeField] FishSkinInfo fishSkinManager;
     [SerializeField] AccountsButtons accountsButtons;
     [SerializeField] SkinsCards skinsCards;
     [SerializeField] GameObject storeWnd;

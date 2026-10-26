@@ -5,7 +5,9 @@ using UnityEngine;
 
 public interface IFishPoolService : IEnumerable<Fish> {
     event Action<Fish> OnFishDie;
+    event Action OnPoolInitialSpawnCompleted;
 
+    bool IsInitialSpawnCompleted { get; }
     int Count { get; }
     Fish GetAt(int index);
 
@@ -24,7 +26,7 @@ public interface IPlayerFishPoolService : IFishPoolService {
     event Action<FishLevel> OnPlayerLVLup;
 
     void SavePlayerData();
-    public void RespawnPlayer(bool isDie, bool isRevive = false);
+    void RespawnPlayer(bool isDie, bool isRevive = false);
 }
 
 public interface IEnemyFishPoolService : IFishPoolService {
@@ -37,5 +39,7 @@ public interface IEnemyFishPoolService : IFishPoolService {
 }
 
 public interface IPermamentFishPoolService : IFishPoolService {
-
+    void SetSpawnPoints(Transform weakFishSpawnPointsParent, Transform strongFishSpawnPointsParent,
+            Transform sharkSpawnPointsParent, Transform pufferfishPointsParent, Transform cuttlefishPointsParent);
+    bool IsSpawnPointsValid();
 }
