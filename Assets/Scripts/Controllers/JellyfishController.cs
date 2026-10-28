@@ -21,7 +21,7 @@ public class JellyfishController : MonoBehaviour {
     private bool _isJellyColliderActive;
     private float _currentColdown;
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
 
 
     void Awake() {

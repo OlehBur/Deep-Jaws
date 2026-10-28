@@ -4,7 +4,12 @@ using VContainer;
 
 
 
-public class GameManager : MonoBehaviour {
+public interface IGameManager {
+    void GameSetPause(bool isPause);
+    void ResetWorldData();
+}
+
+public class GameManager : MonoBehaviour, IGameManager {
     //[SerializeField] MainmenuManager mainmenuManager;
     //[SerializeField] CameraFollower cameraFollower;
     //[SerializeField] SpawnManager spawnManager;
@@ -14,12 +19,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField] PlayerLeaderboardScore playerLeaderboardScore;
     [SerializeField] Button pauseExitButton;
     [SerializeField] GameObject gameCanvas;
-    /// <summary>
-    /// позначає час який має бути встановлено під час виходу з паузи (може бути як стандартний 1, так і змінений певними ефектами)
-    /// </summary>
-
 
     [Inject] private readonly IPlayerFishPoolService _playerProvider;
+    [Inject] private readonly ISettingsManager _settingsControllerUI;
+    [Inject] private readonly IGraphicManager _graphicManager;
 
     public static int ScreenMaxFramerate {
         get {
@@ -33,14 +36,14 @@ public class GameManager : MonoBehaviour {
     }
     public static float CurrentDefaultGameTime { get; private set; }
     public static readonly float DEFAULT_GAME_TIME = 1f;
-    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor || IsPC_Demo();
-    public static bool IsPC_Demo() {
-#if UNITY_STANDALONE_WIN// && !UNITY_EDITOR
-		return true;
-#else
-        return false;
-#endif
-    }
+    public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor || IS_PC_DEMO;
+    public const /*static*/ bool IS_PC_DEMO = false;
+    //#if UNITY_STANDALONE_WIN// && !UNITY_EDITOR
+    //return true;
+    //#else
+    //return false;
+    //#endif
+    //}
     public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
     public static bool IsGamePaused => DJTime.TimeScale == 0f;
     public static bool IsSceneReady { get; private set; } = false;
@@ -70,6 +73,15 @@ public class GameManager : MonoBehaviour {
 
         Invoke(nameof(DelayCanvasActivate), CANVAS_ACTIVATE_DELAY);
         Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);
+    }
+
+    public void ResetWorldData() {
+        PlayerLeaderboardScore.LoadSavedData();
+        PlayerPrefs.DeleteAll();//delete all player prefs data 
+        _settingsControllerUI.SaveAudioData(); // Save current audio settings
+        _graphicManager.SaveGraphicsData(); // Save current graphic settings
+        PlayerLeaderboardScore.SaveLoadedData();
+        ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();
     }
 
     void DelaySceneActivate() {

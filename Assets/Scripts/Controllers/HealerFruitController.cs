@@ -27,7 +27,7 @@ public class HealerFruitController : MonoBehaviour {
         new Vector3(3f, 2.6f, 5f),//white shark
     };
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly IVFXPoolService _vfxPoolService;
     [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
     private Material _fruitMaterial; // reference to the material for emission color

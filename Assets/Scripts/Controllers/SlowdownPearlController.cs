@@ -20,7 +20,7 @@ public class SlowdownPearlController : MonoBehaviour {
 
     private Vector3 _randomRotateDir;
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
 
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

@@ -1,6 +1,7 @@
 
 using System;
 using UnityEngine;
+using VContainer;
 
 
 public enum FishSpeedModifierType {
@@ -27,25 +28,20 @@ public class ProgressArgs : EventArgs {
 }
 
 public class Fish : MonoBehaviour {
-    [SerializeField]
-    FishInfo fishInfo;
-    //[SerializeField] FishLevel level;
-    /*[SerializeField]*/
-    private int health;
-    //[SerializeField] float speed;
-    //[SerializeField] int responseRadius;
+    [SerializeField] FishInfo fishInfo;
     [SerializeField] Transform prefabVisualTransform; //for grow animation
-    //[SerializeField] float jawForwardOffset;
     [SerializeField] Rigidbody rb;
+
+    [Inject] private readonly ISanctuariesManager _sanctuariesManager;
 
     public FishInfo DefaultInfo => fishInfo;
     public Vector3 VisualTransformScale => prefabVisualTransform.localScale;
     public Quaternion VisualRotation => prefabVisualTransform.rotation;
     public Rigidbody Rb => rb;
     public FishLevel Level => /*level*/fishInfo.Level;
-    public int Health { get { return health; } protected set { health = value; } }
+    public int Health { get { return _health; } protected set { _health = value; } }
     //public int MaxHealth { get; private set; }
-    public float Speed { get { return /*speed*/fishInfo.Speed * SpeedMultiplier * SpeedMultiplierSecond * SpeedMultiplierThird * SpeedMultiplierFourth; }/* protected set { speed = value; }*/ }
+    public float Speed { get { return /*speed*/fishInfo.Speed * _speedMultiplier * _speedMultiplierSecond * _speedMultiplierThird * _speedMultiplierFourth; }/* protected set { speed = value; }*/ }
     //public int ResponseRadius => responseRadius;
     public float RotationSpeed => /*speed*/fishInfo.Speed * ROTATION_SPEED_MULTIPLIER;
     /// <summary>
@@ -80,10 +76,11 @@ public class Fish : MonoBehaviour {
     public event Action OnHealthChanged;
     public event Action<ProgressArgs> OnProgressChanged;
 
-    private float SpeedMultiplier { get; set; } = 1;
-    private float SpeedMultiplierSecond { get; set; } = 1;
-    private float SpeedMultiplierThird { get; set; } = 1;
-    private float SpeedMultiplierFourth { get; set; } = 1;
+    private int _health;
+    private float _speedMultiplier = 1;
+    private float _speedMultiplierSecond = 1;
+    private float _speedMultiplierThird = 1;
+    private float _speedMultiplierFourth = 1;
 
     private const float ROTATION_SPEED_MULTIPLIER = 40f; // multiplier for rotation speed
     private const float LEVEL_EAT_DEPEND_MULTIPLIER = .45f;
@@ -96,14 +93,14 @@ public class Fish : MonoBehaviour {
 
     private void Awake() {
         //MaxHealth = health; // store the initial health as max health
-        health = fishInfo.MaxHealth;
+        _health = fishInfo.MaxHealth;
     }
 
     private void OnEnable() {
-        SpeedMultiplier = 1f;
-        SpeedMultiplierSecond = 1f;
-        SpeedMultiplierThird = 1f;
-        SpeedMultiplierFourth = 1f;
+        _speedMultiplier = 1f;
+        _speedMultiplierSecond = 1f;
+        _speedMultiplierThird = 1f;
+        _speedMultiplierFourth = 1f;
 
         //OnInfoStatsChanged?.Invoke();
         OnHealthChanged?.Invoke();
@@ -132,16 +129,16 @@ public class Fish : MonoBehaviour {
     public void ChangeSpeedMultiplier(float value, FishSpeedModifierType index) {
         switch (index) {
             case FishSpeedModifierType.Sprint:
-            SpeedMultiplier = value;
+            _speedMultiplier = value;
             break;
             case FishSpeedModifierType.Current:
-            SpeedMultiplierSecond = value;
+            _speedMultiplierSecond = value;
             break;
             case FishSpeedModifierType.StopTime:
-            SpeedMultiplierThird = value;
+            _speedMultiplierThird = value;
             break;
             case FishSpeedModifierType.Poison:
-            SpeedMultiplierFourth = value;
+            _speedMultiplierFourth = value;
             break;
             default:
             break;
@@ -162,7 +159,8 @@ public class Fish : MonoBehaviour {
         float levelSpeedProgressing = (float)/*level*/fishInfo.Level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
         float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
-        enemyProgressMultiplier = GameStaticInfo.Gamemode != GameMode.Easy ? 1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
+        enemyProgressMultiplier = GameModeController.CurrentMode != GameMode.Easy ?
+            1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
         progressDivider *= enemyProgressMultiplier;
 
         //if (IsPlayer) {
@@ -174,7 +172,7 @@ public class Fish : MonoBehaviour {
         if (!IsPlayer && Progress > 1f) //player can grow over 1f progress
             Progress = 1f;
 
-        int playerDamageMultiplier = victim.IsPlayer && GameStaticInfo.Gamemode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
+        int playerDamageMultiplier = victim.IsPlayer && GameModeController.CurrentMode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
         int damage = (int)/*level*/fishInfo.Level * playerDamageMultiplier;
         OnFishEat?.Invoke(damage);
         //Debug.Log($"{gameObject.name} ({Progress}) eats {victim.name} ({victim.Progress}).");
@@ -185,58 +183,9 @@ public class Fish : MonoBehaviour {
 
         /*return*/
         isStillAlive = victim.TakeDamage(damage);
-        if (IsPlayer && GameStaticInfo.Gamemode != GameMode.Easy && !isStillAlive)//die 
-            SaveSanctuaryData(victim.Level);
-    }
-
-    void SaveSanctuaryData(FishLevel fish) {
-        if (SanctuariesManager.Instance != null) {
-            SanctuaryData sd = SanctuariesManager.Instance.SanctuaryData;
-
-            switch (fish) {
-                case FishLevel.Dartfish:
-                sd.isDartfishNeutralized = true;
-                break;
-                case FishLevel.Crab:
-                sd.isCrabNeutralized = true;
-                break;
-                case FishLevel.SeaBass:
-                sd.isSeabassNeutralized = true;
-                break;
-                case FishLevel.Mackerel:
-                sd.isMackarelNeutralized = true;
-                break;
-                case FishLevel.Moray:
-                sd.isMorayNeutralized = true;
-                break;
-                case FishLevel.Lionfish:
-                sd.isLionfishNeutralized = true;
-                break;
-                case FishLevel.Barracuda:
-                sd.isBarracudaNeutralized = true;
-                break;
-                case FishLevel.Tuna:
-                sd.isTunaNeutralized = true;
-                break;
-                case FishLevel.HammerShark:
-                sd.isHammerheadNeutralized = true;
-                break;
-                case FishLevel.TigerShark:
-                sd.isTigerNeutralized = true;
-                break;
-                case FishLevel.WhiteShark:
-                sd.isWhiteNeutralized = true;
-                break;
-                case FishLevel.Pufferfish:
-                sd.isPufferNeutralized = true;
-                break;
-                case FishLevel.Cuttlefish:
-                sd.isCuttleNeutralized = true;
-                break;
-            }
-            //Debug.LogWarning("Player neutralized: " + fish);
-            ProgressSaver.SaveData(sd);
-        }
+        if (IsPlayer && GameModeController.CurrentMode != GameMode.Easy && !isStillAlive
+            /*&& _sanctuariesManager != null*/)//die 
+            _sanctuariesManager.SaveSanctuaryNueutralizedData(victim.Level);
     }
 
     public void FeedCaviar(/*float foodNutrition*/) {
@@ -307,7 +256,7 @@ public class Fish : MonoBehaviour {
     public bool IsLegitimateTarget(Fish other, bool withChance = false) {
         bool smallerLvl = other.Level < Level;//other - weaker 
         bool sameLevelLegimate = other.Level == Level && other.Progress <= Progress; // same level and <= progress
-        bool allowSameLvlPlayerAtack = GameStaticInfo.Gamemode == GameMode.Hard;
+        bool allowSameLvlPlayerAtack = GameModeController.CurrentMode == GameMode.Hard;
         bool isShark = Level >= GameStaticInfo.SHARK_INDEX_BARRIER;
 
         if (IsPlayer)

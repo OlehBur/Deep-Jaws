@@ -22,7 +22,7 @@ public class СuttlefishController : MonoBehaviour {
     private bool isNeedReverseProgress = false;
     private float curentPoisonCooldown = 0f;
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
     [Inject] private readonly IVFXPoolService _vfxService;
 

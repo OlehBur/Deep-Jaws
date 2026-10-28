@@ -1,3 +1,5 @@
+//#define UNITY_ANDROID
+
 using System;
 using UnityEngine;
 using Unity.Services.LevelPlay;
@@ -15,28 +17,46 @@ public enum AdTarget {
     BoostResearch
 }
 
-public class GameAdsManager : MonoBehaviour {
-    public static GameAdsManager Instance { get; private set; }
-    public event Action<bool> OnAdButtonsInteractable;
+public interface IAdsManager {
+    #if UNITY_ANDROID
+    event Action<bool> OnAdButtonsInteractable;
+    event Action OnDoubleShellsRewarded;
+    event Action OnExtraShellsRewarded;
+    event Action OnReviveRewarded;
 
-    //[SerializeField] SpawnManager spawnManager;
-    [SerializeField] MainmenuManager gui;
+    bool IsAdStartShow { get; }
+    void OnReviveClicked();
+    void OnDoubleShellsClick();
+    void OnClaimExtraShellsClick();
+    void OnBoostClicked(BiomeType type);
+    bool OnShowInterstitialAd();
+    void OnRetryClicked();
+#endif
+}
+
+public class GameAdsManager : MonoBehaviour, IAdsManager {
+    public static GameAdsManager Instance { get; private set; }
 
     //self inject
     [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+    [Inject] private readonly IAlertWindowsManager _alertWindows;
+    //[Inject] private readonly IGameHudController _gameHudController;
 
     public bool IsAdStartShow { get; private set; } = false;
+#if UNITY_ANDROID
+    public event Action<bool> OnAdButtonsInteractable;
     public event Action OnDoubleShellsRewarded;
     public event Action OnExtraShellsRewarded;
     public event Action OnReviveRewarded;
 
-    private LevelPlayRewardedAd rewardedAd;
-    private bool isSdkInitialized = false;
-    private LevelPlayInterstitialAd interstitialAd;
-    private AdTarget adTarget = AdTarget.None;
-    private BiomeType boostResearch;
-    private float timeAfterInterstetial = 0f;
-    private bool isRewardEarned = false;
+    private LevelPlayRewardedAd _rewardedAd;
+    private bool _isSdkInitialized = false;
+
+    private LevelPlayInterstitialAd _interstitialAd;
+    private AdTarget _adTarget = AdTarget.None;
+    private BiomeType _boostResearch;
+    private float _timeAfterInterstetial = 0f;
+    private bool _isRewardEarned = false;
 
     private const string APP_KEY = "26b8c37b5";
     private const string REWARD_AD_UNIT_ID = "shsn3zi2t35xoese";
@@ -45,10 +65,10 @@ public class GameAdsManager : MonoBehaviour {
     private const float INTERSTETIAL_TIME_INTERVAL = 2 * 60;//m*s (m)
     private const float INTERSETIAL_DELAY_RELOAD = 10f;
 
-#if UNITY_ANDROID
+
     private void Awake() {
         if (Instance != null && Instance != this) {
-            Instance.ReInitGameUI(/*spawnManager,*/ gui);
+            //Instance.ReInitGameUI(/*spawnManager,*/ gui);
             Destroy(gameObject);
             return;
         }
@@ -62,12 +82,12 @@ public class GameAdsManager : MonoBehaviour {
     //    this.gui = this.gui == null ? gui : this.gui;
     //    OnAdButtonsInteractable?.Invoke(true);
     //}
-    void ReInitGameUI(/*SpawnManager newSpawnManager,*/ MainmenuManager newGui) {
-        //spawnManager = newSpawnManager;
-        gui = newGui;
+    //void ReInitGameUI(/*SpawnManager newSpawnManager,*/ MainmenuManager newGui) {
+    //    //spawnManager = newSpawnManager;
+    //    gui = newGui;
 
-        OnAdButtonsInteractable?.Invoke(true);
-    }
+    //    OnAdButtonsInteractable?.Invoke(true);
+    //}
 
     async void Start() {
         SetInjects();
@@ -95,8 +115,8 @@ public class GameAdsManager : MonoBehaviour {
         scope.Container.Inject(this);
     }
 
-    bool IsInterstetialTime => Time.time - timeAfterInterstetial >= INTERSTETIAL_TIME_INTERVAL;
-    void ResetInterstetialTime() => timeAfterInterstetial = Time.time;
+    bool IsInterstetialTime => Time.time - _timeAfterInterstetial >= INTERSTETIAL_TIME_INTERVAL;
+    void ResetInterstetialTime() => _timeAfterInterstetial = Time.time;
 
     //bool IsListNeedToCopy<T>(List<T> currentList, List<T> newList) =>
     //     (currentList == null || currentList.Count == 0 || currentList[0] == null)
@@ -112,41 +132,41 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     void SdkInitializationCompletedEvent(LevelPlayConfiguration lc) {
-        isSdkInitialized = true;
+        _isSdkInitialized = true;
         Debug.Log("The LevelPlay SDK has been successfully initialized!");
         //LevelPlay.LaunchTestSuite();
 
-        if (rewardedAd == null) {
-            rewardedAd = new LevelPlayRewardedAd(REWARD_AD_UNIT_ID);
-            rewardedAd.OnAdLoaded += (adInfo) => Debug.Log("Rewarded loaded");
-            rewardedAd.OnAdLoadFailed += OnRewardedLoadFailed;
-            rewardedAd.OnAdRewarded += RewardedAdOnRewardEvent;
-            rewardedAd.OnAdClosed += OnRewardedAdClosed;
+        if (_rewardedAd == null) {
+            _rewardedAd = new LevelPlayRewardedAd(REWARD_AD_UNIT_ID);
+            _rewardedAd.OnAdLoaded += (adInfo) => Debug.Log("Rewarded loaded");
+            _rewardedAd.OnAdLoadFailed += OnRewardedLoadFailed;
+            _rewardedAd.OnAdRewarded += RewardedAdOnRewardEvent;
+            _rewardedAd.OnAdClosed += OnRewardedAdClosed;
 
-            rewardedAd.LoadAd();
+            _rewardedAd.LoadAd();
         }
 
-        if (interstitialAd == null) {
-            interstitialAd = new LevelPlayInterstitialAd(INTERSTITIAL_AD_UNIT_ID);
-            interstitialAd.OnAdLoaded += (adInfo) => Debug.Log("Interstitial loaded");
-            interstitialAd.OnAdLoadFailed += OnInterstitialLoadFailed;
-            interstitialAd.OnAdClosed += OnInterstitialAdClosed;
+        if (_interstitialAd == null) {
+            _interstitialAd = new LevelPlayInterstitialAd(INTERSTITIAL_AD_UNIT_ID);
+            _interstitialAd.OnAdLoaded += (adInfo) => Debug.Log("Interstitial loaded");
+            _interstitialAd.OnAdLoadFailed += OnInterstitialLoadFailed;
+            _interstitialAd.OnAdClosed += OnInterstitialAdClosed;
 
-            interstitialAd.LoadAd();//load in backround
+            _interstitialAd.LoadAd();//load in backround
         }
     }
 
     void SdkInitializationFailedEvent(LevelPlayInitError le) {
-        isSdkInitialized = false;
+        _isSdkInitialized = false;
         Debug.LogError($"LevelPlay initialization error: {le}");
     }
 #endif
 
     public void OnReviveClicked() {//rewarded
 #if UNITY_ANDROID
-        adTarget = AdTarget.ExtraLife;
+        _adTarget = AdTarget.ExtraLife;
         IsAdStartShow = true;
-        gui.ActivateLoadingPanelWnd(true);
+        _alertWindows.ActivateLoadingPanelWnd(true);
         OnAdButtonsInteractable?.Invoke(false);
 
         // check premium\founders
@@ -162,54 +182,64 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     public void OnDoubleShellsClick() {//rewarded
-        adTarget = AdTarget.DoubleShells;
+#if UNITY_ANDROID
+        _adTarget = AdTarget.DoubleShells;
         RewardedCheckAndShow();
+#endif
     }
 
     public void OnClaimExtraShellsClick() {
-        adTarget = AdTarget.ExtraShells;
+#if UNITY_ANDROID
+        _adTarget = AdTarget.ExtraShells;
         RewardedCheckAndShow();
+#endif
     }
 
     public void OnBoostClicked(BiomeType type) {
-        boostResearch = type;
-        adTarget = AdTarget.BoostResearch;
+#if UNITY_ANDROID
+        _boostResearch = type;
+        _adTarget = AdTarget.BoostResearch;
         RewardedCheckAndShow();
+#endif
     }
 
     void RewardedCheckAndShow() {
+#if UNITY_ANDROID
         IsAdStartShow = true;
-        gui.ActivateLoadingPanelWnd(true);
+        _alertWindows.ActivateLoadingPanelWnd(true);
         OnAdButtonsInteractable?.Invoke(false);
 
         if (GameManager.IsInternetNotAvailable) {
-            gui.ActivateNoInternetConnectionWnd(true);
+            _alertWindows.ActivateNoInternetConnectionWnd(true);
             ResetState();
             return;
         }
 
-        if (!isSdkInitialized) {
+        if (!_isSdkInitialized) {
             Debug.LogWarning("The ad isn't ready yet; the SDK is initializing.");
             ResetState();
             return;
         }
 
         //check add readiness
-        if (rewardedAd != null && rewardedAd.IsAdReady())
-            rewardedAd.ShowAd();
+        if (_rewardedAd != null && _rewardedAd.IsAdReady())
+            _rewardedAd.ShowAd();
         else {//try load again if failed load   
             Debug.Log("Rewarded isn't ready. Let's try downloading it...");
-            rewardedAd?.LoadAd();
+            _rewardedAd?.LoadAd();
             ResetState();
         }
+#endif
     }
 
 
     private void ResetState() {
+#if UNITY_ANDROID
         IsAdStartShow = false;
-        adTarget = AdTarget.None;
-        gui.ActivateLoadingPanelWnd(false);
+        _adTarget = AdTarget.None;
+        _alertWindows.ActivateLoadingPanelWnd(false);
         OnAdButtonsInteractable?.Invoke(true);
+#endif
     }
 
     /// <summary>
@@ -230,9 +260,9 @@ public class GameAdsManager : MonoBehaviour {
         }
 
         IsAdStartShow = true;
-        if (interstitialAd != null && interstitialAd.IsAdReady()) {
-            gui.ActivateLoadingPanelWnd(true);
-            interstitialAd.ShowAd();
+        if (_interstitialAd != null && _interstitialAd.IsAdReady()) {
+            _alertWindows.ActivateLoadingPanelWnd(true);
+            _interstitialAd.ShowAd();
             return true;
         }
 #endif
@@ -242,7 +272,7 @@ public class GameAdsManager : MonoBehaviour {
 
 #if UNITY_ANDROID
     void RewardedAdOnRewardEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
-        isRewardEarned = true;
+        _isRewardEarned = true;
 
         if (!IsAdStartShow)
             ProcessEarnedReward();
@@ -250,9 +280,9 @@ public class GameAdsManager : MonoBehaviour {
 
     void ProcessEarnedReward() {
 
-        if (isRewardEarned) {
+        if (_isRewardEarned) {
             RewardedRewardBeh();
-            isRewardEarned = false;
+            _isRewardEarned = false;
         }
     }
 #endif
@@ -283,7 +313,7 @@ public class GameAdsManager : MonoBehaviour {
     //    //SetLimitAdAmountTxt(attemptsLeft);
     //}
 
-#if UNITY_ANDROID || UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_EDITOR) && !UNITY_STANDALONE_WIN
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
 
         ProcessEarnedReward();
@@ -292,7 +322,7 @@ public class GameAdsManager : MonoBehaviour {
 
 #if UNITY_EDITOR//  in case if OnAdClosed worked first, it reset adTarget to None via ResetState().
         IsAdStartShow = false;
-        gui.ActivateLoadingPanelWnd(false);
+        _alertWindows.ActivateLoadingPanelWnd(false);
         OnAdButtonsInteractable?.Invoke(true);
 #else
         ResetState();//!!! necessarily
@@ -306,7 +336,7 @@ public class GameAdsManager : MonoBehaviour {
 
     public void OnRetryClicked() {//restart -> interstitial
 #if UNITY_ANDROID
-        adTarget = AdTarget.JustRespawn;
+        _adTarget = AdTarget.JustRespawn;
 
         if (IsInterstetialTime)
             ResetInterstetialTime();
@@ -315,7 +345,7 @@ public class GameAdsManager : MonoBehaviour {
             return;
         }
 
-        gui.ActivateLoadingPanelWnd(true);
+        _alertWindows.ActivateLoadingPanelWnd(true);
         OnAdButtonsInteractable?.Invoke(false);
 
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
@@ -326,8 +356,8 @@ public class GameAdsManager : MonoBehaviour {
             return;
         }
 
-        if (interstitialAd != null && interstitialAd.IsAdReady())
-            interstitialAd.ShowAd();
+        if (_interstitialAd != null && _interstitialAd.IsAdReady())
+            _interstitialAd.ShowAd();
         else {
             //ad not ready (haha classic lucky u - bum i
             Debug.Log("The interstitial isn't ready. Just restart the game.");
@@ -339,7 +369,7 @@ public class GameAdsManager : MonoBehaviour {
 
 #if UNITY_ANDROID
     void OnInterstitialAdClosed(LevelPlayAdInfo adInfo) {
-        interstitialAd.LoadAd(); //load immediately load on backgr new ad
+        _interstitialAd.LoadAd(); //load immediately load on backgr new ad
         InterstitialRespawnBeh();
 
         ResetState();
@@ -352,40 +382,40 @@ public class GameAdsManager : MonoBehaviour {
     }
 
     void RetryLoadInterstitial() {
-        if (interstitialAd != null && !interstitialAd.IsAdReady())
-            interstitialAd.LoadAd();
+        if (_interstitialAd != null && !_interstitialAd.IsAdReady())
+            _interstitialAd.LoadAd();
     }
 
     private void RewardedRewardBeh() {
-        if (adTarget == AdTarget.ExtraLife) {
+        if (_adTarget == AdTarget.ExtraLife) {
             Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
-            gui.DeactivateRespawnWnd();
+            //_gameHudController.DeactivateRespawnWnd();//solve by playerServis respawn event
             _playerFishPoolService.RespawnPlayer(true, true);
             OnReviveRewarded?.Invoke();
         }
-        else if (adTarget == AdTarget.DoubleShells)
+        else if (_adTarget == AdTarget.DoubleShells)
             OnDoubleShellsRewarded?.Invoke();
 
-        else if (adTarget == AdTarget.ExtraShells) {
+        else if (_adTarget == AdTarget.ExtraShells) {
             if (SanctuariesManager.Instance != null)
                 SanctuariesManager.Instance.OnAddShells(GameStaticInfo.EXTRA_SHELLS_CNT);
             OnExtraShellsRewarded?.Invoke();
         }
-        else if (adTarget == AdTarget.BoostResearch) {
+        else if (_adTarget == AdTarget.BoostResearch) {
             if (SanctuariesManager.Instance != null)
-                SanctuariesManager.Instance.BoostResearch(boostResearch);
+                SanctuariesManager.Instance.BoostResearch(_boostResearch);
         }
 
-        adTarget = AdTarget.None;
+        _adTarget = AdTarget.None;
     }
 
     private void InterstitialRespawnBeh() {
-        if (adTarget == AdTarget.JustRespawn) {
-            gui.DeactivateRespawnWnd();
+        if (_adTarget == AdTarget.JustRespawn) {
+            //_gameHudController.DeactivateRespawnWnd(); //solve by playerServis respawn event
             _playerFishPoolService.RespawnPlayer(true, false);
             //Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
 
-            adTarget = AdTarget.None;
+            _adTarget = AdTarget.None;
         }
     }
 

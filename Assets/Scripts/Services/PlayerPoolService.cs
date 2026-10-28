@@ -155,7 +155,7 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
         worldPlayerData.playerHealth = PlayerCurrentFish.Health;
         worldPlayerData.playerLevel = PlayerCurrentFish.Level;
         worldPlayerData.playerProgress = PlayerCurrentFish.Progress;
-        worldPlayerData.gameMode = GameStaticInfo.Gamemode;
+        worldPlayerData.gameMode = GameModeController.CurrentMode;
 
         ProgressSaver.SaveData(worldPlayerData);
     }

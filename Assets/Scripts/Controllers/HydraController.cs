@@ -9,7 +9,7 @@ public class HydraController : MonoBehaviour {
 
     private const string ANIMATION_NAME = "HydraBite";
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
 
 

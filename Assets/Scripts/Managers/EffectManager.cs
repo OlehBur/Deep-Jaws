@@ -43,7 +43,7 @@ public class EffectManager : MonoBehaviour {
     private Vector3 _prevPos;
 
     //via resolver
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly IVFXPoolService _vfxPoolService;
 
     private const float X_OFFSET_DOUBLE = .6f;

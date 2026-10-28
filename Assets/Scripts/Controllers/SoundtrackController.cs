@@ -3,13 +3,8 @@ using UnityEngine;
 using VContainer;
 
 public class SoundtrackController : MonoBehaviour {
-    //[SerializeField] SpawnManager spawnManager;
-    [SerializeField] AudioSource soundtrackSource;
-    [SerializeField] AudioClip coralRocksSound;
-    [SerializeField] AudioClip algaeForestSound;
-    [SerializeField] AudioClip deepCoralsSound;
-
     [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+    [Inject] private readonly IAudioPlayService _audioPlayService;
 
     private Coroutine _fadeVolumeChangeSoundCoroutine = null;
 
@@ -27,36 +22,33 @@ public class SoundtrackController : MonoBehaviour {
     }
 
     void ActivateNewTargerSong(Fish fish, bool isDeath) {
+        Music_clip targetClip;
 
-        AudioClip target;
         if (fish.Level >= DEEP_CORALS_TRIGGER)
-            target = deepCoralsSound;
+            targetClip = Music_clip.Game_DeepCorals;
         else if (fish.Level >= ALGAE_FOREST_TRIGGER)
-            target = algaeForestSound;
+            targetClip = Music_clip.Game_AlgaeForest;
         else
-            target = coralRocksSound;
-
-        if (target == soundtrackSource.clip)
+            targetClip = Music_clip.Game_CoralRocks;
+        if (targetClip == _audioPlayService.CurrentMusicClip)
             return;
 
         if (_fadeVolumeChangeSoundCoroutine != null)
             StopCoroutine(_fadeVolumeChangeSoundCoroutine);
 
-        _fadeVolumeChangeSoundCoroutine = StartCoroutine(SmoothSoundChange(target));
+        _fadeVolumeChangeSoundCoroutine = StartCoroutine(SmoothSoundChange(targetClip));
     }
 
-    IEnumerator SmoothSoundChange(AudioClip target) {
-        while (soundtrackSource.volume > 0 && soundtrackSource.clip != null) {//for first call - skip volume fade
-            soundtrackSource.volume -= DJTime.UnscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
+    IEnumerator SmoothSoundChange(Music_clip target) {
+        while (_audioPlayService.MusicSourceVolume > 0 && _audioPlayService.CurrentMusicClip != Music_clip.None) {//for first call - skip volume fade
+            _audioPlayService.MusicSourceVolume -= DJTime.UnscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
             yield return null;
         }
 
-        soundtrackSource.clip = target;
-        soundtrackSource.loop = true;
-        soundtrackSource.Play();
+        _audioPlayService.PlayMusic(target);
 
-        while (soundtrackSource.volume < 1) {
-            soundtrackSource.volume += DJTime.UnscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
+        while (_audioPlayService.MusicSourceVolume < 1) {
+            _audioPlayService.MusicSourceVolume += DJTime.UnscaledDeltaTime * SOUND_CHANGE_SPEED_MULT;
             yield return null;
         }
     }

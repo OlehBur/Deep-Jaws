@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UI;
+using VContainer;
 
 
 
@@ -32,9 +33,14 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     [SerializeField] LocalizedString minuteShort;
     [SerializeField] FishLocalized fishLocalized;
 
-    private BiomeWrapper selectedBiome;
-    private BiomeType currentBiomeType = BiomeType.CoralReef;
-    private SanctuaryData sanctuaryData;
+    [Inject] private readonly ISanctuariesManager _sanctuariesManager;
+
+    /// <summary>
+    /// only for check requirements once per load scene
+    /// </summary>
+    private SanctuaryData _sanctuaryData;
+    private BiomeWrapper _selectedBiome;
+    private BiomeType _currentBiomeType = BiomeType.CoralReef;
 
     private readonly float[][] starsXposMultiplier = new float[3][] {
          new float[] { -1f, 0f, 1f },//3 star
@@ -57,42 +63,41 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
         biomesUI.SetActive(true);
         almanacUI.SetActive(false);
 
-        if (SanctuariesManager.Instance != null) {
-            UpdateShellsCnt(SanctuariesManager.Instance.ShellsCnt);
-            UpdateSelectedBiomeUI(currentBiomeType);
+        if (_sanctuariesManager != null) {
+            UpdateShellsCnt(_sanctuariesManager.ShellsCnt);
+            UpdateSelectedBiomeUI(_currentBiomeType);
         }
 
         if (GameAdsManager.Instance != null)
-            boostResearchButton.onClick.AddListener(() => GameAdsManager.Instance.OnBoostClicked(currentBiomeType));
+            boostResearchButton.onClick.AddListener(() => GameAdsManager.Instance.OnBoostClicked(_currentBiomeType));
     }
 
     private void OnEnable() {
-        if (SanctuariesManager.Instance != null) {
-            SanctuariesManager.Instance.OnShellsAmountChanged += UpdateShellsCnt;
-            SanctuariesManager.Instance.OnResearchUpdated += UpdateResearchProgress;
-            SanctuariesManager.Instance.OnBiomeResearched += UpdateUIafterResearch;           
+        if (_sanctuariesManager != null) {
+            _sanctuariesManager.OnShellsAmountChanged += UpdateShellsCnt;
+            _sanctuariesManager.OnResearchUpdated += UpdateResearchProgress;
+            _sanctuariesManager.OnBiomeResearched += UpdateUIafterResearch;
         }
+#if UNITY_ANDROID
         if (GameAdsManager.Instance != null)
             GameAdsManager.Instance.OnAdButtonsInteractable += BoostInteractable;
+#endif
 
-        sanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
+        _sanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-
-        //sanctuaryData.isDartfishNeutralized = true;
-        //sanctuaryData.isCrabNeutralized = true;
-        //sanctuaryData.isSeabassNeutralized = true;
-        //sanctuaryData.isMackarelNeutralized = true;
-        //sanctuaryData.isHammerheadNeutralized = true;
-        //Debug.LogWarning("Activate sone neutralization for testing");
     }
 
     private void OnDisable() {
-        if (SanctuariesManager.Instance != null) {
-            SanctuariesManager.Instance.OnShellsAmountChanged -= UpdateShellsCnt;
-            SanctuariesManager.Instance.OnResearchUpdated -= UpdateResearchProgress;
-            SanctuariesManager.Instance.OnBiomeResearched -= UpdateUIafterResearch;
-            GameAdsManager.Instance.OnAdButtonsInteractable -= BoostInteractable;
+        if (_sanctuariesManager != null) {
+            _sanctuariesManager.OnShellsAmountChanged -= UpdateShellsCnt;
+            _sanctuariesManager.OnResearchUpdated -= UpdateResearchProgress;
+            _sanctuariesManager.OnBiomeResearched -= UpdateUIafterResearch;
         }
+#if UNITY_ANDROID
+        if (GameAdsManager.Instance != null)
+            GameAdsManager.Instance.OnAdButtonsInteractable -= BoostInteractable;
+#endif
+
         reseachButton.onClick.RemoveAllListeners();
         boostResearchButton.onClick.RemoveAllListeners();
     }
@@ -112,11 +117,11 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     void UpdateResidentImagesPreview() {// only diff residents shows
         int lastSpriteIndex = 0;
         int residentInd = 0;
-        residentsImages[lastSpriteIndex].sprite = fishSpriteInfo.GetFishSprite(selectedBiome.Info.Requirements[residentInd]);
+        residentsImages[lastSpriteIndex].sprite = fishSpriteInfo.GetFishSprite(_selectedBiome.Info.Requirements[residentInd]);
         residentsButtons[lastSpriteIndex].gameObject.SetActive(true);
-        for (residentInd = 1; residentInd < selectedBiome.Level/*Info.Requirements.Length*/; residentInd++) {
-            FishLevel newFish = selectedBiome.Info.Requirements[residentInd];
-            FishLevel previousFish = selectedBiome.Info.Requirements[residentInd - 1];
+        for (residentInd = 1; residentInd < _selectedBiome.Level/*Info.Requirements.Length*/; residentInd++) {
+            FishLevel newFish = _selectedBiome.Info.Requirements[residentInd];
+            FishLevel previousFish = _selectedBiome.Info.Requirements[residentInd - 1];
 
             if (newFish != previousFish)
                 ++lastSpriteIndex;
@@ -134,13 +139,13 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     FishLevel GetFishResidentByIndex(int index) {
         //if (index < 0 || index >= selectedBiome.Info.Requirements.Length)
         //    return FishLevel.WhiteShark;
-        FishLevel actualResident = selectedBiome.Info.Requirements[0];
+        FishLevel actualResident = _selectedBiome.Info.Requirements[0];
         if (index == 0)
             return actualResident;
 
-        for (int r = 1, actual = 0; r < selectedBiome.Info.Requirements.Length; r++) {
-            if (actualResident != selectedBiome.Info.Requirements[r]) {
-                actualResident = selectedBiome.Info.Requirements[r];
+        for (int r = 1, actual = 0; r < _selectedBiome.Info.Requirements.Length; r++) {
+            if (actualResident != _selectedBiome.Info.Requirements[r]) {
+                actualResident = _selectedBiome.Info.Requirements[r];
                 ++actual;
 
                 if (actual == index)
@@ -158,27 +163,26 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     private void UpdateSelectedBiomeUI(BiomeType currentBiomeType) {
-        if (SanctuariesManager.Instance != null) {
+        if (_sanctuariesManager != null) {
             if (currentBiomeType < BiomeType.CoralReef)//infinity scroll
                 currentBiomeType = BiomeType.OceanicAbyss;
             if (currentBiomeType > BiomeType.OceanicAbyss)
                 currentBiomeType = BiomeType.CoralReef;
 
-            if (this.currentBiomeType != currentBiomeType)
+            if (_currentBiomeType != currentBiomeType)
                 cameraChanger.OnChangeBiomeCamera(currentBiomeType);
 
-            this.currentBiomeType = currentBiomeType;
-            selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
+            _currentBiomeType = currentBiomeType;
+            _selectedBiome = _sanctuariesManager.GetBiomeWrapper(currentBiomeType);
 
-            biomeTittle.text = selectedBiome.Info.Tittle.GetLocalizedString();
-            researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
-            reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
-
-            if (selectedBiome.NotReserched) {
+            biomeTittle.text = _selectedBiome.Info.Tittle.GetLocalizedString();
+            researchButtonTxt.text = _selectedBiome.GetPriceToUpgrade().ToString();
+            reseachButton.interactable = _selectedBiome.GetPriceToUpgrade() <= _sanctuariesManager.ShellsCnt;
+            if (_selectedBiome.NotReserched) {
                 foreach (GameObject obj in biomeHideLockObjects)
                     obj.SetActive(false);
 
-                UpdateResearchProgress(currentBiomeType, selectedBiome.TimeToUpgrade);
+                UpdateResearchProgress(currentBiomeType, _selectedBiome.TimeToUpgrade);
                 foreach (Button button in residentsButtons)//disable residents buttons
                     button.gameObject.SetActive(false);
             }
@@ -189,7 +193,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                 UpdateBiomeNonStatInfo();
                 UpdateResidentImagesPreview();
 
-                if (selectedBiome.Level >= selectedBiome.Info.MaxLevel) {
+                if (_selectedBiome.Level >= _selectedBiome.Info.MaxLevel) {
                     reseachButton.gameObject.SetActive(false);
                     boostResearchButton.gameObject.SetActive(false);
                     researchProgressBar.gameObject.SetActive(false);
@@ -200,37 +204,37 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     void SetRequirement() {
-        if (selectedBiome.Level >= selectedBiome.Info.MaxLevel) {
+        if (_selectedBiome.Level >= _selectedBiome.Info.MaxLevel) {
             requirement.SetActive(false);
             return;
         }
-        FishLevel requiredFishType = selectedBiome.Info.Requirements[selectedBiome.Level];
+        FishLevel requiredFishType = _selectedBiome.Info.Requirements[_selectedBiome.Level];
 
         requirementVictim.text = researchNeutralize.GetLocalizedString() + " " + fishLocalized.GetFishLocalizeByType(requiredFishType);
     }
 
-    public void OnNextBiome() => UpdateSelectedBiomeUI(currentBiomeType + 1);
-    public void OnPreviousBiome() => UpdateSelectedBiomeUI(currentBiomeType - 1);
+    public void OnNextBiome() => UpdateSelectedBiomeUI(_currentBiomeType + 1);
+    public void OnPreviousBiome() => UpdateSelectedBiomeUI(_currentBiomeType - 1);
 
     void OnResearchCurrentBiome() {
-        SanctuariesManager.Instance.OnAddShells(-selectedBiome.GetPriceToUpgrade());
-        selectedBiome.OnStartUpgrade();
+        _sanctuariesManager.OnAddShells(-_selectedBiome.GetPriceToUpgrade());
+        _selectedBiome.OnStartUpgrade();
 
         //selectedBiome.BoostResearch();
         //if (selectedBiome.Level == selectedBiome.Info.MaxLevel)
         //    reseachButton.gameObject.SetActive(false);
         //Debug.LogWarning("ACtivate one click research");
 
-        UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
+        UpdateResearchProgress(_selectedBiome.Info.Type, _selectedBiome.TimeToUpgrade);
     }
 
     void UpdateBiomeNonStatInfo() {
-        UpdateStars(selectedBiome.Level, selectedBiome.Info.MaxLevel);
-        productionPerMinuteTxt.text = selectedBiome.GetProductionPerMinute().ToString() + "/" + minuteShort.GetLocalizedString();
-        researchButtonTxt.text = selectedBiome.GetPriceToUpgrade().ToString();
-        reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
+        UpdateStars(_selectedBiome.Level, _selectedBiome.Info.MaxLevel);
+        productionPerMinuteTxt.text = _selectedBiome.GetProductionPerMinute().ToString() + "/" + minuteShort.GetLocalizedString();
+        researchButtonTxt.text = _selectedBiome.GetPriceToUpgrade().ToString();
+        reseachButton.interactable = _selectedBiome.GetPriceToUpgrade() <= _sanctuariesManager.ShellsCnt;
 
-        UpdateResearchProgress(selectedBiome.Info.Type, selectedBiome.TimeToUpgrade);
+        UpdateResearchProgress(_selectedBiome.Info.Type, _selectedBiome.TimeToUpgrade);
     }
 
     void UpdateStars(int currentLevel, int maxLevel) {
@@ -248,7 +252,7 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
 
 
     void UpdateUIafterResearch(BiomeType type, int lvl) {
-        if (currentBiomeType == type) {
+        if (_currentBiomeType == type) {
             foreach (GameObject obj in biomeHideLockObjects)//todo: call by research event
                 obj.SetActive(true);
 
@@ -258,11 +262,11 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     void UpdateResearchProgress(BiomeType biomeType, int timeToUpgrade) {
-        if (selectedBiome == null)
-            selectedBiome = SanctuariesManager.Instance.GetBiomeWrapper(currentBiomeType);
+        if (_selectedBiome == null)
+            _selectedBiome = _sanctuariesManager.GetBiomeWrapper(_currentBiomeType);
 
-        if (biomeType == currentBiomeType) {
-            if (selectedBiome.IsUpgrading) {
+        if (biomeType == _currentBiomeType) {
+            if (_selectedBiome.IsUpgrading) {
                 reseachButton.gameObject.SetActive(false);
                 researchProgressBar.gameObject.SetActive(true);
                 boostResearchButton.gameObject.SetActive(true);
@@ -270,9 +274,9 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
             }
             else {
                 //requirement check
-                if (selectedBiome.IsRequirementMet(sanctuaryData)) {
+                if (_selectedBiome.IsRequirementMet(_sanctuaryData)) {
                     requirement.SetActive(false);
-                    reseachButton.interactable = selectedBiome.GetPriceToUpgrade() <= SanctuariesManager.Instance.ShellsCnt;
+                    reseachButton.interactable = _selectedBiome.GetPriceToUpgrade() <= _sanctuariesManager.ShellsCnt;
                 }
                 else {
                     SetRequirement();
@@ -287,13 +291,13 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                 researchProgressBar.gameObject.SetActive(false);
                 boostResearchButton.gameObject.SetActive(false);
 
-                if (selectedBiome.Level < selectedBiome.Info.MaxLevel)
+                if (_selectedBiome.Level < _selectedBiome.Info.MaxLevel)
                     reseachButton.gameObject.SetActive(true);
 
                 return;
             }
 
-            float maxTimeToUpgradeSec = selectedBiome.Info.UpgradeTimeByLevel_Hours[selectedBiome.Level] * GameStaticInfo.SECONDS_IN_HOUR;
+            float maxTimeToUpgradeSec = _selectedBiome.Info.UpgradeTimeByLevel_Hours[_selectedBiome.Level] * GameStaticInfo.SECONDS_IN_HOUR;
             researchProgressBar.SetFillAmount((float)(maxTimeToUpgradeSec - timeToUpgrade) / maxTimeToUpgradeSec);
             researchProgressBar.SetText(researchProg.GetLocalizedString() + " " + GetTimeString(timeToUpgrade));
         }

@@ -2,16 +2,26 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using VContainer;
 
 
-public class GraphicManager : MonoBehaviour {
+
+public interface IGraphicManager {
+    public void SaveGraphicsData();
+    public void LoadGraphicsData();
+    public void ResetSettingsToDefault();
+}
+
+
+public class GraphicManager : MonoBehaviour, IGraphicManager {
     [Header("Graphics Settings")]
     [SerializeField] Light mainLight;
     [SerializeField] Volume mainVolume;
     [SerializeField] UniversalRenderPipelineAsset urpAsset;
 
-    [Header("UI elements")]
-    [SerializeField] SettingsUI settingsUI;
+    //[Header("UI elements")]
+    //[SerializeField] SettingsUI settingsUI;
+    [Inject] private readonly ISettingsManager settingsUI;
 
 
     void Start() {
@@ -75,7 +85,7 @@ public class GraphicManager : MonoBehaviour {
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void LoadGraphicsData() {
+    public void LoadGraphicsData() {
         SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
             ProgressSaver.LoadSettingsData() : new SettingsData();
 

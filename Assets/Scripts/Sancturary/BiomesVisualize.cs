@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using VContainer;
 
 public class BiomesVisualize : MonoBehaviour {
     [SerializeField] Transform coralReefModels;
@@ -13,14 +14,16 @@ public class BiomesVisualize : MonoBehaviour {
     [SerializeField] AudioSource guiSource;
     [SerializeField] AudioClip researchFin;
 
-    private WaitForSeconds WAIT_PARTICLE_BURST = new WaitForSeconds(1f);
-    private bool isBiomesInited = false;
+    [Inject] private readonly ISanctuariesManager _sanctuariesManager;
+
+    private WaitForSeconds _waitParticleBurst = new WaitForSeconds(1f);
+    private bool _isBiomesInited = false;
 
     private const float SCALING_MODELS_SPEED = 2f;
 
 
     private void Start() {
-        if (SanctuariesManager.Instance != null)
+        if (_sanctuariesManager != null)
             InitModelsByLevels();
     }
 
@@ -34,24 +37,24 @@ public class BiomesVisualize : MonoBehaviour {
         foreach (Transform t in oceanicAbyssModels)
             t.gameObject.SetActive(false);
 
-        UpdateBiomeModel(BiomeType.CoralReef, SanctuariesManager.Instance.coralReef.Level);
-        UpdateBiomeModel(BiomeType.CliffsSeaweed, SanctuariesManager.Instance.cliffsSeaweed.Level);
-        UpdateBiomeModel(BiomeType.Pelagial, SanctuariesManager.Instance.pelagial.Level);
-        UpdateBiomeModel(BiomeType.OceanicAbyss, SanctuariesManager.Instance.oceanicAbyss.Level);
+        UpdateBiomeModel(BiomeType.CoralReef, _sanctuariesManager.CoralReef.Level);
+        UpdateBiomeModel(BiomeType.CliffsSeaweed, _sanctuariesManager.CliffsSeaweed.Level);
+        UpdateBiomeModel(BiomeType.Pelagial, _sanctuariesManager.Pelagial.Level);
+        UpdateBiomeModel(BiomeType.OceanicAbyss, _sanctuariesManager.OceanicAbyss.Level);
 
-        isBiomesInited = true;
+        _isBiomesInited = true;
     }
 
     private void OnEnable() {
-        if (SanctuariesManager.Instance != null) {
-            SanctuariesManager.Instance.OnBiomeResearched += UpdateBiomeModel;
+        if (_sanctuariesManager != null) {
+            _sanctuariesManager.OnBiomeResearched += UpdateBiomeModel;
 
         }
     }
 
     private void OnDisable() {
-        if (SanctuariesManager.Instance != null) {
-            SanctuariesManager.Instance.OnBiomeResearched -= UpdateBiomeModel;
+        if (_sanctuariesManager != null) {
+            _sanctuariesManager.OnBiomeResearched -= UpdateBiomeModel;
 
         }
     }
@@ -65,7 +68,7 @@ public class BiomesVisualize : MonoBehaviour {
             _ => coralReefModels
         };
 
-        if (isBiomesInited) {//research call
+        if (_isBiomesInited) {//research call
             GameObject researchParticle = type switch {
                 BiomeType.CoralReef => coral_researchParticle,
                 BiomeType.CliffsSeaweed => cliffs_researchParticle,
@@ -88,7 +91,7 @@ public class BiomesVisualize : MonoBehaviour {
         buildParticle.SetActive(false);
         buildParticle.SetActive(true);
 
-        yield return WAIT_PARTICLE_BURST;
+        yield return _waitParticleBurst;
 
         modelsTrans.gameObject.SetActive(true);
         while (modelsTrans.localScale.x < 1f) {

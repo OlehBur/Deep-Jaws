@@ -26,7 +26,7 @@ public class FishAnim : MonoBehaviour {
     private float matDefSprintSpeed; // default sprint speed in the material
     private float maxShapeRotationVal;
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly IVFXPoolService _fishAddCompMngr;
 
     private const float BUBBLE_INIT_X_OFFSET = 0;

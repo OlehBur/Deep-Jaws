@@ -7,7 +7,7 @@ public class PufferfishController : MonoBehaviour {
     //private AudioManager audioManager;
     [SerializeField] Animator animator;
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly ISpawnOrchestrator _spawnOrchestrator;
 
     private const string PUFFERFISH_BLOW_ANIMATION = "PufferfishBlow";

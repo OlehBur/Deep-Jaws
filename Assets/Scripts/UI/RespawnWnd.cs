@@ -13,20 +13,24 @@ public class RespawnWnd : MonoBehaviour {
 
     private void Awake() {
         if (GameAdsManager.Instance != null) {
+#if UNITY_ANDROID
             reviveB.onClick.AddListener(GameAdsManager.Instance.OnReviveClicked);
             retryB.onClick.AddListener(GameAdsManager.Instance.OnRetryClicked);
             GameAdsManager.Instance.OnAdButtonsInteractable += OnReviveAdInteractable;
             GameAdsManager.Instance.OnReviveRewarded += RecalculateLimit;
+#endif
         }
     }
 
     private void OnDestroy() {
         reviveB.onClick.RemoveAllListeners();
         retryB.onClick.RemoveAllListeners();
+#if UNITY_ANDROID
         if (GameAdsManager.Instance != null) {
             GameAdsManager.Instance.OnAdButtonsInteractable -= OnReviveAdInteractable;
             GameAdsManager.Instance.OnReviveRewarded -= RecalculateLimit;
         }
+#endif
     }
 
     void OnEnable() {

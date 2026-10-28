@@ -114,7 +114,7 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
     }
 
     private void /*OnApplicationQuit*/OnDisable() {
-        if (GameStaticInfo.Gamemode != GameMode.Hard)//in case of death & automatic scene reload
+        if (GameModeController.CurrentMode != GameMode.Hard)//in case of death & automatic scene reload
             _playerSpawnService.SavePlayerData();
 
         _playerSpawnService.OnPlayerLVLup -= CheckPlayerLvlAchievements;//if current player respawn not called from save, check achievements maybe new lvl reached 

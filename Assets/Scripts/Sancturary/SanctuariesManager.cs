@@ -1,8 +1,27 @@
 using System;
 using UnityEngine;
 
-public class SanctuariesManager : MonoBehaviour {
-    public static SanctuariesManager Instance { get; private set; } = null;
+
+public interface ISanctuariesManager {
+    event Action<int> OnShellsAmountChanged;
+    event Action<BiomeType, int> OnResearchUpdated;
+    event Action<BiomeType, int> OnBiomeResearched;
+
+    int ShellsCnt { get; }
+    BiomeWrapper CoralReef { get; }
+    BiomeWrapper CliffsSeaweed { get; }
+    BiomeWrapper Pelagial { get; }
+    BiomeWrapper OceanicAbyss { get; }
+    SanctuaryData SanctuaryData { get; }
+
+    BiomeWrapper GetBiomeWrapper(BiomeType type);
+    void BoostResearch(BiomeType type);
+    void OnAddShells(int shellsCnt);
+    void SaveSanctuaryNueutralizedData(FishLevel fish);
+}
+
+public class SanctuariesManager : MonoBehaviour, ISanctuariesManager {
+    //public static SanctuariesManager Instance { get; private set; } = null;
     public event Action<int> OnShellsAmountChanged;
     /// <summary>
     /// int - time to upgrade
@@ -20,40 +39,39 @@ public class SanctuariesManager : MonoBehaviour {
     [SerializeField] BiomeInfo oceanicAbyssInfo;
 
     //private float secondTimer;
-    private float minuteTimer;
-    public BiomeWrapper coralReef { get; private set; }
-    public BiomeWrapper cliffsSeaweed { get; private set; }
-    public BiomeWrapper pelagial { get; private set; }
-    public BiomeWrapper oceanicAbyss { get; private set; }
+    private float _minuteTimer;
+
+    public BiomeWrapper CoralReef { get; private set; }
+    public BiomeWrapper CliffsSeaweed { get; private set; }
+    public BiomeWrapper Pelagial { get; private set; }
+    public BiomeWrapper OceanicAbyss { get; private set; }
     public SanctuaryData SanctuaryData { get; private set; }
 
 
     private const float PRODUCTION_UPDATE_INTERVAL = 60f;//every min
     //private const float RESEARCH_INTERVAL_TRIGGER = 1f;//every sec
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void ResetStatics() {
-        Instance = null;
-    }
+    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    //private static void ResetStatics() {
+    //    Instance = null;
+    //}
 
     private void Awake() {
-        if (Instance != null && Instance != this) {
-            Destroy(gameObject);
-            return;
-        }
-
+        //if (Instance != null && Instance != this) {
+        //    Destroy(gameObject);
+        //    return;
+        //}
         SanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+        //Instance = this;
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Start() {
         //init update
         OnShellsAmountChanged?.Invoke(ShellsCnt);
-        OnResearchUpdated?.Invoke(BiomeType.CoralReef, coralReef.TimeToUpgrade);
-       
+        OnResearchUpdated?.Invoke(BiomeType.CoralReef, CoralReef.TimeToUpgrade);
+
         //OnAddShells(33333);
         //Debug.LogWarning("Added cheat extra shells");
     }
@@ -69,30 +87,76 @@ public class SanctuariesManager : MonoBehaviour {
 
     public BiomeWrapper GetBiomeWrapper(BiomeType type) =>
         type switch {
-            BiomeType.CoralReef => coralReef,
-            BiomeType.CliffsSeaweed => cliffsSeaweed,
-            BiomeType.Pelagial => pelagial,
-            BiomeType.OceanicAbyss => oceanicAbyss,
+            BiomeType.CoralReef => CoralReef,
+            BiomeType.CliffsSeaweed => CliffsSeaweed,
+            BiomeType.Pelagial => Pelagial,
+            BiomeType.OceanicAbyss => OceanicAbyss,
             _ => null
         };
 
+    public void SaveSanctuaryNueutralizedData(FishLevel fish) {
+        switch (fish) {
+            case FishLevel.Dartfish:
+            SanctuaryData.isDartfishNeutralized = true;
+            break;
+            case FishLevel.Crab:
+            SanctuaryData.isCrabNeutralized = true;
+            break;
+            case FishLevel.SeaBass:
+            SanctuaryData.isSeabassNeutralized = true;
+            break;
+            case FishLevel.Mackerel:
+            SanctuaryData.isMackarelNeutralized = true;
+            break;
+            case FishLevel.Moray:
+            SanctuaryData.isMorayNeutralized = true;
+            break;
+            case FishLevel.Lionfish:
+            SanctuaryData.isLionfishNeutralized = true;
+            break;
+            case FishLevel.Barracuda:
+            SanctuaryData.isBarracudaNeutralized = true;
+            break;
+            case FishLevel.Tuna:
+            SanctuaryData.isTunaNeutralized = true;
+            break;
+            case FishLevel.HammerShark:
+            SanctuaryData.isHammerheadNeutralized = true;
+            break;
+            case FishLevel.TigerShark:
+            SanctuaryData.isTigerNeutralized = true;
+            break;
+            case FishLevel.WhiteShark:
+            SanctuaryData.isWhiteNeutralized = true;
+            break;
+            case FishLevel.Pufferfish:
+            SanctuaryData.isPufferNeutralized = true;
+            break;
+            case FishLevel.Cuttlefish:
+            SanctuaryData.isCuttleNeutralized = true;
+            break;
+        }
+        //Debug.LogWarning("Player neutralized: " + fish);
+        ProgressSaver.SaveData(SanctuaryData);
+    }
+
     void SanctuariesUpdateBehaviour() {
-        minuteTimer += DJTime.UnscaledDeltaTime;
+        _minuteTimer += DJTime.UnscaledDeltaTime;
         //Debug.Log(minuteTimer.ToString());
-        if (minuteTimer >= PRODUCTION_UPDATE_INTERVAL) {
-            minuteTimer = 0f;
+        if (_minuteTimer >= PRODUCTION_UPDATE_INTERVAL) {
+            _minuteTimer = 0f;
             //Production
-            ProduceResourceProgress(coralReef);
-            ProduceResourceProgress(cliffsSeaweed);
-            ProduceResourceProgress(pelagial);
-            ProduceResourceProgress(oceanicAbyss);
+            ProduceResourceProgress(CoralReef);
+            ProduceResourceProgress(CliffsSeaweed);
+            ProduceResourceProgress(Pelagial);
+            ProduceResourceProgress(OceanicAbyss);
             OnShellsAmountChanged?.Invoke(ShellsCnt);
 
             //upgrading
-            ResearchBiomeProgress(coralReef);
-            ResearchBiomeProgress(cliffsSeaweed);
-            ResearchBiomeProgress(pelagial);
-            ResearchBiomeProgress(oceanicAbyss);
+            ResearchBiomeProgress(CoralReef);
+            ResearchBiomeProgress(CliffsSeaweed);
+            ResearchBiomeProgress(Pelagial);
+            ResearchBiomeProgress(OceanicAbyss);
         }
     }
 
@@ -103,7 +167,7 @@ public class SanctuariesManager : MonoBehaviour {
 
     void ResearchBiomeProgress(BiomeWrapper biome) {
         if (biome.IsUpgrading) {
-            biome.TimeToUpgrade-=GameStaticInfo.SECONDS_IN_MINUTE;
+            biome.TimeToUpgrade -= GameStaticInfo.SECONDS_IN_MINUTE;
 
             UpgradeBiomeLevel(biome);
         }
@@ -139,45 +203,45 @@ public class SanctuariesManager : MonoBehaviour {
         ShellsCnt = accountData.shellsCnt;
 
         //init Biomes
-        coralReef = new(coralReefInfo, sancturariesData.coralReef_Lvl, sancturariesData.coralReef_SecondsToUpgrade);
-        cliffsSeaweed = new(cliffsSeaweedInfo, sancturariesData.cliffsSeaweed_Lvl, sancturariesData.cliffsSeaweed_SecondsToUpgrade);
-        pelagial = new(pelagialInfo, sancturariesData.pelagial_Lvl, sancturariesData.pelagial_SecondsToUpgrade);
-        oceanicAbyss = new(oceanicAbyssInfo, sancturariesData.oceanicAbyss_Lvl, sancturariesData.oceanicAbyss_SecondsToUpgrade);
+        CoralReef = new(coralReefInfo, sancturariesData.coralReef_Lvl, sancturariesData.coralReef_SecondsToUpgrade);
+        CliffsSeaweed = new(cliffsSeaweedInfo, sancturariesData.cliffsSeaweed_Lvl, sancturariesData.cliffsSeaweed_SecondsToUpgrade);
+        Pelagial = new(pelagialInfo, sancturariesData.pelagial_Lvl, sancturariesData.pelagial_SecondsToUpgrade);
+        OceanicAbyss = new(oceanicAbyssInfo, sancturariesData.oceanicAbyss_Lvl, sancturariesData.oceanicAbyss_SecondsToUpgrade);
 
-        coralReef.OnBoostedProgress += UpgradeBiomeLevel;
-        cliffsSeaweed.OnBoostedProgress += UpgradeBiomeLevel;
-        pelagial.OnBoostedProgress += UpgradeBiomeLevel;
-        oceanicAbyss.OnBoostedProgress += UpgradeBiomeLevel;
+        CoralReef.OnBoostedProgress += UpgradeBiomeLevel;
+        CliffsSeaweed.OnBoostedProgress += UpgradeBiomeLevel;
+        Pelagial.OnBoostedProgress += UpgradeBiomeLevel;
+        OceanicAbyss.OnBoostedProgress += UpgradeBiomeLevel;
     }
 
     private void OnDisable() {
-        if (Instance == this) {
-            //save data
-            SanctuaryData sancturariesData = ProgressSaver.IsSanctuaryDataExist ?
-                ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-            AccountData accountData = ProgressSaver.IsAccountDataExist ?
-                ProgressSaver.LoadAccountData() : new AccountData();
-            accountData.shellsCnt = ShellsCnt;
-            sancturariesData.coralReef_Lvl = coralReef.Level;
-            sancturariesData.coralReef_SecondsToUpgrade = coralReef.TimeToUpgrade;
+        //if (Instance == this) {
+        //save data
+        SanctuaryData sancturariesData = ProgressSaver.IsSanctuaryDataExist ?
+            ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
+        AccountData accountData = ProgressSaver.IsAccountDataExist ?
+            ProgressSaver.LoadAccountData() : new AccountData();
+        accountData.shellsCnt = ShellsCnt;
+        sancturariesData.coralReef_Lvl = CoralReef.Level;
+        sancturariesData.coralReef_SecondsToUpgrade = CoralReef.TimeToUpgrade;
 
-            sancturariesData.cliffsSeaweed_Lvl = cliffsSeaweed.Level;
-            sancturariesData.cliffsSeaweed_SecondsToUpgrade = cliffsSeaweed.TimeToUpgrade;
+        sancturariesData.cliffsSeaweed_Lvl = CliffsSeaweed.Level;
+        sancturariesData.cliffsSeaweed_SecondsToUpgrade = CliffsSeaweed.TimeToUpgrade;
 
-            sancturariesData.pelagial_Lvl = pelagial.Level;
-            sancturariesData.pelagial_SecondsToUpgrade = pelagial.TimeToUpgrade;
+        sancturariesData.pelagial_Lvl = Pelagial.Level;
+        sancturariesData.pelagial_SecondsToUpgrade = Pelagial.TimeToUpgrade;
 
-            sancturariesData.oceanicAbyss_Lvl = oceanicAbyss.Level;
-            sancturariesData.oceanicAbyss_SecondsToUpgrade = oceanicAbyss.TimeToUpgrade;
-            ProgressSaver.SaveData(sancturariesData);
-            ProgressSaver.SaveData(accountData);
-            Instance = null;
+        sancturariesData.oceanicAbyss_Lvl = OceanicAbyss.Level;
+        sancturariesData.oceanicAbyss_SecondsToUpgrade = OceanicAbyss.TimeToUpgrade;
+        ProgressSaver.SaveData(sancturariesData);
+        ProgressSaver.SaveData(accountData);
+        //Instance = null;
 
-            coralReef.OnBoostedProgress -= UpgradeBiomeLevel;
-            cliffsSeaweed.OnBoostedProgress -= UpgradeBiomeLevel;
-            pelagial.OnBoostedProgress -= UpgradeBiomeLevel;
-            oceanicAbyss.OnBoostedProgress -= UpgradeBiomeLevel;
-        }
+        CoralReef.OnBoostedProgress -= UpgradeBiomeLevel;
+        CliffsSeaweed.OnBoostedProgress -= UpgradeBiomeLevel;
+        Pelagial.OnBoostedProgress -= UpgradeBiomeLevel;
+        OceanicAbyss.OnBoostedProgress -= UpgradeBiomeLevel;
+        //}
     }
 }
 

@@ -104,7 +104,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
     /*LederboardKey*/
     string GetLederboardByGameMode() {
-        return GameStaticInfo.Gamemode switch {
+        return GameModeController.CurrentMode switch {
             GameMode.Easy => GPGSIds.leaderboard_harbor_breeze_appetite,
             GameMode.Medium => GPGSIds.leaderboard_ocean_voyage_appetite,
             GameMode.Hard => GPGSIds.leaderboard_deadly_maelstrom_appetite,

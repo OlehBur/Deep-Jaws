@@ -21,7 +21,7 @@ public class EchoaquaController : MonoBehaviour {
     private static readonly int ProgressShaderID = Shader.PropertyToID("_Progress");
     private static readonly int ScanPosNormalizeShaderID = Shader.PropertyToID("_ScanPosNormalize");
 
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
     private readonly WaitForSecondsRealtime _waitForScanPreview = new WaitForSecondsRealtime(SCAN_PREVIEW_TIME);
 
     private float _cooldownTimer = 0f;

@@ -1,414 +1,104 @@
 using System.Collections;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using UnityEngine.Localization;
 using System.Runtime.CompilerServices;
 using VContainer; //  for Uri.EscapeDataString
 
 
-public interface IMainmenuManager {
-    void OnOpenGameInBrowser();
-    void OnOpenDemoFin();
-    void OnSanctuaryClick();
-    void OnGameModeSet(int gamemode);
-    void OnServicesButton(int buttonIndex);
-    void OnNewGameClick();
-    void OnSkipGuide();
-    void OnCompleteGuide();
-    void OnSureSaveExitGame();
-    void OnExitButtonClicked();
-
-    void ActivateNoInternetConnectionWnd(bool isActive);
-    void ActivateLoadingPanelWnd(bool isActive);
-    void ActivatePauseWnd(bool isActivate);
-    void DeactivateRespawnWnd();
-
-    void ResetAndReloadGame_Hard();
-    void ResetWorldData();
-    void ChangeSignInColor(bool isSignIn);
-    void OpenEmailClientForBugReport();
-}
 
 /// <summary>
 /// відповідає за активніть графічного інтерфейсу пов'язану з грою
 /// responsible for the activity of the graphical interface related to the game
 /// </summary>
-public class MainmenuManager : MonoBehaviour, IMainmenuManager {
-    [SerializeField] GraphicManager graphicManager;
-    [SerializeField] GameObject loadingPanel;
+public class MainmenuManager : MonoBehaviour {
+    //[SerializeField] GraphicManager graphicManager;
 
-    [Header("MainMenu Scene")]
-    [SerializeField] SceneLoader sceneLoader;
-    [SerializeField] GameObject GPG_Services_UI;
-    [SerializeField] GameObject noInternetConnectionWnd;
-    [SerializeField] Light mainMenuLight;
-    [SerializeField] Animator gmWndAnimator;
-    [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
-    [SerializeField] Button merineSanctuary;
-    [SerializeField] SceneLoader faderScene;
-    [SerializeField] GameResultWnd gameResult;
-    [SerializeField] GameObject areUSureWnd;
+
+    //[Header("MainMenu Scene")]
+    //[SerializeField] SceneLoader sceneLoader;
+
+
+    
+
+    //[SerializeField] SceneLoader faderScene;
+
+
     //[SerializeField] GameObject guideBookWnd;
-    [SerializeField] GameObject gamemodeWnd;
-    [SerializeField] GameObject newUpdWnd;
 
-    [SerializeField] Image gameModeWndBackground;
-    [SerializeField] Image signInIcon;
-    [SerializeField] GameObject kingOfDeepsObj;
-    [SerializeField] TextMeshProUGUI kingOfDeepsTxt;
-    [SerializeField] LocalizedString kingOfDeepsLocalized;
-    [SerializeField] Animator kingOfDeepsAnimator;
+
+
     //[SerializeField] LocalizedString settingsMaxFpsLocalized;
 
-    [Header("Game Scene")]
+    //[Header("Game Scene")]
     //only for game scene
-    [SerializeField] GameObject[] gamemodePauseTitles;
-    [SerializeField] GameManager gameManager;
-    [SerializeField] GameObject pauseButton;
-    [SerializeField] GameObject pauseWnd;
-    //[SerializeField] SpawnManager spawnManager;
-    [SerializeField] RespawnWnd respawnWnd;
-    [SerializeField] GameObject demoFinMsg;
 
-    private bool _isGMneedAnimation = true;
-    private bool _isWorldDataExist = false;
-    private Color _targetGMwndColor;
-    private Color _targetLightGMcolor;
+
+
+
+
+    //private bool _isWorldDataExist = false;
+   
     //private GPG_Manager gpg_manager;
 
-    [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
-    [Inject] private readonly IAudioManager _audioManager;
+    //[Inject] private readonly IPlayerFishPoolService _playerSpawnService;
+    //[Inject] private readonly IAudioPlayService _audioManager;
 
-    private static readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
-    private static readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
-    private static readonly Color HARD_GM_COLOR = new Color(0.6698113f, 0.09033603f, 0f, 1f);
-    private static readonly Color LIGHT_DEFAULT_COLOR = new Color(1f, 0.8671192f, 0.504717f, 1f);
-    private static readonly Color LIGHT_MEDIUM_COLOR = new Color(0.4544322f, 0.4999117f, 0.8679245f, 1f);
-    private static readonly Color LIGHT_HARD_COLOR = new Color(0f, 0f, 0f, 1f);
-    private static readonly Color failedSignInColor = new Color(1f, 0.4764151f, 0.4863637f, 1f);
-    private static readonly Color successSignInColor = new Color(0.678066f, 1f, 0.5707547f, 1f);
+
 
     //private const string LOCALE_PREF_KEY = "LocaleIndex";
     //private const string FPS_KEY = "FPS";
-    private const string REPORT_EMAIL = "bovv.company@gmail.com";
-    private const string REPORT_SUBJECT = "Bug Report: Deep Jaws";
-    private const string GAME_FULL_URL = "https://play.google.com/store/apps/details?id=com.bovvcompany.deepjaws&referrer=utm_source%3Ditchio%26utm_medium%3Dpc_demo";
 
 
-    private void Awake() {
-        if (gamemodePauseTitles != null)
-            GameModeTitlesInit();
-
-        AccountData accountData = ProgressSaver.IsAccountDataExist ?
-            ProgressSaver.LoadAccountData() : new AccountData();
-
-        if (accountData.firstUpdOpen1_7 && newUpdWnd != null) {
-            Debug.Log("Confirmed first open on New Update 1.7");
-            newUpdWnd.SetActive(true);
-            accountData.firstUpdOpen1_7 = false;
-            ProgressSaver.SaveData(accountData);
-        }
-
-        if (GPG_Services_UI != null) {
-            GPG_Services_UI.SetActive(!GameManager.IsPC_Demo());
-            merineSanctuary.interactable = !GameManager.IsPC_Demo();
-        }
-    }
-
-    private void Start() {
-        _isWorldDataExist = ProgressSaver.IsWorldDataExist;
-
-        if (faderScene != null)        // Ensure the fader scene is not destroyed on load
-            faderScene?.gameObject.SetActive(true);
-
-        if (continueButton != null) {// Initialize the continue button visibility based on saved data
-            continueButton?.SetActive(_isWorldDataExist);
-            GameStaticInfo.Gamemode = _isWorldDataExist ?
-                ProgressSaver.LoadWorldData().gameMode : GameMode.None;
-        }
-
-        if (GameManager.IsInternetNotAvailable)
-            FirstNoConnectionOpen();
-
-        if (kingOfDeepsObj != null) {
-            kingOfDeepsObj.SetActive(false);
-            kingOfDeepsAnimator.enabled = false;
-        }
-
-        if (pauseButton != null)
-            pauseButton.SetActive(!GameManager.IsRunOnPC);
-    }
-
-    void PlayerLvlUpHandler(FishLevel level) {
-        if (GameManager.IsPC_Demo() && level >= FishLevel.Mackerel) {
-            gameManager.GameSetPause(true);
-            OnOpenDemoFin();
-        }
-
-        (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
-        if (!prem && !noadd) {//if doesnt have immunitet
-            if (/*gameAdsManager*/GameAdsManager.Instance.OnShowInterstitialAd()) //only if ad will be shown
-                ActivatePauseWnd(true);
-        }
-    }
+    //private void Awake() {
+    //    //if (gamemodePauseTitles != null)
+    //    //    GameModeTitlesInit();
 
 
-    private void OnEnable() {
-        if (_playerSpawnService != null) {
-            _playerSpawnService.OnFishDie += ActivateRespawnWnd;
-            _playerSpawnService.OnPlayerLVLup += PlayerLvlUpHandler;
-        }
 
-#if UNITY_ANDROID
-        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
-            GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
-#endif
-    }
+    //}
 
-    private void OnDisable() {
-        if (_playerSpawnService != null) {
-            _playerSpawnService.OnFishDie -= ActivateRespawnWnd;
-            _playerSpawnService.OnPlayerLVLup += PlayerLvlUpHandler;
-        }
+    //private void Start() {
+        //_isWorldDataExist = ProgressSaver.IsWorldDataExist;
 
-#if UNITY_ANDROID
-        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
-            GPG_Manager.Instance.OnLoadKingOfDeeps -= KingOfDeepsUpdate;
-#endif
-    }
+        //if (faderScene != null)        // Ensure the fader scene is not destroyed on load
+        //    faderScene?.gameObject.SetActive(true);
+
+        //if (continueButton != null) {// Initialize the continue button visibility based on saved data
+        //    continueButton?.SetActive(_isWorldDataExist);
+        //    GameStaticInfo.Gamemode = _isWorldDataExist ?
+        //        ProgressSaver.LoadWorldData().gameMode : GameMode.None;
+        //}
+
+        //if (GameManager.IsInternetNotAvailable)
+        //    FirstNoConnectionOpen();
+    //}
 
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void GameModeTitlesInit() {//init gamemode buttons        
-        if (GameStaticInfo.Gamemode == GameMode.None) {
-            Debug.LogWarning("Gamemode = None -> Activate gamemod auto-select (medium)");
-            GameStaticInfo.Gamemode = GameMode.Medium;
-        }
+    //private void OnEnable() {
+        //if (_playerSpawnService != null) {
+        //    _playerSpawnService.OnFishDie += ActivateRespawnWnd;
+        //    _playerSpawnService.OnPlayerLVLup += PlayerLvlUpHandler;
+        //}
 
-        if (gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
-            foreach (GameObject tit in gamemodePauseTitles)
-                tit.SetActive(false);
+//#if UNITY_ANDROID
+//        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
+//            GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
+//#endif
+    //}
 
-            gamemodePauseTitles[(int)GameStaticInfo.Gamemode].SetActive(true);
-        }
-        //Debug.LogWarning(GameStaticInfo.Gamemode);
-    }
+    //private void OnDisable() {
+        //if (_playerSpawnService != null) {
+        //    _playerSpawnService.OnFishDie -= ActivateRespawnWnd;
+        //    _playerSpawnService.OnPlayerLVLup -= PlayerLvlUpHandler;
+        //}
 
-    public void OnOpenGameInBrowser() =>
-            Application.OpenURL(GAME_FULL_URL);
+//#if UNITY_ANDROID
+//        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
+//            GPG_Manager.Instance.OnLoadKingOfDeeps -= KingOfDeepsUpdate;
+//#endif
+    //}
 
-    public void OnOpenDemoFin() {
-        _audioManager.PlayVFX(VFX_clip.BubblePop);
-        _audioManager.PlayerAudioSource.Stop();
-        demoFinMsg.SetActive(true);
-    }
 
-    public void ActivateNoInternetConnectionWnd(bool isActive) {
-#if UNITY_ANDROID
-        if (noInternetConnectionWnd != null)
-            noInternetConnectionWnd.SetActive(isActive);
-#endif
-    }
-
-    public void ActivateLoadingPanelWnd(bool isActive) =>
-        loadingPanel.SetActive(isActive);
-
-#if UNITY_ANDROID
-    void KingOfDeepsUpdate(string playerNick) {
-        if (kingOfDeepsObj == null)
-            return;
-
-        kingOfDeepsObj.SetActive(true);
-        kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
-        kingOfDeepsAnimator.enabled = true;
-    }
-#endif
-
-    void ActivateRespawnWnd(Fish f) {
-#if UNITY_ANDROID
-        if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
-            ResetAndReloadGame_Hard();
-            //playerSpawnService.RespawnPlayer(true, false);
-            return;
-        }
-        //GameAdsManager.Instance.UpdateDailyRevivesTxt();
-        respawnWnd.gameObject.SetActive(true);
-#else
-        spawnManager.RespawnPlayer(true, false);//just respawn without ui on pc
-#endif
-    }
-
-    public void OnSureSaveExitGame() {
-        _playerSpawnService.SavePlayerData();
-#if UNITY_ANDROID
-        gameResult.gameObject.SetActive(true);
-#else
-        spawnManager.OnSceneExit();
-        sceneLoader.OnLoad_MainMenuScene();
-#endif
-    }
-
-    public void ActivatePauseWnd(bool isActivate) {
-        if (gameManager != null)
-            gameManager.GameSetPause(isActivate);
-        pauseWnd.SetActive(isActivate);
-    }
-
-    public void ResetAndReloadGame_Hard() {
-        ResetWorldData();
-        GameStaticInfo.Gamemode = GameMode.Hard;
-        gameResult.AddShellsWithoutWnd();
-        faderScene.OnLoad_GameScene();
-    }
-
-    void FirstNoConnectionOpen() {
-        AccountData accountData = ProgressSaver.IsAccountDataExist ?
-            ProgressSaver.LoadAccountData() : new AccountData();
-
-        if (accountData.isConfirmedNoInternetDisadvantages)
-            return;
-
-        ActivateNoInternetConnectionWnd(true);
-        accountData.isConfirmedNoInternetDisadvantages = true;
-        ProgressSaver.SaveData(accountData);
-    }
-
-    public void OnSanctuaryClick() {
-        if (GameManager.IsInternetNotAvailable)
-            ActivateNoInternetConnectionWnd(true);
-        else
-            sceneLoader.OnLoad_SanctuaryScene();
-    }
-
-    IEnumerator ChangeColorGMwnd() {
-        //Debug.Log("gm changing color started");
-        while (gameModeWndBackground.color != _targetGMwndColor) {
-            gameModeWndBackground.color = Color.Lerp(gameModeWndBackground.color, _targetGMwndColor, DJTime.DeltaTime);
-            yield return null;
-        }
-
-        //Debug.Log("gm Color changed");
-    }
-
-    IEnumerator ChangeColorGMmainMenu() {
-        while (mainMenuLight.color != _targetLightGMcolor) {
-            mainMenuLight.color = Color.Lerp(mainMenuLight.color, _targetLightGMcolor, DJTime.DeltaTime);
-            yield return null;
-        }
-    }
-
-    public void OnGameModeSet(int gamemode) {
-        GameStaticInfo.Gamemode = (GameMode)gamemode;
-
-        _targetGMwndColor = GameStaticInfo.Gamemode switch {
-            GameMode.Easy => EASY_GM_COLOR,
-            GameMode.Medium => MEDIUM_GM_COLOR,
-            GameMode.Hard => HARD_GM_COLOR,
-            _ => Color.white
-        };
-
-        _targetLightGMcolor = GameStaticInfo.Gamemode switch {
-            GameMode.Easy => LIGHT_DEFAULT_COLOR,
-            GameMode.Medium => LIGHT_MEDIUM_COLOR,
-            GameMode.Hard => LIGHT_HARD_COLOR,
-            _ => Color.white
-        };
-
-        StopCoroutine(ChangeColorGMwnd());
-        StartCoroutine(ChangeColorGMwnd());
-        StopCoroutine(ChangeColorGMmainMenu());
-        StartCoroutine(ChangeColorGMmainMenu());
-
-        //PlayerPrefs.SetInt("GameMode", gamemode);
-        //Debug.Log("DELETED WORDL AUTO SAVE");
-
-        if (_isGMneedAnimation) {
-            gmWndAnimator.SetTrigger("Anim");
-            _isGMneedAnimation = false;
-        }
-    }
-
-    public void OnServicesButton(int buttonIndex) {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        if (GPG_Manager.Instance != null)
-            switch (buttonIndex) {
-                case 0:
-                /*gpg_manager*/
-                GPG_Manager.Instance.OnShowLeaderboard();
-                break;
-                case 1:
-                GPG_Manager.Instance.OnShowAchievements();
-                break;
-                case 2:
-                GPG_Manager.Instance.OnSign();
-                break;
-            }
-#endif
-    }
-
-    //open ar u sur wnd if player already has saved game data
-    public void OnNewGameClick() {
-        if (_isWorldDataExist)
-            areUSureWnd?.SetActive(true);
-        else
-            gamemodeWnd.SetActive(true);
-        //guideBookWnd?.SetActive(true);
-    }
-
-    public void ChangeSignInColor(bool isSignIn) {
-        if (signInIcon != null)
-            signInIcon.color = (isSignIn) ?
-                successSignInColor : failedSignInColor;
-    }
-
-    public void ResetWorldData() {
-        PlayerLeaderboardScore.LoadSavedData();
-        PlayerPrefs.DeleteAll();//delete all player prefs data 
-        _audioManager.SaveAudioData(); // Save current audio settings
-        graphicManager.SaveGraphicsData(); // Save current graphic settings
-        PlayerLeaderboardScore.SaveLoadedData();
-        ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();
-    }
-
-    public void OnSkipGuide() {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        if (!isWorldDataExist)
-            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_are_you_serious);
-#endif
-    }
-
-    public void OnCompleteGuide() {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        if (isWorldDataExist)
-            GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_you_have_my_respect);
-#endif
-    }
-
-    public void OpenEmailClientForBugReport() {
-        string bodyTemplate =
-            "Please describe the bug below:\n\n\n" +
-            "Steps to reproduce (how can we trigger this bug):\n\n\n" +
-            "Additional links to videos/photos (if any):\n\n\n" +
-            "--- \n" +
-            "Device info (optional): " + SystemInfo.deviceModel + "\n" +
-            "OS: " + SystemInfo.operatingSystem;
-
-        //form corr link
-        // with text escaping, spaces or etc. convert to %0A like
-        string emailUrl = string.Format(
-            "mailto:{0}?subject={1}&body={2}",
-            REPORT_EMAIL,
-            Uri.EscapeDataString(REPORT_SUBJECT),
-            Uri.EscapeDataString(bodyTemplate)
-        );
-
-        Application.OpenURL(emailUrl);
-
-        Debug.Log("Open Mail Client...");
-    }
-
-    public void DeactivateRespawnWnd() => respawnWnd.gameObject.SetActive(false);
-    public void OnExitButtonClicked() => Application.Quit();
 }

@@ -20,7 +20,7 @@ public class PlayerUIController : MonoBehaviour {
     [SerializeField] InputActionReference jumpAction;
     [SerializeField] InputActionReference cancelAction;
     [SerializeField] GameObject pauseMenu;
-    [SerializeField] MainmenuManager mainmenu;
+    //[SerializeField] MainmenuManager mainmenu;
 
     [Header("Icons for effects (UI)")]
     [SerializeField] RectTransform iconsParent;
@@ -118,7 +118,8 @@ public class PlayerUIController : MonoBehaviour {
     private Coroutine _blindnessCoroutine;
 
     [Inject] private readonly IGameTip _gameTips;
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IGameHudController _gameHudController;
+    [Inject] private readonly IAudioPlayService _audioManager;
     [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
     private readonly Dictionary<FishEffectType, RectTransform> _effectsSlotsMatch 
         = new Dictionary<FishEffectType, RectTransform> { };//private Dictionary<FishEffectType, Coroutine> overlayCoroutines = new Dictionary<FishEffectType, Coroutine>();
@@ -250,7 +251,7 @@ public class PlayerUIController : MonoBehaviour {
 
     void OnPauseWnd(InputAction.CallbackContext ctx) {
         if (pauseMenu.activeInHierarchy == GameManager.IsGamePaused)
-            mainmenu.ActivatePauseWnd(!GameManager.IsGamePaused);
+            _gameHudController.ActivatePauseWnd(!GameManager.IsGamePaused);
     }
 
     public void OnSpintButtonClick() {

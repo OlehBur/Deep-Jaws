@@ -3,32 +3,33 @@ using VContainer.Unity;
 using UnityEngine;
 
 
-public class MainLifetimeScope : LifetimeScope {
+
+public class GameLifetimeScope : LifetimeScopeBase {
     [SerializeField] FishPrefabsInfo fishPrefabs;
     [SerializeField] VFX_PrefabsInfo vfxPrefabsInfo;
     [SerializeField] FishSkinInfo fishSkinInfo;
 
 
     protected override void Configure(IContainerBuilder builder) {
-        InitInjectParams(builder);
+        InitAssets(builder);
         InitServices(builder);
 
-        InjectMultipleScripts(builder);
-        InjectSingleScripts(builder);
+        InitMultipleScripts(builder);
+        InitSingleScripts(builder);
 
         //builder.RegisterComponentInHierarchy<HydraController>();
 
         //builder.RegisterComponentInHierarchy<ZoneController>(); //implemented in auto inject (component config on scene)
     }
 
-    void InitInjectParams(IContainerBuilder builder) {
+    public override void InitAssets(IContainerBuilder builder) {
         //inject params
         builder.RegisterInstance(fishPrefabs);
         builder.RegisterInstance(vfxPrefabsInfo);
         builder.RegisterInstance(fishSkinInfo);
     }
 
-    void InitServices(IContainerBuilder builder) {
+    public override void InitServices(IContainerBuilder builder) {
         //services
         //builder.Register<IGameTip, GameTipsService>(Lifetime.Singleton);
         builder.Register<IVFXPoolService, VFXPoolService>(Lifetime.Singleton);
@@ -38,12 +39,12 @@ public class MainLifetimeScope : LifetimeScope {
 
         builder.RegisterComponentInHierarchy<IGameTip>();
         //builder.RegisterComponentInHierarchy<IMainmenuManager/*MainmenuManager*/>();
-        builder.RegisterComponentInHierarchy<IAudioManager/*AudioManager*/>();
+        //builder.RegisterComponentInHierarchy<IAudioPlayService/*AudioManager*/>();
         builder.RegisterComponentInHierarchy<ISpawnOrchestrator/*SpawnOrchestrator*/>();
         //builder.RegisterComponentInHierarchy<VFXpoolService>();
     }
 
-    void InjectMultipleScripts(IContainerBuilder builder) {
+    public override void InitMultipleScripts(IContainerBuilder builder) {
         //scripts to inject
         MultipleInject<HydraController>(builder);
         MultipleInject<HealerFruitController>(builder);
@@ -55,32 +56,18 @@ public class MainLifetimeScope : LifetimeScope {
         MultipleInject<ZoneController>(builder);
     }
 
-    void InjectSingleScripts(IContainerBuilder builder) {
-        SingInject<NoEscapeAchieveTrig>(builder);
-        SingInject<PlayerLeaderboardScore>(builder);
-        SingInject<CameraFollower>(builder);
-        SingInject<SoundtrackController>(builder);
-        SingInject<DeadArea>(builder);
-        SingInject<FishHeartbeatsManager>(builder);
-        SingInject<GameManager>(builder);
-        SingInject<MainmenuManager>(builder);
-        SingInject<PlayerUIController>(builder);
+    public override void InitSingleScripts(IContainerBuilder builder) {
+        SingleInject<NoEscapeAchieveTrig>(builder);
+        SingleInject<PlayerLeaderboardScore>(builder);
+        SingleInject<CameraFollower>(builder);
+        SingleInject<SoundtrackController>(builder);
+        SingleInject<DeadArea>(builder);
+        SingleInject<FishHeartbeatsManager>(builder);
+        SingleInject<GameManager>(builder);
+        SingleInject<MainmenuManager>(builder);
+        SingleInject<PlayerUIController>(builder);
+        SingleInject<GameResultWnd>(builder);
     }
 
-    void MultipleInject<T>(IContainerBuilder builder) where T : Object {
-        T[] allScripts = FindObjectsByType<T>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
-        builder.RegisterBuildCallback(container => {
-            foreach (T script in allScripts)
-                container.Inject(script);
-        });
-    }
-
-    void SingInject<T>(IContainerBuilder builder) where T : Object {
-        T script = FindAnyObjectByType<T>();
-
-        if (script != null)
-            builder.RegisterBuildCallback(container =>
-                container.Inject(script));
-    }
 }

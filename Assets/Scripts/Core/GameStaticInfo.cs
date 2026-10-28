@@ -152,10 +152,10 @@ public static class GameStaticInfo {
     public const int SECONDS_IN_MINUTE = 60;
     public const float PERCENT_MULTIPLIER = 100f;
 
-    public static readonly string GAME_SCENE_NAME = "Game";
-    public static readonly string MAINMENU_SCENE_NAME = "MainMenu";
-    public static readonly string LOADING_SCENE_NAME = "LoadScene";
-    public static readonly string SANCTUARY_SCENE_NAME = "Sanctuary";
+    public const string GAME_SCENE_NAME = "Game";
+    public const string MAINMENU_SCENE_NAME = "MainMenu";
+    public const string LOADING_SCENE_NAME = "LoadScene";
+    public const string SANCTUARY_SCENE_NAME = "Sanctuary";
 
     public const int DEFAULT_SCREEN_FRAMERATE = 60;
     public const int FRAMERATE_30 = 30;
@@ -176,13 +176,21 @@ public static class GameStaticInfo {
     public const int SETTINGS_DEFAULT_LANGUAGE = 0;
 
     //gamemode
-    public static GameMode Gamemode { get; set; } = GameMode.None;
+    //public static GameMode Gamemode { get; set; } = GameMode.None;
     public const int GAMEMODES_COUNT = 3;
     public const float EASY_MODE_SHELLS_MULTIPLIER = 1f;
     public const float MEDIUM_MODE_SHELLS_MULTIPLIER = 1.2f;
     public const float HARD_MODE_SHELLS_MULTIPLIER = 1.5f;
     public const int MAX_DAILY_REVIVALS = 10;
     public const int AUTO_RESPAWN_TIME = 5;
+    public static readonly Color EASY_GM_COLOR = new Color(0.7058824f, 1f, 0.5411765f, 1f);
+    public static readonly Color MEDIUM_GM_COLOR = new Color(0.8207547f, 0.5232103f, 0f, 1f);
+    public static readonly Color HARD_GM_COLOR = new Color(0.6698113f, 0.09033603f, 0f, 1f);
+    public static readonly Color LIGHT_DEFAULT_COLOR = new Color(1f, 0.8671192f, 0.504717f, 1f);
+    public static readonly Color LIGHT_MEDIUM_COLOR = new Color(0.4544322f, 0.4999117f, 0.8679245f, 1f);
+    public static readonly Color LIGHT_HARD_COLOR = new Color(0f, 0f, 0f, 1f);
+    public static readonly Color FAILED_SIGN_IN_COLOR = new Color(1f, 0.4764151f, 0.4863637f, 1f);
+    public static readonly Color SUCCESS_SIGN_IN_COLOR = new Color(0.678066f, 1f, 0.5707547f, 1f);
 
     //pools
     public const float HORIZONTAL_SPAWN_MAX_OFFSET = 6f;
@@ -257,9 +265,19 @@ public static class GameStaticInfo {
     public const string AUDIO_MASTER_VOLUME_PARAM = "MasterVol";
     public const string AUDIO_MUSIC_VOLUME_PARAM = "MusicVol";
     public const string AUDIO_VFX_VOLUME_PARAM = "SFXVol";
+    public const float MAX_MASTER_DB = 0f;
+    public const float MAX_MUSIC_DB = -13f;//-10
+    public const float MAX_SFX_DB = -5f;
+    public const float MIN_DB = -80f;
     public enum LocalizationID {
         English = 0,
         Ukrainian = 1
+    }
+    public static float SliderToDB(float sliderValue, float maxDB) {
+        const float CURVE_FACTOR = .2f; // Adjust this factor to change the curve steepness
+        float curvedValue = Mathf.Pow(sliderValue, CURVE_FACTOR);
+
+        return Mathf.Lerp(MIN_DB, maxDB, curvedValue);
     }
 
     //animators

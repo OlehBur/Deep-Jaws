@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
+using VContainer;
 
 public class LicenseValidator : MonoBehaviour {
-    [Header("UI Panels")]
-    //[SerializeField] private GameObject firstInitLicensePanel;
-    [SerializeField] private GameObject licenseFailedPanel;
-
-    [Header("Game Start Logic")]
-    [SerializeField] private GameObject mainMenuContainer;
+    [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
+    [Inject] private readonly IMainMenuNavigation _mainMenu;
 
 
     private void Awake/*Start*/() {
@@ -14,9 +11,10 @@ public class LicenseValidator : MonoBehaviour {
     }
 
     public void ValidateGame() {
-        mainMenuContainer.SetActive(false);
+        if (_mainMenu != null)
+            _mainMenu.ActivateMainMenuContainer(false);
         //firstInitLicensePanel.SetActive(false);
-        licenseFailedPanel.SetActive(false);
+        _alertWindowsManager.ActivateLicenseFailedWnd(false);
 
         if (ProgressSaver.IsAccountDataExist) {
             AccountData data = ProgressSaver.LoadAccountData();
@@ -54,7 +52,7 @@ public class LicenseValidator : MonoBehaviour {
         else {
             //if game installed not fr Play Market
             Debug.LogWarning("[LicenseValidator] License check failed! Invalid installer.");
-            licenseFailedPanel.SetActive(true);
+            _alertWindowsManager.ActivateLicenseFailedWnd(true);
         }
     }
 
@@ -69,9 +67,9 @@ public class LicenseValidator : MonoBehaviour {
         }
 
         //firstInitLicensePanel.SetActive(false);
-        licenseFailedPanel.SetActive(false);
-        if (mainMenuContainer != null)
-            mainMenuContainer.SetActive(true);
+        _alertWindowsManager.ActivateLicenseFailedWnd(false);
+        if (_mainMenu != null)
+            _mainMenu.ActivateMainMenuContainer(true);
     }
 
 

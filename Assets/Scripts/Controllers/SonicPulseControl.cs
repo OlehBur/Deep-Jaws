@@ -14,7 +14,7 @@ public class SonicPulseControl : MonoBehaviour {
     private bool _playAnim = false;
 
     [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
-    [Inject] private readonly IAudioManager _audioManager;
+    [Inject] private readonly IAudioPlayService _audioManager;
 
 
     private void Update() {

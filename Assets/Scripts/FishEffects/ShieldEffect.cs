@@ -6,12 +6,12 @@ public class ShieldEffect : Effect {
     private const float SHIELD_SCALE_MULTIPLIER = 1.2f;
 
     private readonly IVFXPoolService _fishAddComp;
-    private readonly IAudioManager _audioManager;
+    private readonly IAudioPlayService _audioManager;
     private readonly Vector3 _shieldLocalPos;
     private readonly Vector3 _shieldLocalScale;
     private readonly Transform _shieldParent;
 
-    public ShieldEffect(IAudioManager audioManager, IVFXPoolService fishAddComp, Transform parent, Vector3 shieldLocPos, Vector3 shieldLocScale) {
+    public ShieldEffect(IAudioPlayService audioManager, IVFXPoolService fishAddComp, Transform parent, Vector3 shieldLocPos, Vector3 shieldLocScale) {
         _audioManager = audioManager;
         _fishAddComp = fishAddComp;
         _shieldLocalPos = shieldLocPos;

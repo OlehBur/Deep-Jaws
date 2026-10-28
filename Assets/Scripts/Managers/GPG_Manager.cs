@@ -17,13 +17,15 @@ using System;
 /// </summary>
 public class GPG_Manager : MonoBehaviour {
     public static GPG_Manager Instance { get; private set; } = null;
-    public event Action<string> OnLoadKingOfDeeps;
+
 
     [SerializeField] MainmenuManager mainmenu;
     [SerializeField] GamePurchaseManager purchaseManager;
 
 
 #if UNITY_ANDROID 
+    public event Action<string> OnLoadKingOfDeeps;
+
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
 
     private const float WAKKE_UP_ACHIEVEMENT_TIME = 180 * 60f;
