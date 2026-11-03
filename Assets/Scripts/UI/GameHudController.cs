@@ -23,6 +23,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly ISceneLoader _sceneLoader;
     [Inject] private readonly IGameManager _gameManager;
+    [Inject] private readonly IAdsManager _adsManager;
 
 
     private void Awake() {
@@ -85,7 +86,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
 
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (!prem && !noadd) {//if doesnt have immunitet
-            if (/*gameAdsManager*/GameAdsManager.Instance.OnShowInterstitialAd()) //only if ad will be shown
+            if (/*gameAdsManager*/_adsManager.OnShowInterstitialAd()) //only if ad will be shown
                 ActivatePauseWnd(true);
         }
     }

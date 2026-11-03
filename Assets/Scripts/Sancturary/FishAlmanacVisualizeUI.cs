@@ -1,9 +1,13 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization;
+using VContainer;
 
-public class FishAlmanacVisualizeUI : MonoBehaviour {
-    [SerializeField] FishAllInfo fishInfoManager;
+
+public interface IFishAlmanacVisualizeUI {
+    void InitWnd(FishLevel fishLevel);
+}
+
+public class FishAlmanacVisualizeUI : MonoBehaviour, IFishAlmanacVisualizeUI {
     [SerializeField] TextMeshProUGUI fishName;
     [SerializeField] TextMeshProUGUI description;
     [SerializeField] TextMeshProUGUI health;
@@ -17,12 +21,6 @@ public class FishAlmanacVisualizeUI : MonoBehaviour {
     [SerializeField] ProgressBar speedBar;
     [SerializeField] ProgressBar responseBar;
     [SerializeField] ProgressBar biteBar;
-
-    [SerializeField] LocalizedString yesStr;
-    [SerializeField] LocalizedString noStr;
-    [SerializeField] LocalizedString units;
-    [SerializeField] LocalizedString metersPerSec;
-    [SerializeField] LocalizedString meters;
 
     [SerializeField] Transform fishesParent;
     [SerializeField] GameObject dartfish;
@@ -39,6 +37,9 @@ public class FishAlmanacVisualizeUI : MonoBehaviour {
     [SerializeField] GameObject cuttle;
     [SerializeField] GameObject puffer;
 
+    [Inject] private readonly SanctuaryUIInfo _sanctuaryUIInfo;
+    [Inject] private readonly FishAllInfo _fishInfoManager;
+
     private const string TEXT_RED_TAG = "<color=red>";
     private const string TEXT_GREEN_TAG = "<color=green>";
 
@@ -52,7 +53,7 @@ public class FishAlmanacVisualizeUI : MonoBehaviour {
     private void Start() {
         //init max stats
         foreach (FishLevel fish in GameStaticInfo.AllFishLevels) {
-            FishInfo currentFish = fishInfoManager.GetFishInfo(fish);
+            FishInfo currentFish = _fishInfoManager.GetFishInfo(fish);
 
             if (maxHealth < currentFish.MaxHealth)
                 maxHealth = currentFish.MaxHealth;
@@ -66,23 +67,23 @@ public class FishAlmanacVisualizeUI : MonoBehaviour {
     }
 
     public void InitWnd(FishLevel fishLevel) {
-        FishInfo currentFishInfo = fishInfoManager.GetFishInfo(fishLevel);
+        FishInfo currentFishInfo = _fishInfoManager.GetFishInfo(fishLevel);
         DisableFishObjects();
         GetObjByFish(fishLevel).SetActive(true);
 
         fishName.text = currentFishInfo.Tittle.GetLocalizedString();
         description.text = currentFishInfo.Description.GetLocalizedString();
 
-        health.text = currentFishInfo.MaxHealth.ToString() + units.GetLocalizedString();
+        health.text = currentFishInfo.MaxHealth.ToString() + _sanctuaryUIInfo.Units.GetLocalizedString();
         healthBar.SetFillAmount(currentFishInfo.MaxHealth / maxHealth);
 
-        speed.text = currentFishInfo.Speed.ToString("F1") + metersPerSec.GetLocalizedString();
+        speed.text = currentFishInfo.Speed.ToString("F1") + _sanctuaryUIInfo.MetersPerSec.GetLocalizedString();
         speedBar.SetFillAmount(currentFishInfo.Speed / maxSpeed);
 
-        responseRadius.text = currentFishInfo.ResponseRadius.ToString("F1") + meters.GetLocalizedString();
+        responseRadius.text = currentFishInfo.ResponseRadius.ToString("F1") + _sanctuaryUIInfo.Meters.GetLocalizedString();
         responseBar.SetFillAmount(currentFishInfo.ResponseRadius / maxResponse);
 
-        biteDamage.text = currentFishInfo.BiteDamage.ToString("F1") + units.GetLocalizedString();
+        biteDamage.text = currentFishInfo.BiteDamage.ToString("F1") + _sanctuaryUIInfo.Units.GetLocalizedString();
         biteBar.SetFillAmount(currentFishInfo.BiteDamage / maxBite);
 
         isHasShield.text = GetYesNoLabel(currentFishInfo.IsHaveShield);
@@ -92,8 +93,8 @@ public class FishAlmanacVisualizeUI : MonoBehaviour {
 
     string GetYesNoLabel(bool isYes) {
         return isYes ?
-            TEXT_GREEN_TAG + yesStr.GetLocalizedString() :
-            TEXT_RED_TAG + noStr.GetLocalizedString();
+            TEXT_GREEN_TAG + _sanctuaryUIInfo.YesStr.GetLocalizedString() :
+            TEXT_RED_TAG + _sanctuaryUIInfo.NoStr.GetLocalizedString();
     }
 
     GameObject GetObjByFish(FishLevel fishLevel) {

@@ -1,6 +1,13 @@
 using UnityEngine;
 
-public class SanctuaryCameraChanger : MonoBehaviour {
+
+public interface ISanctuaryCameraChanger {
+    void OnChangeBiomeCamera(BiomeType biomeType);
+    void EnableAlmanacCamera();
+    void DisableAlmanacCamera();
+}
+
+public class SanctuaryCameraChangerService : MonoBehaviour, ISanctuaryCameraChanger {
     [SerializeField] Camera almanac;
     [SerializeField] Camera coralReef;
     [SerializeField] Camera cliffsSeaweed;

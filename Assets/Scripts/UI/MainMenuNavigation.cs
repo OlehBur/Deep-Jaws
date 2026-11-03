@@ -44,9 +44,15 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
             sanctuaryButton.interactable = !GameManager.IS_PC_DEMO;
         }
 
-        _alertWindowsManager.OnAlerWndOpened += (value) => gameObject.SetActive(!value);//auto close main menu wnd if player click "yes" on are u sure wnd
+        _alertWindowsManager.OnAlerWndOpened += AutoHideMainMenu;//auto close main menu wnd if player click "yes" on are u sure wnd
 
         InitMMButtonsListeners();
+    }
+
+    void AutoHideMainMenu(bool isAlertWndOpened) => gameObject.SetActive(!isAlertWndOpened);
+
+    private void OnDisable() {
+        _alertWindowsManager.OnAlerWndOpened -= AutoHideMainMenu;
     }
 
     void InitMMButtonsListeners() {

@@ -1,5 +1,6 @@
-using UnityEngine;
+//#define UNITY_ANDROID
 
+using UnityEngine;
 #if UNITY_ANDROID 
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
@@ -16,10 +17,7 @@ using System;
 /// Google Play Games Manager
 /// </summary>
 public class GPG_Manager : MonoBehaviour {
-    public static GPG_Manager Instance { get; private set; } = null;
 
-
-    [SerializeField] MainmenuManager mainmenu;
     [SerializeField] GamePurchaseManager purchaseManager;
 
 

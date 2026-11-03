@@ -121,5 +121,9 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
         _playerSpawnService.OnPlayerRespawn -= SpawnPlayerSpawnParticles;
         _permamentFishPoolService.OnFishDie -= EnemyFishSpawnDeadParticles;
         _enemyPoolService.OnFishDie -= EnemyFishSpawnDeadParticles;
+
+        _playerSpawnService.OnDestroy();
+        _permamentFishPoolService.OnDestroy();
+        _enemyPoolService.OnDestroy();
     }
 }

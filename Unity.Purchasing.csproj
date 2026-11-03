@@ -360,8 +360,8 @@
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\Models\PurchasesFetchFailureDescription.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\Android\GooglePlay\Interfaces\UseCases\IGooglePlayChangeSubscriptionUseCase.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Product\ProductServiceContainer.cs" />
-    <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Legacy\PurchasingManager.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\Models\CartItem.cs" />
+    <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Legacy\PurchasingManager.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\CartValidation\SingleProductSingleQuantityCartValidator.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\PurchaseServiceFactoryManager.cs" />
     <Compile Include="Packages\com.unity.purchasing\Runtime\Purchasing\Core\Purchasing\Android\GooglePlay\Extensions\UseCases\GooglePlayGetGooglePurchaseUseCase.cs" />
@@ -1524,18 +1524,6 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.3.20f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Services.Core">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Services.Core.Environments">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Services.Core.Internal">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Internal.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
@@ -1546,6 +1534,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.Services.Core.csproj">
+      <Project>{8C12AD21-26BC-4042-C358-99D3BB54FACA}</Project>
+      <Name>Unity.Services.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Services.Core.Environments.csproj">
+      <Project>{39FC9BE1-00FC-6845-F5A3-EEAA9C68E2A0}</Project>
+      <Name>Unity.Services.Core.Environments</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Services.Core.Internal.csproj">
+      <Project>{1E0E74C1-FFEA-6C53-92F7-28EDE7935897}</Project>
+      <Name>Unity.Services.Core.Internal</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.SecurityStub.csproj">
       <Project>{6F6076F5-774E-CED1-E0AD-8F5052574D51}</Project>
       <Name>Unity.Purchasing.SecurityStub</Name>

@@ -21,6 +21,7 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
     //private readonly AudioManager _audioManager;
     //private readonly VFXpoolManager _vfxPoolManager;
     private readonly FishSkinInfo _fishSkinManager;
+    private readonly IAdsManager _adsManager;
 
     public event Action<Fish, bool> OnPlayerRespawn;//bool - is respawn after death
     public event Action<Fish> OnFishDie;
@@ -35,15 +36,19 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
 
     [Inject]
     public PlayerPoolService(FishPrefabsInfo fishPrefabs,/* AudioManager audioManager,*/
-        /*VFXpoolManager vfxPoolManager,*/ FishSkinInfo fishSkinManager, IObjectResolver resolver) : base(fishPrefabs, resolver) {
+        /*VFXpoolManager vfxPoolManager,*/ FishSkinInfo fishSkinManager, IObjectResolver resolver, IAdsManager adsManager) : base(fishPrefabs, resolver) {
         _savedWorldData = ProgressSaver.LoadWorldData();// ProgressSaver.IsWorldDataExist() ?             ProgressSaver.LoadWorldData() : new WorldData();//load save data if exists
         //_fishPrefabs = fishPrefabs;
         //_audioManager = audioManager;
         //_vfxPoolManager = vfxPoolManager;
         _fishSkinManager = fishSkinManager;
+        _adsManager = adsManager;
 
         _playerInitSpawnPos = Vector3.up * GameStaticInfo.FISH_SPAWN_HEINGT;//in center map
-        //InitPlayerPool(fishPrefabs, fishPoolParent, audioManager, fishAdditionalCompManager, fishSkinManager);
+                                                                            //InitPlayerPool(fishPrefabs, fishPoolParent, audioManager, fishAdditionalCompManager, fishSkinManager);
+
+        _adsManager.OnDeadRespawn += PlayerRespawnHandler;
+        _adsManager.OnDeadRevive += PlayerReviveHandler;
     }
 
     public Fish GetAt(int index) => _playerPoolComp[index];
@@ -83,6 +88,11 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
             playerPrefab.SetActive(false);
         }
     }
+
+    void PlayerRespawnHandler() =>
+        RespawnPlayer(true, false);
+    void PlayerReviveHandler() =>
+        RespawnPlayer(true, true);
 
     public bool TryGetFish(GameObject fishObject, out Fish fish) {
         int index = Array.IndexOf(_playerPool, fishObject);
@@ -243,5 +253,10 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
 
         if (PlayerCurrentFish != null) //null in case death of hard mode
             OnPlayerRespawn?.Invoke(PlayerCurrentFish, isDie);
+    }
+
+    public void OnDestroy() {
+        _adsManager.OnDeadRespawn -= PlayerRespawnHandler;
+        _adsManager.OnDeadRevive -= PlayerReviveHandler;
     }
 }

@@ -1,7 +1,10 @@
+#define UNITY_ANDROID
+
 using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 public class RespawnWnd : MonoBehaviour {
     [SerializeField] TextMeshProUGUI limitRevives;
@@ -9,35 +12,38 @@ public class RespawnWnd : MonoBehaviour {
     [SerializeField] Button reviveB;
     [SerializeField] Button retryB;
 
-    private int respawnTime;
+    [Inject] private readonly IAdsManager _adsManager;
+
+    private int _respawnTime;
+
 
     private void Awake() {
-        if (GameAdsManager.Instance != null) {
+        //if (GameAdsManager.Instance != null) {
 #if UNITY_ANDROID
-            reviveB.onClick.AddListener(GameAdsManager.Instance.OnReviveClicked);
-            retryB.onClick.AddListener(GameAdsManager.Instance.OnRetryClicked);
-            GameAdsManager.Instance.OnAdButtonsInteractable += OnReviveAdInteractable;
-            GameAdsManager.Instance.OnReviveRewarded += RecalculateLimit;
+        reviveB.onClick.AddListener(_adsManager.OnReviveClicked);
+        retryB.onClick.AddListener(_adsManager.OnRetryClicked);
+        _adsManager.OnAdButtonsInteractable += OnReviveAdInteractable;
+        _adsManager.OnReviveRewarded += RecalculateLimit;
 #endif
-        }
+        //}
     }
 
     private void OnDestroy() {
         reviveB.onClick.RemoveAllListeners();
         retryB.onClick.RemoveAllListeners();
 #if UNITY_ANDROID
-        if (GameAdsManager.Instance != null) {
-            GameAdsManager.Instance.OnAdButtonsInteractable -= OnReviveAdInteractable;
-            GameAdsManager.Instance.OnReviveRewarded -= RecalculateLimit;
-        }
+        //if (GameAdsManager.Instance != null) {
+            _adsManager.OnAdButtonsInteractable -= OnReviveAdInteractable;
+            _adsManager.OnReviveRewarded -= RecalculateLimit;
+        //}
 #endif
     }
 
     void OnEnable() {
         limitRevives.text = GetRevivesTxt();
         reviveB.interactable = CanWatchRewardedForRevive();
-        respawnTime = GameStaticInfo.AUTO_RESPAWN_TIME;
-        respawnTimer.text = respawnTime.ToString();
+        _respawnTime = GameStaticInfo.AUTO_RESPAWN_TIME;
+        respawnTimer.text = _respawnTime.ToString();
         InvokeRepeating(nameof(RespawnWndTimer), 0f, 1f);
     }
 
@@ -53,16 +59,16 @@ public class RespawnWnd : MonoBehaviour {
     }
 
     void RespawnWndTimer() {
-        respawnTimer.text = respawnTime.ToString();
-        --respawnTime;
+        respawnTimer.text = _respawnTime.ToString();
+        --_respawnTime;
 
-        if (GameAdsManager.Instance.IsAdStartShow || !gameObject.activeInHierarchy) {
+        if (_adsManager.IsAdStartShow || !gameObject.activeInHierarchy) {
             CancelInvoke(nameof(RespawnWndTimer));
             return;
         }
 
-        if (respawnTime < 0)//auto retry
-            GameAdsManager.Instance.OnRetryClicked();
+        if (_respawnTime < 0)//auto retry
+            _adsManager.OnRetryClicked();
     }
 
     private bool CanWatchRewardedForRevive() {

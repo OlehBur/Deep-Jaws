@@ -312,8 +312,8 @@ public class BiomeWrapper {
         if (TimeToUpgrade < 0)
             TimeToUpgrade = 0;
 
-        //Debug.LogWarning("Activate one click research");
-        //TimeToUpgrade = 0;
+        Debug.LogWarning("Activate one click research");
+        TimeToUpgrade = 0;
 
         OnBoostedProgress?.Invoke(this);
     }

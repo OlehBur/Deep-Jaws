@@ -23,8 +23,8 @@ public class BiomesVisualize : MonoBehaviour {
 
 
     private void Start() {
-        if (_sanctuariesManager != null)
-            InitModelsByLevels();
+        //if (_sanctuariesManager != null)
+        InitModelsByLevels();
     }
 
     void InitModelsByLevels() {

@@ -71,15 +71,13 @@
     <Compile Include="Assets\Scripts\Core\JoystickArea.cs" />
     <Compile Include="Assets\Scripts\Sancturary\SanctuaryVisualizeUI.cs" />
     <Compile Include="Assets\Scripts\UI\SnowAnimation.cs" />
-    <Compile Include="Assets\Scripts\Managers\Spawn Manager.cs" />
     <Compile Include="Assets\Scripts\Controllers\ZoneController.cs" />
     <Compile Include="Assets\Scripts\FishEffects\StunInitiatorEffet.cs" />
     <Compile Include="Assets\Scripts\Managers\GraphicManager.cs" />
     <Compile Include="Assets\Scripts\Debug_\ModelsAroundView.cs" />
+    <Compile Include="Assets\Scripts\UI\ResidentButtonsView.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\LicenseValidator.cs" />
-    <Compile Include="Assets\Scripts\Scriptable\FishLocalized.cs" />
-    <Compile Include="Assets\Scripts\Sancturary\SanctuaryCameraChanger.cs" />
     <Compile Include="Assets\Scripts\Achievements\CantCatchAchieveTrig.cs" />
     <Compile Include="Assets\Scripts\Core\HudBars.cs" />
     <Compile Include="Assets\Scripts\UI\RespawnWnd.cs" />
@@ -88,6 +86,7 @@
     <Compile Include="Assets\Scripts\UI\GPGServicesUIView.cs" />
     <Compile Include="Assets\Scripts\LifeTimeScope\MenuLifetimeScope.cs" />
     <Compile Include="Assets\Scripts\Sancturary\FishAlmanacVisualizeUI.cs" />
+    <Compile Include="Assets\Scripts\UI\SanctuaryBiomesNavigation.cs" />
     <Compile Include="Assets\Scripts\Managers\EffectManager.cs" />
     <Compile Include="Assets\Scripts\Sancturary\ProgressBar.cs" />
     <Compile Include="Assets\Scripts\Controllers\CameraFollower.cs" />
@@ -145,6 +144,7 @@
     <Compile Include="Assets\Scripts\Managers\GameAdsManager.cs" />
     <Compile Include="Assets\Scripts\Scriptable\VFX_PrefabsInfo.cs" />
     <Compile Include="Assets\Scripts\UI\PurchaseUIvisualizer.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\SanctuaryUIInfo.cs" />
     <Compile Include="Assets\Scripts\Core\Fish.cs" />
     <Compile Include="Assets\Scripts\Controllers\SlowdownPearlController.cs" />
     <Compile Include="Assets\Scripts\FishEffects\SprintEffect.cs" />
@@ -152,15 +152,17 @@
     <Compile Include="Assets\Scripts\Sancturary\SanctuariesManager.cs" />
     <Compile Include="Assets\Scripts\UI\SceneLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Effect.cs" />
+    <Compile Include="Assets\Scripts\Scriptable\FishLocalizedInfo.cs" />
     <Compile Include="Assets\Scripts\FishEffects\ShieldEffect.cs" />
-    <Compile Include="Assets\Scripts\Managers\MainmenuManager.cs" />
     <Compile Include="Assets\Scripts\UI\SkinStoreCard.cs" />
     <Compile Include="Assets\Scripts\Core\Encryptor.cs" />
     <Compile Include="Assets\Scripts\Core\GameStaticInfo.cs" />
+    <Compile Include="Assets\Scripts\UI\BiomeLvlBarView.cs" />
     <Compile Include="Assets\Scripts\UI\GameHudController.cs" />
     <Compile Include="Assets\Scripts\Core\GlobalEventSystem.cs" />
     <Compile Include="Assets\Scripts\UI\GameModeController.cs" />
     <Compile Include="Assets\Scripts\Services\IFishPoolService.cs" />
+    <Compile Include="Assets\Scripts\Sancturary\SanctuaryCameraChangerService.cs" />
     <Compile Include="Assets\Scripts\Controllers\FishControl.cs" />
     <Compile Include="Assets\Scripts\Debug_\VolumeCinema.cs" />
     <Compile Include="Assets\Scripts\UI\SettingsUI.cs" />
@@ -1311,28 +1313,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Localization">
-      <HintPath>Library\ScriptAssemblies\Unity.Localization.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.InputSystem">
-      <HintPath>Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.LevelPlay">
-      <HintPath>Library\ScriptAssemblies\Unity.LevelPlay.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.ResourceManager">
-      <HintPath>Library\ScriptAssemblies\Unity.ResourceManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VContainer">
@@ -1357,9 +1343,25 @@
       <Project>{CDEC674B-7FD6-BD7F-E5C9-E209A37A7BF2}</Project>
       <Name>Google.Play.InputMapping</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.Localization.csproj">
+      <Project>{4162980C-9852-1AEC-FBBA-502130F573E8}</Project>
+      <Name>Unity.Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.InputSystem.csproj">
+      <Project>{59821C99-E87F-4E0E-99A9-2D02B56F72C5}</Project>
+      <Name>Unity.InputSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Purchasing.csproj">
       <Project>{298CAE37-0D5B-F2B3-BB17-E9498AF1DC9D}</Project>
       <Name>Unity.Purchasing</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.LevelPlay.csproj">
+      <Project>{4937035B-4A3E-3FA8-4AC0-E1242DA82185}</Project>
+      <Name>Unity.LevelPlay</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.ResourceManager.csproj">
+      <Project>{015684FD-203C-EBD6-6070-D593D6EB3E49}</Project>
+      <Name>Unity.ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

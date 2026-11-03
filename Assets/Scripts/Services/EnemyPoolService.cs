@@ -320,4 +320,14 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
 
         return (FishLevel)allowedLevels[0];
     }
+
+    public void OnDestroy() {
+        _playerPoolProvider.OnPlayerRespawn -= PlayerRespawnHandler;
+        for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
+            for (int i = 0; i < GameStaticInfo.ENEMY_POOL_SIZE; i++) {
+                Fish enemyFish = _enemyPoolComp.Get(level, i);
+                if (enemyFish != null)
+                    enemyFish.OnFishDie -= FishDieAct;
+            }
+    }
 }

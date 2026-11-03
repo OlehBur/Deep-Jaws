@@ -17,6 +17,8 @@ public interface IFishPoolService : IEnumerable<Fish> {
     bool TryGetFish(GameObject fishObject, out Fish fish);
     //Fish GetFishByIndex(int index);
     //void PrefabNamingTaging(GameObject prefab, FishLevel level);
+
+    void OnDestroy();
 }
 
 public interface IPlayerFishPoolService : IFishPoolService {

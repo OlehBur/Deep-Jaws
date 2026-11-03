@@ -249,4 +249,13 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
             return true;
         }
     }
+
+    public void OnDestroy() {
+        foreach (Fish f in _pufferfishPoolComp)
+            f.OnFishDie -= DeactivateRespawnPrefab;
+        foreach (Fish f in _cuttlefishPoolComp)
+            f.OnFishDie -= DeactivateRespawnPrefab;
+        foreach (Fish f in _dartfishPoolComp)
+            f.OnFishDie -= DeactivateRespawnPrefab;
+    }
 }

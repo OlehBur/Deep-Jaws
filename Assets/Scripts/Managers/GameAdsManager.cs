@@ -1,4 +1,4 @@
-//#define UNITY_ANDROID
+#define UNITY_ANDROID
 
 using System;
 using UnityEngine;
@@ -18,11 +18,13 @@ public enum AdTarget {
 }
 
 public interface IAdsManager {
-    #if UNITY_ANDROID
+#if UNITY_ANDROID
     event Action<bool> OnAdButtonsInteractable;
     event Action OnDoubleShellsRewarded;
     event Action OnExtraShellsRewarded;
     event Action OnReviveRewarded;
+    event Action OnDeadRespawn;
+    event Action OnDeadRevive;
 
     bool IsAdStartShow { get; }
     void OnReviveClicked();
@@ -35,12 +37,15 @@ public interface IAdsManager {
 }
 
 public class GameAdsManager : MonoBehaviour, IAdsManager {
-    public static GameAdsManager Instance { get; private set; }
+    //public static GameAdsManager Instance { get; private set; }
 
     //self inject
     //[Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
-    //[Inject] private readonly IAlertWindowsManager _alertWindows;
     //[Inject] private readonly IGameHudController _gameHudController;
+#if UNITY_ANDROID
+    [Inject] private readonly IAlertWindowsManager _alertWindows;
+    [Inject] private readonly ISanctuariesManager _sanctuariesManager;
+#endif
 
     public bool IsAdStartShow { get; private set; } = false;
 #if UNITY_ANDROID
@@ -48,6 +53,8 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
     public event Action OnDoubleShellsRewarded;
     public event Action OnExtraShellsRewarded;
     public event Action OnReviveRewarded;
+    public event Action OnDeadRespawn;
+    public event Action OnDeadRevive;
 
     private LevelPlayRewardedAd _rewardedAd;
     private bool _isSdkInitialized = false;
@@ -66,27 +73,15 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
     private const float INTERSETIAL_DELAY_RELOAD = 10f;
 
 
-    private void Awake() {
-        if (Instance != null && Instance != this) {
-            //Instance.ReInitGameUI(/*spawnManager,*/ gui);
-            Destroy(gameObject);
-            return;
-        }
+    //private void Awake() {
+    //    if (Instance != null && Instance != this) {
+    //        //Instance.ReInitGameUI(/*spawnManager,*/ gui);
+    //        Destroy(gameObject);
+    //        return;
+    //    }
 
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    //void ReInitGameUI(SpawnManager spawnManager, MainmenuManager gui) {
-    //    this.spawnManager = this.spawnManager == null ? spawnManager : this.spawnManager;
-    //    this.gui = this.gui == null ? gui : this.gui;
-    //    OnAdButtonsInteractable?.Invoke(true);
-    //}
-    //void ReInitGameUI(/*SpawnManager newSpawnManager,*/ MainmenuManager newGui) {
-    //    //spawnManager = newSpawnManager;
-    //    gui = newGui;
-
-    //    OnAdButtonsInteractable?.Invoke(true);
+    //    Instance = this;
+    //    DontDestroyOnLoad(gameObject);
     //}
 
     async void Start() {
@@ -118,9 +113,6 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
     bool IsInterstetialTime => Time.time - _timeAfterInterstetial >= INTERSTETIAL_TIME_INTERVAL;
     void ResetInterstetialTime() => _timeAfterInterstetial = Time.time;
 
-    //bool IsListNeedToCopy<T>(List<T> currentList, List<T> newList) =>
-    //     (currentList == null || currentList.Count == 0 || currentList[0] == null)
-    //        && newList != null && newList.Count > 0;
 
     private string GetUserID() {
         if (!PlayerPrefs.HasKey(USER_ID_KEY)) {
@@ -200,6 +192,10 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
         _boostResearch = type;
         _adTarget = AdTarget.BoostResearch;
         RewardedCheckAndShow();
+
+        _sanctuariesManager.BoostResearch(_boostResearch);
+        Debug.LogWarning("Activate onle click boost");
+        return;
 #endif
     }
 
@@ -287,37 +283,11 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
     }
 #endif
 
-    //true if limit hsnt exhausted
-    //bool RewardedLimitRecalc() {
-    //    int loadedAttemptsCnt = PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, MAX_DAILY_REWARDED);
-    //    if (loadedAttemptsCnt != 0) {
-    //        loadedAttemptsCnt--;
-    //        PlayerPrefs.SetInt(REWARDED_LIMIT_KEY, loadedAttemptsCnt);
-    //        PlayerPrefs.Save();
-    //        return true;
-    //    }
-    //    else //loadedAttemptsCnt == 0
-    //        return false;
-    //    //PlayerPrefs.Save();
-    //    //SetLimitAdAmountTxt(/*MAX_DAILY_REWARDED -*/ loadedAttemptsCnt);
-    //}
-
-    //void SetLimitAdAmountTxt(int currentCnt) {
-    //    //foreach (TextMeshProUGUI t in limitTxtUI)
-    //    limitTxtUI.text = currentCnt + "/" + MAX_DAILY_REWARDED;
-    //}
-
-    //public void UpdateDailyRevivesTxt() {
-    //    int attemptsLeft = /*MAX_DAILY_REWARDED - */PlayerPrefs.GetInt(REWARDED_LIMIT_KEY, MAX_DAILY_REWARDED);
-    //    limitRevivesTxtUI.text = attemptsLeft + "/" + MAX_DAILY_REWARDED;
-    //    //SetLimitAdAmountTxt(attemptsLeft);
-    //}
-
-#if (UNITY_ANDROID || UNITY_EDITOR) && !UNITY_STANDALONE_WIN
+#if (UNITY_ANDROID || UNITY_EDITOR) //&& !UNITY_STANDALONE_WIN
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
 
         ProcessEarnedReward();
-        rewardedAd.LoadAd();
+        _rewardedAd.LoadAd();
 
 
 #if UNITY_EDITOR//  in case if OnAdClosed worked first, it reset adTarget to None via ResetState().
@@ -328,7 +298,9 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
         ResetState();//!!! necessarily
 #endif
     }
+#endif
 
+#if UNITY_ANDROID
     void OnRewardedLoadFailed(LevelPlayAdError error) {
         Debug.LogWarning($"Rewarded loading error: {error}");
     }
@@ -389,21 +361,21 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
     private void RewardedRewardBeh() {
         if (_adTarget == AdTarget.ExtraLife) {
             Debug.Log("RevivePlayerLogic: A fish comes back to life at the very spot where it died, with the same level!");
-            //_gameHudController.DeactivateRespawnWnd();//solve by playerServis respawn event
-            _playerFishPoolService.RespawnPlayer(true, true);
+            //_playerFishPoolService.RespawnPlayer(true, true);
+            OnDeadRevive?.Invoke();
             OnReviveRewarded?.Invoke();
         }
         else if (_adTarget == AdTarget.DoubleShells)
             OnDoubleShellsRewarded?.Invoke();
 
         else if (_adTarget == AdTarget.ExtraShells) {
-            if (SanctuariesManager.Instance != null)
-                SanctuariesManager.Instance.OnAddShells(GameStaticInfo.EXTRA_SHELLS_CNT);
+            //if (_sanctuariesManager != null)
+            _sanctuariesManager.OnAddShells(GameStaticInfo.EXTRA_SHELLS_CNT);
             OnExtraShellsRewarded?.Invoke();
         }
         else if (_adTarget == AdTarget.BoostResearch) {
-            if (SanctuariesManager.Instance != null)
-                SanctuariesManager.Instance.BoostResearch(_boostResearch);
+            //if (SanctuariesManager.Instance != null)
+            _sanctuariesManager.BoostResearch(_boostResearch);
         }
 
         _adTarget = AdTarget.None;
@@ -411,8 +383,8 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
 
     private void InterstitialRespawnBeh() {
         if (_adTarget == AdTarget.JustRespawn) {
-            //_gameHudController.DeactivateRespawnWnd(); //solve by playerServis respawn event
-            _playerFishPoolService.RespawnPlayer(true, false);
+            //_playerFishPoolService.RespawnPlayer(true, false);
+            OnDeadRespawn?.Invoke();
             //Debug.Log("RestartGameLogic: The fish falls off the platform and the game restarts.");
 
             _adTarget = AdTarget.None;
@@ -423,8 +395,8 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
         LevelPlay.OnInitSuccess -= SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed -= SdkInitializationFailedEvent;
 
-        if (Instance == this)
-            Instance = null;
+        //if (Instance == this)
+        //    Instance = null;
     }
 #endif
 }

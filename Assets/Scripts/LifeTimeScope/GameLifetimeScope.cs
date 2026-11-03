@@ -65,9 +65,9 @@ public class GameLifetimeScope : LifetimeScopeBase {
         SingleInject<DeadArea>(builder);
         SingleInject<FishHeartbeatsManager>(builder);
         SingleInject<GameManager>(builder);
-        SingleInject<MainmenuManager>(builder);
         SingleInject<PlayerUIController>(builder);
         SingleInject<GameResultWnd>(builder);
+        SingleInject<RespawnWnd>(builder);
     }
 
 

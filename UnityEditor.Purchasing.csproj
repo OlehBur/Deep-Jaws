@@ -1244,10 +1244,6 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.3.20f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Services.Core.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
@@ -1293,6 +1289,10 @@
     <ProjectReference Include="Unity.Purchasing.Utilities.csproj">
       <Project>{ADD06F75-4FC3-85E7-6BCA-D058B30FC2F9}</Project>
       <Name>Unity.Purchasing.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Services.Core.Editor.csproj">
+      <Project>{C8FA0CC2-A9E1-A6ED-1C12-1F3185665CBF}</Project>
+      <Name>Unity.Services.Core.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

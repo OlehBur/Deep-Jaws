@@ -9,15 +9,12 @@ public class RootLifetimeScope : LifetimeScopeBase {
 
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] AudioClipsInfo clipsInfo;
-    [SerializeField] SceneLoader sceneLoader;
-    [SerializeField] GameAdsManager gameAdsManager;
-    [SerializeField] AudioPlayManager audioPlayManager;
-    [SerializeField] AlertWindowsManager alertWindowsManager;
-    [SerializeField] GamePurchaseManager gamePurchaseManager;
-    [SerializeField] GraphicManager graphicManager;
-    [SerializeField] SanctuariesManager sanctuariesManager;
-    [SerializeField] SettingsUI settingsManager;
-    [SerializeField] LicenseValidator licenseValidator;
+    [SerializeField] SanctuaryUIInfo sanctuaryUIInfo;
+    [SerializeField] FishLocalizedInfo fishLocalizedInfo;
+    [SerializeField] FishAllInfo fishInfoManager;
+    [SerializeField] FishSpriteInfo fishSpriteInfo;
+
+
 
     protected override void Awake() {
         if (Instance != null && Instance != this) {
@@ -41,19 +38,32 @@ public class RootLifetimeScope : LifetimeScopeBase {
 
     public override void InitAssets(IContainerBuilder builder) {
         builder.RegisterInstance(clipsInfo);
+        builder.RegisterInstance(sanctuaryUIInfo);
+        builder.RegisterInstance(fishLocalizedInfo);
+        builder.RegisterInstance(fishSpriteInfo);
+        builder.RegisterInstance(fishInfoManager);
         builder.RegisterInstance(audioMixer);
     }
 
     public override void InitServices(IContainerBuilder builder) {
-        builder.RegisterComponent(alertWindowsManager).As<IAlertWindowsManager>();
-        builder.RegisterComponent(settingsManager).As<ISettingsManager>();
-        builder.RegisterComponent(sceneLoader).As<ISceneLoader>();
-        builder.RegisterComponent(gameAdsManager).As<IAdsManager>();
-        builder.RegisterComponent(audioPlayManager).As<IAudioPlayService>();
-        builder.RegisterComponent(gamePurchaseManager).As<IGamePurchaseManager>();
-        builder.RegisterComponent(graphicManager).As<IGraphicManager>();
-        builder.RegisterComponent(sanctuariesManager).As<ISanctuariesManager>();
-        builder.RegisterComponent(licenseValidator).As<ILicenseValidator>();
+        builder.RegisterComponentInHierarchy<SanctuariesManager>().As<ISanctuariesManager>();
+        builder.RegisterComponentInHierarchy<AlertWindowsManager>().As<IAlertWindowsManager>();
+        builder.RegisterComponentInHierarchy<SettingsUI>().As<ISettingsManager>();
+        builder.RegisterComponentInHierarchy<SceneLoader>().As<ISceneLoader>();
+        builder.RegisterComponentInHierarchy<GameAdsManager>().As<IAdsManager>();
+        builder.RegisterComponentInHierarchy<AudioPlayManager>().As<IAudioPlayService>();
+        builder.RegisterComponentInHierarchy<GamePurchaseManager>().As<IGamePurchaseManager>();
+        builder.RegisterComponentInHierarchy<GraphicManager>().As<IGraphicManager>();
+        builder.RegisterComponentInHierarchy<LicenseValidator>().As<ILicenseValidator>();
+        //builder.RegisterComponent(alertWindowsManager).As<IAlertWindowsManager>();
+        //builder.RegisterComponent(settingsManager).As<ISettingsManager>();
+        //builder.RegisterComponent(sceneLoader).As<ISceneLoader>();
+        //builder.RegisterComponent(gameAdsManager).As<IAdsManager>();
+        //builder.RegisterComponent(audioPlayManager).As<IAudioPlayService>();
+        //builder.RegisterComponent(gamePurchaseManager).As<IGamePurchaseManager>();
+        //builder.RegisterComponent(graphicManager).As<IGraphicManager>();
+        //builder.RegisterComponent(sanctuariesManager).As<ISanctuariesManager>();
+        //builder.RegisterComponent(licenseValidator).As<ILicenseValidator>();
     }
 
     public override void InitMultipleScripts(IContainerBuilder builder) {

@@ -1,4 +1,4 @@
-//#define UNITY_ANDROID
+#define UNITY_ANDROID
 
 using TMPro;
 using UnityEngine;
@@ -14,6 +14,7 @@ public class ShellsBarVIsualize : MonoBehaviour {
     private bool _isInteracted = false;
 
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
+    [Inject] private readonly IAdsManager _adsManager;
 
 
 
@@ -45,16 +46,16 @@ public class ShellsBarVIsualize : MonoBehaviour {
             _sanctuariesManager.OnShellsAmountChanged += UpdateShellsCnt;
         }
 
-        if (GameAdsManager.Instance != null) {
+        //if (GameAdsManager.Instance != null) {
 #if UNITY_ANDROID
-            GameAdsManager.Instance.OnAdButtonsInteractable += ClaimInteractable;
-            GameAdsManager.Instance.OnExtraShellsRewarded += OnExtraShellsReceive;
-            claimB.onClick.AddListener(() => {
-                GameAdsManager.Instance.OnClaimExtraShellsClick();
-                _isInteracted = true;
-            });
+        _adsManager.OnAdButtonsInteractable += ClaimInteractable;
+        _adsManager.OnExtraShellsRewarded += OnExtraShellsReceive;
+        claimB.onClick.AddListener(() => {
+            _adsManager.OnClaimExtraShellsClick();
+            _isInteracted = true;
+        });
 #endif
-        }
+        //}
     }
 
 
@@ -63,10 +64,10 @@ public class ShellsBarVIsualize : MonoBehaviour {
             _sanctuariesManager.OnShellsAmountChanged -= UpdateShellsCnt;
 
 #if UNITY_ANDROID
-        if (GameAdsManager.Instance != null) {
-            GameAdsManager.Instance.OnAdButtonsInteractable -= ClaimInteractable;
-            GameAdsManager.Instance.OnExtraShellsRewarded -= OnExtraShellsReceive;
-        }
+        //if (GameAdsManager.Instance != null) {
+        _adsManager.OnAdButtonsInteractable -= ClaimInteractable;
+        _adsManager.OnExtraShellsRewarded -= OnExtraShellsReceive;
+        //}
 #endif
 
         claimB.onClick.RemoveAllListeners();
