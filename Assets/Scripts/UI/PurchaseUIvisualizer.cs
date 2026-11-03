@@ -2,7 +2,6 @@
 //#undef UNITY_EDITOR 
 
 using UnityEngine;
-using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using VContainer;
 

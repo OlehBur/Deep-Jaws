@@ -38,8 +38,8 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
     public static GameAdsManager Instance { get; private set; }
 
     //self inject
-    [Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
-    [Inject] private readonly IAlertWindowsManager _alertWindows;
+    //[Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
+    //[Inject] private readonly IAlertWindowsManager _alertWindows;
     //[Inject] private readonly IGameHudController _gameHudController;
 
     public bool IsAdStartShow { get; private set; } = false;

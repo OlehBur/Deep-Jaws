@@ -1,19 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VContainer;
 
-public class LicenseValidator : MonoBehaviour {
-    [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
-    [Inject] private readonly IMainMenuNavigation _mainMenu;
 
+public interface ILicenseValidator {
+    void ValidateGame();
+    event Action<bool> OnLicenseCheckCompleted;
+}
+
+public class LicenseValidator : MonoBehaviour, ILicenseValidator {
+    [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
+    //[Inject] private readonly IMainMenuNavigation _mainMenu;
+
+    public event Action<bool> OnLicenseCheckCompleted;
 
     private void Awake/*Start*/() {
         ValidateGame();
     }
 
     public void ValidateGame() {
-        if (_mainMenu != null)
-            _mainMenu.ActivateMainMenuContainer(false);
-        //firstInitLicensePanel.SetActive(false);
+        //if (_mainMenu != null)
+        //    _mainMenu.ActivateMainMenuContainer(false);
+        OnLicenseCheckCompleted?.Invoke(false);
         _alertWindowsManager.ActivateLicenseFailedWnd(false);
 
         if (ProgressSaver.IsAccountDataExist) {
@@ -68,8 +76,9 @@ public class LicenseValidator : MonoBehaviour {
 
         //firstInitLicensePanel.SetActive(false);
         _alertWindowsManager.ActivateLicenseFailedWnd(false);
-        if (_mainMenu != null)
-            _mainMenu.ActivateMainMenuContainer(true);
+        //if (_mainMenu != null)
+        //    _mainMenu.ActivateMainMenuContainer(true);
+        OnLicenseCheckCompleted?.Invoke(true);
     }
 
 

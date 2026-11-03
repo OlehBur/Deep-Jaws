@@ -1,27 +1,21 @@
-﻿using TMPro;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Localization;
+using VContainer;
 
 
 public interface IGameModeController {
     void OnGameModeSet(int gamemode);
-    void ChangeSignInColor(bool isSignIn);
     void ActivateGamemodesWnd(bool isActivate);
 }
 
 public class GameModeController : MonoBehaviour, IGameModeController {
     [SerializeField] GameObject gamemodeWnd;
-    [SerializeField] Light mainMenuLight;
+    //[SerializeField] Light mainMenuLight;
     [SerializeField] Animator gmWndAnimator;
     [SerializeField] Image gameModeWndBackground;
 
-    [SerializeField] Image signInIcon;
-    [SerializeField] GameObject kingOfDeepsObj;
-    [SerializeField] TextMeshProUGUI kingOfDeepsTxt;
-    [SerializeField] LocalizedString kingOfDeepsLocalized;
-    [SerializeField] Animator kingOfDeepsAnimator;
+    [Inject] private readonly IGraphicManager _graphicManager;
 
     public static GameMode CurrentMode { get; set; } = GameMode.None;
 
@@ -30,64 +24,9 @@ public class GameModeController : MonoBehaviour, IGameModeController {
     private Color _targetLightGMcolor;
 
 
-    void Start() {
-        if (kingOfDeepsObj != null) {
-            kingOfDeepsObj.SetActive(false);
-            kingOfDeepsAnimator.enabled = false;
-        }
-    }
-
-    private void OnEnable() {
-#if UNITY_ANDROID
-        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
-            GPG_Manager.Instance.OnLoadKingOfDeeps += KingOfDeepsUpdate;
-#endif
-    }
-
-    private void OnDisable() {
-#if UNITY_ANDROID
-        if (kingOfDeepsObj != null && GPG_Manager.Instance != null)
-            GPG_Manager.Instance.OnLoadKingOfDeeps -= KingOfDeepsUpdate;
-#endif
-    }
-
-
-#if UNITY_ANDROID
-    void KingOfDeepsUpdate(string playerNick) {
-        if (kingOfDeepsObj == null)
-            return;
-
-        kingOfDeepsObj.SetActive(true);
-        kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
-        kingOfDeepsAnimator.enabled = true;
-    }
-#endif
-
     public void ActivateGamemodesWnd(bool isActivate) =>
         gamemodeWnd.SetActive(isActivate);
 
-    public void OnServicesButton(int buttonIndex) {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        if (GPG_Manager.Instance != null)
-            switch (buttonIndex) {
-                case 0:
-                /*gpg_manager*/
-                GPG_Manager.Instance.OnShowLeaderboard();
-                break;
-                case 1:
-                GPG_Manager.Instance.OnShowAchievements();
-                break;
-                case 2:
-                GPG_Manager.Instance.OnSign();
-                break;
-            }
-#endif
-    }
-    public void ChangeSignInColor(bool isSignIn) {
-        if (signInIcon != null)
-            signInIcon.color = (isSignIn) ?
-               GameStaticInfo.SUCCESS_SIGN_IN_COLOR : GameStaticInfo.FAILED_SIGN_IN_COLOR;
-    }
 
     IEnumerator ChangeColorGMwnd() {
         //Debug.Log("gm changing color started");
@@ -100,10 +39,12 @@ public class GameModeController : MonoBehaviour, IGameModeController {
     }
 
     IEnumerator ChangeColorGMmainMenu() {
-        while (mainMenuLight.color != _targetLightGMcolor) {
-            mainMenuLight.color = Color.Lerp(mainMenuLight.color, _targetLightGMcolor, DJTime.DeltaTime);
+        while (_graphicManager.MainLightColor != _targetLightGMcolor) {
+            _graphicManager.MainLightColor = Color.Lerp(_graphicManager.MainLightColor, _targetLightGMcolor, DJTime.DeltaTime);
             yield return null;
         }
+
+        Debug.LogWarning("TODO: call OnGameStartLoad() after extit fr gamemode wnd");
     }
 
 
@@ -136,5 +77,9 @@ public class GameModeController : MonoBehaviour, IGameModeController {
             gmWndAnimator.SetTrigger("Anim");
             _isGMneedAnimation = false;
         }
+    }
+
+    public void OnGameStartLoad() {
+        _graphicManager.ResetLightColor();
     }
 }

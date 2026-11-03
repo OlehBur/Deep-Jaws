@@ -47,6 +47,10 @@ public class SceneLoader : MonoBehaviour, ISceneLoader {
         if (_isTransitioning)
             return;
 
+        //fadeCanvasObject.SetActive(true);
+        //gameObject.SetActive(true);
+
+        //if (gameObject.activeInHierarchy)
         StartCoroutine(TransitionRoutine(sceneType));
     }
 

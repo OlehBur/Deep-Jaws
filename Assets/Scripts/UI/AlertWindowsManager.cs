@@ -1,21 +1,44 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VContainer;
 
 
 public interface IAlertWindowsManager {
+    event Action<bool> OnAlerWndOpened;
+
+    bool IsOpenedAnyAlertWnd { get; }
     void ActivateLoadingPanelWnd(bool isActive);
     void ActivateAreUSureWnd(bool isActive);
     void ActivateNoInternetConnectionWnd(bool isActive);
     void ActivateLicenseFailedWnd(bool isActive);
+    void ActivateSettingsWnd(bool isActive);
     void FirstNoConnectionOpen();
 }
 
-public class AlertWindowsManager : MonoBehaviour {
+public enum AlertWndType {
+    AreUSure,
+    Loading,
+    NoInternetConnection,
+    NewUpdate,
+    LicenseFailed,
+    Settings
+}
+
+public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
     [SerializeField] GameObject areUSureWnd;
     [SerializeField] GameObject loadingPanel;
     [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] GameObject newUpdWnd;
     [SerializeField] GameObject licenseFailedPanel;
+    [SerializeField] GameObject settingsWnd;
+
+    public event Action<bool> OnAlerWndOpened;
+    public bool IsOpenedAnyAlertWnd => areUSureWnd.activeInHierarchy 
+        || loadingPanel.activeInHierarchy 
+        || noInternetConnectionWnd.activeInHierarchy 
+        || newUpdWnd.activeInHierarchy 
+        || licenseFailedPanel.activeInHierarchy 
+        || settingsWnd.activeInHierarchy;
 
 
     private void Awake() {
@@ -33,13 +56,31 @@ public class AlertWindowsManager : MonoBehaviour {
 
 
     public void ActivateLoadingPanelWnd(bool isActive) =>
-        loadingPanel.SetActive(isActive);
+        ActivateAlertWndHandler(AlertWndType.Loading, isActive);
 
     public void ActivateAreUSureWnd(bool isActive) =>
-        areUSureWnd.SetActive(isActive);
+        ActivateAlertWndHandler(AlertWndType.AreUSure, isActive);
 
-    public void ActivateLicenseFailedPanel(bool isActive) =>
-        licenseFailedPanel.SetActive(isActive);
+    public void ActivateLicenseFailedWnd(bool isActive) =>
+        ActivateAlertWndHandler(AlertWndType.LicenseFailed, isActive);
+
+    public void ActivateSettingsWnd(bool isActive) =>
+        ActivateAlertWndHandler(AlertWndType.Settings, isActive);
+
+    void ActivateAlertWndHandler(AlertWndType type, bool isActive) {
+        GameObject currentWnd = type switch {
+            AlertWndType.AreUSure => areUSureWnd,
+            AlertWndType.Loading => loadingPanel,
+            AlertWndType.NoInternetConnection => noInternetConnectionWnd,
+            AlertWndType.NewUpdate => newUpdWnd,
+            AlertWndType.LicenseFailed => licenseFailedPanel,
+            AlertWndType.Settings => settingsWnd,
+            _ => null
+        };
+
+        currentWnd.SetActive(isActive);
+        OnAlerWndOpened?.Invoke(IsOpenedAnyAlertWnd);
+    }
 
 
     public void ActivateNoInternetConnectionWnd(bool isActive) {
@@ -60,7 +101,5 @@ public class AlertWindowsManager : MonoBehaviour {
         accountData.isConfirmedNoInternetDisadvantages = true;
         ProgressSaver.SaveData(accountData);
     }
-
-
 }
 

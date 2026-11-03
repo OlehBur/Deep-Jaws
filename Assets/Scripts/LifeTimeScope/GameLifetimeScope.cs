@@ -42,6 +42,7 @@ public class GameLifetimeScope : LifetimeScopeBase {
         //builder.RegisterComponentInHierarchy<IAudioPlayService/*AudioManager*/>();
         builder.RegisterComponentInHierarchy<ISpawnOrchestrator/*SpawnOrchestrator*/>();
         //builder.RegisterComponentInHierarchy<VFXpoolService>();
+        builder.RegisterComponentInHierarchy<IGameHudController>();
     }
 
     public override void InitMultipleScripts(IContainerBuilder builder) {

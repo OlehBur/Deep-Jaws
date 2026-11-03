@@ -5,7 +5,7 @@ using VContainer;
 
 
 public interface IMainMenuNavigation {
-    void ActivateMainMenuContainer(bool isActive);
+    //void ActivateMainMenuContainer(bool isActive);
     void OnOpenGameInBrowser();
     void OnSanctuaryClick();
     void OnNewGameClick();
@@ -15,14 +15,20 @@ public interface IMainMenuNavigation {
 }
 
 public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
-    [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
+    //[Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly IGameModeController _gameModeController;
     [Inject] private readonly ISceneLoader _sceneLoader;
     [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
+    [Inject] private readonly ILicenseValidator _licenseValidator;
+    [Inject] private readonly IAudioPlayService _audioPlayService;
 
     [SerializeField] GameObject GPG_Services_UI;
-    [SerializeField] GameObject continueButton; //for ensuring the visibility of the continue game button if there is saved data
-    [SerializeField] Button merineSanctuary;                                //[SerializeField] Button merineSanctuary;
+    [SerializeField] Button continueButton; //for ensuring the visibility of the continue game button if there is saved data
+    [SerializeField] Button newGameButton;
+    [SerializeField] Button sanctuaryButton;
+    [SerializeField] Button settingsButton;
+    [SerializeField] Button exitButton;
+    [SerializeField] Button bugReport;
     [SerializeField] GameObject mainMenuContainer;
 
     private bool _isWorldDataExist = false;
@@ -35,14 +41,41 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
     private void Awake() {
         if (GPG_Services_UI != null) {
             GPG_Services_UI.SetActive(!GameManager.IS_PC_DEMO);
-            merineSanctuary.interactable = !GameManager.IS_PC_DEMO;
+            sanctuaryButton.interactable = !GameManager.IS_PC_DEMO;
         }
+
+        _alertWindowsManager.OnAlerWndOpened += (value) => gameObject.SetActive(!value);//auto close main menu wnd if player click "yes" on are u sure wnd
+
+        InitMMButtonsListeners();
+    }
+
+    void InitMMButtonsListeners() {
+        continueButton.onClick.RemoveAllListeners();
+        newGameButton.onClick.RemoveAllListeners();
+        sanctuaryButton.onClick.RemoveAllListeners();
+        settingsButton.onClick.RemoveAllListeners();
+        exitButton.onClick.RemoveAllListeners();
+        bugReport.onClick.RemoveAllListeners();
+
+        continueButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+        newGameButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+        sanctuaryButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+        settingsButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+        exitButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+        bugReport.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+
+        continueButton.onClick.AddListener(() => _sceneLoader.OnLoad_GameScene());
+        newGameButton.onClick.AddListener(() => OnNewGameClick());
+        sanctuaryButton.onClick.AddListener(() => _sceneLoader.OnLoad_SanctuaryScene());
+        settingsButton.onClick.AddListener(() => _alertWindowsManager.ActivateSettingsWnd(true));
+        exitButton.onClick.AddListener(() => OnExitButtonClicked());
+        bugReport.onClick.AddListener(() => OpenEmailClientForBugReport());
     }
 
     private void Start() {
         _isWorldDataExist = ProgressSaver.IsWorldDataExist;
         if (continueButton != null) {// Initialize the continue button visibility based on saved data
-            continueButton?.SetActive(_isWorldDataExist);
+            continueButton.gameObject.SetActive(_isWorldDataExist);
             GameModeController.CurrentMode = _isWorldDataExist ?
                 ProgressSaver.LoadWorldData().gameMode : GameMode.None;
         }
@@ -50,10 +83,12 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
         if (GameManager.IsInternetNotAvailable)
             _alertWindowsManager.FirstNoConnectionOpen();
 
+        _licenseValidator.OnLicenseCheckCompleted += ActivateMainMenuContainer;
     }
 
-    public void ActivateMainMenuContainer(bool isActive) =>
-        mainMenuContainer.SetActive(isActive);
+    /*public*/
+    void ActivateMainMenuContainer(bool isActive) =>
+mainMenuContainer.SetActive(isActive);
 
     public void OnOpenGameInBrowser() =>
         Application.OpenURL(GAME_FULL_URL);
