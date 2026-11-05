@@ -14,7 +14,7 @@ public class LicenseValidator : MonoBehaviour, ILicenseValidator {
 
     public event Action<bool> OnLicenseCheckCompleted;
 
-    private void Awake/*Start*/() {
+    private void Start() {
         ValidateGame();
     }
 

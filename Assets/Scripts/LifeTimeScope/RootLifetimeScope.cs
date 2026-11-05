@@ -19,7 +19,7 @@ public class RootLifetimeScope : LifetimeScopeBase {
     protected override void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
-            return; 
+            return;
         }
 
         Instance = this;
@@ -46,15 +46,26 @@ public class RootLifetimeScope : LifetimeScopeBase {
     }
 
     public override void InitServices(IContainerBuilder builder) {
-        builder.RegisterComponentInHierarchy<SanctuariesManager>().As<ISanctuariesManager>();
-        builder.RegisterComponentInHierarchy<AlertWindowsManager>().As<IAlertWindowsManager>();
-        builder.RegisterComponentInHierarchy<SettingsUI>().As<ISettingsManager>();
-        builder.RegisterComponentInHierarchy<SceneLoader>().As<ISceneLoader>();
-        builder.RegisterComponentInHierarchy<GameAdsManager>().As<IAdsManager>();
-        builder.RegisterComponentInHierarchy<AudioPlayManager>().As<IAudioPlayService>();
-        builder.RegisterComponentInHierarchy<GamePurchaseManager>().As<IGamePurchaseManager>();
-        builder.RegisterComponentInHierarchy<GraphicManager>().As<IGraphicManager>();
-        builder.RegisterComponentInHierarchy<LicenseValidator>().As<ILicenseValidator>();
+        builder.RegisterComponent(GetComponentInChildren<SanctuariesManager>(true)).As<ISanctuariesManager>();
+        builder.RegisterComponent(GetComponentInChildren<AlertWindowsManager>(true)).As<IAlertWindowsManager>();
+        builder.RegisterComponent(GetComponentInChildren<SettingsUI>(true)).As<ISettingsManager>();
+        builder.RegisterComponent(GetComponentInChildren<SceneLoader>(true)).As<ISceneLoader>();
+        builder.RegisterComponent(GetComponentInChildren<GameAdsManager>(true)).As<IAdsManager>();
+        builder.RegisterComponent(GetComponentInChildren<AudioPlayManager>(true)).As<IAudioPlayService>();
+        builder.RegisterComponent(GetComponentInChildren<GamePurchaseManager>(true)).As<IGamePurchaseManager>();
+        builder.RegisterComponent(GetComponentInChildren<LicenseValidator>(true)).As<ILicenseValidator>();
+        builder.RegisterComponent(GetComponentInChildren<GraphicManager>(true)).As<IGraphicManager>();
+
+        //builder.RegisterComponentInHierarchy<SanctuariesManager>().As<ISanctuariesManager>();
+        //builder.RegisterComponentInHierarchy<AlertWindowsManager>().As<IAlertWindowsManager>();
+        //builder.RegisterComponentInHierarchy<SettingsUI>().As<ISettingsManager>();
+        //builder.RegisterComponentInHierarchy<SceneLoader>().As<ISceneLoader>();
+        //builder.RegisterComponentInHierarchy<GameAdsManager>().As<IAdsManager>();
+        //builder.RegisterComponentInHierarchy<AudioPlayManager>().As<IAudioPlayService>();
+        //builder.RegisterComponentInHierarchy<GamePurchaseManager>().As<IGamePurchaseManager>();
+        //builder.RegisterComponentInHierarchy<GraphicManager>().As<IGraphicManager>();
+        //builder.RegisterComponentInHierarchy<LicenseValidator>().As<ILicenseValidator>();
+
         //builder.RegisterComponent(alertWindowsManager).As<IAlertWindowsManager>();
         //builder.RegisterComponent(settingsManager).As<ISettingsManager>();
         //builder.RegisterComponent(sceneLoader).As<ISceneLoader>();

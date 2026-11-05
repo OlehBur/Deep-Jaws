@@ -192,6 +192,9 @@ public static class GameStaticInfo {
     public static readonly Color FAILED_SIGN_IN_COLOR = new Color(1f, 0.4764151f, 0.4863637f, 1f);
     public static readonly Color SUCCESS_SIGN_IN_COLOR = new Color(0.678066f, 1f, 0.5707547f, 1f);
 
+    //ui
+    public const float MAX_EFFECTS_CNT = 5; // max effects count that can be displayed in the UI
+
     //pools
     public const float HORIZONTAL_SPAWN_MAX_OFFSET = 6f;
     public const float FISH_SPAWN_HEINGT = 1.78f;

@@ -8,6 +8,7 @@ using VContainer;
 
 public interface IGraphicManager {
     Color MainLightColor { get; set; }
+    Volume Volume { get; }
 
     void SaveGraphicsData();
     void LoadGraphicsData();
@@ -32,6 +33,7 @@ public class GraphicManager : MonoBehaviour, IGraphicManager {
         get => MainLight.color;
         set => MainLight.color = value;
     }
+    public Volume Volume => mainVolume;
 
 
     void Start() {

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using VContainer;
 
 
@@ -13,29 +14,21 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     [SerializeField] GameObject demoFinMsg;
     [SerializeField] GameResultWnd gameResult;
     [SerializeField] GameManager gameManager;
-    [SerializeField] GameObject pauseButton;
+    //[SerializeField] GameObject pauseButton;
     [SerializeField] GameObject pauseWnd;
     //[SerializeField] SpawnManager spawnManager;
     [SerializeField] RespawnWnd respawnWnd;
-    [SerializeField] GameObject[] gamemodePauseTitles;
+    [SerializeField] Button pauseButton;
 
-    [Inject] private readonly IAudioPlayService _audioManager;
+    [Inject] private readonly IAudioPlayService _audioPlayService;
     [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly ISceneLoader _sceneLoader;
     [Inject] private readonly IGameManager _gameManager;
     [Inject] private readonly IAdsManager _adsManager;
 
 
-    private void Awake() {
-        if (gamemodePauseTitles != null)
-            GameModeTitlesInit();
-    }
-
     private void Start() {
-        if (pauseButton != null)
-            pauseButton.SetActive(!GameManager.IsRunOnPC);
-
-
+        PauseButtonInit();
     }
 
     private void OnEnable() {
@@ -54,28 +47,22 @@ public class GameHudController : MonoBehaviour, IGameHudController {
         }
     }
 
+    void PauseButtonInit() {
+        pauseButton.gameObject.SetActive(!GameManager.IsRunOnPC);
+        pauseButton.onClick.RemoveAllListeners();
+        pauseButton.onClick.AddListener(() => {
+            _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick);
+            ActivatePauseWnd(true);
+        });
+    }
+
     void PlayerRespawnHandler(Fish f, bool isDie) =>
         DeactivateRespawnWnd();
 
     public void OnOpenDemoFin() {
-        _audioManager.PlayVFX(VFX_clip.BubblePop);
-        _audioManager.StopPlayerAudioSource();
+        _audioPlayService.PlayVFX(VFX_clip.BubblePop);
+        _audioPlayService.StopPlayerAudioSource();
         demoFinMsg.SetActive(true);
-    }
-
-    void GameModeTitlesInit() {//init gamemode buttons        
-        if (GameModeController.CurrentMode == GameMode.None) {
-            Debug.LogWarning("Gamemode = None -> Activate gamemod auto-select (medium)");
-            GameModeController.CurrentMode = GameMode.Medium;
-        }
-
-        if (gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
-            foreach (GameObject tit in gamemodePauseTitles)
-                tit.SetActive(false);
-
-            gamemodePauseTitles[(int)GameModeController.CurrentMode].SetActive(true);
-        }
-        //Debug.LogWarning(GameStaticInfo.Gamemode);
     }
 
     void PlayerLvlUpHandler(FishLevel level) {
@@ -94,6 +81,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     public void ActivatePauseWnd(bool isActivate) {
         if (gameManager != null)
             gameManager.GameSetPause(isActivate);
+
         pauseWnd.SetActive(isActivate);
     }
 

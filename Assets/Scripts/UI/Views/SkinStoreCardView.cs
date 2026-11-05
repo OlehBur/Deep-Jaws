@@ -1,10 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
-public class SkinStoreCard : MonoBehaviour {
+public class SkinStoreCardView : MonoBehaviour {
     [SerializeField] Button buyB;
     [SerializeField] Button selectB;
     [SerializeField] Button previewB;
@@ -16,8 +15,6 @@ public class SkinStoreCard : MonoBehaviour {
     public Button.ButtonClickedEvent BuyOnClick => buyB.onClick;
     public Button.ButtonClickedEvent PreviewOnClick => previewB.onClick;
 
-    //private static string SELECTED_TXT => LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_selected");
-    //private static string SELECT_TXT => LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_select");
 
 
     private void OnEnable() {
@@ -41,18 +38,9 @@ public class SkinStoreCard : MonoBehaviour {
     }
 
     public void ShowSelectUI(bool isSelected = false) {
-        //if (SELECTED_TXT == null) {//not inited
-        //SELECTED_TXT = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_selected");
-        //SELECT_TXT = LocalizationSettings.StringDatabase.GetLocalizedString("UI", "store_select");
-        //}
         if (buyB == null)
             return;
 
-        //LocalizedString currentStr = isSelected ?
-        //    SELECTED_TXT : SELECT_TXT;
-        //currentStr.GetLocalizedStringAsync().Completed += handle => {
-        //    selectTxt.text = handle.Result;
-        //};
         LocalizedString currentStr = isSelected ? SELECTED_TXT : SELECT_TXT;
         currentStr.RefreshString();//force text upd
 

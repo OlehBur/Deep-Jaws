@@ -44,17 +44,30 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
             sanctuaryButton.interactable = !GameManager.IS_PC_DEMO;
         }
 
+        _isWorldDataExist = ProgressSaver.IsWorldDataExist;
+        if (continueButton != null) {// Initialize the continue button visibility based on saved data
+            continueButton.gameObject.SetActive(_isWorldDataExist);
+            GameModeController.CurrentMode = _isWorldDataExist ?
+                ProgressSaver.LoadWorldData().gameMode : GameMode.None;
+        }
+    }
+
+    private void Start() {
+        if (GameManager.IsInternetNotAvailable)
+            _alertWindowsManager.FirstNoConnectionOpen();
+
+        _licenseValidator.OnLicenseCheckCompleted += ActivateMainMenuContainer;
         _alertWindowsManager.OnAlerWndOpened += AutoHideMainMenu;//auto close main menu wnd if player click "yes" on are u sure wnd
 
         InitMMButtonsListeners();
     }
 
-    void AutoHideMainMenu(bool isAlertWndOpened) => gameObject.SetActive(!isAlertWndOpened);
-
     private void OnDisable() {
         _alertWindowsManager.OnAlerWndOpened -= AutoHideMainMenu;
     }
 
+    void AutoHideMainMenu(bool isAlertWndOpened) => gameObject.SetActive(!isAlertWndOpened);
+  
     void InitMMButtonsListeners() {
         continueButton.onClick.RemoveAllListeners();
         newGameButton.onClick.RemoveAllListeners();
@@ -78,19 +91,6 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
         bugReport.onClick.AddListener(() => OpenEmailClientForBugReport());
     }
 
-    private void Start() {
-        _isWorldDataExist = ProgressSaver.IsWorldDataExist;
-        if (continueButton != null) {// Initialize the continue button visibility based on saved data
-            continueButton.gameObject.SetActive(_isWorldDataExist);
-            GameModeController.CurrentMode = _isWorldDataExist ?
-                ProgressSaver.LoadWorldData().gameMode : GameMode.None;
-        }
-
-        if (GameManager.IsInternetNotAvailable)
-            _alertWindowsManager.FirstNoConnectionOpen();
-
-        _licenseValidator.OnLicenseCheckCompleted += ActivateMainMenuContainer;
-    }
 
     /*public*/
     void ActivateMainMenuContainer(bool isActive) =>
@@ -108,7 +108,7 @@ mainMenuContainer.SetActive(isActive);
     //open ar u sur wnd if player already has saved game data
     public void OnNewGameClick() {
         if (ProgressSaver.IsWorldDataExist)
-            _alertWindowsManager.ActivateAreUSureWnd(true);
+            _alertWindowsManager.ActivateAreUSureNewGameWnd(true);
         else
             _gameModeController.ActivateGamemodesWnd(true);
         //guideBookWnd?.SetActive(true);

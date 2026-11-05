@@ -36,12 +36,13 @@ public class GameLifetimeScope : LifetimeScopeBase {
         builder.Register<IPlayerFishPoolService, PlayerPoolService>(Lifetime.Singleton);
         builder.Register<IEnemyFishPoolService, EnemyPoolService>(Lifetime.Singleton);
         builder.Register<IPermamentFishPoolService, PermamentPoolService>(Lifetime.Singleton);
+        //builder.Register<IEffectsVisualizationService, EffectsVisualizationService>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<EffectsVisualizationService>()
+            .As<IEffectsVisualizationService>();
 
+        builder.RegisterComponentInHierarchy<IGameManager>();
         builder.RegisterComponentInHierarchy<IGameTip>();
-        //builder.RegisterComponentInHierarchy<IMainmenuManager/*MainmenuManager*/>();
-        //builder.RegisterComponentInHierarchy<IAudioPlayService/*AudioManager*/>();
-        builder.RegisterComponentInHierarchy<ISpawnOrchestrator/*SpawnOrchestrator*/>();
-        //builder.RegisterComponentInHierarchy<VFXpoolService>();
+        builder.RegisterComponentInHierarchy<ISpawnOrchestrator>();
         builder.RegisterComponentInHierarchy<IGameHudController>();
     }
 
@@ -58,6 +59,7 @@ public class GameLifetimeScope : LifetimeScopeBase {
     }
 
     public override void InitSingleScripts(IContainerBuilder builder) {
+        builder.RegisterComponentInHierarchy<PauseMenuNavigation>();
         SingleInject<NoEscapeAchieveTrig>(builder);
         SingleInject<PlayerLeaderboardScore>(builder);
         SingleInject<CameraFollower>(builder);
@@ -65,7 +67,9 @@ public class GameLifetimeScope : LifetimeScopeBase {
         SingleInject<DeadArea>(builder);
         SingleInject<FishHeartbeatsManager>(builder);
         SingleInject<GameManager>(builder);
+        //SingleInject<PauseMenuNavigation>(builder);
         SingleInject<PlayerUIController>(builder);
+        SingleInject<EffectsBarView>(builder);
         SingleInject<GameResultWnd>(builder);
         SingleInject<RespawnWnd>(builder);
     }

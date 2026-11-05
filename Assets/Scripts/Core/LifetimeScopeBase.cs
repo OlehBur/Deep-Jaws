@@ -17,8 +17,8 @@ public abstract class LifetimeScopeBase : LifetimeScope {
         T script = FindAnyObjectByType<T>();
 
         if (script != null)
-            builder.RegisterBuildCallback(container =>
-                container.Inject(script));
+            builder.RegisterBuildCallback(container => container.Inject(script));
+        //builder.RegisterComponent(script);
     }
 
     public abstract void InitAssets(IContainerBuilder builder);

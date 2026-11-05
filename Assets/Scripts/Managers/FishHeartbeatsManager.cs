@@ -4,16 +4,14 @@ using UnityEngine.UI;
 using VContainer;
 
 
-
 /// <summary>
 /// class for initializing fish heartbeat particles and managing components responsible for their display such as cameras and render textures
 /// </summary>
 public class FishHeartbeatsManager : MonoBehaviour {
     [SerializeField] ParticleSystem heartbeatPrefab;
-    //[SerializeField] Transform heartbeatParent;
-    //[field: SerializeField] public Transform HeartbeatParent {get;private set;}
     [SerializeField] RenderTexture heartbeatView;
     [SerializeField] RenderTexture defaultView;
+
     [Header("for otimization disabling")]
     [SerializeField] GameObject shaderCamerasParent;
     [SerializeField] Image uiShaderVisualize;

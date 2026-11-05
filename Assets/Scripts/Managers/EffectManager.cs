@@ -14,18 +14,16 @@ public enum TypeEffects {
 
 public class EffectManager : MonoBehaviour {
     [Header("Icons for effects (World)")]
+    [field: SerializeField] public GameObject IconsParentObj { get; private set; }
     [SerializeField] GameObject shieldIcon;
     [SerializeField] GameObject stunIcon;
     [SerializeField] GameObject currentIcon;
     [SerializeField] GameObject poisonIcon;
+
+    [Header("Depend Components")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Renderer fishSkinnedRenderer;
-    //[SerializeField] Transform editableTransform;
     [SerializeField] Transform rotationTransform;
-    //[SerializeField] public bool IsHaveShield = true;
-    //[SerializeField] Vector3 shieldLocalPos;
-    //[SerializeField] Vector3 shieldLocalScale;
-    //[SerializeField] Vector3 whirlLocalPos;
     [SerializeField] Fish fish;
     [SerializeField] FishAnim fishAnim;
 
@@ -218,7 +216,6 @@ public class EffectManager : MonoBehaviour {
             GPG_Manager.OnTriggerAchievement(GPGSIds.achievement_thats_impossible_seriously);
 #endif
     }
-
 
     //in world
     private void UpdateIconVisualization() {
