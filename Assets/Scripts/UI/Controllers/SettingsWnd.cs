@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using VContainer;
 
 
-public interface ISettingsManager {
+public interface ISettingsController {
     Toggle BloomTog { get; }
     Toggle BlurTog { get; }
     Toggle VignetteTog { get; }
@@ -28,7 +28,7 @@ public interface ISettingsManager {
     void LoadAudioData();
 }
 
-public class SettingsUI : MonoBehaviour, ISettingsManager {
+public class SettingsWnd : WindowBase, ISettingsController {
     [field: SerializeField] public Toggle BloomTog { get; private set; }
     [field: SerializeField] public Toggle BlurTog { get; private set; }
     [field: SerializeField] public Toggle VignetteTog { get; private set; }

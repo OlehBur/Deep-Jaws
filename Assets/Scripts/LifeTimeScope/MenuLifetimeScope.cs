@@ -15,8 +15,9 @@ public class MenuLifetimeScope : LifetimeScopeBase {
     public override void InitAssets(IContainerBuilder builder) {
     }
     public override void InitServices(IContainerBuilder builder) {
-        builder.RegisterComponentInHierarchy<MainMenuNavigation>().As<IMainMenuNavigation>();
-        builder.RegisterComponentInHierarchy<GameModeController>().As<IGameModeController>();
+        builder.RegisterComponentInHierarchy<IMainMenuNavigation>();
+        builder.RegisterComponentInHierarchy<IGameModeController>();
+        builder.RegisterComponentInHierarchy<ISkinsPreviewController>();
     }
 
     public override void InitMultipleScripts(IContainerBuilder builder) {
@@ -24,7 +25,10 @@ public class MenuLifetimeScope : LifetimeScopeBase {
     public override void InitSingleScripts(IContainerBuilder builder) {
         //SingleInject<MainMenuNavigation>(builder);
         //SingleInject<GameHudController>(builder);
-        SingleInject<PurchaseUIvisualizer>(builder);
-        SingleInject<ShellsBarVIsualize>(builder);
+        SingleInject<GPGServicesWnd>(builder);
+        SingleInject<StoreWnd>(builder);
+        SingleInject<SkinsPreviewWnd>(builder);
+        SingleInject<PurchaseAccountVisualizer>(builder);
+        SingleInject<ShellsBarView>(builder);
     }
 }

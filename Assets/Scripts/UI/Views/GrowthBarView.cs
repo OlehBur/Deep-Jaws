@@ -39,7 +39,7 @@ public class GrowthBarView : MonoBehaviour {
         if (gameObject.activeInHierarchy)
             _coroutine = StartCoroutine(Animation());
         else
-            ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
+            ChangeTransparancy(SettingsWnd.IsAutoHideUI ? 0f : 1f);
 
         Progress.text = lvlProgress.ToString();
         GetProgress(playerFish.Level).fillAmount = playerFish.Progress;
@@ -77,7 +77,7 @@ public class GrowthBarView : MonoBehaviour {
             while (timer > 0) {
                 timer -= DJTime.UnscaledDeltaTime;
 
-                if (SettingsUI.IsAutoHideUI)
+                if (SettingsWnd.IsAutoHideUI)
                     ChangeTransparancy(timer / PlayerUIController.FADE_HUD_TIME);
                 yield return null;
             }
@@ -86,7 +86,7 @@ public class GrowthBarView : MonoBehaviour {
             Progress.transform.localScale = Vector3.one * DEFAULT_TEXT_SIZE;
             ProgressPercent.transform.localScale = Vector3.one * DEFAULT_TEXT_SIZE;
 
-            if (SettingsUI.IsAutoHideUI)
+            if (SettingsWnd.IsAutoHideUI)
                 ChangeTransparancy(0f);
         }
     }

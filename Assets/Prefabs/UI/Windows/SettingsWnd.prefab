@@ -2033,7 +2033,7 @@ GameObject:
   - component: {fileID: 4691347093951226261}
   - component: {fileID: 7523256671858000643}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: SliderMaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4185,7 +4185,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3262773226774720125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5801ad9910519e40a2244c2cf5e4486, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c78fe8ad81dbbf48934d118d5f21f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
   <BloomTog>k__BackingField: {fileID: 3545431997390679414}
@@ -4196,9 +4196,9 @@ MonoBehaviour:
   <ShadowDistSl>k__BackingField: {fileID: 7643005633021775840}
   <ShadowFixSl>k__BackingField: {fileID: 7010816617845249413}
   <GameResolutSl>k__BackingField: {fileID: 3491971536354223256}
-  <masterSlider>k__BackingField: {fileID: 0}
-  <musicSlider>k__BackingField: {fileID: 0}
-  <sfxSlider>k__BackingField: {fileID: 0}
+  <masterSlider>k__BackingField: {fileID: 7523256671858000643}
+  <musicSlider>k__BackingField: {fileID: 7928216950843953699}
+  <sfxSlider>k__BackingField: {fileID: 2632665411327222679}
   <ShadowResolution>k__BackingField: {fileID: 3561710697181486547}
   <LanguageDropdown>k__BackingField: {fileID: 6044142227035357720}
   <FramerateDropdown>k__BackingField: {fileID: 1882076114919798506}
@@ -4706,7 +4706,7 @@ GameObject:
   - component: {fileID: 3659113273542936228}
   - component: {fileID: 7928216950843953699}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: SliderMusic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7986,7 +7986,7 @@ GameObject:
   - component: {fileID: 2920356361084171492}
   - component: {fileID: 3491971536354223256}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Slider_GameResolution
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9647,7 +9647,7 @@ GameObject:
   - component: {fileID: 4764441879438264957}
   - component: {fileID: 7643005633021775840}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Slider_ShadowDist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11344,7 +11344,7 @@ GameObject:
   - component: {fileID: 5903975762415260482}
   - component: {fileID: 2632665411327222679}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: SliderSFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12235,7 +12235,7 @@ GameObject:
   - component: {fileID: 7917064275966846857}
   - component: {fileID: 7010816617845249413}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Slider_ShadowFix
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

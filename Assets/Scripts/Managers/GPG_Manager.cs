@@ -1,7 +1,9 @@
 //#define UNITY_ANDROID
 
 using UnityEngine;
-#if UNITY_ANDROID 
+using VContainer;
+
+#if UNITY_ANDROID
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using System.Reflection;
@@ -13,16 +15,29 @@ using UnityEngine.SocialPlatforms;//?!
 using System;
 
 
+public interface IGPGManager {
+#if UNITY_ANDROID
+    event Action<string> OnLoadKingOfDeeps;
+    event Action<bool> OnSignInStatusChanged;
+#endif
+
+    void OnShowAchievements();
+    void OnShowLeaderboard();
+    void CheckFounderStatus(Action<bool> onComplete);
+    void OnSign();
+}
+
 /// <summary>
 /// Google Play Games Manager
 /// </summary>
-public class GPG_Manager : MonoBehaviour {
+public class GPG_Manager : MonoBehaviour, IGPGManager {
+    [Inject] private readonly IGamePurchaseManager _purchaseManager;
+    [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
 
-    [SerializeField] GamePurchaseManager purchaseManager;
-
-
-#if UNITY_ANDROID 
+#if UNITY_ANDROID
     public event Action<string> OnLoadKingOfDeeps;
+    public event Action<bool> OnSignInStatusChanged;
+#endif
 
     private static readonly WaitForSeconds SECOND_WAIT = new WaitForSeconds(1f);
 
@@ -31,49 +46,30 @@ public class GPG_Manager : MonoBehaviour {
     private bool isAuthenticated = false;
 
 
-    void Awake() {
-        if (Instance == null) {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+    void Start() {
 
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            Invoke(nameof(OnTriggerWakeUpAchi), WAKKE_UP_ACHIEVEMENT_TIME);
-        }
-        else {
-            Instance.ReInit(mainmenu, purchaseManager);
-            Destroy(gameObject);
-        }
-
-        UpdateMainMenuUI();
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) => OnSign();
-
-    void ReInit(MainmenuManager mainmenu, GamePurchaseManager purchaseManager) {
-        this.mainmenu =
-            this.mainmenu == null ?
-                mainmenu : this.mainmenu;
-        this.purchaseManager = this.purchaseManager == null ?
-            purchaseManager : this.purchaseManager;
+#if UNITY_ANDROID
+        OnSign();
+#endif
     }
 
     public void OnShowAchievements() {
+#if UNITY_ANDROID
         ShowNoConnectionIfNeed();
-        //Social.ShowAchievementsUI();
         if (!isAuthenticated) {
             Debug.LogWarning("Cannot show achievements, not authenticated.");
             return;
         }
         //Debug.LogWarning("OnShowAchievements called");
 
-        if (mainmenu != null)
-            mainmenu.ActivateLoadingPanelWnd(true);
-        //PlayGamesPlatform.Instance.ShowAchievementsUI();
-        PlayGamesPlatform.Instance.ShowAchievementsUI(OnLeaderboardAchiClosed);
 
+        _alertWindowsManager.ActivateLoadingPanelWnd(true);
+        PlayGamesPlatform.Instance.ShowAchievementsUI(OnLeaderboardAchiClosed);
+#endif
     }
 
     public void OnShowLeaderboard() {
+#if UNITY_ANDROID
         ShowNoConnectionIfNeed();
         if (!isAuthenticated) {
             Debug.LogWarning("Cannot show leaderboard, not authenticated.");
@@ -81,24 +77,25 @@ public class GPG_Manager : MonoBehaviour {
         }
         //Debug.LogWarning("OnShowLeaderboard called");
 
-        if (mainmenu != null)
-            mainmenu.ActivateLoadingPanelWnd(true);
-        //PlayGamesPlatform.Instance.ShowLeaderboardUI();
+        _alertWindowsManager.ActivateLoadingPanelWnd(true);
         PlayGamesPlatform.Instance.ShowLeaderboardUI(
             null,
             LeaderboardTimeSpan.AllTime,
             OnLeaderboardAchiClosed
         );
+#endif
     }
 
-    private void OnLeaderboardAchiClosed(UIStatus status) {
-        Debug.Log($"Leaderboard or Achievement UI closed with status: {status}");
+    public void OnSign() {
+        //if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(GameStaticInfo.GAME_SCENE_NAME))
+        //    ShowNoConnectionIfNeed();
 
-        if (mainmenu != null)
-            mainmenu.ActivateLoadingPanelWnd(false);
-
-        if (status != UIStatus.Valid)
-            Debug.LogWarning($"Failed to open Leaderboards | achievements UI. Status: {status}");
+#if UNITY_ANDROID
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+        StartCoroutine(TryAuthenticateWithDelay());
+        //Debug.Log("Attempting authentication...");
+#endif
     }
 
     public void CheckFounderStatus(System.Action<bool> onComplete) {
@@ -108,6 +105,7 @@ public class GPG_Manager : MonoBehaviour {
             return;
         }
 
+#if UNITY_ANDROID
         Debug.LogWarning("TODO: change founder status date condition");
         PlayGamesPlatform.Instance.LoadAchievements((achievements) => {
             string targetAchievementId = GPGSIds.achievement_youre_my_friend_now;
@@ -131,11 +129,21 @@ public class GPG_Manager : MonoBehaviour {
             }
             onComplete(false);
         });
+#endif
+    }
+
+#if UNITY_ANDROID
+    private void OnLeaderboardAchiClosed(UIStatus status) {
+        Debug.Log($"Leaderboard or Achievement UI closed with status: {status}");
+
+        _alertWindowsManager.ActivateLoadingPanelWnd(false);
+
+        if (status != UIStatus.Valid)
+            Debug.LogWarning($"Failed to open Leaderboards | achievements UI. Status: {status}");
     }
 
     IEnumerator TryAuthenticateWithDelay() {
-        if (mainmenu != null)
-            mainmenu.ActivateLoadingPanelWnd(true);
+        _alertWindowsManager.ActivateLoadingPanelWnd(true);
 
         yield return SECOND_WAIT; // Delay for Google Play init
         if (this == null)//in case fast open game scene
@@ -147,7 +155,7 @@ public class GPG_Manager : MonoBehaviour {
             if (result == SignInStatus.Success) {
                 //Debug.Log("Authentication SUCCESS");
                 isAuthenticated = true;
-                mainmenu.ChangeSignInColor(true);//DON`T DELETE  - working Hack 
+                OnSignInStatusChanged?.Invoke(isAuthenticated);
                 GetTop1Player();
 
                 CheckFounderStatus((isFounder) => {
@@ -162,45 +170,23 @@ public class GPG_Manager : MonoBehaviour {
                         OnAddToFoundersLeaderboard();
                         ProgressSaver.SaveData(currentData);
 
-                        purchaseManager.RefreshUI();
+                        _purchaseManager.RefreshUI();
                     }
                 });
             }
             else {
                 Debug.Log("Authentication FAILED: " + result);
                 isAuthenticated = false;
+                OnSignInStatusChanged?.Invoke(isAuthenticated);
             }
 
-            if (mainmenu != null)
-                mainmenu.ActivateLoadingPanelWnd(false);
+            _alertWindowsManager.ActivateLoadingPanelWnd(false);
         });
-
-        UpdateMainMenuUI();
-    }
-
-    private void UpdateMainMenuUI() {
-        if (mainmenu == null)
-            mainmenu = GameObject.FindWithTag("MainMenu")?.GetComponent<MainmenuManager>();
-
-        if (mainmenu != null) {
-            //mainmenu.InitGPGServices(this);
-            mainmenu.ChangeSignInColor(isAuthenticated);
-        }
-    }
-
-    public void OnSign() {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(GameStaticInfo.GAME_SCENE_NAME))
-            ShowNoConnectionIfNeed();
-
-        PlayGamesPlatform.DebugLogEnabled = true;
-        PlayGamesPlatform.Activate();
-        StartCoroutine(TryAuthenticateWithDelay());
-        //Debug.Log("Attempting authentication...");
     }
 
     void ShowNoConnectionIfNeed() {
         if (Application.internetReachability == NetworkReachability.NotReachable)
-            mainmenu.ActivateNoInternetConnectionWnd(true);
+            _alertWindowsManager.ActivateNoInternetConnectionWnd(true);
     }
 
     public void OnSavePlayerScoreToLeaderBoard(string leaderboard, long score) {
@@ -259,8 +245,11 @@ public class GPG_Manager : MonoBehaviour {
             OnTopScoreLoaded
         );
     }
+#endif
 
 #pragma warning disable 0618
+
+#if UNITY_ANDROID
     private void OnTopScoreLoaded(LeaderboardScoreData scoreData) {
         if (scoreData.Valid && scoreData.Scores.Length > 0) {
             IScore topScore = scoreData.Scores[0];
@@ -289,8 +278,10 @@ public class GPG_Manager : MonoBehaviour {
             }
         });
     }
-#pragma warning restore 0618
+#endif
 
+#pragma warning restore 0618
+#if UNITY_ANDROID
     void OnTriggerWakeUpAchi() {
         OnTriggerAchievement(GPGSIds.achievement_its_time_to_wake_up);
         //Debug.LogWarning(GPGSIds.achievement_its_time_to_wake_up);
@@ -305,13 +296,10 @@ public class GPG_Manager : MonoBehaviour {
         PlayGamesPlatform.Instance.UnlockAchievement(achievementKey);
     }
 
-    private void OnDestroy() {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
 #else
     private void Awake() {
         Debug.LogWarning("Running on PC: Google Services and Ads disabled.");
     }
 #endif
+
 }

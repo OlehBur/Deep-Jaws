@@ -17,7 +17,7 @@ public class SanctuaryLifetimeScope : LifetimeScopeBase {
     public override void InitServices(IContainerBuilder builder) {
         builder.RegisterComponentInHierarchy<SanctuaryCameraChangerService>().As<ISanctuaryCameraChanger>();
         builder.RegisterComponentInHierarchy<FishAlmanacVisualizeUI>().As<IFishAlmanacVisualizeUI>();
-        builder.RegisterComponentInHierarchy<SanctuaryBiomesNavigation>().As<ISanctuaryBiomesNavigation>();
+        builder.RegisterComponentInHierarchy<SanctuaryBiomeWnd>().As<ISanctuaryBiomesNavigation>();
     }
 
     public override void InitMultipleScripts(IContainerBuilder builder) {
@@ -25,9 +25,9 @@ public class SanctuaryLifetimeScope : LifetimeScopeBase {
     public override void InitSingleScripts(IContainerBuilder builder) {
         SingleInject<BiomesVisualize>(builder);
         SingleInject<ResidentButtonsView>(builder);
-        SingleInject<SanctuaryBiomesNavigation>(builder);
-        SingleInject<SanctuaryVisualizeUI>(builder);
-        SingleInject<ShellsBarVIsualize>(builder);
+        SingleInject<SanctuaryBiomeWnd>(builder);
+        SingleInject<SanctuaryVisualizeWnd>(builder);
+        SingleInject<ShellsBarView>(builder);
         SingleInject<FishAlmanacVisualizeUI>(builder);
     }
 }

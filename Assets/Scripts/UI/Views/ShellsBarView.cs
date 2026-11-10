@@ -7,7 +7,7 @@ using VContainer;
 
 
 
-public class ShellsBarVIsualize : MonoBehaviour {
+public class ShellsBarView : MonoBehaviour {
     [SerializeField] TextMeshProUGUI shellsCnt;
     [SerializeField] Button claimB;
 
@@ -23,7 +23,7 @@ public class ShellsBarVIsualize : MonoBehaviour {
             UpdateShellsCnt(_sanctuariesManager.ShellsCnt);
     }
 
-    void UpdateShellsCnt(int cnt) {
+    public void UpdateShellsCnt(int cnt) {
         shellsCnt.text = cnt.ToString();
     }
 
@@ -46,16 +46,19 @@ public class ShellsBarVIsualize : MonoBehaviour {
             _sanctuariesManager.OnShellsAmountChanged += UpdateShellsCnt;
         }
 
-        //if (GameAdsManager.Instance != null) {
 #if UNITY_ANDROID
-        _adsManager.OnAdButtonsInteractable += ClaimInteractable;
-        _adsManager.OnExtraShellsRewarded += OnExtraShellsReceive;
-        claimB.onClick.AddListener(() => {
-            _adsManager.OnClaimExtraShellsClick();
-            _isInteracted = true;
-        });
+        if (_adsManager != null) {
+            _adsManager.OnAdButtonsInteractable += ClaimInteractable;
+            _adsManager.OnExtraShellsRewarded += OnExtraShellsReceive;
+            claimB.onClick.AddListener(() => {
+                _adsManager.OnClaimExtraShellsClick();
+                _isInteracted = true;
+            });
+            claimB.gameObject.SetActive(true);
+        }
+        else
+            claimB.gameObject.SetActive(false);
 #endif
-        //}
     }
 
 
@@ -64,10 +67,10 @@ public class ShellsBarVIsualize : MonoBehaviour {
             _sanctuariesManager.OnShellsAmountChanged -= UpdateShellsCnt;
 
 #if UNITY_ANDROID
-        //if (GameAdsManager.Instance != null) {
-        _adsManager.OnAdButtonsInteractable -= ClaimInteractable;
-        _adsManager.OnExtraShellsRewarded -= OnExtraShellsReceive;
-        //}
+        if (_adsManager != null) {
+            _adsManager.OnAdButtonsInteractable -= ClaimInteractable;
+            _adsManager.OnExtraShellsRewarded -= OnExtraShellsReceive;
+        }
 #endif
 
         claimB.onClick.RemoveAllListeners();

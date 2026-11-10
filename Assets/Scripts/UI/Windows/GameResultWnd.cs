@@ -1,5 +1,6 @@
-//#define UNITY_ANDROID
+#define UNITY_ANDROID
 
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ using VContainer;
 
 
 
-public class GameResultWnd : MonoBehaviour {
+public class GameResultWnd : WindowBase {
     [SerializeField] TextMeshProUGUI points;
     [SerializeField] TextMeshProUGUI multiplier;
     [SerializeField] TextMeshProUGUI finalShells;
@@ -16,6 +17,7 @@ public class GameResultWnd : MonoBehaviour {
 
     [Inject] private readonly IAdsManager _adsManager;
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
+
 
     private int _receivedShells = 0;
     //private bool isAlreadyReceivedDoublePrice = false;
@@ -43,6 +45,8 @@ public class GameResultWnd : MonoBehaviour {
         }
 #endif
     }
+
+
 
     void AdInteractable(bool interactable) {
         if (doubleShellsB != null)

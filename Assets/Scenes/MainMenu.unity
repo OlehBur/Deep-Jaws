@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 48283717}
   - component: {fileID: 48283716}
   - component: {fileID: 48283718}
+  - component: {fileID: 48283719}
   m_Layer: 5
   m_Name: StoreWnd
   m_TagString: Untagged
@@ -412,6 +413,45 @@ MonoBehaviour:
   - {fileID: 1829381806}
   - {fileID: 1390643523}
   - {fileID: 2099821398}
+--- !u!114 &48283719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48283714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d846997164082a145846e04429dbfd0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  resetSkinsButton: {fileID: 1025386118}
+  restorePurchaseButton: {fileID: 1120272698}
+  previewSkinsButton: {fileID: 1089678872}
+  exitStoreButton: {fileID: 686823315}
+  storeBackgroundLiveShadows: {fileID: 1060104489}
+  skinsCards:
+    mercury: {fileID: 1001402851}
+    chameleon: {fileID: 1567960008}
+    ashflow: {fileID: 233141621}
+    zebra: {fileID: 1434551480}
+    singularity: {fileID: 1879003690}
+    blinker: {fileID: 1088090834}
+    checkerboard: {fileID: 1911519985}
+    corrosion: {fileID: 1907760234}
+    cosmo: {fileID: 724169797}
+    cupid: {fileID: 1292312966}
+    fairylights: {fileID: 1712098792}
+    pixy: {fileID: 2117351410}
+    porcelain: {fileID: 1526743493}
+    rainbow: {fileID: 1257120066}
+    sun: {fileID: 570226223}
+    invert: {fileID: 1128487392}
+  accountsButtons:
+    noAdCard: {fileID: 2051253554}
+    premiumCard: {fileID: 1116630885}
+    supportDevCard: {fileID: 1750609594}
+  skinsPreviewWnd: {fileID: 8105629118535288116}
 --- !u!114 &59013508 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3115919967722847359, guid: 3c0c2d681c4e3e1418892c607d9d1246, type: 3}
@@ -1316,17 +1356,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144461271}
   m_CullTransparentMesh: 1
---- !u!114 &147777974 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1063070039208567439, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
-  m_PrefabInstance: {fileID: 759331214}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &151475232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1577,17 +1606,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
---- !u!114 &172466376 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3174577098538862535, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
-  m_PrefabInstance: {fileID: 759331214}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &178428424
 GameObject:
   m_ObjectHideFlags: 0
@@ -2043,7 +2061,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &237068557
@@ -2185,7 +2203,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1160, y: 721.98}
+  m_SizeDelta: {x: 1300, y: 721.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &239269779
 MonoBehaviour:
@@ -2258,17 +2276,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
---- !u!114 &274760799 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3174577098538862535, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
-  m_PrefabInstance: {fileID: 1750609592}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &292121574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4414,7 +4421,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &574538630
@@ -4626,6 +4633,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5498627130543008574, guid: c15b70a15f561434c9fcd481803389b2, type: 3}
   m_PrefabInstance: {fileID: 1738675677}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &588831135 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4362620690309100066, guid: c15b70a15f561434c9fcd481803389b2, type: 3}
+  m_PrefabInstance: {fileID: 1738675677}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &590800742 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3572640382305239854, guid: 3c0c2d681c4e3e1418892c607d9d1246, type: 3}
@@ -5260,55 +5278,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 686823316}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1172455760}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 3d8cc4e266d980843bdb12326d21a351, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 48283714}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 761672703}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1060104489}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &686823316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5596,7 +5566,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1 &727759638
@@ -6248,14 +6218,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6626a54d82f0ebe49b1ed8ad0fc271da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::MainMenuNavigation
-  GPG_Services_UI: {fileID: 1121217655}
+  gpgServicesWnd: {fileID: 1121217657}
+  storeWnd: {fileID: 48283719}
+  skinsPreviewWnd: {fileID: 8105629118535288116}
   continueButton: {fileID: 1525560263}
   newGameButton: {fileID: 822021715}
   sanctuaryButton: {fileID: 2107679342}
   settingsButton: {fileID: 873491896}
   exitButton: {fileID: 727759640}
   bugReport: {fileID: 121279423}
-  mainMenuContainer: {fileID: 761672703}
 --- !u!1001 &763195248
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7612,17 +7583,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ec3ecc48755043a43ba54c21032c3060, type: 3}
   m_PrefabInstance: {fileID: 828556676}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &841221291 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1063070039208567439, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
-  m_PrefabInstance: {fileID: 2051253552}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &854426830
 GameObject:
   m_ObjectHideFlags: 0
@@ -7810,6 +7770,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 868615670}
+  - component: {fileID: 868615671}
   m_Layer: 0
   m_Name: SkinsPreview
   m_TagString: Untagged
@@ -7848,6 +7809,34 @@ Transform:
   - {fileID: 685636032}
   m_Father: {fileID: 2137089644}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &868615671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 868615669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c97cc35f8f76749a906775457556b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  chameleon_Seabass: {fileID: 1731969858}
+  ashflow_Mackarel: {fileID: 1634151123}
+  blinker_Lionfish: {fileID: 1153378679}
+  zebra_Barracuda: {fileID: 1632714703}
+  mercury_Tuna: {fileID: 491507578}
+  checkerboard_Seabass: {fileID: 1813781512}
+  corrosion_Mackarel: {fileID: 1948479329}
+  fairylight_Lionfish: {fileID: 1959266637}
+  cupid_Barracuda: {fileID: 902947790}
+  singularity_Tuna: {fileID: 1100989959}
+  cosmo_Seabass: {fileID: 315142071}
+  pixy_Mackarel: {fileID: 1938226414}
+  sun_Lionfish: {fileID: 1495046866}
+  porcelain_Barracuda: {fileID: 1617190586}
+  rainbow_Tuna: {fileID: 1856830923}
+  invert_Seabass: {fileID: 685636033}
 --- !u!1 &869529127
 GameObject:
   m_ObjectHideFlags: 0
@@ -9578,7 +9567,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1 &1004270979
@@ -9903,19 +9892,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1025386119}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1172455760}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 3d8cc4e266d980843bdb12326d21a351, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1025386119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10087,17 +10064,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 1821.76}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1056125423 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1063070039208567439, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
-  m_PrefabInstance: {fileID: 1750609592}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &1060104489
 GameObject:
   m_ObjectHideFlags: 0
@@ -10886,7 +10852,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1 &1089678870
@@ -10971,43 +10937,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1089678873}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1172455760}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 3d8cc4e266d980843bdb12326d21a351, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 48283714}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1172455761}
-        m_TargetAssemblyTypeName: PurchaseUIvisualizer, GameAssembly
-        m_MethodName: OnOpen_ScinsPreviewWnd
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1089678873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11211,6 +11141,17 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3887185075125053422, guid: cb93f53c78711f34aa8fe088a0d68dd3, type: 3}
   m_PrefabInstance: {fileID: 1100989957}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1116630885 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1126027519834020785, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
+  m_PrefabInstance: {fileID: 759331214}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1 &1120272696
 GameObject:
   m_ObjectHideFlags: 0
@@ -11293,19 +11234,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1120272699}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1172455760}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 3d8cc4e266d980843bdb12326d21a351, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1120272699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11355,7 +11284,7 @@ GameObject:
   - component: {fileID: 1121217656}
   - component: {fileID: 1121217657}
   m_Layer: 5
-  m_Name: GPG_Services_UI
+  m_Name: GPG_ServicesWnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11396,6 +11325,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d857e150d3053b4fb8a52b521b37494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  signInButton: {fileID: 1282343181}
+  achievementsButton: {fileID: 1412751594}
+  leaderboardButton: {fileID: 1551219138}
+  storeButton: {fileID: 1635173284}
   signInIcon: {fileID: 2022515326}
   kingOfDeepsObj: {fileID: 490792147}
   kingOfDeepsTxt: {fileID: 85329267}
@@ -11409,6 +11342,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   kingOfDeepsAnimator: {fileID: 490792149}
+  storeWnd: {fileID: 48283719}
   references:
     version: 2
     RefIds: []
@@ -11498,7 +11432,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!114 &1128916441 stripped
@@ -12288,58 +12222,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2e0c867daebb764c8f35bbbdd9adbcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  fishSkinManager: {fileID: 11400000, guid: 9b9c06ba6e81b3244bcd39c2bbd353ad, type: 2}
-  accountsButtons:
-    buyNoAd: {fileID: 841221291}
-    buyPremium: {fileID: 147777974}
-    buySupportDev: {fileID: 1056125423}
-    noAdTxt: {fileID: 1907164824}
-    premiumTxt: {fileID: 172466376}
-    supportDevTxt: {fileID: 274760799}
-  skinsCards:
-    mercury: {fileID: 1001402851}
-    chameleon: {fileID: 1567960008}
-    ashflow: {fileID: 233141621}
-    zebra: {fileID: 1434551480}
-    singularity: {fileID: 1879003690}
-    blinker: {fileID: 1088090834}
-    checkerboard: {fileID: 1911519985}
-    corrosion: {fileID: 1907760234}
-    cosmo: {fileID: 724169797}
-    cupid: {fileID: 1292312966}
-    fairylights: {fileID: 1712098792}
-    pixy: {fileID: 2117351410}
-    porcelain: {fileID: 1526743493}
-    rainbow: {fileID: 1257120066}
-    sun: {fileID: 570226223}
-    invert: {fileID: 1128487392}
   storeWnd: {fileID: 48283714}
-  resetSkinsButton: {fileID: 1025386118}
-  restorePurchaseButton: {fileID: 1120272698}
   loyaltyRewardedWnd: {fileID: 5960298251013235783}
   titleAdFree: {fileID: 1492207536}
   titlePremium: {fileID: 1199829286}
   titleFounder: {fileID: 1254469419}
   titleDemo: {fileID: 799078834}
-  NoInternetConnectionWnd: {fileID: 0}
-  skinsPreviewWnd: {fileID: 1134296395820673278}
-  skinsPreview: {fileID: 868615670}
-  chameleon_Seabass: {fileID: 1731969858}
-  mercury_Tuna: {fileID: 491507578}
-  ashflow_Mackarel: {fileID: 1634151123}
-  zebra_Barracuda: {fileID: 1632714703}
-  singularity_Tuna: {fileID: 1100989959}
-  blinker_Lionfish: {fileID: 1153378679}
-  checkerboard_Seabass: {fileID: 1813781512}
-  corrosion_Mackarel: {fileID: 1948479329}
-  cosmo_Seabass: {fileID: 315142071}
-  cupid_Barracuda: {fileID: 902947790}
-  fairylight_Lionfish: {fileID: 1959266637}
-  pixy_Mackarel: {fileID: 1938226414}
-  porcelain_Barracuda: {fileID: 1617190586}
-  rainbow_Tuna: {fileID: 1856830923}
-  sun_Lionfish: {fileID: 1495046866}
-  invert_Seabass: {fileID: 685636033}
 --- !u!114 &1185214184 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3115919967722847359, guid: 3c0c2d681c4e3e1418892c607d9d1246, type: 3}
@@ -12873,7 +12761,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!224 &1262801282 stripped
@@ -13046,19 +12934,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1282343182}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainmenuManager, Assembly-CSharp
-        m_MethodName: OnServicesButton
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1282343182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13105,7 +12981,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1 &1296153918
@@ -13815,7 +13691,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 5.66
+  m_PixelsPerUnitMultiplier: 2.5
 --- !u!222 &1361748737
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14192,19 +14068,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1412751595}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainmenuManager, Assembly-CSharp
-        m_MethodName: OnServicesButton
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1412751595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15206,7 +15070,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!114 &1444869703 stripped
@@ -16025,7 +15889,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!114 &1533837854 stripped
@@ -16134,19 +15998,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1551219139}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainmenuManager, Assembly-CSharp
-        m_MethodName: OnServicesButton
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1551219139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16443,7 +16295,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &1602957139
@@ -17029,7 +16881,7 @@ GameObject:
   - component: {fileID: 1635173284}
   - component: {fileID: 1635173287}
   m_Layer: 5
-  m_Name: Shop button
+  m_Name: Store button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17100,55 +16952,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1635173285}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1172455760}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 3d8cc4e266d980843bdb12326d21a351, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 48283714}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1060104489}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 761672703}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1635173285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18290,7 +18094,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &1715546120
@@ -18893,6 +18697,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7600087614815824745, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
   m_PrefabInstance: {fileID: 1750609592}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1750609594 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1126027519834020785, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
+  m_PrefabInstance: {fileID: 1750609592}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &1755886149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19915,20 +19730,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
---- !u!114 &1907164824 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3174577098538862535, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
-  m_PrefabInstance: {fileID: 2051253552}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &1907760234 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 618068122117611529, guid: 3c0c2d681c4e3e1418892c607d9d1246, type: 3}
@@ -19937,7 +19741,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &1909609456
@@ -20264,7 +20068,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1 &1919149033
@@ -21382,8 +21186,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -29.349998}
-  m_SizeDelta: {x: -60, y: -118.7}
+  m_AnchoredPosition: {x: -35.000053, y: -29.350006}
+  m_SizeDelta: {x: -129.9999, y: -118.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1978019360
 MonoBehaviour:
@@ -21981,8 +21785,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 10, y: 0}
-  m_SizeDelta: {x: 30, y: 0}
+  m_AnchoredPosition: {x: 70, y: 0}
+  m_SizeDelta: {x: 80, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2011572015
 MonoBehaviour:
@@ -22062,7 +21866,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 6.42
+  m_PixelsPerUnitMultiplier: 3.36
 --- !u!222 &2011572017
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22398,6 +22202,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7600087614815824745, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
   m_PrefabInstance: {fileID: 2051253552}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2051253554 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1126027519834020785, guid: aa67c514ef504da4ebbee0f6fc7638d0, type: 3}
+  m_PrefabInstance: {fileID: 2051253552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!114 &2053348729 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 717036818552740151, guid: 3c0c2d681c4e3e1418892c607d9d1246, type: 3}
@@ -22872,7 +22687,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f81178bfabe5a184d96b9e0c9fe8408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a67a8ae4dd5954fac76fbc308a666a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::SkinStoreCard
 --- !u!1001 &2124262976
@@ -23311,6 +23126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8105629118535288115}
   - component: {fileID: 7689588375662834871}
+  - component: {fileID: 8105629118535288116}
   m_Layer: 5
   m_Name: SkinsPreview
   m_TagString: Untagged
@@ -26256,6 +26072,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5498627130543008574, guid: c15b70a15f561434c9fcd481803389b2, type: 3}
   m_PrefabInstance: {fileID: 4669995528524764711}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6841777472601173277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4362620690309100066, guid: c15b70a15f561434c9fcd481803389b2, type: 3}
+  m_PrefabInstance: {fileID: 4669995528524764711}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6875223278102600861
 GameObject:
   m_ObjectHideFlags: 0
@@ -26826,26 +26653,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1180059979946778774, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1214164424409077533, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 1261611661250709868, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 2722324007736866021, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 3003729654907887505, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
     - target: {fileID: 3155532216538601432, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -128.34222
@@ -26886,50 +26693,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3344956744194239641, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 4068540283534336442, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 4739486566574147781, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 4739486566574147781, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 761672703}
     - target: {fileID: 4922444573241007694, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
       propertyPath: m_Name
       value: RootLifetimeScope
       objectReference: {fileID: 0}
-    - target: {fileID: 4944040816979222028, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 5947530173186109153, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 6163546882513358717, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 7358678471737498197, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 8577968004290872189, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
-    - target: {fileID: 8646993165987785930, guid: 4b7e130fc3882ae4896e3b1d92272eeb, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1172455760}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27730,6 +27497,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8105629118535288116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134296395820673278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 397da6178c52c064c8b6da7ea94c3c03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  exitButton: {fileID: 6841777472601173277}
+  nextSkinButton: {fileID: 588831135}
 --- !u!1 &8143018278854449036
 GameObject:
   m_ObjectHideFlags: 0

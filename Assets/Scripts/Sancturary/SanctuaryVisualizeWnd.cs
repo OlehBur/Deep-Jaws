@@ -22,10 +22,10 @@ public class BiomeUIContainer {
 }
 
 
-public class SanctuaryVisualizeUI : MonoBehaviour {
+public class SanctuaryVisualizeWnd : MonoBehaviour {
     [SerializeField] GameObject biomesUI;
     [SerializeField] GameObject almanacUI;
-    [SerializeField] TextMeshProUGUI shellsCnt;
+    [SerializeField] ShellsBarView shellsBar;
     [SerializeField] BiomeUIContainer biomeUIContainer;
 
     [Inject] private readonly SanctuaryUIInfo _sanctuaryUIInfo;
@@ -208,8 +208,8 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
                     biomeUIContainer.reseachButton.interactable = false;
                 }
 
-                biomeUIContainer.reseachButton.interactable = true;
-                Debug.LogWarning("Research always free");
+                //biomeUIContainer.reseachButton.interactable = true;
+                //Debug.LogWarning("Research always free");
 
                 //progress bar and boost button hide
                 biomeUIContainer.researchProgressBar.gameObject.SetActive(false);
@@ -237,6 +237,6 @@ public class SanctuaryVisualizeUI : MonoBehaviour {
     }
 
     private void UpdateShellsCnt(int currentWheat) =>
-        shellsCnt.text = currentWheat.ToString();
+        shellsBar.UpdateShellsCnt(currentWheat);
 
 }

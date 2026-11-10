@@ -9,13 +9,13 @@ public interface ISanctuaryBiomesNavigation {
     Action<BiomeType> OnBiomeChanged { get; set; }
 }
 
-public class SanctuaryBiomesNavigation : MonoBehaviour, ISanctuaryBiomesNavigation {
+public class SanctuaryBiomeWnd : WindowBase, ISanctuaryBiomesNavigation {
     [SerializeField] Button nextBiomeButton;
     [SerializeField] Button previousBiomeButton;
     [SerializeField] Button exitSactuaryButton;
     [SerializeField] Button hideUIButton;
     [SerializeField] Button viewUIButton;
-    [SerializeField] GameObject biomeUi;
+    [SerializeField] SanctuaryBiomeWnd biomeUi;
     [SerializeField] GameObject hideUi;
 
     [Inject] private readonly IAudioPlayService _audioPlayService;
@@ -55,11 +55,11 @@ public class SanctuaryBiomesNavigation : MonoBehaviour, ISanctuaryBiomesNavigati
     void OnPreviousBiome() => UpdateSelectedBiomeUI(CurrentBiomeType - 1);
     void OnExitSanctuary() => _sceneLoader.OnLoad_MainMenuScene();
     void OnHideUI() {
-        biomeUi.SetActive(false);
+        biomeUi.OnClose();
         hideUi.SetActive(true);
     }
     void OnViewUI() {
-        biomeUi.SetActive(true);
+        biomeUi.OnOpen();
         hideUi.SetActive(false);
     }
 

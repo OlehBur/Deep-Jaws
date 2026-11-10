@@ -25,7 +25,7 @@ public class GraphicManager : MonoBehaviour, IGraphicManager {
 
     //[Header("UI elements")]
     //[SerializeField] SettingsUI settingsUI;
-    [Inject] private readonly ISettingsManager _settingsUI;
+    [Inject] private readonly ISettingsController _settingsUI;
 
     private Color _defaultLightColor;
 
@@ -94,7 +94,7 @@ public class GraphicManager : MonoBehaviour, IGraphicManager {
         _settingsUI.ShadowFixSl.value = GameStaticInfo.SETTINGS_DEFAULT_SHADOW_FIX;
         _settingsUI.GameResolutSl.value = GameStaticInfo.SETTINGS_DEFAYLT_GAME_RESOLUTION;
         _settingsUI.ShadowResolution.value = GameStaticInfo.SETTINGS_DEFAULT_GAME_RESOLUTION_INDEX;
-        _settingsUI.FramerateDropdown.value = (int)SettingsUI.Framerate.Max;
+        _settingsUI.FramerateDropdown.value = (int)SettingsWnd.Framerate.Max;
         _settingsUI.AutoHideUI_tog.isOn = true;
     }
 

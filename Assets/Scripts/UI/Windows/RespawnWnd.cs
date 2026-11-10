@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
-public class RespawnWnd : MonoBehaviour {
+public class RespawnWnd : WindowBase {
     [SerializeField] TextMeshProUGUI limitRevives;
     [SerializeField] TextMeshProUGUI respawnTimer;
     [SerializeField] Button reviveB;

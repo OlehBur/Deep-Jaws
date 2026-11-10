@@ -17,7 +17,8 @@ public enum VFX_clip {
     Heal,
     Echo,
     BubblePop,
-    UI_ButtonClick
+    UI_ButtonClick,
+    SanctuaryResearch
 }
 
 public enum Music_clip {
@@ -109,6 +110,7 @@ public class AudioPlayManager : MonoBehaviour, IAudioPlayService {
             VFX_clip.Echo => _clipsInfo.EchoAqua,
             VFX_clip.BubblePop => _clipsInfo.BubblePop,
             VFX_clip.UI_ButtonClick => _clipsInfo.UI_buttonClick,
+            VFX_clip.SanctuaryResearch => _clipsInfo.SanctuaryResearch,
             _ => _clipsInfo.Damage
         };
 

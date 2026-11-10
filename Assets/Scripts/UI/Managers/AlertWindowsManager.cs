@@ -35,7 +35,7 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
     [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] GameObject newUpdWnd;
     [SerializeField] GameObject licenseFailedPanel;
-    [SerializeField] GameObject settingsWnd;
+    [SerializeField] SettingsWnd settingsWnd;
     [SerializeField] GameObject guideBookWnd;
 
     public event Action<bool> OnAlerWndOpened;
@@ -45,7 +45,7 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
         || noInternetConnectionWnd.activeInHierarchy 
         || newUpdWnd.activeInHierarchy 
         || licenseFailedPanel.activeInHierarchy 
-        || settingsWnd.activeInHierarchy
+        || settingsWnd.isActiveAndEnabled
         || guideBookWnd.activeInHierarchy;
 
 
@@ -88,7 +88,7 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
             AlertWndType.NoInternetConnection => noInternetConnectionWnd,
             AlertWndType.NewUpdate => newUpdWnd,
             AlertWndType.LicenseFailed => licenseFailedPanel,
-            AlertWndType.Settings => settingsWnd,
+            AlertWndType.Settings => settingsWnd.gameObject,
             AlertWndType.Guidebook => guideBookWnd,
             _ => null
         };

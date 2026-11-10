@@ -13,7 +13,7 @@ public interface IGameManager {
 }
 
 public class GameManager : MonoBehaviour, IGameManager {
-    [Inject] private readonly ISettingsManager _settingsControllerUI;
+    [Inject] private readonly ISettingsController _settingsControllerUI;
     [Inject] private readonly IGraphicManager _graphicManager;
 
     public event Action<bool> OnGamePause;

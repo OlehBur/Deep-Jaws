@@ -38,7 +38,7 @@ public class HealthBarView : MonoBehaviour {
                 scaleNoiseMult = Mathf.PerlinNoise(heartBeatSpeed, 0) * HEART_ADD_SCALE_MULT;
                 HealthBar.transform.localScale = Vector3.one + Vector3.one * scaleNoiseMult;
 
-                if (SettingsUI.IsAutoHideUI)
+                if (SettingsWnd.IsAutoHideUI)
                     ChangeTransparancy(timer / PlayerUIController.FADE_HUD_TIME);
                 yield return null;
             }
@@ -46,7 +46,7 @@ public class HealthBarView : MonoBehaviour {
         finally {
             HealthBar.transform.localScale = Vector3.one;
 
-            if (SettingsUI.IsAutoHideUI)
+            if (SettingsWnd.IsAutoHideUI)
                 ChangeTransparancy(0f);
         }
     }

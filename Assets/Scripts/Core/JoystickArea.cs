@@ -11,7 +11,7 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
 
     void Awake() {
-        SettingsUI.OnHudHideChanged += SetJoystickHide;
+        SettingsWnd.OnHudHideChanged += SetJoystickHide;
     }
 
     private void Start() {
@@ -20,7 +20,7 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
     void SetJoystickHide() {
         if (joystickBackgr != null)
-            joystickBackgr.gameObject.SetActive(!SettingsUI.IsAutoHideUI);
+            joystickBackgr.gameObject.SetActive(!SettingsWnd.IsAutoHideUI);
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -34,7 +34,7 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
         //center to click pos
         joystickBackgr.anchoredPosition = localPoint;
-        if (SettingsUI.IsAutoHideUI)
+        if (SettingsWnd.IsAutoHideUI)
             joystickBackgr.gameObject.SetActive(true);
 
         //reset handler
@@ -72,7 +72,7 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         JoyAxis.Axis = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
 
-        if (SettingsUI.IsAutoHideUI)
+        if (SettingsWnd.IsAutoHideUI)
             joystickBackgr.gameObject.SetActive(false);
 
         //Debug.Log("Release");
@@ -97,12 +97,12 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     private void OnDisable() {//like user release joystick (in case when joystick immediately disabled)
         JoyAxis.Axis = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
-        if (SettingsUI.IsAutoHideUI)
+        if (SettingsWnd.IsAutoHideUI)
             joystickBackgr.gameObject.SetActive(false);
     }
 
     private void OnDestroy() {
-        SettingsUI.OnHudHideChanged -= SetJoystickHide;
+        SettingsWnd.OnHudHideChanged -= SetJoystickHide;
     }
 }
 

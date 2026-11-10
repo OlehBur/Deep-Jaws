@@ -11,10 +11,9 @@ public class BiomesVisualize : MonoBehaviour {
     [SerializeField] GameObject cliffs_researchParticle;
     [SerializeField] GameObject pelagial_researchParticle;
     [SerializeField] GameObject abyss_researchParticle;
-    [SerializeField] AudioSource guiSource;
-    [SerializeField] AudioClip researchFin;
 
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
+    [Inject] private readonly IAudioPlayService _audioPlayService;
 
     private WaitForSeconds _waitParticleBurst = new WaitForSeconds(1f);
     private bool _isBiomesInited = false;
@@ -78,7 +77,7 @@ public class BiomesVisualize : MonoBehaviour {
             };
 
             StartCoroutine(ResearchAnim(lvlModelsParent.GetChild(Level - 1), researchParticle));
-            guiSource.PlayOneShot(researchFin);
+            _audioPlayService.PlayVFX(VFX_clip.SanctuaryResearch);
         }
         else {//init biome
             for (int i = 0; i < Level; i++)

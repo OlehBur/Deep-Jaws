@@ -7,22 +7,22 @@ using UnityEngine;
 
 [Serializable]
 public class SkinsCards {
-    public SkinStoreCardView mercury;
-    public SkinStoreCardView chameleon;
-    public SkinStoreCardView ashflow;
-    public SkinStoreCardView zebra;
-    public SkinStoreCardView singularity;
-    public SkinStoreCardView blinker;
-    public SkinStoreCardView checkerboard;
-    public SkinStoreCardView corrosion;
-    public SkinStoreCardView cosmo;
-    public SkinStoreCardView cupid;
-    public SkinStoreCardView fairylights;
-    public SkinStoreCardView pixy;
-    public SkinStoreCardView porcelain;
-    public SkinStoreCardView rainbow;
-    public SkinStoreCardView sun;
-    public SkinStoreCardView invert;
+    public StoreCardView mercury;
+    public StoreCardView chameleon;
+    public StoreCardView ashflow;
+    public StoreCardView zebra;
+    public StoreCardView singularity;
+    public StoreCardView blinker;
+    public StoreCardView checkerboard;
+    public StoreCardView corrosion;
+    public StoreCardView cosmo;
+    public StoreCardView cupid;
+    public StoreCardView fairylights;
+    public StoreCardView pixy;
+    public StoreCardView porcelain;
+    public StoreCardView rainbow;
+    public StoreCardView sun;
+    public StoreCardView invert;
 
     public static readonly Skin[] ALL_SKINS_ITETATORS = Enum.GetValues(typeof(Skin))
         .Cast<Skin>()
@@ -54,7 +54,7 @@ public class SkinsCards {
         Skin.Sun,
     };
 
-    public SkinStoreCardView GetSkinCard(Skin type) =>
+    public StoreCardView GetSkinCard(Skin type) =>
     type switch {
         Skin.Chameleon => chameleon,
         Skin.Mercury => mercury,

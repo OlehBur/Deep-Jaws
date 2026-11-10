@@ -13,6 +13,7 @@ public class RootLifetimeScope : LifetimeScopeBase {
     [SerializeField] FishLocalizedInfo fishLocalizedInfo;
     [SerializeField] FishAllInfo fishInfoManager;
     [SerializeField] FishSpriteInfo fishSpriteInfo;
+    [SerializeField] FishSkinInfo fishSkinInfo;
 
 
 
@@ -41,14 +42,16 @@ public class RootLifetimeScope : LifetimeScopeBase {
         builder.RegisterInstance(sanctuaryUIInfo);
         builder.RegisterInstance(fishLocalizedInfo);
         builder.RegisterInstance(fishSpriteInfo);
+        builder.RegisterInstance(fishSkinInfo);
         builder.RegisterInstance(fishInfoManager);
         builder.RegisterInstance(audioMixer);
     }
 
     public override void InitServices(IContainerBuilder builder) {
+        builder.RegisterComponent(GetComponentInChildren<GPG_Manager>(true)).As<IGPGManager>();
         builder.RegisterComponent(GetComponentInChildren<SanctuariesManager>(true)).As<ISanctuariesManager>();
         builder.RegisterComponent(GetComponentInChildren<AlertWindowsManager>(true)).As<IAlertWindowsManager>();
-        builder.RegisterComponent(GetComponentInChildren<SettingsUI>(true)).As<ISettingsManager>();
+        builder.RegisterComponent(GetComponentInChildren<SettingsWnd>(true)).As<ISettingsController>();
         builder.RegisterComponent(GetComponentInChildren<SceneLoader>(true)).As<ISceneLoader>();
         builder.RegisterComponent(GetComponentInChildren<GameAdsManager>(true)).As<IAdsManager>();
         builder.RegisterComponent(GetComponentInChildren<AudioPlayManager>(true)).As<IAudioPlayService>();

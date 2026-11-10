@@ -52,7 +52,7 @@ public class PlayerUIController : MonoBehaviour {
     void Start() {
         _playerFishPoolService.OnPlayerRespawn += PlayerReConnect;
         PlayerLeaderboardScore.OnChanged += scoreBar.UpdateScoreInfo;
-        SettingsUI.OnHudHideChanged += UpdateHUDbars;
+        SettingsWnd.OnHudHideChanged += UpdateHUDbars;
 
         if (GameManager.IsRunOnPC) {
             playebleAreaUI.SetActive(false);
@@ -86,7 +86,7 @@ public class PlayerUIController : MonoBehaviour {
 
         //PlayerReConnect(_playerFish, false);
         PlayerLeaderboardScore.OnChanged -= scoreBar.UpdateScoreInfo;
-        SettingsUI.OnHudHideChanged -= UpdateHUDbars;
+        SettingsWnd.OnHudHideChanged -= UpdateHUDbars;
         StopAllCoroutines();
     }
 
@@ -158,7 +158,7 @@ public class PlayerUIController : MonoBehaviour {
         if (gameObject.activeInHierarchy)
             healthBar.Coroutine = StartCoroutine(healthBar.Animation(healthBar.Filler.fillAmount));
         else
-            healthBar.ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
+            healthBar.ChangeTransparancy(SettingsWnd.IsAutoHideUI ? 0f : 1f);
     }
 
     void SprintButtonBehaviour() {

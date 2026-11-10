@@ -9,7 +9,7 @@ public class SprintArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler 
     [SerializeField] Button sprintB;
 
     void Awake() {
-        SettingsUI.OnHudHideChanged += SetSprintHide;
+        SettingsWnd.OnHudHideChanged += SetSprintHide;
     }
 
     private void Start() {
@@ -18,7 +18,7 @@ public class SprintArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler 
 
     void SetSprintHide() {
         if (sprintB != null)
-            sprintB.gameObject.SetActive(!SettingsUI.IsAutoHideUI);
+            sprintB.gameObject.SetActive(!SettingsWnd.IsAutoHideUI);
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -36,21 +36,21 @@ public class SprintArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler 
         if (sprintB.interactable)
             sprintB.onClick.Invoke();
 
-        if (SettingsUI.IsAutoHideUI)
+        if (SettingsWnd.IsAutoHideUI)
             sprintB.gameObject.SetActive(true);
     }
 
     public void OnPointerUp(PointerEventData eventData) {
-        if (SettingsUI.IsAutoHideUI)
+        if (SettingsWnd.IsAutoHideUI)
             sprintB.gameObject.SetActive(false);
     }
 
     private void OnDisable() {
-        if (SettingsUI.IsAutoHideUI)
+        if (SettingsWnd.IsAutoHideUI)
             sprintB.gameObject.SetActive(true);
     }
 
     private void OnDestroy() {
-        SettingsUI.OnHudHideChanged -= SetSprintHide;
+        SettingsWnd.OnHudHideChanged -= SetSprintHide;
     }
 }

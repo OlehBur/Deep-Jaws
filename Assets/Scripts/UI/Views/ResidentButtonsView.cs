@@ -12,7 +12,7 @@ public class ResidentButtonsView : MonoBehaviour {
     [Inject] private readonly FishSpriteInfo _fishSpriteInfo;
 
 
-    public void InitListeners(SanctuaryVisualizeUI sanctuaryVisualizeUI) {
+    public void InitListeners(SanctuaryVisualizeWnd sanctuaryVisualizeUI) {
         for (int i = 0; i < residentsButtons.Length; i++) {//init residents buttons
             int redisDentInd = i;
             residentsButtons[i].onClick.RemoveAllListeners();

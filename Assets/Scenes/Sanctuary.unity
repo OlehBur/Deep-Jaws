@@ -225,17 +225,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 878145867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7012101 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8226697971980146215, guid: 9405174f64205d3499028f0d0977c776, type: 3}
-  m_PrefabInstance: {fileID: 8381198792739287634}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &7595411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4786,7 +4775,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 269122984}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -8707,7 +8696,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 442210962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b40f38c062a9e11488a2534c0b5e28ed, type: 3}
+  m_Script: {fileID: 11500000, guid: e6bb758fa8cc41f4998f8be4372aa918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
   nextBiomeButton: {fileID: 1574076277}
@@ -8715,7 +8704,7 @@ MonoBehaviour:
   exitSactuaryButton: {fileID: 2114258024}
   hideUIButton: {fileID: 551367739}
   viewUIButton: {fileID: 1260974615}
-  biomeUi: {fileID: 442210962}
+  biomeUi: {fileID: 442210964}
   hideUi: {fileID: 84205859}
 --- !u!1 &443421467
 GameObject:
@@ -10377,7 +10366,7 @@ PrefabInstance:
     - target: {fileID: 2291874257255536590, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 2363571348981046797, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_Name
       value: InfoFishButton 4
@@ -14881,7 +14870,7 @@ PrefabInstance:
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -16844,7 +16833,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 805512576}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -22243,7 +22232,7 @@ PrefabInstance:
     - target: {fileID: 2291874257255536590, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 2363571348981046797, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_Name
       value: InfoFishButton (1)
@@ -23362,7 +23351,7 @@ PrefabInstance:
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayOneShot
@@ -25195,7 +25184,7 @@ PrefabInstance:
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 1397585499506445813, guid: ff2421d02ae146b48b12d8dd42d12d8a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayOneShot
@@ -37589,7 +37578,7 @@ PrefabInstance:
     - target: {fileID: 2291874257255536590, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 2363571348981046797, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_Name
       value: InfoFishButton (3)
@@ -39359,8 +39348,6 @@ MonoBehaviour:
   cliffs_researchParticle: {fileID: 879988101}
   pelagial_researchParticle: {fileID: 714349827}
   abyss_researchParticle: {fileID: 337329552}
-  guiSource: {fileID: 1784974808}
-  researchFin: {fileID: 8300000, guid: 65f4a07449038c3489d72370e93db618, type: 3}
 --- !u!1 &1747680778
 GameObject:
   m_ObjectHideFlags: 0
@@ -40649,7 +40636,6 @@ GameObject:
   - component: {fileID: 1784974806}
   - component: {fileID: 1784974805}
   - component: {fileID: 1784974804}
-  - component: {fileID: 1784974808}
   - component: {fileID: 1784974809}
   m_Layer: 5
   m_Name: GUI
@@ -40745,103 +40731,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!82 &1784974808
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1784974803}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 531342383864937755, guid: d0b9685dba020b44cb7c71d0afc5f162, type: 2}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 0
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 10
-  Pan2D: 0
-  rolloffMode: 1
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &1784974809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40851,12 +40740,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1784974803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83ca5c65ff9d705449da99b718c42fef, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b2ee35681760e44ab37996f1fc51e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
   biomesUI: {fileID: 442210962}
   almanacUI: {fileID: 1632457741}
-  shellsCnt: {fileID: 7012101}
+  shellsBar: {fileID: 2097781445}
   biomeUIContainer:
     residentButtonsView: {fileID: 1574041312}
     biomeTittle: {fileID: 1794206192}
@@ -47316,7 +47205,7 @@ PrefabInstance:
     - target: {fileID: 2291874257255536590, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 2363571348981046797, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_Name
       value: InfoFishButton 2
@@ -47541,6 +47430,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 796718701}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2097781445 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3997368105410672210, guid: 9405174f64205d3499028f0d0977c776, type: 3}
+  m_PrefabInstance: {fileID: 8381198792739287634}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408116cbeb6cae04a9eedaa9809b3b3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &2099519334
 GameObject:
   m_ObjectHideFlags: 0
@@ -47732,7 +47632,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2107060406}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -48563,7 +48463,7 @@ PrefabInstance:
     - target: {fileID: 2291874257255536590, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 2363571348981046797, guid: f27ceaac1330a334a8e9c7a739e33f47, type: 3}
       propertyPath: m_Name
       value: InfoFishButton
@@ -49248,7 +49148,7 @@ PrefabInstance:
     - target: {fileID: 6018935369987224364, guid: 9405174f64205d3499028f0d0977c776, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1784974808}
+      objectReference: {fileID: 0}
     - target: {fileID: 6018935369987224364, guid: 9405174f64205d3499028f0d0977c776, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayOneShot

@@ -94,7 +94,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
             return;
         }
         //GameAdsManager.Instance.UpdateDailyRevivesTxt();
-        respawnWnd.gameObject.SetActive(true);
+        respawnWnd.OnOpen();
 #else
         /*spawnManager*/
         _playerSpawnService.RespawnPlayer(true, false);//just respawn without ui on pc
@@ -104,7 +104,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     public void OnSureSaveExitGame() {
         _playerSpawnService.SavePlayerData();
 #if UNITY_ANDROID
-        gameResult.gameObject.SetActive(true);
+        gameResult.OnOpen();
 #else
         _sceneLoader.OnLoad_MainMenuScene();
 #endif
@@ -118,5 +118,5 @@ public class GameHudController : MonoBehaviour, IGameHudController {
         _sceneLoader.OnLoad_GameScene();
     }
 
-    public void DeactivateRespawnWnd() => respawnWnd.gameObject.SetActive(false);
+    public void DeactivateRespawnWnd() => respawnWnd.OnClose();
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UI;
 
-public class SkinStoreCardView : MonoBehaviour {
+public class StoreCardView : MonoBehaviour {
     [SerializeField] Button buyB;
     [SerializeField] Button selectB;
     [SerializeField] Button previewB;
@@ -28,7 +28,7 @@ public class SkinStoreCardView : MonoBehaviour {
     }
     public void SetBuyInterctable(bool interactable) => buyB.interactable = interactable;
 
-    public void ShowPriceUI(string price) {
+    public void SetAndShowPrice(string price) {
         if (buyB == null)
             return;
 
@@ -57,7 +57,7 @@ public class SkinStoreCardView : MonoBehaviour {
 
     public void UpdateData(bool isSelected, bool isPurchased = true, string price = "") {
         if (!isPurchased)
-            ShowPriceUI(price);
+            SetAndShowPrice(price);
         else
             ShowSelectUI(isSelected);
     }

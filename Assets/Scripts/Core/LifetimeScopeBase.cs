@@ -14,7 +14,7 @@ public abstract class LifetimeScopeBase : LifetimeScope {
     }
 
     public static void SingleInject<T>(IContainerBuilder builder) where T : Object {
-        T script = FindAnyObjectByType<T>();
+        T script = FindAnyObjectByType<T>(FindObjectsInactive.Include);
 
         if (script != null)
             builder.RegisterBuildCallback(container => container.Inject(script));

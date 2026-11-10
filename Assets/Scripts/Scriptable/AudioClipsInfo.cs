@@ -22,4 +22,5 @@ public class AudioClipsInfo : ScriptableObject {
     [field: SerializeField] public AudioClip EchoAqua { get; set; }
     [field: SerializeField] public AudioClip BubblePop { get; set; }
     [field: SerializeField] public AudioClip UI_buttonClick { get; set; }
+    [field: SerializeField] public AudioClip SanctuaryResearch { get; set; }
 }

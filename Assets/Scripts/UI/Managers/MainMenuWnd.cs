@@ -14,7 +14,7 @@ public interface IMainMenuNavigation {
     void OnExitButtonClicked();
 }
 
-public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
+public class MainMenuWnd : WindowBase, IMainMenuNavigation {
     //[Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly IGameModeController _gameModeController;
     [Inject] private readonly ISceneLoader _sceneLoader;
@@ -22,14 +22,15 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
     [Inject] private readonly ILicenseValidator _licenseValidator;
     [Inject] private readonly IAudioPlayService _audioPlayService;
 
-    [SerializeField] GameObject GPG_Services_UI;
+    [SerializeField] GPGServicesWnd gpgServicesWnd;
+    [SerializeField] StoreWnd storeWnd;
+    [SerializeField] SkinsPreviewWnd skinsPreviewWnd;
     [SerializeField] Button continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] Button newGameButton;
     [SerializeField] Button sanctuaryButton;
     [SerializeField] Button settingsButton;
     [SerializeField] Button exitButton;
     [SerializeField] Button bugReport;
-    [SerializeField] GameObject mainMenuContainer;
 
     private bool _isWorldDataExist = false;
 
@@ -39,8 +40,8 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
 
 
     private void Awake() {
-        if (GPG_Services_UI != null) {
-            GPG_Services_UI.SetActive(!GameManager.IS_PC_DEMO);
+        if (gpgServicesWnd != null) {
+            gpgServicesWnd.SetActivation(!GameManager.IS_PC_DEMO);
             sanctuaryButton.interactable = !GameManager.IS_PC_DEMO;
         }
 
@@ -56,18 +57,25 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
         if (GameManager.IsInternetNotAvailable)
             _alertWindowsManager.FirstNoConnectionOpen();
 
-        _licenseValidator.OnLicenseCheckCompleted += ActivateMainMenuContainer;
+        _licenseValidator.OnLicenseCheckCompleted += SetActivation;
+        storeWnd.OnChangeStage += AutoHideMainMenu;
+        skinsPreviewWnd.OnChangeStage += AutoHideMainMenu;
         _alertWindowsManager.OnAlerWndOpened += AutoHideMainMenu;//auto close main menu wnd if player click "yes" on are u sure wnd
 
         InitMMButtonsListeners();
     }
 
-    private void OnDisable() {
-        _alertWindowsManager.OnAlerWndOpened -= AutoHideMainMenu;
+    private void OnDestroy() {
+        if (_alertWindowsManager != null)
+            _alertWindowsManager.OnAlerWndOpened -= AutoHideMainMenu;
     }
 
-    void AutoHideMainMenu(bool isAlertWndOpened) => gameObject.SetActive(!isAlertWndOpened);
-  
+    void AutoHideMainMenu(bool isAlertWndOpened) {
+        bool isAnyWndOpened = isAlertWndOpened || storeWnd.isActiveAndEnabled || skinsPreviewWnd.isActiveAndEnabled;
+        
+        SetActivation(!isAnyWndOpened);
+    }
+
     void InitMMButtonsListeners() {
         continueButton.onClick.RemoveAllListeners();
         newGameButton.onClick.RemoveAllListeners();
@@ -83,18 +91,13 @@ public class MainMenuNavigation : MonoBehaviour, IMainMenuNavigation {
         exitButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
         bugReport.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
 
-        continueButton.onClick.AddListener(() => _sceneLoader.OnLoad_GameScene());
-        newGameButton.onClick.AddListener(() => OnNewGameClick());
-        sanctuaryButton.onClick.AddListener(() => _sceneLoader.OnLoad_SanctuaryScene());
+        continueButton.onClick.AddListener(_sceneLoader.OnLoad_GameScene);
+        newGameButton.onClick.AddListener(OnNewGameClick);
+        sanctuaryButton.onClick.AddListener(_sceneLoader.OnLoad_SanctuaryScene);
         settingsButton.onClick.AddListener(() => _alertWindowsManager.ActivateSettingsWnd(true));
-        exitButton.onClick.AddListener(() => OnExitButtonClicked());
-        bugReport.onClick.AddListener(() => OpenEmailClientForBugReport());
+        exitButton.onClick.AddListener(OnExitButtonClicked);
+        bugReport.onClick.AddListener(OpenEmailClientForBugReport);
     }
-
-
-    /*public*/
-    void ActivateMainMenuContainer(bool isActive) =>
-mainMenuContainer.SetActive(isActive);
 
     public void OnOpenGameInBrowser() =>
         Application.OpenURL(GAME_FULL_URL);

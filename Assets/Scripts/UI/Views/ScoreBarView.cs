@@ -29,7 +29,7 @@ public class ScoreBarView : MonoBehaviour {
         if (gameObject.activeInHierarchy)
             _coroutine = StartCoroutine(Animation());
         else
-            ChangeTransparancy(SettingsUI.IsAutoHideUI ? 0f : 1f);
+            ChangeTransparancy(SettingsWnd.IsAutoHideUI ? 0f : 1f);
 
         Score.text = score.ToString();
     }
@@ -97,7 +97,7 @@ public class ScoreBarView : MonoBehaviour {
             while (timer > 0) {
                 timer -= DJTime.UnscaledDeltaTime;
 
-                if (SettingsUI.IsAutoHideUI)
+                if (SettingsWnd.IsAutoHideUI)
                     ChangeTransparancy(timer / PlayerUIController.FADE_HUD_TIME);
                 yield return null;
             }
@@ -106,7 +106,7 @@ public class ScoreBarView : MonoBehaviour {
             Ico.transform.localScale = Vector3.one * DEFAULT_JAW_SCALE;
             Score.transform.localScale = Vector3.one * DEFAULT_TEXT_SCALE;
 
-            if (SettingsUI.IsAutoHideUI)
+            if (SettingsWnd.IsAutoHideUI)
                 ChangeTransparancy(0f);
         }
     }
