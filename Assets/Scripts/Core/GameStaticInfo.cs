@@ -37,12 +37,6 @@ public struct AccountTitles {
     public string NoAdPrice;
     public string PremiumPrice;
     public string SupportDevPrice;
-    //public bool NoAdHasDiscount;
-    //public bool PremiumHasDiscount;
-    //public bool SupportDevHasDiscount;
-    //public string NoAdBadgeTxt;
-    //public string PremiumBadgeTxt;
-    //public string SupportDevBadgeTxt;
 
     public string GetPrice(AccountPurchase ap) =>
     ap switch {
@@ -81,13 +75,6 @@ public struct PurchasedSkins {
     public string MercuryPrice;
     public string ChameleonPrice;
     public string AshflowPrice;
-    //public Skin Selected;
-    //public bool MercuryHasDiscount;
-    //public bool ChameleonHasDiscount;
-    //public bool AshflowHasDiscount;
-    //public string MercuryBadgeTxt;
-    //public string ChameleonBadgeTxt;
-    //public string AshflowBadgeTxt;
 
     public string GetPrice(Skin s) =>
         s switch {
@@ -98,60 +85,11 @@ public struct PurchasedSkins {
         };
 }
 
-//public struct FreeSkins {
-//    public bool Zebra;
-//    public bool Singularity;
-//    public bool Blinker;
-//    public bool Checkerboard;
-//    public bool Corrosion;
-//    public bool Cosmo;
-//    public bool Cupid;
-//    public bool Fairylights;
-//    public bool Pixy;
-//    public bool Porcelain;
-//    public bool Rainbow;
-//    public bool Sun;
-//    public bool Invert;
-
-//    public int ZebraPrice;
-//    public int SingularityPrice;
-//    public int BlinkerPrice;
-//    public int CheckerboardPrice;
-//    public int CorrosionPrice;
-//    public int CosmoPrice;
-//    public int CupidPrice;
-//    public int FairylightsPrice;
-//    public int PixyPrice;
-//    public int PorcelainPrice;
-//    public int RainbowPrice;
-//    public int SunPrice;
-//    public int InvertPrice;
-
-//    public int GetPrice(Skin s) =>
-//    s switch {
-//        Skin.Zebra => ZebraPrice,
-//        Skin.Singularity => SingularityPrice,
-//        Skin.Blinker => BlinkerPrice,
-//        Skin.Checkerboard => CheckerboardPrice,
-//        Skin.Corrosion => CorrosionPrice,
-//        Skin.Cosmo => CosmoPrice,
-//        Skin.Cupid => CupidPrice,
-//        Skin.Fairylight => FairylightsPrice,
-//        Skin.Pixy => PixyPrice,
-//        Skin.Porcelain => PorcelainPrice,
-//        Skin.Rainbow => RainbowPrice,
-//        Skin.Sun => SunPrice,
-//        Skin.Invert => InvertPrice,
-//        _ => -1
-//    };
-//}
-
-
 public static class GameStaticInfo {
     public const int SECONDS_IN_HOUR = 3600;
     public const int SECONDS_IN_MINUTE = 60;
     public const float PERCENT_MULTIPLIER = 100f;
-
+    
     public const string GAME_SCENE_NAME = "Game";
     public const string MAINMENU_SCENE_NAME = "MainMenu";
     public const string LOADING_SCENE_NAME = "LoadScene";
@@ -176,7 +114,6 @@ public static class GameStaticInfo {
     public const int SETTINGS_DEFAULT_LANGUAGE = 0;
 
     //gamemode
-    //public static GameMode Gamemode { get; set; } = GameMode.None;
     public const int GAMEMODES_COUNT = 3;
     public const float EASY_MODE_SHELLS_MULTIPLIER = 1f;
     public const float MEDIUM_MODE_SHELLS_MULTIPLIER = 1.2f;
@@ -322,6 +259,11 @@ public static class GameStaticInfo {
     public const int RAINBOW_SKIN_PRICE = 8765;
     public const int COSMO_SKIN_PRICE = 9000;
     public const int SINGULAR_SKIN_PRICE = 11111;
+
+    public const int CHAMELEON_SKIN_PRICE = 7337;
+    public const int MERCURY_SKIN_PRICE = 12321;
+    public const int ASHFLOW_SKIN_PRICE = 5555;
+
     public static int GetFreeSkinPrice(Skin skin) =>
         skin switch {
             Skin.Porcelain => PORCELAIN_SKIN_PRICE,
@@ -337,28 +279,20 @@ public static class GameStaticInfo {
             Skin.Cosmo => COSMO_SKIN_PRICE,
             Skin.Singularity => SINGULAR_SKIN_PRICE,
             Skin.Invert => INVERT_SKIN_PRICE,
+
+            Skin.Chameleon => CHAMELEON_SKIN_PRICE,
+            Skin.Mercury => MERCURY_SKIN_PRICE,
+            Skin.Ashflow => ASHFLOW_SKIN_PRICE,
             _ => -1
         } /*/ 100*/;
 
     public const int BIOME_RESEARCH_BOOST_TIME = 15 * 60;//15 MIN
 
     public static Vector2 WorldToNormalizeScreenPos(Vector3 pos, Camera targetCamera = null) {
-        //Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);
-
-        //return new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
         Camera cam = targetCamera != null ? targetCamera : Camera.main;
         Vector3 viewportPos = cam.WorldToViewportPoint(pos);
         return new Vector2(viewportPos.x, viewportPos.y);
     }
-
-    //public static bool TryGetFish(GameObject fishObject, out Fish fish) {
-    //    //Debug.LogWarning("Player inviolability Activated!");
-    //    return TryGetFishFromPool(fishObject, SpawnManager.playerPool_Objects, SpawnManager.playerPool_FishComponents, out fish) ||//players
-    //        TryGetFishFromPool(fishObject, SpawnManager.visible_poolFishObjects, SpawnManager.visible_poolFishComponents, out fish) ||//default enemies
-    //        TryGetFishFromPool(fishObject, SpawnManager.cuttlefishPool_Objects, SpawnManager. cuttlefishPool_FishComponents, out fish) ||//cucttlefishes
-    //        TryGetFishFromPool(fishObject, SpawnManager.pufferfishPool_Objects, SpawnManager.pufferfishPool_FishComponents, out fish) || //dartfish
-    //        TryGetFishFromPool(fishObject, SpawnManager.dartfishPool_Objects, SpawnManager.dartfishPool_FishComponents, out fish);
-    //}
 
     public static bool Approximately(Color a, Color b, float tolerance = 0.01f) {
         return Mathf.Abs(a.r - b.r) < tolerance &&
@@ -374,17 +308,6 @@ public static class GameStaticInfo {
         return new Vector3(offsetMultiplierX * maxOffset, 0, offsetMultiplierZ * maxOffset);
     }
 
-    static bool TryGetFishFromPool(GameObject fishObject, GameObject[] pool, Fish[] fishPool, out Fish fish) {
-        int index = Array.IndexOf(pool, fishObject);
-        if (index < 0) {
-            fish = null;
-            return false;
-        }
-        else {
-            fish = fishPool[index];
-            return true;
-        }
-    }
 
     public static bool IsRunningOnPlayGamesPC() {
 #if UNITY_ANDROID && !UNITY_EDITOR

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using VContainer;
 
 public enum SceneType {
     MainMenu,
@@ -23,6 +24,8 @@ public interface ISceneLoader {
 public class SceneLoader : MonoBehaviour, ISceneLoader {
     [SerializeField] private GameObject fadeCanvasObject;
     [SerializeField] private Image fadeImage;
+
+    [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
 
     public event Action<string> OnNewSceneLoaded;
 
@@ -47,10 +50,6 @@ public class SceneLoader : MonoBehaviour, ISceneLoader {
         if (_isTransitioning)
             return;
 
-        //fadeCanvasObject.SetActive(true);
-        //gameObject.SetActive(true);
-
-        //if (gameObject.activeInHierarchy)
         StartCoroutine(TransitionRoutine(sceneType));
     }
 
@@ -62,13 +61,13 @@ public class SceneLoader : MonoBehaviour, ISceneLoader {
 
         // to black
         yield return FadeImageAlpha(TRANSPARENT_ALPHA, OPAQUE_ALPHA);
+        
+        _alertWindowsManager.ActivateLoadingPanelWnd(true);
 
         AudioListener.volume = 0f;
         string sceneName = GetSceneName(sceneToLoad);
         //async scene load 
-        AsyncOperation asyncLoad = (sceneToLoad == SceneType.Game) ?
-            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive) :
-            SceneManager.LoadSceneAsync(sceneName);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
 
         asyncLoad.allowSceneActivation = false;
 
@@ -92,6 +91,8 @@ public class SceneLoader : MonoBehaviour, ISceneLoader {
             if (loadingScene.isLoaded)
                 SceneManager.UnloadSceneAsync(loadingScene);
         }
+
+        _alertWindowsManager.ActivateLoadingPanelWnd(false);
 
         //to transparent
         yield return FadeImageAlpha(OPAQUE_ALPHA, TRANSPARENT_ALPHA);

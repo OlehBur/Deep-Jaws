@@ -1,4 +1,4 @@
-#define UNITY_ANDROID
+//#define UNITY_ANDROID
 
 using TMPro;
 using UnityEngine;
@@ -55,9 +55,12 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
         //if (_sanctuariesManager != null) {
         UpdateShellsCnt(_sanctuariesManager.ShellsCnt);
         //}
-#if UNITY_ANDROID
+
+#if !UNITY_STANDALONE_WIN
         //if (_adsManager != null)
         biomeUIContainer.boostResearchButton.onClick.AddListener(() => _adsManager.OnBoostClicked(_sanctuaryBiomesNavigation.CurrentBiomeType));
+#else 
+        biomeUIContainer.boostResearchButton.gameObject.SetActive(false);
 #endif
     }
 
@@ -121,8 +124,10 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
         biomeUIContainer.boostResearchButton.onClick.RemoveAllListeners();
     }
 
+#if !UNITY_STANDALONE_WIN
     void BoostInteractable(bool interactable) =>
         biomeUIContainer.boostResearchButton.interactable = interactable;
+#endif
 
     public void OnOpenAlmanacUI(int index) {
         FishLevel fishLevel = biomeUIContainer.residentButtonsView.GetFishResidentByIndex(index, _selectedBiome);
@@ -156,10 +161,10 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
         _sanctuariesManager.OnAddShells(-_selectedBiome.GetPriceToUpgrade());
         _selectedBiome.OnStartUpgrade();
 
-        _selectedBiome.BoostResearch();
-        if (_selectedBiome.Level == _selectedBiome.Info.MaxLevel)
-            biomeUIContainer.reseachButton.gameObject.SetActive(false);
-        Debug.LogWarning("ACtivate one click research");
+        //_selectedBiome.BoostResearch();
+        //if (_selectedBiome.Level == _selectedBiome.Info.MaxLevel)
+        //    biomeUIContainer.reseachButton.gameObject.SetActive(false);
+        //Debug.LogWarning("ACtivate one click research");
 
         UpdateResearchProgress(_selectedBiome.Info.Type, _selectedBiome.TimeToUpgrade);
     }
@@ -193,7 +198,9 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
             if (_selectedBiome.IsUpgrading) {
                 biomeUIContainer.reseachButton.gameObject.SetActive(false);
                 biomeUIContainer.researchProgressBar.gameObject.SetActive(true);
+#if !UNITY_STANDALONE_WIN
                 biomeUIContainer.boostResearchButton.gameObject.SetActive(true);
+#endif
                 biomeUIContainer.requirementContainer.SetActive(false); //disable requirements
             }
             else {
@@ -221,7 +228,7 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
                 return;
             }
 
-            float maxTimeToUpgradeSec = _selectedBiome.Info.UpgradeTimeByLevel_Hours[_selectedBiome.Level] * GameStaticInfo.SECONDS_IN_HOUR;
+            float maxTimeToUpgradeSec = _selectedBiome.Info.GetUpgradeTimeByLevel_Hours(_selectedBiome.Level) * GameStaticInfo.SECONDS_IN_HOUR;
             biomeUIContainer.researchProgressBar.SetFillAmount((float)(maxTimeToUpgradeSec - timeToUpgrade) / maxTimeToUpgradeSec);
             biomeUIContainer.researchProgressBar.SetText(_sanctuaryUIInfo.ResearchProg.GetLocalizedString() + " " + GetTimeString(timeToUpgrade));
         }

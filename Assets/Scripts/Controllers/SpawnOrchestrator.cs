@@ -1,18 +1,16 @@
 ﻿using UnityEngine;
 using VContainer;
-//using VContainer.Unity;
 
 
 public interface ISpawnOrchestrator {
     bool TryGetFish(GameObject fishObject, out Fish fish);
 }
 
-public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializable*/ {
+public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator{
     [Inject] private readonly IVFXPoolService _vfxPoolManager;
     [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly IEnemyFishPoolService _enemyPoolService;
     [Inject] private readonly IPermamentFishPoolService _permamentFishPoolService;
-    //[Inject] private readonly MainmenuManager _mainmenuManager;
 
     [SerializeField] Transform fishPoolParent;
     [SerializeField] Transform weakFishSpawnPointsParent;
@@ -22,20 +20,12 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
     [SerializeField] Transform cuttleSpawnPointsParent;
     [SerializeField] GameObject enemyDetectorPrefab;
 
-    // VContainer construct!
-    //[Inject]
-    //public SpawnOrchestrator(PlayerSpawnService playerSpawnService, EnemyPoolService enemyPoolService, MainmenuManager mainmenuManager) {
-    //    _playerSpawnService = playerSpawnService;
-    //    _enemyPoolService = enemyPoolService;
-    //    _mainmenuManager = mainmenuManager;
-    //}
 
-    public void /*Initialize*/Start() {
+    public void Start() {
         //init
         _playerSpawnService.Init(fishPoolParent);
         _permamentFishPoolService.Init(fishPoolParent);
         _enemyPoolService.Init(fishPoolParent);
-        //_enemyPoolService.SetPlayerProvider(_playerSpawnService);
         _enemyPoolService.SetSpawnPoints(weakFishSpawnPointsParent, strongFishSpawnPointsParent, sharkSpawnPointsParent);
         _permamentFishPoolService.SetSpawnPoints(weakFishSpawnPointsParent, strongFishSpawnPointsParent, sharkSpawnPointsParent, pufferSpawnPointsParent, cuttleSpawnPointsParent);
 
@@ -78,11 +68,6 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
             _permamentFishPoolService.TryGetFish(fishObject, out fish);//cucttlefishes | dartfhis | pufferfish
     }
 
-    //public void OnSceneExit() {
-    //    _playerSpawnService.SavePlayerData();
-    //}
-
-
     void CheckPlayerLvlAchievements(FishLevel playerLvl) {
 #if UNITY_ANDROID && !UNITY_EDITOR
         switch (playerLvl) {
@@ -113,7 +98,7 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator/*IInitializab
 #endif
     }
 
-    private void /*OnApplicationQuit*/OnDisable() {
+    private void OnDisable() {
         if (GameModeController.CurrentMode != GameMode.Hard)//in case of death & automatic scene reload
             _playerSpawnService.SavePlayerData();
 

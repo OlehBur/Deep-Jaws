@@ -14,6 +14,7 @@ public class StoreCardView : MonoBehaviour {
 
     public Button.ButtonClickedEvent BuyOnClick => buyB.onClick;
     public Button.ButtonClickedEvent PreviewOnClick => previewB.onClick;
+    public Button.ButtonClickedEvent SelectOnClick => selectB.onClick;
 
 
 

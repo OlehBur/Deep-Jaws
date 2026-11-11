@@ -1,4 +1,4 @@
-#define UNITY_ANDROID
+//#define UNITY_ANDROID
 
 using System;
 using UnityEngine;
@@ -37,19 +37,13 @@ public interface IAdsManager {
 }
 
 public class GameAdsManager : MonoBehaviour, IAdsManager {
-    //public static GameAdsManager Instance { get; private set; }
-
-    //self inject
-    //[Inject] private readonly IPlayerFishPoolService _playerFishPoolService;
-    //[Inject] private readonly IGameHudController _gameHudController;
-#if UNITY_ANDROID
     [Inject] private readonly IAlertWindowsManager _alertWindows;
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
-#endif
 
     public bool IsAdStartShow { get; private set; } = false;
-#if UNITY_ANDROID
+
     public event Action<bool> OnAdButtonsInteractable;
+#if UNITY_ANDROID
     public event Action OnDoubleShellsRewarded;
     public event Action OnExtraShellsRewarded;
     public event Action OnReviveRewarded;
@@ -285,10 +279,10 @@ public class GameAdsManager : MonoBehaviour, IAdsManager {
 
 #if (UNITY_ANDROID || UNITY_EDITOR) //&& !UNITY_STANDALONE_WIN
     void OnRewardedAdClosed(LevelPlayAdInfo adInfo) {
-
+#if !UNITY_STANDALONE_WIN
         ProcessEarnedReward();
         _rewardedAd.LoadAd();
-
+#endif
 
 #if UNITY_EDITOR//  in case if OnAdClosed worked first, it reset adTarget to None via ResetState().
         IsAdStartShow = false;

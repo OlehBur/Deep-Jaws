@@ -15,7 +15,6 @@ public class SanctuaryBiomeWnd : WindowBase, ISanctuaryBiomesNavigation {
     [SerializeField] Button exitSactuaryButton;
     [SerializeField] Button hideUIButton;
     [SerializeField] Button viewUIButton;
-    [SerializeField] SanctuaryBiomeWnd biomeUi;
     [SerializeField] GameObject hideUi;
 
     [Inject] private readonly IAudioPlayService _audioPlayService;
@@ -55,11 +54,11 @@ public class SanctuaryBiomeWnd : WindowBase, ISanctuaryBiomesNavigation {
     void OnPreviousBiome() => UpdateSelectedBiomeUI(CurrentBiomeType - 1);
     void OnExitSanctuary() => _sceneLoader.OnLoad_MainMenuScene();
     void OnHideUI() {
-        biomeUi.OnClose();
+        OnClose();
         hideUi.SetActive(true);
     }
     void OnViewUI() {
-        biomeUi.OnOpen();
+        OnOpen();
         hideUi.SetActive(false);
     }
 

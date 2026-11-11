@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
 using VContainer;
 
 
@@ -12,7 +10,6 @@ public enum ZoneType {
 }
 
 public class ZoneController : MonoBehaviour {
-    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] ZoneType zoneType;
     [SerializeField] Material zoneBarrierMat;
     [SerializeField] Collider barrierCollider;
@@ -25,6 +22,8 @@ public class ZoneController : MonoBehaviour {
 
 
     private void Start() {//work onlu once per game install (only for old players)
+        Debug.Log($"ZoneController service = {_playerFishPoolService}");
+
         _playerFishPoolService.OnPlayerRespawn += BiomeByLvlBehaviour;
 
         if (_playerFishPoolService.PlayerCurrentFish != null)
@@ -55,7 +54,6 @@ public class ZoneController : MonoBehaviour {
         Rigidbody victimRb = collision.collider.attachedRigidbody;
 
         if (victimRb != null && victimRb.CompareTag(GameStaticInfo.TAG_PLAYER)) {
-            //playerUIController.ActivateZoneOverlay(fishLvlRequirMsg);
             playerUIController.ActivateBiomeTip(zoneType);
 
             if (!isBarrierAnimationActive) {

@@ -297,9 +297,9 @@ public class GPG_Manager : MonoBehaviour, IGPGManager {
     }
 
 #else
-    private void Awake() {
-        Debug.LogWarning("Running on PC: Google Services and Ads disabled.");
-    }
+    //private void Awake() {
+    //    Debug.LogWarning("Running on PC: Google Services and Ads disabled.");
+    //}
 #endif
 
 }

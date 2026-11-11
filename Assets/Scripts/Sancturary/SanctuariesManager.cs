@@ -21,7 +21,6 @@ public interface ISanctuariesManager {
 }
 
 public class SanctuariesManager : MonoBehaviour, ISanctuariesManager {
-    //public static SanctuariesManager Instance { get; private set; } = null;
     public event Action<int> OnShellsAmountChanged;
     /// <summary>
     /// int - time to upgrade
@@ -38,7 +37,6 @@ public class SanctuariesManager : MonoBehaviour, ISanctuariesManager {
     [SerializeField] BiomeInfo pelagialInfo;
     [SerializeField] BiomeInfo oceanicAbyssInfo;
 
-    //private float secondTimer;
     private float _minuteTimer;
 
     public BiomeWrapper CoralReef { get; private set; }
@@ -49,22 +47,15 @@ public class SanctuariesManager : MonoBehaviour, ISanctuariesManager {
 
 
     private const float PRODUCTION_UPDATE_INTERVAL = 60f;//every min
-    //private const float RESEARCH_INTERVAL_TRIGGER = 1f;//every sec
 
-    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    //private static void ResetStatics() {
-    //    Instance = null;
-    //}
 
     private void Awake() {
-        //if (Instance != null && Instance != this) {
-        //    Destroy(gameObject);
-        //    return;
-        //}
         SanctuaryData = ProgressSaver.IsSanctuaryDataExist ?
             ProgressSaver.LoadSanctuaryData() : new SanctuaryData();
-        //Instance = this;
-        //DontDestroyOnLoad(gameObject);
+
+        //SanctuaryData.coralReef_Lvl = 4;
+        //Debug.LogWarning("CliffsSeawed always has 1 lvl on awake");
+        //ProgressSaver.SaveData(SanctuaryData);
     }
 
     private void Start() {
@@ -301,7 +292,7 @@ public class BiomeWrapper {
         if (level >= Info.MaxLevel)
             return;
 
-        TimeToUpgrade = (int)(Info.UpgradeTimeByLevel_Hours[level] * SECONDS_IN_HOUR);
+        TimeToUpgrade = (int)(Info.GetUpgradeTimeByLevel_Hours(level) * SECONDS_IN_HOUR);
     }
 
     public void BoostResearch() {
@@ -312,8 +303,8 @@ public class BiomeWrapper {
         if (TimeToUpgrade < 0)
             TimeToUpgrade = 0;
 
-        Debug.LogWarning("Activate one click research");
-        TimeToUpgrade = 0;
+        //Debug.LogWarning("Activate one click research");
+        //TimeToUpgrade = 0;
 
         OnBoostedProgress?.Invoke(this);
     }

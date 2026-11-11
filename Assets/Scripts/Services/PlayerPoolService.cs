@@ -35,20 +35,19 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
 
 
     [Inject]
-    public PlayerPoolService(FishPrefabsInfo fishPrefabs,/* AudioManager audioManager,*/
-        /*VFXpoolManager vfxPoolManager,*/ FishSkinInfo fishSkinManager, IObjectResolver resolver, IAdsManager adsManager) : base(fishPrefabs, resolver) {
-        _savedWorldData = ProgressSaver.LoadWorldData();// ProgressSaver.IsWorldDataExist() ?             ProgressSaver.LoadWorldData() : new WorldData();//load save data if exists
-        //_fishPrefabs = fishPrefabs;
-        //_audioManager = audioManager;
-        //_vfxPoolManager = vfxPoolManager;
+    public PlayerPoolService(FishPrefabsInfo fishPrefabs, FishSkinInfo fishSkinManager, IObjectResolver resolver, IAdsManager adsManager) : base(fishPrefabs, resolver) {
+        _savedWorldData = ProgressSaver.LoadWorldData();
+
         _fishSkinManager = fishSkinManager;
         _adsManager = adsManager;
 
         _playerInitSpawnPos = Vector3.up * GameStaticInfo.FISH_SPAWN_HEINGT;//in center map
                                                                             //InitPlayerPool(fishPrefabs, fishPoolParent, audioManager, fishAdditionalCompManager, fishSkinManager);
 
+#if !UNITY_STANDALONE_WIN
         _adsManager.OnDeadRespawn += PlayerRespawnHandler;
         _adsManager.OnDeadRevive += PlayerReviveHandler;
+#endif
     }
 
     public Fish GetAt(int index) => _playerPoolComp[index];
@@ -256,7 +255,9 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
     }
 
     public void OnDestroy() {
+#if !UNITY_STANDALONE_WIN
         _adsManager.OnDeadRespawn -= PlayerRespawnHandler;
         _adsManager.OnDeadRevive -= PlayerReviveHandler;
+#endif
     }
 }

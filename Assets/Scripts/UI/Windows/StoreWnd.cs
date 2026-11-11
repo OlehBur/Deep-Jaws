@@ -18,6 +18,13 @@ public class StoreWnd : WindowBase {
     [SerializeField] AccountsButtons accountsButtons;
     [SerializeField] SkinsPreviewWnd skinsPreviewWnd;
 
+    [Header("PC UI Adaptation elements")]
+    [SerializeField] Image storeScrollImg;
+    [SerializeField] ScrollRect storeScrollRect;
+    [SerializeField] GameObject scrollbarVertical;
+
+    [SerializeField] RectTransform storeScrollRectTransform;
+
     [Inject] private readonly IGamePurchaseManager _gamePurchaseManager;
     [Inject] private readonly IAudioPlayService _audioPlayService;
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
@@ -49,6 +56,41 @@ public class StoreWnd : WindowBase {
         AccountTitles at = _gamePurchaseManager.GetCurrentAccountTitles();
         UpdateAccountSection(at);
         UpdatePaidSkinsSection(ps, null);
+
+#if UNITY_STANDALONE_WIN
+        ActivatePCModeUI(true);
+#else
+        ActivatePCModeUI(false);
+#endif
+    }
+
+    void ActivatePCModeUI(bool isActivate) {
+        storeScrollImg.enabled = !isActivate;
+        storeScrollRect.enabled = !isActivate;
+        scrollbarVertical.SetActive(!isActivate);
+        SetStoreCrollMarginType(isActivate);
+
+        //exit button rect
+        const float PC_EXIT_B_OFFSET = 0f;
+        const float ANDROID_EXIT_B_OFFSET = 300f;
+
+        if (exitStoreButton.TryGetComponent(out RectTransform exitBrect)) {
+            exitBrect.anchoredPosition = new Vector2(
+                isActivate ?
+                    PC_EXIT_B_OFFSET : ANDROID_EXIT_B_OFFSET,
+                exitBrect.anchoredPosition.y);
+        }
+
+        restorePurchaseButton.gameObject.SetActive(!isActivate);
+    }
+
+    void SetStoreCrollMarginType(bool isPcVers) {
+        const float DEFAULT_SIDE_MARGIN = 30f;//left and right margin for PC version
+        const float ANDROID_SCROLL_SIDE_MARGIN = 100f;
+        float right = isPcVers ? DEFAULT_SIDE_MARGIN : ANDROID_SCROLL_SIDE_MARGIN;
+
+        storeScrollRectTransform.offsetMin = new Vector2(DEFAULT_SIDE_MARGIN, storeScrollRectTransform.offsetMin.y);
+        storeScrollRectTransform.offsetMax = new Vector2(-right, storeScrollRectTransform.offsetMax.y);
     }
 
     private void OnDestroy() {
@@ -76,24 +118,6 @@ public class StoreWnd : WindowBase {
         UpdateFreeSkinsSection(currentData);
     }
 
-    public void OnSelectMercurySkinClick() => SelectSkinHandler(Skin.Mercury);
-    public void OnSelectChameleonSkinClick() => SelectSkinHandler(Skin.Chameleon);
-    public void OnSelectAshflowSkinClick() => SelectSkinHandler(Skin.Ashflow);
-    public void OnSelectZebraSkinClick() => SelectSkinHandler(Skin.Zebra);
-
-    public void OnSelectInvertSkinClick() => SelectSkinHandler(Skin.Invert);
-    public void OnSelectSingularitySkinClick() => SelectSkinHandler(Skin.Singularity);
-    public void OnSelectBlinkerSkinClick() => SelectSkinHandler(Skin.Blinker);
-    public void OnSelectCheckerboardSkinClick() => SelectSkinHandler(Skin.Checkerboard);
-    public void OnSelectCorrosionSkinClick() => SelectSkinHandler(Skin.Corrosion);
-    public void OnSelectCosmoSkinClick() => SelectSkinHandler(Skin.Cosmo);
-    public void OnSelectCupidSkinClick() => SelectSkinHandler(Skin.Cupid);
-    public void OnSelectFairylightSkinClick() => SelectSkinHandler(Skin.Fairylight);
-    public void OnSelectPixySkinClick() => SelectSkinHandler(Skin.Pixy);
-    public void OnSelectPorcelainSkinClick() => SelectSkinHandler(Skin.Porcelain);
-    public void OnSelectRainbowSkinClick() => SelectSkinHandler(Skin.Rainbow);
-    public void OnSelectSunSkinClick() => SelectSkinHandler(Skin.Sun);
-
     void SelectSkinHandler(Skin type) {
         SaveSelectedSkinToProgress(type, out AccountData data);
         UpdatePaidSkinsSection(_purchasedSkins, data);
@@ -115,13 +139,14 @@ public class StoreWnd : WindowBase {
     }
 
     void UpdatePaidSkinsSection(PurchasedSkins purchasedSkins, AccountData data) {
-#if UNITY_ANDROID && !UNITY_EDITOR
+        //#if UNITY_ANDROID && !UNITY_EDITOR
         if (data == null)
             data = ProgressSaver.IsAccountDataExist ?
-                   ProgressSaver.LoadAccountData() : new AccountData();
+                   ProgressSaver.LoadAccountData() : new();
 
         _purchasedSkins = purchasedSkins;//if fetch from purchase manager
 
+#if !UNITY_STANDALONE_WIN      
         foreach (Skin s in SkinsCards.PURCHASE_SKINS_ITERATORS)
             skinsCards.GetSkinCard(s).SetAndShowPrice(purchasedSkins.GetPrice(s));
 
@@ -131,6 +156,15 @@ public class StoreWnd : WindowBase {
             skinsCards.GetSkinCard(Skin.Mercury).ShowSelectUI(data.selectedSkin == Skin.Mercury);
         if (purchasedSkins.Ashflow)
             skinsCards.GetSkinCard(Skin.Ashflow).ShowSelectUI(data.selectedSkin == Skin.Ashflow);
+#else
+        bool skinPurchasedBuffer;
+        int price;
+
+        foreach (Skin s in SkinsCards.PURCHASE_SKINS_ITERATORS) {
+            skinPurchasedBuffer = data.IsHasSkin(s);
+            price = GameStaticInfo.GetFreeSkinPrice(s);
+            skinsCards.GetSkinCard(s).UpdateData(data.selectedSkin == s, skinPurchasedBuffer, price.ToString());
+        }
 #endif
     }
 
@@ -164,8 +198,10 @@ public class StoreWnd : WindowBase {
     void InitButtonsListeners() {
         //skins
         skinsCards.InitListeners(_gamePurchaseManager);
-        foreach (Skin s in SkinsCards.ALL_SKINS_ITETATORS)
+        foreach (Skin s in SkinsCards.ALL_SKINS_ITETATORS) {
             skinsCards.GetSkinCard(s).PreviewOnClick.AddListener(() => OpenPreviewWithCurrentSkin(s));
+            skinsCards.GetSkinCard(s).SelectOnClick.AddListener(() => SelectSkinHandler(s));
+        }
         //Debug.LogWarning("Todo init view buttons for paid skins");
 
         //accounts

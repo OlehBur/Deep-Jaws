@@ -1,4 +1,4 @@
-#define UNITY_ANDROID
+//#define UNITY_ANDROID
 
 using System;
 using TMPro;
@@ -19,7 +19,7 @@ public class RespawnWnd : WindowBase {
 
     private void Awake() {
         //if (GameAdsManager.Instance != null) {
-#if UNITY_ANDROID
+#if ! UNITY_STANDALONE_WIN
         reviveB.onClick.AddListener(_adsManager.OnReviveClicked);
         retryB.onClick.AddListener(_adsManager.OnRetryClicked);
         _adsManager.OnAdButtonsInteractable += OnReviveAdInteractable;
@@ -33,8 +33,8 @@ public class RespawnWnd : WindowBase {
         retryB.onClick.RemoveAllListeners();
 #if UNITY_ANDROID
         //if (GameAdsManager.Instance != null) {
-            _adsManager.OnAdButtonsInteractable -= OnReviveAdInteractable;
-            _adsManager.OnReviveRewarded -= RecalculateLimit;
+        _adsManager.OnAdButtonsInteractable -= OnReviveAdInteractable;
+        _adsManager.OnReviveRewarded -= RecalculateLimit;
         //}
 #endif
     }
@@ -51,17 +51,19 @@ public class RespawnWnd : WindowBase {
         CancelInvoke(nameof(RespawnWndTimer));
     }
 
+#if !UNITY_STANDALONE_WIN
     void OnReviveAdInteractable(bool interactable) {
         if (CanWatchRewardedForRevive())
             reviveB.interactable = interactable;
         else
             reviveB.interactable = false;
     }
+#endif
 
     void RespawnWndTimer() {
         respawnTimer.text = _respawnTime.ToString();
         --_respawnTime;
-
+#if !UNITY_STANDALONE_WIN
         if (_adsManager.IsAdStartShow || !gameObject.activeInHierarchy) {
             CancelInvoke(nameof(RespawnWndTimer));
             return;
@@ -69,6 +71,7 @@ public class RespawnWnd : WindowBase {
 
         if (_respawnTime < 0)//auto retry
             _adsManager.OnRetryClicked();
+#endif
     }
 
     private bool CanWatchRewardedForRevive() {

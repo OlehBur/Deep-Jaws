@@ -1,4 +1,4 @@
-#define UNITY_ANDROID
+//#define UNITY_ANDROID
 
 using TMPro;
 using UnityEngine;
@@ -11,7 +11,9 @@ public class ShellsBarView : MonoBehaviour {
     [SerializeField] TextMeshProUGUI shellsCnt;
     [SerializeField] Button claimB;
 
+#if !UNITY_STANDALONE_WIN
     private bool _isInteracted = false;
+#endif
 
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
     [Inject] private readonly IAdsManager _adsManager;
@@ -21,12 +23,17 @@ public class ShellsBarView : MonoBehaviour {
     void Start() {
         if (_sanctuariesManager != null)
             UpdateShellsCnt(_sanctuariesManager.ShellsCnt);
+
+#if UNITY_STANDALONE_WIN
+        claimB.gameObject.SetActive(false);
+#endif
     }
 
     public void UpdateShellsCnt(int cnt) {
         shellsCnt.text = cnt.ToString();
     }
 
+#if !UNITY_STANDALONE_WIN
     void ClaimInteractable(bool interactable) {
         if (claimB != null)
             if (!_isInteracted)
@@ -40,6 +47,7 @@ public class ShellsBarView : MonoBehaviour {
             claimB.interactable = false;
         shellsCnt.color = Color.orange;
     }
+#endif
 
     private void OnEnable() {
         if (_sanctuariesManager != null) {

@@ -16,10 +16,6 @@ public class GameLifetimeScope : LifetimeScopeBase {
 
         InitMultipleScripts(builder);
         InitSingleScripts(builder);
-
-        //builder.RegisterComponentInHierarchy<HydraController>();
-
-        //builder.RegisterComponentInHierarchy<ZoneController>(); //implemented in auto inject (component config on scene)
     }
 
     public override void InitAssets(IContainerBuilder builder) {
@@ -36,7 +32,6 @@ public class GameLifetimeScope : LifetimeScopeBase {
         builder.Register<IPlayerFishPoolService, PlayerPoolService>(Lifetime.Singleton);
         builder.Register<IEnemyFishPoolService, EnemyPoolService>(Lifetime.Singleton);
         builder.Register<IPermamentFishPoolService, PermamentPoolService>(Lifetime.Singleton);
-        //builder.Register<IEffectsVisualizationService, EffectsVisualizationService>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EffectsVisualizationService>()
             .As<IEffectsVisualizationService>();
 
@@ -67,7 +62,6 @@ public class GameLifetimeScope : LifetimeScopeBase {
         SingleInject<DeadArea>(builder);
         SingleInject<FishHeartbeatsManager>(builder);
         SingleInject<GameManager>(builder);
-        //SingleInject<PauseMenuNavigation>(builder);
         SingleInject<PlayerUIController>(builder);
         SingleInject<EffectsBarView>(builder);
         SingleInject<GameResultWnd>(builder);

@@ -5,7 +5,6 @@ using UnityEngine.Audio;
 
 
 public class RootLifetimeScope : LifetimeScopeBase {
-    public static RootLifetimeScope Instance { get; private set; }
 
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] AudioClipsInfo clipsInfo;
@@ -16,19 +15,10 @@ public class RootLifetimeScope : LifetimeScopeBase {
     [SerializeField] FishSkinInfo fishSkinInfo;
 
 
-
-    protected override void Awake() {
-        if (Instance != null && Instance != this) {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        // for VContainer init container
-        base.Awake();
-    }
+    //protected override void Awake() {
+    //    base.Awake();
+    //    Debug.Log($"Root Awake {GetInstanceID()}");
+    //}
 
     protected override void Configure(IContainerBuilder builder) {
         InitAssets(builder);

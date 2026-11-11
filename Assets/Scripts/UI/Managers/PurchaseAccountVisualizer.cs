@@ -6,8 +6,7 @@ using VContainer;
 
 
 
-public class PurchaseAccountVisualizer: MonoBehaviour {
-    [SerializeField] GameObject storeWnd;
+public class PurchaseAccountVisualizer : MonoBehaviour {
     [SerializeField] GameObject loyaltyRewardedWnd;
     [SerializeField] Animator titleAdFree;
     [SerializeField] Animator titlePremium;
@@ -20,7 +19,19 @@ public class PurchaseAccountVisualizer: MonoBehaviour {
 
 
     private void Start() {
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_STANDALONE_WIN                     
+        titleAdFree.gameObject.SetActive(false);
+        titlePremium.gameObject.SetActive(false);
+        titleFounder.gameObject.SetActive(false);
+        titleDemo.gameObject.SetActive(GameManager.IS_PC_DEMO);
+
+        titleAdFree.enabled = false;
+        titlePremium.enabled = false;
+        titleFounder.enabled = false;
+        titleDemo.enabled = GameManager.IS_PC_DEMO;
+
+#else
+        /*if UNITY_ANDROID && !UNITY_EDITOR*/
         if (_gamePurchaseManager != null) {
             _gamePurchaseManager.OnUpdateAccountTittles -= InitMainMenuAccountTittles;
             _gamePurchaseManager.OnNonInternetConnection -= PurchaseManagerNoInternetHandler;
@@ -30,18 +41,7 @@ public class PurchaseAccountVisualizer: MonoBehaviour {
             LocalLoadTitlesAndSkins();
         }
 
-
         _gamePurchaseManager?.RefreshUI();
-#elif UNITY_STANDALONE_WIN
-        titleAdFree.gameObject.SetActive(false);
-        titlePremium.gameObject.SetActive(false);
-        titleFounder.gameObject.SetActive(false);
-        titleDemo.gameObject.SetActive(true);
-
-        titleAdFree.enabled = false;
-        titlePremium.enabled = false;
-        titleFounder.enabled = false;
-        titleDemo.enabled = true;
 #endif
 
     }
@@ -51,16 +51,18 @@ public class PurchaseAccountVisualizer: MonoBehaviour {
         if (_gamePurchaseManager != null) {
             _gamePurchaseManager.OnUpdateAccountTittles -= InitMainMenuAccountTittles;
             _gamePurchaseManager.OnNonInternetConnection -= PurchaseManagerNoInternetHandler;
-        }        
+        }
     }
-   
+
     void PurchaseManagerNoInternetHandler() => _alertWindowsManager.ActivateNoInternetConnectionWnd(true);
 
+#if !UNITY_STANDALONE_WIN
     void LocalLoadTitlesAndSkins() {
         AccountTitles at = _gamePurchaseManager.GetCurrentAccountTitles();
 
         InitMainMenuAccountTittles(at);
     }
+#endif
 
     void OpenLoyaltyRewardedWnd() {
         AccountData currentData = ProgressSaver.IsAccountDataExist ?

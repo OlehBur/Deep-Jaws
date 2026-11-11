@@ -5,6 +5,7 @@ using VContainer;
 
 public interface IAlertWindowsManager {
     event Action<bool> OnAlerWndOpened;
+    event Action OnNewGameConfirmTrigger;
 
     bool IsOpenedAnyAlertWnd { get; }
     void ActivateLoadingPanelWnd(bool isActive);
@@ -39,12 +40,14 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
     [SerializeField] GameObject guideBookWnd;
 
     public event Action<bool> OnAlerWndOpened;
-    public bool IsOpenedAnyAlertWnd => areUSureNewGameWnd.activeInHierarchy 
-        || areUSureExitGameWnd.activeInHierarchy 
-        || loadingPanel.activeInHierarchy 
-        || noInternetConnectionWnd.activeInHierarchy 
-        || newUpdWnd.activeInHierarchy 
-        || licenseFailedPanel.activeInHierarchy 
+    public event Action OnNewGameConfirmTrigger;
+
+    public bool IsOpenedAnyAlertWnd => areUSureNewGameWnd.activeInHierarchy
+        || areUSureExitGameWnd.activeInHierarchy
+        || loadingPanel.activeInHierarchy
+        || noInternetConnectionWnd.activeInHierarchy
+        || newUpdWnd.activeInHierarchy
+        || licenseFailedPanel.activeInHierarchy
         || settingsWnd.isActiveAndEnabled
         || guideBookWnd.activeInHierarchy;
 
@@ -62,12 +65,14 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
 
     }
 
+    public void NewGameConfirmTrigger() => OnNewGameConfirmTrigger?.Invoke();
 
     public void ActivateLoadingPanelWnd(bool isActive) =>
         ActivateAlertWndHandler(AlertWndType.Loading, isActive);
 
     public void ActivateAreUSureNewGameWnd(bool isActive) =>
         ActivateAlertWndHandler(AlertWndType.AreUSureNew, isActive);
+
     public void ActivateAreUSureExitGameWnd(bool isActive) =>
         ActivateAlertWndHandler(AlertWndType.AreUSureExit, isActive);
 

@@ -16,6 +16,7 @@ public class GameModeController : MonoBehaviour, IGameModeController {
     [SerializeField] Image gameModeWndBackground;
 
     [Inject] private readonly IGraphicManager _graphicManager;
+    [Inject] private /*readonly*/ IAlertWindowsManager _alertWindowsManager;
 
     public static GameMode CurrentMode { get; set; } = GameMode.None;
 
@@ -23,9 +24,21 @@ public class GameModeController : MonoBehaviour, IGameModeController {
     private Color _targetGMwndColor;
     private Color _targetLightGMcolor;
 
+    [Inject]
+    private void Construct(IAlertWindowsManager alertWindowsManager) {
+        _alertWindowsManager = alertWindowsManager;
 
-    public void ActivateGamemodesWnd(bool isActivate) =>
-        gamemodeWnd.SetActive(isActivate);
+        _alertWindowsManager.OnNewGameConfirmTrigger += NewGameTriggerHandler;
+    }
+
+    void OnDestroy() {
+        if (_alertWindowsManager != null)
+            _alertWindowsManager.OnNewGameConfirmTrigger -= NewGameTriggerHandler;
+    }
+
+    void NewGameTriggerHandler() => ActivateGamemodesWnd(true);
+
+    public void ActivateGamemodesWnd(bool isActivate) => gamemodeWnd.SetActive(true);
 
 
     IEnumerator ChangeColorGMwnd() {

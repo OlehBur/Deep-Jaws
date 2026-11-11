@@ -70,12 +70,13 @@ public class GameHudController : MonoBehaviour, IGameHudController {
             gameManager.GameSetPause(true);
             OnOpenDemoFin();
         }
-
+#if !UNITY_STANDALONE_WIN
         (bool prem, bool noadd) = ProgressSaver.IsPlayerHasAdImmunitet();
         if (!prem && !noadd) {//if doesnt have immunitet
             if (/*gameAdsManager*/_adsManager.OnShowInterstitialAd()) //only if ad will be shown
                 ActivatePauseWnd(true);
         }
+#endif
     }
 
     public void ActivatePauseWnd(bool isActivate) {

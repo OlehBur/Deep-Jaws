@@ -13,6 +13,7 @@ public class GPGServicesWnd : WindowBase {
     [SerializeField] Button achievementsButton;
     [SerializeField] Button leaderboardButton;
     [SerializeField] Button storeButton;
+    [SerializeField] GameObject storePromotion;
 
     [SerializeField] Image signInIcon;
     [SerializeField] GameObject kingOfDeepsObj;
@@ -34,6 +35,13 @@ public class GPGServicesWnd : WindowBase {
         _gpgManager.OnSignInStatusChanged += ChangeSignInColor;
 #endif
         InitServiceButtonsListeners();
+
+#if UNITY_STANDALONE_WIN
+        signInButton.gameObject.SetActive(false);
+        achievementsButton.gameObject.SetActive(false);
+        leaderboardButton.gameObject.SetActive(false);
+        storePromotion.SetActive(false);
+#endif
     }
 
 #if UNITY_ANDROID

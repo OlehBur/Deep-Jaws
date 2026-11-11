@@ -18,4 +18,16 @@ public class BiomeInfo : ScriptableObject {
     [field: SerializeField] public float[] UpgradeTimeByLevel_Hours { get; private set; }
     [field: SerializeField] public int[] LevelPrices { get; private set; }
     [field: SerializeField] public FishLevel[] Requirements { get; private set; }
+
+    public float GetUpgradeTimeByLevel_Hours(int level) {
+        float boostMultiplier = 1f;
+
+#if UNITY_STANDALONE_WIN
+        boostMultiplier = .33f;
+#endif
+        if (level < UpgradeTimeByLevel_Hours.Length)
+            return UpgradeTimeByLevel_Hours[level] * boostMultiplier;
+        else
+            return 0f;
+    }
 }

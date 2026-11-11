@@ -1,4 +1,4 @@
-#define UNITY_ANDROID
+//#define UNITY_ANDROID
 
 using System;
 using TMPro;
@@ -26,7 +26,7 @@ public class GameResultWnd : WindowBase {
     void OnEnable() {
         InitWnd();
 
-#if UNITY_ANDROID
+#if !UNITY_STANDALONE_WIN
         if (_adsManager != null) {
             _adsManager.OnAdButtonsInteractable += AdInteractable;
             _adsManager.OnDoubleShellsRewarded += OnDoubleShellsReceive;
@@ -92,6 +92,7 @@ public class GameResultWnd : WindowBase {
             _sanctuariesManager.OnAddShells(_receivedShells);
     }
 
+#if !UNITY_STANDALONE_WIN
     void OnDoubleShellsReceive() {
         if (_sanctuariesManager != null)
             _sanctuariesManager.OnAddShells(_receivedShells);
@@ -101,4 +102,5 @@ public class GameResultWnd : WindowBase {
         finalShells.text = (_receivedShells * 2).ToString();
         finalShells.color = Color.orange;
     }
+#endif
 }
