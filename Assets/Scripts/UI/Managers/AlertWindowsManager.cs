@@ -5,16 +5,19 @@ using VContainer;
 
 public interface IAlertWindowsManager {
     event Action<bool> OnAlerWndOpened;
-    event Action OnNewGameConfirmTrigger;
+    //event Action OnNewGameConfirmTrigger;
+    //event Action OnSureExitGameTrigger;
 
+    //int GetLegthNewGameTrigger();
     bool IsOpenedAnyAlertWnd { get; }
     void ActivateLoadingPanelWnd(bool isActive);
-    void ActivateAreUSureNewGameWnd(bool isActive);
-    void ActivateAreUSureExitGameWnd(bool isActive);
+    void ActivateAreUSureNewGameWnd(bool isActive, Action onConfirm);
+    void ActivateAreUSureExitGameWnd(bool isActive, Action onConfirm);
     void ActivateNoInternetConnectionWnd(bool isActive);
     void ActivateLicenseFailedWnd(bool isActive);
     void ActivateSettingsWnd(bool isActive);
     void ActivateGuidebookWnd(bool isActive);
+    void ActivateDemoWnd(bool isActive);
     void FirstNoConnectionOpen();
 }
 
@@ -26,7 +29,8 @@ public enum AlertWndType {
     NewUpdate,
     LicenseFailed,
     Settings,
-    Guidebook
+    Guidebook,
+    Demo
 }
 
 public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
@@ -36,11 +40,14 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
     [SerializeField] GameObject noInternetConnectionWnd;
     [SerializeField] GameObject newUpdWnd;
     [SerializeField] GameObject licenseFailedPanel;
-    [SerializeField] SettingsWnd settingsWnd;
     [SerializeField] GameObject guideBookWnd;
 
+    [SerializeField] SettingsWnd settingsWnd;
+    [SerializeField] DemoFinWnd demoFinWnd;
+
     public event Action<bool> OnAlerWndOpened;
-    public event Action OnNewGameConfirmTrigger;
+    //public event Action OnNewGameConfirmTrigger;
+    //public event Action OnSureExitGameTrigger;
 
     public bool IsOpenedAnyAlertWnd => areUSureNewGameWnd.activeInHierarchy
         || areUSureExitGameWnd.activeInHierarchy
@@ -49,7 +56,11 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
         || newUpdWnd.activeInHierarchy
         || licenseFailedPanel.activeInHierarchy
         || settingsWnd.isActiveAndEnabled
+        || demoFinWnd.isActiveAndEnabled
         || guideBookWnd.activeInHierarchy;
+
+    private Action _confirmNewGameAction;
+    private Action _confirmExitGameAction;
 
 
     private void Awake() {
@@ -62,10 +73,37 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
             accountData.firstUpdOpen1_7 = false;
             ProgressSaver.SaveData(accountData);
         }
-
     }
 
-    public void NewGameConfirmTrigger() => OnNewGameConfirmTrigger?.Invoke();
+    //public int GetLegthNewGameTrigger() {
+    //    return OnNewGameConfirmTrigger?.GetInvocationList().Length ?? -1;
+    //}
+
+    public void NewGameConfirmTrigger() {
+        //Debug.Log(OnNewGameConfirmTrigger?.GetInvocationList().Length);
+        //OnNewGameConfirmTrigger?.Invoke();
+        _confirmNewGameAction?.Invoke();
+        _confirmNewGameAction = null;
+    }
+    public void SaveExitGameTrigger() {
+        //OnSureExitGameTrigger?.Invoke();
+        _confirmExitGameAction?.Invoke();
+        _confirmExitGameAction = null;
+    }
+
+    public void ActivateAreUSureNewGameWnd(bool isActive, Action onConfirm) {
+        if (isActive)
+            _confirmNewGameAction = onConfirm;
+
+        ActivateAlertWndHandler(AlertWndType.AreUSureNew, isActive);
+    }
+
+    public void ActivateAreUSureExitGameWnd(bool isActive, Action onConfirm) {
+        if (isActive)
+            _confirmExitGameAction = onConfirm;
+
+        ActivateAlertWndHandler(AlertWndType.AreUSureExit, isActive);
+    }
 
     public void ActivateLoadingPanelWnd(bool isActive) =>
         ActivateAlertWndHandler(AlertWndType.Loading, isActive);
@@ -84,6 +122,8 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
 
     public void ActivateGuidebookWnd(bool isActive) =>
         ActivateAlertWndHandler(AlertWndType.Guidebook, isActive);
+    public void ActivateDemoWnd(bool isActive) =>
+        ActivateAlertWndHandler(AlertWndType.Demo, isActive);
 
     void ActivateAlertWndHandler(AlertWndType type, bool isActive) {
         GameObject currentWnd = type switch {
@@ -93,15 +133,23 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
             AlertWndType.NoInternetConnection => noInternetConnectionWnd,
             AlertWndType.NewUpdate => newUpdWnd,
             AlertWndType.LicenseFailed => licenseFailedPanel,
-            AlertWndType.Settings => settingsWnd.gameObject,
             AlertWndType.Guidebook => guideBookWnd,
             _ => null
         };
+        if (currentWnd != null) {
+            currentWnd.SetActive(isActive);
+        }
+        else {
+            WindowBase window = type switch {
+                AlertWndType.Settings => settingsWnd,
+                AlertWndType.Demo => demoFinWnd,
+                _ => null
+            };
+            window.SetActivation(isActive);
+        }
 
-        currentWnd.SetActive(isActive);
         OnAlerWndOpened?.Invoke(IsOpenedAnyAlertWnd);
     }
-
 
     public void ActivateNoInternetConnectionWnd(bool isActive) {
 #if UNITY_ANDROID

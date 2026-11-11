@@ -1,5 +1,7 @@
+using log4net.Filter;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 using VContainer;
 using VContainer.Unity;
 
@@ -36,15 +38,14 @@ public interface IAudioPlayService {
     float MusicVolume { get; set; }
     float SFXVolume { get; set; }
     float MusicSourceVolume { get; set; }
-    //AudioSource PlayerAudioSource { get; }
-    //AudioSource MusicAudioSource { get; }
-    //AudioSource VFXAudioSource { get; }
+    float PlayerSourceVolume { get; set; }
     Music_clip CurrentMusicClip { get; }
-
 
     void PlayVFX(VFX_clip clipType);
     void PlayMusic(Music_clip clipType);
-    void StopPlayerAudioSource();
+
+    void StopPlayerSprintAudioSource();
+    void PlayPlayerSprintAudioSource();
 }
 
 
@@ -59,6 +60,7 @@ public class AudioPlayManager : MonoBehaviour, IAudioPlayService {
     [Inject] private readonly AudioClipsInfo _clipsInfo;
     [Inject] private readonly AudioMixer _audioMixer;
     [Inject] private readonly ISceneLoader _sceneLoader;
+    [Inject] IAudioSettingsLoader _audioSettingsLoader;
 
     public Music_clip CurrentMusicClip { get; private set; }
     public float MusicSourceVolume {
@@ -69,9 +71,41 @@ public class AudioPlayManager : MonoBehaviour, IAudioPlayService {
             MusicAudioSource.volume = value;
         }
     }
+    public float PlayerSourceVolume {
+        get {
+            return PlayerAudioSource.volume;
+        }
+        set {
+            PlayerAudioSource.volume = value;
+        }
+    }
 
     void Start() {
+        LoadVolumeSettings();
+        InitPlayerAudioSource();
+
         _sceneLoader.OnNewSceneLoaded += SceneChangeHandler;
+        SceneChangeHandler(GameStaticInfo.MAINMENU_SCENE_NAME);//by default main menu        
+    }
+
+    void InitPlayerAudioSource() {
+        if (PlayerAudioSource.clip == null)
+            Debug.LogWarning("Player AudioSource should have a current sound clip by default");
+        PlayerAudioSource.Stop();
+        PlayerAudioSource.volume = 0f;
+    }
+
+    void LoadVolumeSettings() {
+        AudioVolumes av = _audioSettingsLoader.Load();
+
+        MasterVolume = av.MasterVolume;
+        SFXVolume = av.SFXVolume;
+        MusicVolume = av.MusicVolume;
+    }
+
+    void OnDestroy() {
+        if (_sceneLoader != null)
+            _sceneLoader.OnNewSceneLoaded -= SceneChangeHandler;
     }
 
     void SceneChangeHandler(string sceneName) {
@@ -136,8 +170,11 @@ public class AudioPlayManager : MonoBehaviour, IAudioPlayService {
             MusicAudioSource.Play();
         }
     }
-    public void StopPlayerAudioSource() =>
+    public void StopPlayerSprintAudioSource() =>
         PlayerAudioSource.Stop();
+
+    public void PlayPlayerSprintAudioSource() =>
+        PlayerAudioSource.Play();
 
     public float MasterVolume {
         get {

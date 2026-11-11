@@ -75,6 +75,11 @@ public class SkinsCards {
         _ => chameleon
     };
 
+    public void InitDI(UILocalizationInfo localizationInfo) {
+        foreach (Skin s in ALL_SKINS_ITETATORS)
+            GetSkinCard(s).InitDI(localizationInfo);
+    }
+
     public void InitListeners(IGamePurchaseManager gamePurchaseManager) {
         if (gamePurchaseManager != null) {
             mercury.BuyOnClick.AddListener(gamePurchaseManager.OnBuy_MercurySkin);

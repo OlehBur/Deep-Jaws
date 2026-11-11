@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UI;
+using VContainer;
 
 public class StoreCardView : MonoBehaviour {
     [SerializeField] Button buyB;
@@ -9,23 +10,33 @@ public class StoreCardView : MonoBehaviour {
     [SerializeField] Button previewB;
     [SerializeField] TextMeshProUGUI priceTxt;
     [SerializeField] TextMeshProUGUI selectTxt;
-    [SerializeField] LocalizedString SELECTED_TXT;
-    [SerializeField] LocalizedString SELECT_TXT;
+
+    //[Inject] private readonly UILocalizationInfo _localizationInfo;
 
     public Button.ButtonClickedEvent BuyOnClick => buyB.onClick;
     public Button.ButtonClickedEvent PreviewOnClick => previewB.onClick;
     public Button.ButtonClickedEvent SelectOnClick => selectB.onClick;
 
+    private UILocalizationInfo _localizationInfo;
 
+    public void InitDI(UILocalizationInfo localizationInfo) {
+        _localizationInfo = localizationInfo;
+    }
 
     private void OnEnable() {
-        SELECTED_TXT.StringChanged += OnStringUpdated;
-        SELECT_TXT.StringChanged += OnStringUpdated;
+        if (_localizationInfo == null)
+            return;
+
+        _localizationInfo.SelectedTxt.StringChanged += OnStringUpdated;
+        _localizationInfo.SelectTxt.StringChanged += OnStringUpdated;
     }
 
     private void OnDisable() {
-        SELECTED_TXT.StringChanged -= OnStringUpdated;
-        SELECT_TXT.StringChanged -= OnStringUpdated;
+        if (_localizationInfo == null)
+            return;
+
+        _localizationInfo.SelectedTxt.StringChanged -= OnStringUpdated;
+        _localizationInfo.SelectTxt.StringChanged -= OnStringUpdated;
     }
     public void SetBuyInterctable(bool interactable) => buyB.interactable = interactable;
 
@@ -42,8 +53,11 @@ public class StoreCardView : MonoBehaviour {
         if (buyB == null)
             return;
 
-        LocalizedString currentStr = isSelected ? SELECTED_TXT : SELECT_TXT;
+        LocalizedString currentStr = isSelected ? 
+            _localizationInfo.SelectedTxt :
+            _localizationInfo.SelectTxt;
         currentStr.RefreshString();//force text upd
+        selectTxt.text = currentStr.GetLocalizedString();
 
         selectB.interactable = !isSelected;
 
@@ -53,7 +67,8 @@ public class StoreCardView : MonoBehaviour {
 
     private void OnStringUpdated(string translatedValue) {
         selectTxt.text = selectB.interactable ?
-            SELECT_TXT.GetLocalizedString() : SELECTED_TXT.GetLocalizedString();
+            _localizationInfo.SelectTxt.GetLocalizedString() :
+            _localizationInfo.SelectedTxt.GetLocalizedString();
     }
 
     public void UpdateData(bool isSelected, bool isPurchased = true, string price = "") {

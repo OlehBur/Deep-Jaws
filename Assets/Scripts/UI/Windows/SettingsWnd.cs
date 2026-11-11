@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,25 +7,7 @@ using UnityEngine.UI;
 using VContainer;
 
 
-public interface ISettingsController {
-    Toggle BloomTog { get; }
-    Toggle BlurTog { get; }
-    Toggle VignetteTog { get; }
-    Toggle ShadowCastTog { get; }
-    Toggle AutoHideUI_tog { get; }
-    Slider ShadowDistSl { get; }
-    Slider ShadowFixSl { get; }
-    Slider GameResolutSl { get; }
-    Slider masterSlider { get; }
-    Slider musicSlider { get; }
-    Slider sfxSlider { get; }
-    TMP_Dropdown ShadowResolution { get; }
-    TMP_Dropdown LanguageDropdown { get; }
-    TMP_Dropdown FramerateDropdown { get; }
 
-    void SaveAudioData();
-    void LoadAudioData();
-}
 
 public class SettingsWnd : WindowBase, ISettingsController {
     [field: SerializeField] public Toggle BloomTog { get; private set; }
@@ -86,6 +67,23 @@ public class SettingsWnd : WindowBase, ISettingsController {
         runner.AddComponent<LocalizationStartupRunner>();
     }
 
+    private void Awake() {
+        RefreshUIValues();
+        InitListeners();
+    }
+
+    void Start() {
+        SettingsData data = ProgressSaver.LoadSettingsData();
+
+        masterSlider.value = data.volume_master;
+        musicSlider.value = data.volume_music;
+        sfxSlider.value = data.volume_sfx;
+    }
+
+    private void OnDisable() {
+        SaveAudioData();
+    }
+
     //save audio data in normalize format
     public void SaveAudioData() {
         SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
@@ -94,27 +92,13 @@ public class SettingsWnd : WindowBase, ISettingsController {
         settingsData.volume_master = masterSlider.value;
         settingsData.volume_music = musicSlider.value;
         settingsData.volume_sfx = sfxSlider.value;
-
-        //PlayerPrefs.SetFloat(MASTER_KEY, masterSlider.value);
-        //PlayerPrefs.SetFloat(MUSIC_KEY, musicSlider.value);
-        //PlayerPrefs.SetFloat(SFX_KEY, sfxSlider.value);
         ProgressSaver.SaveData(settingsData);
     }
 
-    public void LoadAudioData() {
-        SettingsData settingsData = ProgressSaver.IsSettingsDataExist ?
-            ProgressSaver.LoadSettingsData() : new SettingsData();
 
-        masterSlider.value = settingsData.volume_master;//PlayerPrefs.GetFloat(MASTER_KEY, 1f);
-        musicSlider.value = settingsData.volume_music; //PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
-        sfxSlider.value = settingsData.volume_sfx; //PlayerPrefs.GetFloat(SFX_KEY, 1f);
-    }
-
-    //load audio data on start
-    void OnEnable() {
-        RefreshUIValues();
+    void InitListeners() {
         masterSlider.onValueChanged.AddListener(value =>
-            _audioPlayService.MasterVolume = GameStaticInfo.SliderToDB(value, GameStaticInfo.MAX_MASTER_DB));
+           _audioPlayService.MasterVolume = GameStaticInfo.SliderToDB(value, GameStaticInfo.MAX_MASTER_DB));
 
         musicSlider.onValueChanged.AddListener(value => {
             _audioPlayService.MusicVolume = GameStaticInfo.SliderToDB(value, GameStaticInfo.MAX_MUSIC_DB);
@@ -128,16 +112,8 @@ public class SettingsWnd : WindowBase, ISettingsController {
             _audioPlayService.SFXVolume = GameStaticInfo.SliderToDB(value, GameStaticInfo.MAX_SFX_DB));
     }
 
-    private void OnDisable() {
-        SaveAudioData();
-    }
 
-    private void Start() {
-        LoadAudioData();// In OnEnable and Awake, the mixer does not react to changes because for some reason it is still inactive in Unity.
-
-    }
-
-    private void RefreshUIValues() {
+    void RefreshUIValues() {
         SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
             ? ProgressSaver.LoadSettingsData()
             : new SettingsData();
@@ -227,23 +203,3 @@ public class SettingsWnd : WindowBase, ISettingsController {
     }
 }
 
-// helper class for safe language loading without frame freezes
-public class LocalizationStartupRunner : MonoBehaviour {
-    private IEnumerator Start() {
-        SettingsData savedSettings = ProgressSaver.IsSettingsDataExist
-            ? ProgressSaver.LoadSettingsData()
-            : new SettingsData();
-
-        // wait for Unity Localization in frame mode (yield return instead of await)
-        yield return LocalizationSettings.InitializationOperation;
-
-        int localeIndex = savedSettings.language;
-        if (localeIndex >= 0 && localeIndex < LocalizationSettings.AvailableLocales.Locales.Count) {
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localeIndex];
-            Debug.Log($"[LocalizationStartup] Successfully loaded locale index: {localeIndex}");
-        }
-
-        // self-destruct so as not to litter the memory
-        Destroy(gameObject);
-    }
-}

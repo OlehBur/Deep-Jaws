@@ -26,16 +26,19 @@ public class GameLifetimeScope : LifetimeScopeBase {
     }
 
     public override void InitServices(IContainerBuilder builder) {
+        //special life cycle
+        builder.RegisterEntryPoint<PlayerLeaderboardScore>();
+        builder.RegisterEntryPoint<EffectsVisualizationService>()
+            .As<IEffectsVisualizationService>();
+
         //services
-        //builder.Register<IGameTip, GameTipsService>(Lifetime.Singleton);
+        builder.Register<GameManager>(Lifetime.Singleton).AsImplementedInterfaces().As<IGameManager>();
         builder.Register<IVFXPoolService, VFXPoolService>(Lifetime.Singleton);
         builder.Register<IPlayerFishPoolService, PlayerPoolService>(Lifetime.Singleton);
         builder.Register<IEnemyFishPoolService, EnemyPoolService>(Lifetime.Singleton);
         builder.Register<IPermamentFishPoolService, PermamentPoolService>(Lifetime.Singleton);
-        builder.RegisterEntryPoint<EffectsVisualizationService>()
-            .As<IEffectsVisualizationService>();
 
-        builder.RegisterComponentInHierarchy<IGameManager>();
+        //builder.RegisterComponentInHierarchy<IGameManager>();
         builder.RegisterComponentInHierarchy<IGameTip>();
         builder.RegisterComponentInHierarchy<ISpawnOrchestrator>();
         builder.RegisterComponentInHierarchy<IGameHudController>();
@@ -55,13 +58,14 @@ public class GameLifetimeScope : LifetimeScopeBase {
 
     public override void InitSingleScripts(IContainerBuilder builder) {
         builder.RegisterComponentInHierarchy<PauseMenuNavigation>();
+
         SingleInject<NoEscapeAchieveTrig>(builder);
-        SingleInject<PlayerLeaderboardScore>(builder);
+        //SingleInject<PlayerLeaderboardScore>(builder);
         SingleInject<CameraFollower>(builder);
         SingleInject<SoundtrackController>(builder);
         SingleInject<DeadArea>(builder);
         SingleInject<FishHeartbeatsManager>(builder);
-        SingleInject<GameManager>(builder);
+        //SingleInject<GameManager>(builder);
         SingleInject<PlayerUIController>(builder);
         SingleInject<EffectsBarView>(builder);
         SingleInject<GameResultWnd>(builder);

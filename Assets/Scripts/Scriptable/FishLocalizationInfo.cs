@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "FishLocalized", menuName = "Scriptable Objects/FishLocalized")]
-public class FishLocalizedInfo : ScriptableObject
+public class FishLocalizationInfo : ScriptableObject
 {
     [SerializeField] LocalizedString dartfish;
     [SerializeField] LocalizedString crab;

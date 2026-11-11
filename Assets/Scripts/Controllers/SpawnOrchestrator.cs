@@ -6,7 +6,7 @@ public interface ISpawnOrchestrator {
     bool TryGetFish(GameObject fishObject, out Fish fish);
 }
 
-public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator{
+public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
     [Inject] private readonly IVFXPoolService _vfxPoolManager;
     [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly IEnemyFishPoolService _enemyPoolService;
@@ -99,7 +99,7 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator{
     }
 
     private void OnDisable() {
-        if (GameModeController.CurrentMode != GameMode.Hard)//in case of death & automatic scene reload
+        if (GameModeWnd.CurrentMode != GameMode.Hard)//in case of death & automatic scene reload
             _playerSpawnService.SavePlayerData();
 
         _playerSpawnService.OnPlayerLVLup -= CheckPlayerLvlAchievements;//if current player respawn not called from save, check achievements maybe new lvl reached 

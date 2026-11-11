@@ -22,27 +22,31 @@ public class SprintArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler 
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        //convert click pos to area pos
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        if (GameStaticInfo.IsRunningOnPlayGamesPC()) {
+            //convert click pos to area pos
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
             area,
             eventData.position,
             eventData.pressEventCamera,
             out Vector2 localPoint
         );
 
-        //center to click pos
-        sprintButtonRect.anchoredPosition = localPoint;
+            //center to click pos
+            sprintButtonRect.anchoredPosition = localPoint;
 
-        if (sprintB.interactable)
-            sprintB.onClick.Invoke();
+            if (sprintB.interactable)
+                sprintB.onClick.Invoke();
 
-        if (SettingsWnd.IsAutoHideUI)
-            sprintB.gameObject.SetActive(true);
+            if (SettingsWnd.IsAutoHideUI)
+                sprintB.gameObject.SetActive(true);
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData) {
-        if (SettingsWnd.IsAutoHideUI)
-            sprintB.gameObject.SetActive(false);
+        if (GameStaticInfo.IsRunningOnPlayGamesPC()) {
+            if (SettingsWnd.IsAutoHideUI)
+                sprintB.gameObject.SetActive(false);
+        }
     }
 
     private void OnDisable() {

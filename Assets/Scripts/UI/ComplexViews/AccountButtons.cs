@@ -1,7 +1,5 @@
 ﻿using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 
@@ -10,15 +8,14 @@ public class AccountsButtons {
     public StoreCardView noAdCard;
     public StoreCardView premiumCard;
     public StoreCardView supportDevCard;
-    //public Button buyNoAd;
-    //public Button buyPremium;
-    //public Button buySupportDev;
-    //public TextMeshProUGUI noAdTxt;//from price to bought and interactable false
-    //public TextMeshProUGUI premiumTxt;
-    //public TextMeshProUGUI supportDevTxt;
-
 
     public static readonly AccountPurchase[] ACCOUNT_PURCH_ITERATORS = (AccountPurchase[])Enum.GetValues(typeof(AccountPurchase)); //Enum.GetValues(typeof(AccountPurchase))                    .Cast<AccountPurchase>()                    .ToArray();
+
+
+    public void InitDI(UILocalizationInfo localizationInfo) {
+        foreach(AccountPurchase ac in ACCOUNT_PURCH_ITERATORS)
+            GetStoreCard(ac).InitDI(localizationInfo);
+    }
 
     public StoreCardView GetStoreCard(AccountPurchase s) =>
         s switch {

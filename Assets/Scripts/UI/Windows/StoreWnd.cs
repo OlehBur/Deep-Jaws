@@ -25,12 +25,18 @@ public class StoreWnd : WindowBase {
 
     [SerializeField] RectTransform storeScrollRectTransform;
 
+    [Inject] private readonly UILocalizationInfo _localizationInfo;
     [Inject] private readonly IGamePurchaseManager _gamePurchaseManager;
     [Inject] private readonly IAudioPlayService _audioPlayService;
     [Inject] private readonly ISanctuariesManager _sanctuariesManager;
 
     private PurchasedSkins _purchasedSkins;//buffer only for click listeners
 
+
+    private void Awake() {
+        accountsButtons.InitDI(_localizationInfo);
+        skinsCards.InitDI(_localizationInfo);
+    }
 
     private void Start() {
         if (_sanctuariesManager != null) {
@@ -119,6 +125,10 @@ public class StoreWnd : WindowBase {
     }
 
     void SelectSkinHandler(Skin type) {
+        AccountData currentData = ProgressSaver.IsAccountDataExist ?
+            ProgressSaver.LoadAccountData() : new AccountData();
+
+        currentData.selectedSkin = type;
         SaveSelectedSkinToProgress(type, out AccountData data);
         UpdatePaidSkinsSection(_purchasedSkins, data);
         UpdateFreeSkinsSection(data);

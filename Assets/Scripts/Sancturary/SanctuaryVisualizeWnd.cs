@@ -29,7 +29,7 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
     [SerializeField] BiomeUIContainer biomeUIContainer;
 
     [Inject] private readonly SanctuaryUIInfo _sanctuaryUIInfo;
-    [Inject] private readonly FishLocalizedInfo _fishLocalized;
+    [Inject] private readonly FishLocalizationInfo _fishLocalized;
     [Inject] private readonly ISanctuaryCameraChanger _cameraChanger;
     [Inject] private readonly ISanctuaryBiomesNavigation _sanctuaryBiomesNavigation;
     [Inject] private readonly IFishAlmanacVisualizeUI _fishAlmanac;

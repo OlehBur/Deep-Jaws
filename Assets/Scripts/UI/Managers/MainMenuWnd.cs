@@ -6,7 +6,6 @@ using VContainer;
 
 public interface IMainMenuNavigation {
     //void ActivateMainMenuContainer(bool isActive);
-    void OnOpenGameInBrowser();
     void OnSanctuaryClick();
     void OnNewGameClick();
     void OnSkipGuide();
@@ -15,7 +14,6 @@ public interface IMainMenuNavigation {
 }
 
 public class MainMenuWnd : WindowBase, IMainMenuNavigation {
-    //[Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly IGameModeController _gameModeController;
     [Inject] private readonly ISceneLoader _sceneLoader;
     [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
@@ -24,19 +22,21 @@ public class MainMenuWnd : WindowBase, IMainMenuNavigation {
 
     [SerializeField] GPGServicesWnd gpgServicesWnd;
     [SerializeField] StoreWnd storeWnd;
+    //[SerializeField] GameModeWnd gameModeWnd;
     [SerializeField] SkinsPreviewWnd skinsPreviewWnd;
     [SerializeField] Button continueButton; //for ensuring the visibility of the continue game button if there is saved data
     [SerializeField] Button newGameButton;
     [SerializeField] Button sanctuaryButton;
+    [SerializeField] Button guideBookButton;
     [SerializeField] Button settingsButton;
     [SerializeField] Button exitButton;
     [SerializeField] Button bugReport;
 
     private bool _isWorldDataExist = false;
+    private bool _immediate—losureFlag = false;
 
     private const string REPORT_EMAIL = "bovv.company@gmail.com";
     private const string REPORT_SUBJECT = "Bug Report: Deep Jaws";
-    private const string GAME_FULL_URL = "https://play.google.com/store/apps/details?id=com.bovvcompany.deepjaws&referrer=utm_source%3Ditchio%26utm_medium%3Dpc_demo";
 
 
     private void Awake() {
@@ -48,8 +48,7 @@ public class MainMenuWnd : WindowBase, IMainMenuNavigation {
         _isWorldDataExist = ProgressSaver.IsWorldDataExist;
         if (continueButton != null) {// Initialize the continue button visibility based on saved data
             continueButton.gameObject.SetActive(_isWorldDataExist);
-            GameModeController.CurrentMode = _isWorldDataExist ?
-                ProgressSaver.LoadWorldData().gameMode : GameMode.None;
+            GameModeWnd.GamemodeInitSet(_isWorldDataExist ? ProgressSaver.LoadWorldData().gameMode : GameMode.None);
         }
     }
 
@@ -58,6 +57,7 @@ public class MainMenuWnd : WindowBase, IMainMenuNavigation {
             _alertWindowsManager.FirstNoConnectionOpen();
 
         _licenseValidator.OnLicenseCheckCompleted += SetActivation;
+        _gameModeController.Window.OnChangeStage += AutoHideMainMenu;
         storeWnd.OnChangeStage += AutoHideMainMenu;
         skinsPreviewWnd.OnChangeStage += AutoHideMainMenu;
         _alertWindowsManager.OnAlerWndOpened += AutoHideMainMenu;//auto close main menu wnd if player click "yes" on are u sure wnd
@@ -66,13 +66,23 @@ public class MainMenuWnd : WindowBase, IMainMenuNavigation {
     }
 
     private void OnDestroy() {
-        if (_alertWindowsManager != null)
+        if (_licenseValidator != null)
+            _licenseValidator.OnLicenseCheckCompleted -= SetActivation;
+        if (_gameModeController != null)
+            _gameModeController.Window.OnChangeStage -= AutoHideMainMenu;
+
+        storeWnd.OnChangeStage -= AutoHideMainMenu;
+        skinsPreviewWnd.OnChangeStage -= AutoHideMainMenu;
+
+        if (_alertWindowsManager != null) {
             _alertWindowsManager.OnAlerWndOpened -= AutoHideMainMenu;
+        }
     }
 
     void AutoHideMainMenu(bool isAlertWndOpened) {
-        bool isAnyWndOpened = isAlertWndOpened || storeWnd.isActiveAndEnabled || skinsPreviewWnd.isActiveAndEnabled;
-        
+        bool isAnyWndOpened = _immediate—losureFlag || isAlertWndOpened || storeWnd.isActiveAndEnabled
+            || skinsPreviewWnd.isActiveAndEnabled || _gameModeController.Window.isActiveAndEnabled;
+
         SetActivation(!isAnyWndOpened);
     }
 
@@ -83,6 +93,7 @@ public class MainMenuWnd : WindowBase, IMainMenuNavigation {
         settingsButton.onClick.RemoveAllListeners();
         exitButton.onClick.RemoveAllListeners();
         bugReport.onClick.RemoveAllListeners();
+        guideBookButton.onClick.RemoveAllListeners();
 
         continueButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
         newGameButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
@@ -90,31 +101,35 @@ public class MainMenuWnd : WindowBase, IMainMenuNavigation {
         settingsButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
         exitButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
         bugReport.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
+        guideBookButton.onClick.AddListener(() => _audioPlayService.PlayVFX(VFX_clip.UI_ButtonClick));
 
         continueButton.onClick.AddListener(_sceneLoader.OnLoad_GameScene);
         newGameButton.onClick.AddListener(OnNewGameClick);
         sanctuaryButton.onClick.AddListener(_sceneLoader.OnLoad_SanctuaryScene);
+        guideBookButton.onClick.AddListener(() => _alertWindowsManager.ActivateGuidebookWnd(true));
         settingsButton.onClick.AddListener(() => _alertWindowsManager.ActivateSettingsWnd(true));
         exitButton.onClick.AddListener(OnExitButtonClicked);
         bugReport.onClick.AddListener(OpenEmailClientForBugReport);
     }
 
-    public void OnOpenGameInBrowser() =>
-        Application.OpenURL(GAME_FULL_URL);
-    public void OnSanctuaryClick() {
-        //if (GameManager.IsInternetNotAvailable)
-        //    ActivateNoInternetConnectionWnd(true);
-        //else
+    public void OnSanctuaryClick() =>
         _sceneLoader.OnLoad_SanctuaryScene();
-    }
 
     //open ar u sur wnd if player already has saved game data
     public void OnNewGameClick() {
         if (ProgressSaver.IsWorldDataExist)
-            _alertWindowsManager.ActivateAreUSureNewGameWnd(true);
+            _alertWindowsManager.ActivateAreUSureNewGameWnd(true, NewGameConfirmHandler);
         else
-            _gameModeController.ActivateGamemodesWnd(true);
+            NewGameConfirmHandler();
         //guideBookWnd?.SetActive(true);
+    }
+
+    void NewGameConfirmHandler() {
+        PlayerPrefs.DeleteAll();
+        ProgressSaver.DeleteWorldData();
+        _gameModeController.Window.OnOpen();
+        _immediate—losureFlag = true;
+        AutoHideMainMenu(true);
     }
 
     public void OnCompleteGuide() {

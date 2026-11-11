@@ -1,7 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 using VContainer;
+using VContainer.Unity;
 
 
 
@@ -12,7 +13,8 @@ public interface IGameManager {
     void ResetWorldData();
 }
 
-public class GameManager : MonoBehaviour, IGameManager {
+public class GameManager : IGameManager, IInitializable, IDisposable {
+    //public class GameManager : MonoBehaviour, IGameManager {
     [Inject] private readonly ISettingsController _settingsControllerUI;
     [Inject] private readonly IGraphicManager _graphicManager;
 
@@ -21,29 +23,20 @@ public class GameManager : MonoBehaviour, IGameManager {
     public static float CurrentDefaultGameTime { get; private set; }
     public static readonly float DEFAULT_GAME_TIME = 1f;
     public static readonly bool IsRunOnPC = GameStaticInfo.IsRunningOnPlayGamesPC() || Application.isEditor || IS_PC_DEMO;
-    public const /*static*/ bool IS_PC_DEMO = false;
-    //#if UNITY_STANDALONE_WIN// && !UNITY_EDITOR
-    //return true;
-    //#else
-    //return false;
-    //#endif
-    //}
     public static float CurrentFixedDeltaTime { get; private set; } = FIXED_DELTA_TINE_LOW;
     public static bool IsGamePaused => DJTime.TimeScale == 0f;
-    public static bool IsSceneReady { get; private set; } = false;
+    
+    public const bool IS_PC_DEMO = false;
 
-    private const float SCENE_ACTIVATE_DELAY = .14f;
     private const float FIXED_DELTA_TINE_HIGH = .02f;
     private const float FIXED_DELTA_TINE_LOW = .05f;
 
     //game init
-    void Awake() {
+    public void Initialize() {
         //Debug.LogWarning("Run On ANDROID Enanbled");
         CurrentDefaultGameTime = DEFAULT_GAME_TIME;
 
         SetFixedDelta();
-
-        Invoke(nameof(DelaySceneActivate), SCENE_ACTIVATE_DELAY);
     }
 
     public void ResetWorldData() {
@@ -53,11 +46,6 @@ public class GameManager : MonoBehaviour, IGameManager {
         _graphicManager.SaveGraphicsData(); // Save current graphic settings
         PlayerLeaderboardScore.SaveLoadedData();
         ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();
-    }
-
-    void DelaySceneActivate() {
-        IsSceneReady = true;
-        AudioListener.volume = 1f; // enable vol
     }
 
     void SetFixedDelta() {
@@ -95,7 +83,7 @@ public class GameManager : MonoBehaviour, IGameManager {
     public static bool IsInternetNotAvailable =>
         Application.internetReachability == NetworkReachability.NotReachable;
 
-    private void OnDestroy() {
+    public void Dispose() {
         DJTime.TimeScale = DEFAULT_GAME_TIME;
         SetFixedDeltaTime(true);
     }

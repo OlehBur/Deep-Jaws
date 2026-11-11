@@ -22,7 +22,7 @@ public class ZoneController : MonoBehaviour {
 
 
     private void Start() {//work onlu once per game install (only for old players)
-        Debug.Log($"ZoneController service = {_playerFishPoolService}");
+        //Debug.Log($"ZoneController service = {_playerFishPoolService}");
 
         _playerFishPoolService.OnPlayerRespawn += BiomeByLvlBehaviour;
 

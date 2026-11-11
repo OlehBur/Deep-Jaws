@@ -9,7 +9,7 @@ public class PauseMenuNavigation : MonoBehaviour {
     [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
     [Inject] private readonly IAudioPlayService _audioPlayService;
     [Inject] private readonly IGameHudController _gameHudController;
-    [Inject] private readonly IPlayerFishPoolService _playerProvider;
+    [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
 
     [SerializeField] Button resumeButton;
     [SerializeField] Button settingsButton;
@@ -17,20 +17,6 @@ public class PauseMenuNavigation : MonoBehaviour {
     [SerializeField] Button exitButton;
     [SerializeField] GameObject[] gamemodePauseTitles;
 
-
-    //[Inject]
-    //public void Construct(
-    //    IAlertWindowsManager alertWindowsManager,
-    //    IAudioPlayService audioPlayService,
-    //    IGameHudController gameHudController) {
-    //    _alertWindowsManager = alertWindowsManager;
-    //    _audioPlayService = audioPlayService;
-    //    _gameHudController = gameHudController;
-
-    //    //Debug.Log("Pause Menu Nav INject: " + _audioPlayService);
-
-    //    InitButtonListeners();
-    //}
 
     private void Awake() {
         if (gamemodePauseTitles != null)
@@ -43,8 +29,8 @@ public class PauseMenuNavigation : MonoBehaviour {
     }
 
     void OnPauseChanged(bool isPause) {
-        if (_playerProvider.PlayerCurrentFish != null) {
-            _playerProvider.PlayerCurrentFish.gameObject.TryGetComponent(out EffectManager playerEffManager);
+        if (_playerSpawnService.PlayerCurrentFish != null) {
+            _playerSpawnService.PlayerCurrentFish.gameObject.TryGetComponent(out EffectManager playerEffManager);
             if (isPause && exitButton != null)
                 //can exist only if the player is not being pursued by enemies and has no active effects
                 exitButton.interactable = playerEffManager.IsNoNegativeEffects() && !GameStaticInfo.IS_ENEMY_DETECTOR_ENABLED;
@@ -52,16 +38,16 @@ public class PauseMenuNavigation : MonoBehaviour {
     }
 
     void GameModeTitlesInit() {//init gamemode buttons        
-        if (GameModeController.CurrentMode == GameMode.None) {
+        if (GameModeWnd.CurrentMode == GameMode.None) {
             Debug.LogWarning("Gamemode = None -> Activate gamemod auto-select (medium)");
-            GameModeController.CurrentMode = GameMode.Medium;
+            GameModeWnd.GamemodeInitSet(GameMode.Medium);
         }
 
         if (gamemodePauseTitles.Length == GameStaticInfo.GAMEMODES_COUNT) {
             foreach (GameObject tit in gamemodePauseTitles)
                 tit.SetActive(false);
 
-            gamemodePauseTitles[(int)GameModeController.CurrentMode].SetActive(true);
+            gamemodePauseTitles[(int)GameModeWnd.CurrentMode].SetActive(true);
         }
         //Debug.LogWarning(GameStaticInfo.Gamemode);
     }
@@ -80,6 +66,6 @@ public class PauseMenuNavigation : MonoBehaviour {
         resumeButton.onClick.AddListener(() => _gameHudController.ActivatePauseWnd(false));
         settingsButton.onClick.AddListener(() => _alertWindowsManager.ActivateSettingsWnd(true));
         guideBookButton.onClick.AddListener(() => _alertWindowsManager.ActivateGuidebookWnd(true));
-        exitButton.onClick.AddListener(() => _alertWindowsManager.ActivateAreUSureExitGameWnd(true));
+        exitButton.onClick.AddListener(() => _alertWindowsManager.ActivateAreUSureExitGameWnd(true, _playerSpawnService.SavePlayerData));
     }
 }

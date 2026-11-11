@@ -45,7 +45,7 @@ public class GameTipsService : MonoBehaviour, IGameTip {
         _worldData = ProgressSaver.IsWorldDataExist ?
             ProgressSaver.LoadWorldData() : new WorldData();
 
-        if (_worldData.IsAllTipsShowed() || GameModeController.CurrentMode != GameMode.Easy)
+        if (_worldData.IsAllTipsShowed() || GameModeWnd.CurrentMode != GameMode.Easy)
             gameObject.SetActive(false);
         else
             if (!_worldData.isVictimTipShowed)
@@ -70,7 +70,7 @@ public class GameTipsService : MonoBehaviour, IGameTip {
 
     void ActivateStage(TipType type, /*bool isSaveDepend = true,*/ bool isShowed, bool isGamemodeDepend = true) {
         bool condition = /*!isSaveDepend || */(gameObject.activeInHierarchy && !isShowed);
-        condition = condition && (!isGamemodeDepend || GameModeController.CurrentMode == GameMode.Easy);
+        condition = condition && (!isGamemodeDepend || GameModeWnd.CurrentMode == GameMode.Easy);
 
         if (condition /*worldData.isStageTipShowed*/) {
             _worldData = ProgressSaver.IsWorldDataExist ?//load other prop in case changing by others scripts

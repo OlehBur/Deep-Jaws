@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 using VContainer;
+using VContainer.Unity;
 
 
-public class PlayerLeaderboardScore : MonoBehaviour {
+public class PlayerLeaderboardScore : IStartable, IDisposable {
     [Inject] private readonly IPlayerFishPoolService _playerPoolService;
 
     private Fish _player;
@@ -15,8 +16,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
     private const string DEATHS_KEY = "Deaths";
 
 
-
-    void Start() {
+    public void Start() {
         //PlayerReconnect(_playerPoolService.PlayerCurrentFish, false);
         _playerPoolService.OnPlayerRespawn += PlayerReconnect;
         EasyDeaths = PlayerPrefs.GetInt(DEATHS_KEY, 0);
@@ -24,11 +24,8 @@ public class PlayerLeaderboardScore : MonoBehaviour {
     }
 
     void PlayerReconnect(Fish player, bool isDie) {
-        //else
-        //Debug.LogWarning("Player ref: "+player);
-
         if (isDie) {
-            if (/*this.player != null &&*/ _player != player) {//not same fish & not first init (is die never = true on first init)
+            if (_player != player) {//not same fish & not first init (is die never = true on first init)
                 _player.OnFishEat -= OnScoreAdd;
                 _player = player;
                 _player.OnFishEat += OnScoreAdd;
@@ -84,15 +81,13 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
     public void OnResetScore() => Score = 0;
 
-    private void OnDisable/*OnApplicationQuit*/() {
+    public void Dispose() {
 #if UNITY_ANDROID && !UNITY_EDITOR
         GPG_Manager.Instance?.OnSavePlayerScoreToLeaderBoard(GetLederboardByGameMode(), Score);
         Score = 0; // Reset score when the player is disabled
         //Debug.Log("OnApplicationQuit");
 #endif
-    }
 
-    private void OnDestroy() {
         PlayerPrefs.SetInt(DEATHS_KEY, EasyDeaths);
         //Debug.LogWarning("Deaths: " + easyDeaths);
 
@@ -104,7 +99,7 @@ public class PlayerLeaderboardScore : MonoBehaviour {
 
     /*LederboardKey*/
     string GetLederboardByGameMode() {
-        return GameModeController.CurrentMode switch {
+        return GameModeWnd.CurrentMode switch {
             GameMode.Easy => GPGSIds.leaderboard_harbor_breeze_appetite,
             GameMode.Medium => GPGSIds.leaderboard_ocean_voyage_appetite,
             GameMode.Hard => GPGSIds.leaderboard_deadly_maelstrom_appetite,

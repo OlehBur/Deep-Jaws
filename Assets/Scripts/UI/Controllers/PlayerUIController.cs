@@ -51,6 +51,9 @@ public class PlayerUIController : MonoBehaviour {
 
     void Start() {
         _playerFishPoolService.OnPlayerRespawn += PlayerReConnect;
+        if (_playerFishPoolService.PlayerCurrentFish !=null)
+            PlayerReConnect(_playerFishPoolService.PlayerCurrentFish, false);
+
         PlayerLeaderboardScore.OnChanged += scoreBar.UpdateScoreInfo;
         SettingsWnd.OnHudHideChanged += UpdateHUDbars;
 

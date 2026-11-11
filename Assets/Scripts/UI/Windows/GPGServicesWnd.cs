@@ -2,7 +2,6 @@
 
 using UnityEngine;
 using TMPro;
-using UnityEngine.Localization;
 using UnityEngine.UI;
 using VContainer;
 
@@ -14,15 +13,14 @@ public class GPGServicesWnd : WindowBase {
     [SerializeField] Button leaderboardButton;
     [SerializeField] Button storeButton;
     [SerializeField] GameObject storePromotion;
-
     [SerializeField] Image signInIcon;
     [SerializeField] GameObject kingOfDeepsObj;
     [SerializeField] TextMeshProUGUI kingOfDeepsTxt;
-    [SerializeField] LocalizedString kingOfDeepsLocalized;
     [SerializeField] Animator kingOfDeepsAnimator;
     [SerializeField] StoreWnd storeWnd;
 
     [Inject] private readonly IAudioPlayService _audioPlayService;
+    [Inject] private readonly UILocalizationInfo _localizationInfo;
     [Inject] private readonly IGPGManager _gpgManager;
 
 
@@ -86,7 +84,7 @@ public class GPGServicesWnd : WindowBase {
             return;
 
         kingOfDeepsObj.SetActive(true);
-        kingOfDeepsTxt.text = kingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
+        kingOfDeepsTxt.text = _localizationInfo.KingOfDeepsLocalized.GetLocalizedString() + " " + playerNick;
         kingOfDeepsAnimator.enabled = true;
     }
 #endif

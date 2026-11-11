@@ -78,7 +78,7 @@ public class SceneLoader : MonoBehaviour, ISceneLoader {
         AudioListener.volume = 1f;
         asyncLoad.allowSceneActivation = true;
 
-        while (!asyncLoad.isDone || (sceneToLoad == SceneType.Game && !GameManager.IsSceneReady)) {
+        while (!asyncLoad.isDone) {
             yield return null;
         }
 

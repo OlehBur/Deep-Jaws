@@ -11,15 +11,12 @@ public interface IGameHudController {
 }
 
 public class GameHudController : MonoBehaviour, IGameHudController {
-    [SerializeField] GameObject demoFinMsg;
     [SerializeField] GameResultWnd gameResult;
-    [SerializeField] GameManager gameManager;
-    //[SerializeField] GameObject pauseButton;
     [SerializeField] GameObject pauseWnd;
-    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] RespawnWnd respawnWnd;
     [SerializeField] Button pauseButton;
 
+    [Inject] private readonly IAlertWindowsManager _alertWindowsManager;
     [Inject] private readonly IAudioPlayService _audioPlayService;
     [Inject] private readonly IPlayerFishPoolService _playerSpawnService;
     [Inject] private readonly ISceneLoader _sceneLoader;
@@ -29,6 +26,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
 
     private void Start() {
         PauseButtonInit();
+        //_alertWindowsManager.OnSureExitGameTrigger += OnSureSaveExitGame;
     }
 
     private void OnEnable() {
@@ -61,13 +59,13 @@ public class GameHudController : MonoBehaviour, IGameHudController {
 
     public void OnOpenDemoFin() {
         _audioPlayService.PlayVFX(VFX_clip.BubblePop);
-        _audioPlayService.StopPlayerAudioSource();
-        demoFinMsg.SetActive(true);
+        _audioPlayService.StopPlayerSprintAudioSource();
+        _alertWindowsManager.ActivateDemoWnd(true);
     }
 
     void PlayerLvlUpHandler(FishLevel level) {
         if (GameManager.IS_PC_DEMO && level >= FishLevel.Mackerel) {
-            gameManager.GameSetPause(true);
+            _gameManager.GameSetPause(true);
             OnOpenDemoFin();
         }
 #if !UNITY_STANDALONE_WIN
@@ -80,8 +78,8 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     }
 
     public void ActivatePauseWnd(bool isActivate) {
-        if (gameManager != null)
-            gameManager.GameSetPause(isActivate);
+        if (_gameManager != null)
+            _gameManager.GameSetPause(isActivate);
 
         pauseWnd.SetActive(isActivate);
     }
@@ -97,7 +95,6 @@ public class GameHudController : MonoBehaviour, IGameHudController {
         //GameAdsManager.Instance.UpdateDailyRevivesTxt();
         respawnWnd.OnOpen();
 #else
-        /*spawnManager*/
         _playerSpawnService.RespawnPlayer(true, false);//just respawn without ui on pc
 #endif
     }
@@ -111,10 +108,9 @@ public class GameHudController : MonoBehaviour, IGameHudController {
 #endif
     }
 
-
     public void ResetAndReloadGame_Hard() {
         _gameManager.ResetWorldData();
-        GameModeController.CurrentMode = GameMode.Hard;
+        GameModeWnd.GamemodeInitSet(GameMode.Hard);
         gameResult.AddShellsWithoutWnd();
         _sceneLoader.OnLoad_GameScene();
     }

@@ -159,7 +159,7 @@ public class Fish : MonoBehaviour {
         float levelSpeedProgressing = (float)/*level*/fishInfo.Level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
         float enemyProgressMultiplier = IsPlayer ? 1f : 3f;//progress tripl longer in enemies
-        enemyProgressMultiplier = GameModeController.CurrentMode != GameMode.Easy ?
+        enemyProgressMultiplier = GameModeWnd.CurrentMode != GameMode.Easy ?
             1f : enemyProgressMultiplier; // in easy mode - slow progress for enemies
         progressDivider *= enemyProgressMultiplier;
 
@@ -172,7 +172,7 @@ public class Fish : MonoBehaviour {
         if (!IsPlayer && Progress > 1f) //player can grow over 1f progress
             Progress = 1f;
 
-        int playerDamageMultiplier = victim.IsPlayer && GameModeController.CurrentMode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
+        int playerDamageMultiplier = victim.IsPlayer && GameModeWnd.CurrentMode == GameMode.Easy ? 1 : 3; // player gets 1/3 damage
         int damage = (int)/*level*/fishInfo.Level * playerDamageMultiplier;
         OnFishEat?.Invoke(damage);
         //Debug.Log($"{gameObject.name} ({Progress}) eats {victim.name} ({victim.Progress}).");
@@ -183,7 +183,7 @@ public class Fish : MonoBehaviour {
 
         /*return*/
         isStillAlive = victim.TakeDamage(damage);
-        if (IsPlayer && GameModeController.CurrentMode != GameMode.Easy && !isStillAlive
+        if (IsPlayer && GameModeWnd.CurrentMode != GameMode.Easy && !isStillAlive
             /*&& _sanctuariesManager != null*/)//die 
             _sanctuariesManager.SaveSanctuaryNueutralizedData(victim.Level);
     }
@@ -256,7 +256,7 @@ public class Fish : MonoBehaviour {
     public bool IsLegitimateTarget(Fish other, bool withChance = false) {
         bool smallerLvl = other.Level < Level;//other - weaker 
         bool sameLevelLegimate = other.Level == Level && other.Progress <= Progress; // same level and <= progress
-        bool allowSameLvlPlayerAtack = GameModeController.CurrentMode == GameMode.Hard;
+        bool allowSameLvlPlayerAtack = GameModeWnd.CurrentMode == GameMode.Hard;
         bool isShark = Level >= GameStaticInfo.SHARK_INDEX_BARRIER;
 
         if (IsPlayer)

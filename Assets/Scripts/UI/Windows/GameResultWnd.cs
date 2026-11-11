@@ -58,7 +58,7 @@ public class GameResultWnd : WindowBase {
 
     public void AddShellsWithoutWnd() {
         float reachedScore = PlayerLeaderboardScore.Score;
-        float currentMultiplier = GameModeController.CurrentMode switch {
+        float currentMultiplier = GameModeWnd.CurrentMode switch {
             GameMode.Easy => GameStaticInfo.EASY_MODE_SHELLS_MULTIPLIER,
             GameMode.Medium => GameStaticInfo.MEDIUM_MODE_SHELLS_MULTIPLIER,
             GameMode.Hard => GameStaticInfo.HARD_MODE_SHELLS_MULTIPLIER,
@@ -72,7 +72,7 @@ public class GameResultWnd : WindowBase {
 
     void InitWnd() {
         float reachedScore = PlayerLeaderboardScore.Score;
-        float currentMultiplier = GameModeController.CurrentMode switch {
+        float currentMultiplier = GameModeWnd.CurrentMode switch {
             GameMode.Easy => GameStaticInfo.EASY_MODE_SHELLS_MULTIPLIER,
             GameMode.Medium => GameStaticInfo.MEDIUM_MODE_SHELLS_MULTIPLIER,
             GameMode.Hard => GameStaticInfo.HARD_MODE_SHELLS_MULTIPLIER,

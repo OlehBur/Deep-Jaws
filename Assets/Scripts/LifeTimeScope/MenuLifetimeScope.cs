@@ -21,7 +21,9 @@ public class MenuLifetimeScope : LifetimeScopeBase {
     }
 
     public override void InitMultipleScripts(IContainerBuilder builder) {
+        //MultipleInject<StoreCardView>(builder);
     }
+
     public override void InitSingleScripts(IContainerBuilder builder) {
         //SingleInject<MainMenuNavigation>(builder);
         //SingleInject<GameHudController>(builder);

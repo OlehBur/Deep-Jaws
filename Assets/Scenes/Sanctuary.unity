@@ -8704,7 +8704,6 @@ MonoBehaviour:
   exitSactuaryButton: {fileID: 2114258024}
   hideUIButton: {fileID: 551367739}
   viewUIButton: {fileID: 1260974615}
-  biomeUi: {fileID: 442210964}
   hideUi: {fileID: 84205859}
 --- !u!1 &443421467
 GameObject:
@@ -41463,7 +41462,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1823938862}
   - component: {fileID: 1823938861}
-  - component: {fileID: 1823938863}
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
@@ -41508,14 +41506,6 @@ Transform:
   - {fileID: 1446370071}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &1823938863
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1823938860}
-  m_Enabled: 1
 --- !u!1 &1824108598
 GameObject:
   m_ObjectHideFlags: 0

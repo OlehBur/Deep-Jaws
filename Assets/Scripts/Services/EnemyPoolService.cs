@@ -293,18 +293,18 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
             SPAWN_WEIGHTS_EASY_START : SPAWN_WEIGHTS_EASY;//easy enemies for beginner players
                                                           //weight by gamemode
 
-        if (GameModeController.CurrentMode == GameMode.None) {
+        if (GameModeWnd.CurrentMode == GameMode.None) {
             Debug.LogWarning("Activate fast game scene start!");
 
             if (ProgressSaver.IsWorldDataExist)
-                GameModeController.CurrentMode = ProgressSaver.LoadWorldData().gameMode;
+                GameModeWnd.GamemodeInitSet(ProgressSaver.LoadWorldData().gameMode);
 
-            if (GameModeController.CurrentMode == GameMode.None) {
-                GameModeController.CurrentMode = GameMode.Easy;
+            if (GameModeWnd.CurrentMode == GameMode.None) {
+                GameModeWnd.GamemodeInitSet(GameMode.Easy);
                 Debug.LogWarning("Gamemode selection System doesnt work properly!");
             }
         }
-        spawnWeight = GameModeController.CurrentMode switch {
+        spawnWeight = GameModeWnd.CurrentMode switch {
             GameMode.Easy => spawnWeight,
             GameMode.Medium => SPAWN_WEIGHTS_MEDIUM,
             GameMode.Hard => SPAWN_WEIGHTS_HARD,

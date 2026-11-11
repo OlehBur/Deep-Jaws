@@ -24,48 +24,51 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        //convert click pos to area pos
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            touchArea,
-            eventData.position,
-            eventData.pressEventCamera,
-            out Vector2 localPoint
-        );
+        if (GameStaticInfo.IsRunningOnPlayGamesPC()) {
+            //convert click pos to area pos
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                touchArea,
+                eventData.position,
+                eventData.pressEventCamera,
+                out Vector2 localPoint
+            );
 
-        //center to click pos
-        joystickBackgr.anchoredPosition = localPoint;
-        if (SettingsWnd.IsAutoHideUI)
-            joystickBackgr.gameObject.SetActive(true);
+            //center to click pos
+            joystickBackgr.anchoredPosition = localPoint;
+            if (SettingsWnd.IsAutoHideUI)
+                joystickBackgr.gameObject.SetActive(true);
 
-        //reset handler
-        handle.anchoredPosition = Vector2.zero;
-        JoyAxis.Axis = Vector2.zero;
+            //reset handler
+            handle.anchoredPosition = Vector2.zero;
+            JoyAxis.Axis = Vector2.zero;
 
-        //UpdateJoystick(eventData);
-        //Debug.Log("Click");
+            //UpdateJoystick(eventData);
+            //Debug.Log("Click");
+        }
     }
 
     public void OnDrag(PointerEventData eventData) {
-        //cals fing offset relat to new joystick center
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        if (GameStaticInfo.IsRunningOnPlayGamesPC()) {
+            //cals fing offset relat to new joystick center
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
             joystickBackgr,
             eventData.position,
             eventData.pressEventCamera,
             out Vector2 handlePos
         );
 
-        Vector2 clamped = Vector2.ClampMagnitude(handlePos, maxRadius);
-        handle.anchoredPosition = clamped;
+            Vector2 clamped = Vector2.ClampMagnitude(handlePos, maxRadius);
+            handle.anchoredPosition = clamped;
 
-        JoyAxis.Axis = clamped / maxRadius;
+            JoyAxis.Axis = clamped / maxRadius;
 
-        if (JoyAxis.isReset) {
-            eventData.pointerDrag = null;
-            JoyAxis.isReset = false;
+            if (JoyAxis.isReset) {
+                eventData.pointerDrag = null;
+                JoyAxis.isReset = false;
+            }
+
+            //Debug.Log("Drag");
         }
-
-        //UpdateJoystick(eventData);
-        //Debug.Log("Drag");
     }
 
     public void OnPointerUp(PointerEventData eventData) {
@@ -77,22 +80,6 @@ public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
         //Debug.Log("Release");
     }
-
-    //private void UpdateJoystick(PointerEventData eventData) {
-    //    Vector2 pointerPos;
-    //    RectTransformUtility.ScreenPointToLocalPointInRectangle(
-    //        transform as RectTransform,
-    //        eventData.position,
-    //        eventData.pressEventCamera,
-    //        out pointerPos
-    //    );
-
-    //    Vector2 clamped = Vector2.ClampMagnitude(pointerPos, maxRadius);
-    //    handle.anchoredPosition = clamped;
-
-    //    JoyAxis.Axis = clamped / maxRadius;
-    //    //Debug.Log($"Joystick Input: {JoyAxis.Axis} ");
-    //}
 
     private void OnDisable() {//like user release joystick (in case when joystick immediately disabled)
         JoyAxis.Axis = Vector2.zero;
