@@ -6,6 +6,8 @@ This repository showcases a clean, decoupled service-based architecture utilizin
 
 *Note: The core architecture has been successfully refactored to a decoupled, service-based VContainer structure. Some minor legacy utilities and helper scripts are undergoing ongoing incremental cleanup.*
 
+<img width="672" height="378" alt="Movie_108-ezgif com-resize" src="https://github.com/user-attachments/assets/256ec64b-5306-4bea-9df3-513ce70780fd" />
+
 ---
 
 ## Architecture & Naming Conventions
