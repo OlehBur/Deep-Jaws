@@ -12,14 +12,6 @@ public enum SceneType {
     Sancturary
 }
 
-public interface ISceneLoader {
-    event Action<string> OnNewSceneLoaded;
-
-    void OnLoad_GameScene();
-    void OnLoad_SanctuaryScene();
-    void OnLoad_MainMenuScene();
-    void LoadScene(SceneType sceneType);
-}
 
 public class SceneLoader : MonoBehaviour, ISceneLoader {
     [SerializeField] private GameObject fadeCanvasObject;

@@ -1,9 +1,8 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 
+
 public class CaviarController : MonoBehaviour {
-    //[SerializeField] SpawnManager spawnManager;
     [SerializeField] GameObject caviarModel;
 
     [Inject] private readonly IPlayerFishPoolService _playeyPoolService;
@@ -53,7 +52,7 @@ public class CaviarController : MonoBehaviour {
 
         if (caviarModel.activeInHierarchy && other.isTrigger//only mouth (trigger collider)
             && parentFish.CompareTag("Player")
-            && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out Fish fish)) {
+            && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out FishController fish)) {
             fish.FeedCaviar();
 
             ++PlayerEatedCaviarCnt;
@@ -77,7 +76,6 @@ public class CaviarController : MonoBehaviour {
             return;
 
         if (Vector3.Distance(_playeyPoolService.PlayerCurrentFish.transform.position, transform.position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW)
-            /*gameObject*/
             caviarModel.SetActive(true);
         else
             _current_reEnablerTime = 0f;

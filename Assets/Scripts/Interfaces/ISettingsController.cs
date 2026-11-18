@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 
 
-
 public interface ISettingsController {
     Toggle BloomTog { get; }
     Toggle BlurTog { get; }

@@ -3,7 +3,7 @@ using VContainer;
 
 
 public interface ISpawnOrchestrator {
-    bool TryGetFish(GameObject fishObject, out Fish fish);
+    bool TryGetFish(GameObject fishObject, out FishController fish);
 }
 
 public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
@@ -45,14 +45,14 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
 #endif
     }
 
-    void SpawnPlayerSpawnParticles(Fish playerFish, bool isDie) {
+    void SpawnPlayerSpawnParticles(FishController playerFish, bool isDie) {
         FishVFX bubbleType = isDie ? FishVFX.DeadBubblesParticle : FishVFX.BubblesLvlUp;
 
         _vfxPoolManager.ActivateObjectFromPool(bubbleType, fishPoolParent,
             playerFish.transform.localPosition, Vector3.one, Quaternion.identity);
     }
 
-    void EnemyFishSpawnDeadParticles(Fish currentFish) {
+    void EnemyFishSpawnDeadParticles(FishController currentFish) {
         if (currentFish.IsVisible) {
             _vfxPoolManager.ActivateObjectFromPool(FishVFX.SkeletonParticle, fishPoolParent,
                 currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
@@ -62,7 +62,7 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
     }
 
 
-    public bool TryGetFish(GameObject fishObject, out Fish fish) {
+    public bool TryGetFish(GameObject fishObject, out FishController fish) {
         return _playerSpawnService.TryGetFish(fishObject, out fish) ||//players
             _enemyPoolService.TryGetFish(fishObject, out fish) ||//default enemies
             _permamentFishPoolService.TryGetFish(fishObject, out fish);//cucttlefishes | dartfhis | pufferfish

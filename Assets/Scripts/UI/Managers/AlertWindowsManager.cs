@@ -1,25 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using VContainer;
 
 
-public interface IAlertWindowsManager {
-    event Action<bool> OnAlerWndOpened;
-    //event Action OnNewGameConfirmTrigger;
-    //event Action OnSureExitGameTrigger;
-
-    //int GetLegthNewGameTrigger();
-    bool IsOpenedAnyAlertWnd { get; }
-    void ActivateLoadingPanelWnd(bool isActive);
-    void ActivateAreUSureNewGameWnd(bool isActive, Action onConfirm);
-    void ActivateAreUSureExitGameWnd(bool isActive, Action onConfirm);
-    void ActivateNoInternetConnectionWnd(bool isActive);
-    void ActivateLicenseFailedWnd(bool isActive);
-    void ActivateSettingsWnd(bool isActive);
-    void ActivateGuidebookWnd(bool isActive);
-    void ActivateDemoWnd(bool isActive);
-    void FirstNoConnectionOpen();
-}
 
 public enum AlertWndType {
     AreUSureNew,
@@ -46,8 +28,6 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
     [SerializeField] DemoFinWnd demoFinWnd;
 
     public event Action<bool> OnAlerWndOpened;
-    //public event Action OnNewGameConfirmTrigger;
-    //public event Action OnSureExitGameTrigger;
 
     public bool IsOpenedAnyAlertWnd => areUSureNewGameWnd.activeInHierarchy
         || areUSureExitGameWnd.activeInHierarchy
@@ -75,18 +55,11 @@ public class AlertWindowsManager : MonoBehaviour, IAlertWindowsManager {
         }
     }
 
-    //public int GetLegthNewGameTrigger() {
-    //    return OnNewGameConfirmTrigger?.GetInvocationList().Length ?? -1;
-    //}
-
     public void NewGameConfirmTrigger() {
-        //Debug.Log(OnNewGameConfirmTrigger?.GetInvocationList().Length);
-        //OnNewGameConfirmTrigger?.Invoke();
         _confirmNewGameAction?.Invoke();
         _confirmNewGameAction = null;
     }
     public void SaveExitGameTrigger() {
-        //OnSureExitGameTrigger?.Invoke();
         _confirmExitGameAction?.Invoke();
         _confirmExitGameAction = null;
     }

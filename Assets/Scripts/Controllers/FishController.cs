@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 using VContainer;
@@ -11,23 +10,9 @@ public enum FishSpeedModifierType {
     Poison,
 }
 
-/// <summary>
-/// Class for the player and enemy fish (base component for fish prefab)
-/// </summary>
 
-public class ProgressArgs : EventArgs {
-    public ProgressArgs() {
-        IsCaviarEaten = false;
-    }
-    public ProgressArgs(bool isCaviarEaten) {
-        IsCaviarEaten = isCaviarEaten;
-    }
 
-    public bool IsCaviarEaten { get; set; }
-    //public bool IsFishBited { get; set; }
-}
-
-public class Fish : MonoBehaviour {
+public class FishController : MonoBehaviour {
     [SerializeField] FishInfo fishInfo;
     [SerializeField] Transform prefabVisualTransform; //for grow animation
     [SerializeField] Rigidbody rb;
@@ -74,7 +59,7 @@ public class Fish : MonoBehaviour {
     public event Action OnFishDamage;
     //public event Action OnInfoStatsChanged;
     public event Action OnHealthChanged;
-    public event Action<ProgressArgs> OnProgressChanged;
+    public event Action<ProgressEventArgs> OnProgressChanged;
 
     private int _health;
     private float _speedMultiplier = 1;
@@ -154,7 +139,7 @@ public class Fish : MonoBehaviour {
     /// return true if fish is alive, false if fish is dead
     /// </summary>
     /// <param name="victim"></param>
-    public void Eat(Fish victim, out bool isStillAlive) {
+    public void Eat(FishController victim, out bool isStillAlive) {
         float entityCeiling = (float)GameStaticInfo.MAX_FISH_LEVEL - Mathf.Abs((float)victim.Level);
         float levelSpeedProgressing = (float)/*level*/fishInfo.Level * LEVEL_EAT_DEPEND_MULTIPLIER;
         float progressDivider = MIN_PROGRESS_GAIN_MULTIPLIER * levelSpeedProgressing + entityCeiling;//abs for unbeatable fishes
@@ -253,7 +238,7 @@ public class Fish : MonoBehaviour {
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool IsLegitimateTarget(Fish other, bool withChance = false) {
+    public bool IsLegitimateTarget(FishController other, bool withChance = false) {
         bool smallerLvl = other.Level < Level;//other - weaker 
         bool sameLevelLegimate = other.Level == Level && other.Progress <= Progress; // same level and <= progress
         bool allowSameLvlPlayerAtack = GameModeWnd.CurrentMode == GameMode.Hard;

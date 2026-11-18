@@ -6,11 +6,6 @@ using UnityEngine.UI;
 using VContainer;
 
 
-public interface IGameModeController {
-    WindowBase Window { get; }
-    void OnGameModeSet(int gamemode);
-    void ActivateGamemodesWnd(bool isActivate);
-}
 
 public class GameModeWnd : WindowBase, IGameModeController {
     [SerializeField] TextMeshProUGUI description;
@@ -25,47 +20,14 @@ public class GameModeWnd : WindowBase, IGameModeController {
     [Inject] private readonly IGraphicManager _graphicManager;
     [Inject] private readonly ISceneLoader _sceneLoader;
     [Inject] private readonly UILocalizationInfo _localizationInfo;
-    //[Inject] private /*readonly*/ IAlertWindowsManager _alertWindowsManager;
 
     public static GameMode CurrentMode { get; private set; } = GameMode.None;
     public WindowBase Window => this;
 
-    //private bool _isDestroyed;
     private bool _isGMneedAnimation = true;
     private Color _targetGMwndColor;
     private Color _targetLightGMcolor;
 
-    //[Inject]
-    //private void Construct(IAlertWindowsManager alertWindowsManager) {
-    //    Debug.Log($"СONSTRUCT SUBSCRIBE {GetInstanceID()}");
-    //    _alertWindowsManager = alertWindowsManager;
-
-    //    _alertWindowsManager.OnNewGameConfirmTrigger -= NewGameTriggerHandler;
-    //    _alertWindowsManager.OnNewGameConfirmTrigger += NewGameTriggerHandler;
-    //    InitButtonListeners();
-    //}
-    //private void OnEnable() {
-    //    Debug.Log($"ENABLE SUBSCRIBE {GetInstanceID()}");
-    //    _alertWindowsManager.OnNewGameConfirmTrigger += NewGameTriggerHandler;
-    //}
-
-    //void Awake() {
-    //    Debug.Log($"GameModeWnd Awake {GetInstanceID()}");
-    //}
-
-    //void OnDestroy() {
-    //    Debug.Log($"UNSUBSCRIBE {GetInstanceID()} " +
-    //    $"{_alertWindowsManager.GetLegthNewGameTrigger()}");
-
-    //    if (_alertWindowsManager != null)
-    //        _alertWindowsManager.OnNewGameConfirmTrigger -= NewGameTriggerHandler;
-    //}
-
-    //private void OnDisable() {
-    //    Debug.Log($"DISABLE UNSUBSCRIBE {GetInstanceID()}");
-    //    if (_alertWindowsManager != null)
-    //        _alertWindowsManager.OnNewGameConfirmTrigger -= NewGameTriggerHandler;
-    //}
 
     void Awake() {
         InitButtonListeners();
@@ -105,13 +67,6 @@ public class GameModeWnd : WindowBase, IGameModeController {
         OnGameModeSet((int)gamemode);
     }
 
-    ////void NewGameTriggerHandler() => ActivateGamemodesWnd(true);
-    //private void NewGameTriggerHandler() {
-    //    Debug.Log($"Handler {GetInstanceID()} Alive={this != null}");
-
-    //    ActivateGamemodesWnd(true);
-    //}
-
     public void ActivateGamemodesWnd(bool isActivate) {
         //Debug.Log($"Activate {GetInstanceID()} " +
         //    $"this==null:{this == null} " +
@@ -136,8 +91,6 @@ public class GameModeWnd : WindowBase, IGameModeController {
             _graphicManager.MainLightColor = Color.Lerp(_graphicManager.MainLightColor, _targetLightGMcolor, DJTime.DeltaTime);
             yield return null;
         }
-
-        //Debug.LogWarning("TODO: call OnGameStartLoad() after extit fr gamemode wnd");
     }
 
     public static void GamemodeInitSet(GameMode gamemode) => CurrentMode = gamemode;
@@ -163,9 +116,6 @@ public class GameModeWnd : WindowBase, IGameModeController {
         StartCoroutine(ChangeColorGMwnd());
         StopCoroutine(ChangeColorGMmainMenu());
         StartCoroutine(ChangeColorGMmainMenu());
-
-        //PlayerPrefs.SetInt("GameMode", gamemode);
-        //Debug.Log("DELETED WORDL AUTO SAVE");
 
         if (_isGMneedAnimation) {
             gmWndAnimator.SetTrigger("Anim");

@@ -6,17 +6,6 @@ using VContainer;
 
 
 
-public interface IGraphicManager {
-    Color MainLightColor { get; set; }
-    Volume Volume { get; }
-
-    void SaveGraphicsData();
-    void LoadGraphicsData();
-    void ResetSettingsToDefault();
-    void ResetLightColor();
-}
-
-
 public class GraphicManager : MonoBehaviour, IGraphicManager {
     [Header("Graphics Settings")]
     [SerializeField] Light MainLight;

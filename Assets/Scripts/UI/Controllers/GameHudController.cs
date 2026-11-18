@@ -3,12 +3,6 @@ using UnityEngine.UI;
 using VContainer;
 
 
-public interface IGameHudController {
-    void ActivatePauseWnd(bool isActivate);
-    void OnOpenDemoFin();
-    void ResetAndReloadGame_Hard();
-    void DeactivateRespawnWnd();
-}
 
 public class GameHudController : MonoBehaviour, IGameHudController {
     [SerializeField] GameResultWnd gameResult;
@@ -54,7 +48,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
         });
     }
 
-    void PlayerRespawnHandler(Fish f, bool isDie) =>
+    void PlayerRespawnHandler(FishController f, bool isDie) =>
         DeactivateRespawnWnd();
 
     public void OnOpenDemoFin() {
@@ -85,7 +79,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     }
 
 
-    void ActivateRespawnWnd(Fish f) {
+    void ActivateRespawnWnd(FishController f) {
 #if UNITY_ANDROID
         if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
             ResetAndReloadGame_Hard();

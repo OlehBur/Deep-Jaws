@@ -4,10 +4,6 @@ using UnityEngine.UI;
 using VContainer;
 
 
-public interface ISanctuaryBiomesNavigation {
-    BiomeType CurrentBiomeType { get; }
-    Action<BiomeType> OnBiomeChanged { get; set; }
-}
 
 public class SanctuaryBiomeWnd : WindowBase, ISanctuaryBiomesNavigation {
     [SerializeField] Button nextBiomeButton;

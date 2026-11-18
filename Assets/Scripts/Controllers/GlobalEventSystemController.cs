@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class GlobalEventSystem : MonoBehaviour {
-    private static GlobalEventSystem instance;
+public class GlobalEventSystemController : MonoBehaviour {
+    private static GlobalEventSystemController instance;
 
     void Awake() {
         if (instance != null && instance != this) {

@@ -32,7 +32,7 @@ public class ZoneController : MonoBehaviour {
         zoneBarrierMat.SetFloat(GameStaticInfo.ZONE_PROGRESS_PROP, 0);//resert previous mat
     }
 
-    void BiomeByLvlBehaviour(Fish fish, bool isDie) {
+    void BiomeByLvlBehaviour(FishController fish, bool isDie) {
         if (fish == null)
             return;
 

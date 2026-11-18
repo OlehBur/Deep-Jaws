@@ -29,7 +29,7 @@ public class PlayerUIController : MonoBehaviour {
 
     private EffectManager _playerEffectManager;
     private float _currentSprintCooldownTime = 0;
-    private Fish _playerFish; // reference to the player fish component
+    private FishController _playerFish; // reference to the player fish component
 
     [Inject] private readonly IGameTip _gameTips;
     [Inject] private readonly IGameHudController _gameHudController;
@@ -54,7 +54,7 @@ public class PlayerUIController : MonoBehaviour {
         if (_playerFishPoolService.PlayerCurrentFish !=null)
             PlayerReConnect(_playerFishPoolService.PlayerCurrentFish, false);
 
-        PlayerLeaderboardScore.OnChanged += scoreBar.UpdateScoreInfo;
+        PlayerScoreService.OnChanged += scoreBar.UpdateScoreInfo;
         SettingsWnd.OnHudHideChanged += UpdateHUDbars;
 
         if (GameManager.IsRunOnPC) {
@@ -88,7 +88,7 @@ public class PlayerUIController : MonoBehaviour {
             _playerEffectManager.OnEffectChanges -= PlayerVisualEffectChangeHandler;
 
         //PlayerReConnect(_playerFish, false);
-        PlayerLeaderboardScore.OnChanged -= scoreBar.UpdateScoreInfo;
+        PlayerScoreService.OnChanged -= scoreBar.UpdateScoreInfo;
         SettingsWnd.OnHudHideChanged -= UpdateHUDbars;
         StopAllCoroutines();
     }
@@ -138,7 +138,7 @@ public class PlayerUIController : MonoBehaviour {
         JoyAxis.Axis = moveInput.normalized; // set the joystick axis to the normalized input vector
     }
 
-    void UpdateProgressBar(ProgressArgs args = null) {
+    void UpdateProgressBar(ProgressEventArgs args = null) {
         int lvlProgress = (int)(_playerFish.Progress * GameStaticInfo.PERCENT_MULTIPLIER);
 
         growthBar.UpdateProgressInfo(lvlProgress, _playerFish);
@@ -203,7 +203,7 @@ public class PlayerUIController : MonoBehaviour {
     }
 
 
-    void PlayerReConnect(Fish fish, bool isDie) {
+    void PlayerReConnect(FishController fish, bool isDie) {
         //Debug.LogWarning("PlayerRespawn");
         PlayerReconnectEventsHandler(fish);
 
@@ -228,7 +228,7 @@ public class PlayerUIController : MonoBehaviour {
         PlayerReconectTipsHandler(fish, isDie);
     }
 
-    void PlayerReconnectEventsHandler(Fish fish) {
+    void PlayerReconnectEventsHandler(FishController fish) {
         if (_playerFish != null && _playerEffectManager != null) {
             _playerFish.OnProgressChanged -= UpdateProgressBar;
             _playerFish.OnHealthChanged -= UpdateHealthInfo;
@@ -256,7 +256,7 @@ public class PlayerUIController : MonoBehaviour {
             Debug.LogWarning("Player Effet Manager is Null.", this);
     }
 
-    void PlayerReconectTipsHandler(Fish fish, bool isDie) {
+    void PlayerReconectTipsHandler(FishController fish, bool isDie) {
         if (!isDie) {//lvl upgr & unlock new biomes
             if (fish.Level == FishLevel.Mackerel)
                 _gameTips.OnStageTip();
@@ -278,7 +278,7 @@ public class PlayerUIController : MonoBehaviour {
     void UpdateHUDbars() {
         UpdateHealthInfo();
         UpdateProgressBar();
-        scoreBar.UpdateScoreInfo(PlayerLeaderboardScore.Score);
+        scoreBar.UpdateScoreInfo(PlayerScoreService.Score);
     }
 
 }

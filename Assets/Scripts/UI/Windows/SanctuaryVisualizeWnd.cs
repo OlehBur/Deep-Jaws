@@ -1,32 +1,14 @@
 //#define UNITY_ANDROID
-
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using VContainer;
 
-
-[System.Serializable]
-public class BiomeUIContainer {
-    public ResidentButtonsView residentButtonsView;
-    public TextMeshProUGUI biomeTittle;
-    public GameObject biomeUnlockInfo;
-    public BiomeLvlBarView biomeLvlBar;
-    public TextMeshProUGUI productionPerMinuteTxt;
-    public Button reseachButton;
-    public TextMeshProUGUI researchButtonTxt;
-    public Button boostResearchButton;
-    public ProgressBar researchProgressBar;
-    public TextMeshProUGUI requirementVictimValue;
-    public GameObject requirementContainer;
-}
 
 
 public class SanctuaryVisualizeWnd : MonoBehaviour {
     [SerializeField] GameObject biomesUI;
     [SerializeField] GameObject almanacUI;
     [SerializeField] ShellsBarView shellsBar;
-    [SerializeField] BiomeUIContainer biomeUIContainer;
+    [SerializeField] BiomeUIWrapper biomeUIContainer;
 
     [Inject] private readonly SanctuaryUIInfo _sanctuaryUIInfo;
     [Inject] private readonly FishLocalizationInfo _fishLocalized;
@@ -52,9 +34,7 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
         biomesUI.SetActive(true);
         almanacUI.SetActive(false);
 
-        //if (_sanctuariesManager != null) {
         UpdateShellsCnt(_sanctuariesManager.ShellsCnt);
-        //}
 
 #if !UNITY_STANDALONE_WIN
         //if (_adsManager != null)
@@ -89,7 +69,7 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
                 biomeUIContainer.reseachButton.gameObject.SetActive(false);
                 biomeUIContainer.boostResearchButton.gameObject.SetActive(false);
                 biomeUIContainer.researchProgressBar.gameObject.SetActive(false);
-                biomeUIContainer.requirementContainer.SetActive(false);
+                biomeUIContainer.requirementView.SetActive(false);
             }
         }
     }
@@ -148,13 +128,14 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
 
     void SetRequirement() {
         if (_selectedBiome.Level >= _selectedBiome.Info.MaxLevel) {
-            biomeUIContainer.requirementContainer.SetActive(false);
+            biomeUIContainer.requirementView.SetActive(false);
             return;
         }
         FishLevel requiredFishType = _selectedBiome.Info.Requirements[_selectedBiome.Level];
-
-        biomeUIContainer.requirementVictimValue.text = _sanctuaryUIInfo.ResearchNeutralize.GetLocalizedString() + " "
+        string victimeName = _sanctuaryUIInfo.ResearchNeutralize.GetLocalizedString() + " "
             + _fishLocalized.GetFishLocalizeByType(requiredFishType);
+
+        biomeUIContainer.requirementView.SetVictimName(victimeName);
     }
 
     void OnResearchCurrentBiome() {
@@ -201,17 +182,17 @@ public class SanctuaryVisualizeWnd : MonoBehaviour {
 #if !UNITY_STANDALONE_WIN
                 biomeUIContainer.boostResearchButton.gameObject.SetActive(true);
 #endif
-                biomeUIContainer.requirementContainer.SetActive(false); //disable requirements
+                biomeUIContainer.requirementView.SetActive(false); //disable requirements
             }
             else {
                 //requirement check
                 if (_selectedBiome.IsRequirementMet(_sanctuaryData)) {
-                    biomeUIContainer.requirementContainer.SetActive(false);
+                    biomeUIContainer.requirementView.SetActive(false);
                     biomeUIContainer.reseachButton.interactable = _selectedBiome.GetPriceToUpgrade() <= _sanctuariesManager.ShellsCnt;
                 }
                 else {
                     SetRequirement();
-                    biomeUIContainer.requirementContainer.SetActive(true);
+                    biomeUIContainer.requirementView.SetActive(true);
                     biomeUIContainer.reseachButton.interactable = false;
                 }
 

@@ -105,7 +105,7 @@ public class EffectsBarView : MonoBehaviour {
                     SetEffectProgress(eff.Key, eff.Value);
     }
 
-    void PlayerReConnect(Fish fish, bool isDie) {
+    void PlayerReConnect(FishController fish, bool isDie) {
         if (_playerEffectManager != null)
             _playerEffectManager.OnEffectChanges -= IconsUpdBehaviour;
 

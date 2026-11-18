@@ -6685,7 +6685,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_Name
-      value: BiomeResearh_3
+      value: BiomeResearh_Particle_OA
+      objectReference: {fileID: 0}
+    - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5951271043336343592, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7491,7 +7495,7 @@ GameObject:
   m_Component:
   - component: {fileID: 362832326}
   m_Layer: 0
-  m_Name: lvls
+  m_Name: model Pelagial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7686,7 +7690,7 @@ Transform:
   - {fileID: 2040062017}
   - {fileID: 1845712522}
   - {fileID: 97404503}
-  m_Father: {fileID: 1746316558}
+  m_Father: {fileID: 507590826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &366849790
 Animator:
@@ -10668,6 +10672,62 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1201732078343638998, guid: 929d82eeedb8f1948ac17878466bc807, type: 3}
   m_PrefabInstance: {fileID: 506568241}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &507590825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 507590826}
+  - component: {fileID: 507590827}
+  m_Layer: 0
+  m_Name: Map Zones
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &507590826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507590825}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 748687554}
+  - {fileID: 1280404123}
+  - {fileID: 1824108599}
+  - {fileID: 366849789}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &507590827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507590825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c887fa58c55f81d4381b3c90f9464544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: "GameAssembly::BiomesVisualize\u0421ontroller"
+  coralReefModels: {fileID: 2040062017}
+  cliffsSeaweedModels: {fileID: 796386043}
+  pelagialModels: {fileID: 362832326}
+  oceanicAbyssModels: {fileID: 801191470}
+  coral_researchParticle: {fileID: 1845712521}
+  cliffs_researchParticle: {fileID: 879988101}
+  pelagial_researchParticle: {fileID: 714349827}
+  abyss_researchParticle: {fileID: 337329552}
 --- !u!1 &509245299
 GameObject:
   m_ObjectHideFlags: 0
@@ -14630,7 +14690,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_Name
-      value: BiomeResearh_2
+      value: BiomeResearh_Particle_P
       objectReference: {fileID: 0}
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_IsActive
@@ -15571,11 +15631,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1145323126994007649, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: progress
@@ -15736,7 +15796,7 @@ Transform:
   - {fileID: 801191470}
   - {fileID: 337329551}
   - {fileID: 1696468004}
-  m_Father: {fileID: 1746316558}
+  m_Father: {fileID: 507590826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &752518335
 GameObject:
@@ -16540,7 +16600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 796386043}
   m_Layer: 0
-  m_Name: lvls
+  m_Name: model CliffsSeaweed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16646,7 +16706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 801191470}
   m_Layer: 0
-  m_Name: lvls
+  m_Name: model OceanicAbyss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18228,7 +18288,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_Name
-      value: BiomeResearh_1
+      value: BiomeResearh_Particle_CS
       objectReference: {fileID: 0}
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_IsActive
@@ -24555,7 +24615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1108569380
 Transform:
   m_ObjectHideFlags: 0
@@ -26377,6 +26437,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: abyss
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4aa8fadfe797882438bb4afb3c5f9e00, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27292,7 +27356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1218585639
 Transform:
   m_ObjectHideFlags: 0
@@ -28993,7 +29057,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280404122}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -120, y: 0, z: -30.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -29002,7 +29066,7 @@ Transform:
   - {fileID: 362832326}
   - {fileID: 714349826}
   - {fileID: 988566426}
-  m_Father: {fileID: 1746316558}
+  m_Father: {fileID: 507590826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1280951591
 GameObject:
@@ -29508,11 +29572,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1145323126994007649, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: progressLabel
@@ -30409,8 +30473,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1354445914}
+  - component: {fileID: 1354445915}
   m_Layer: 5
-  m_Name: Requirement Container
+  m_Name: Requirement View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30437,6 +30502,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 10}
   m_SizeDelta: {x: 900, y: 60}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &1354445915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354445913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dc79745db8774e448d90f923f86c5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  obj: {fileID: 1354445913}
+  victimValue: {fileID: 2029657875}
 --- !u!1001 &1358312288
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30451,11 +30530,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1145323126994007649, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: progressLabel
@@ -31882,7 +31961,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1412141806
 Transform:
   m_ObjectHideFlags: 0
@@ -39291,62 +39370,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 631448184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1746316557
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1746316558}
-  - component: {fileID: 1746316559}
-  m_Layer: 0
-  m_Name: Map Zones
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1746316558
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746316557}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 748687554}
-  - {fileID: 1280404123}
-  - {fileID: 1824108599}
-  - {fileID: 366849789}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1746316559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746316557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 255c5d669e19c804bbe08831b84851c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  coralReefModels: {fileID: 2040062017}
-  cliffsSeaweedModels: {fileID: 796386043}
-  pelagialModels: {fileID: 362832326}
-  oceanicAbyssModels: {fileID: 801191470}
-  coral_researchParticle: {fileID: 1845712521}
-  cliffs_researchParticle: {fileID: 879988101}
-  pelagial_researchParticle: {fileID: 714349827}
-  abyss_researchParticle: {fileID: 337329552}
 --- !u!1 &1747680778
 GameObject:
   m_ObjectHideFlags: 0
@@ -40755,8 +40778,7 @@ MonoBehaviour:
     researchButtonTxt: {fileID: 1215754082}
     boostResearchButton: {fileID: 1141933304}
     researchProgressBar: {fileID: 1602065270}
-    requirementVictimValue: {fileID: 2029657875}
-    requirementContainer: {fileID: 1354445913}
+    requirementView: {fileID: 1354445915}
 --- !u!1 &1786859819
 GameObject:
   m_ObjectHideFlags: 0
@@ -41539,7 +41561,7 @@ Transform:
   - {fileID: 796386043}
   - {fileID: 879988100}
   - {fileID: 1012927492}
-  m_Father: {fileID: 1746316558}
+  m_Father: {fileID: 507590826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1824696067
 GameObject:
@@ -45341,11 +45363,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -370
       objectReference: {fileID: 0}
     - target: {fileID: 1145323126994007649, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: progressLabel
@@ -46014,7 +46036,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2040062017}
   m_Layer: 0
-  m_Name: lvls
+  m_Name: model CoralReef
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48434,6 +48456,18 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -448.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076696954515669864, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -448.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1145323126994007649, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
+      propertyPath: progress
+      value: 0.214
+      objectReference: {fileID: 0}
     - target: {fileID: 1145323126994007649, guid: 9a7b68c6b4f0f8640901b069145b3924, type: 3}
       propertyPath: progressLabel
       value: 
@@ -48865,7 +48899,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_Name
-      value: BiomeResearh
+      value: BiomeResearhParticle_CR
       objectReference: {fileID: 0}
     - target: {fileID: 1048846953307857037, guid: 2d87ec6bdfeba08409b85dc57f80beff, type: 3}
       propertyPath: m_IsActive
@@ -49177,5 +49211,5 @@ SceneRoots:
   - {fileID: 1329487283}
   - {fileID: 1823938862}
   - {fileID: 4562051176548013881}
-  - {fileID: 1746316558}
+  - {fileID: 507590826}
   - {fileID: 1784974807}

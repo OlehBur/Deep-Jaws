@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class SprintArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+public class SprintAreaView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     [SerializeField] RectTransform area;
     [SerializeField] RectTransform sprintButtonRect;
     [SerializeField] Button sprintB;

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class JoystickArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
+public class JoystickAreaView : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
     [SerializeField] RectTransform joystickBackgr;
     [SerializeField] RectTransform handle;
     [SerializeField] RectTransform touchArea;

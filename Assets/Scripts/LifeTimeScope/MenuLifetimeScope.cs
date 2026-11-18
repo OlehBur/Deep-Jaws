@@ -14,6 +14,7 @@ public class MenuLifetimeScope : LifetimeScopeBase {
 
     public override void InitAssets(IContainerBuilder builder) {
     }
+
     public override void InitServices(IContainerBuilder builder) {
         builder.RegisterComponentInHierarchy<IMainMenuNavigation>();
         builder.RegisterComponentInHierarchy<IGameModeController>();
@@ -21,12 +22,9 @@ public class MenuLifetimeScope : LifetimeScopeBase {
     }
 
     public override void InitMultipleScripts(IContainerBuilder builder) {
-        //MultipleInject<StoreCardView>(builder);
     }
 
     public override void InitSingleScripts(IContainerBuilder builder) {
-        //SingleInject<MainMenuNavigation>(builder);
-        //SingleInject<GameHudController>(builder);
         SingleInject<GPGServicesWnd>(builder);
         SingleInject<StoreWnd>(builder);
         SingleInject<SkinsPreviewWnd>(builder);

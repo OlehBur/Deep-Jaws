@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using VContainer;
 
-public class BiomesVisualize : MonoBehaviour {
+public class BiomesVisualize—ontroller : MonoBehaviour {
     [SerializeField] Transform coralReefModels;
     [SerializeField] Transform cliffsSeaweedModels;
     [SerializeField] Transform pelagialModels;

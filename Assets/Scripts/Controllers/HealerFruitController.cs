@@ -64,7 +64,7 @@ public class HealerFruitController : MonoBehaviour {
 
         Transform parentFish = other.attachedRigidbody.transform;
 
-        if (other.isTrigger && parentFish.CompareTag("Player") && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out Fish fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
+        if (other.isTrigger && parentFish.CompareTag("Player") && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out FishController fish)/*parentFish.TryGetComponent<Fish>(out Fish fish)*/
             && parentFish.TryGetComponent(out FishAnim animManager)) {
 
 #if UNITY_ANDROID && !UNITY_EDITOR

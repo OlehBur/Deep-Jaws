@@ -40,11 +40,11 @@ public class GameManager : IGameManager, IInitializable, IDisposable {
     }
 
     public void ResetWorldData() {
-        PlayerLeaderboardScore.LoadSavedData();
+        PlayerScoreService.LoadSavedData();
         PlayerPrefs.DeleteAll();//delete all player prefs data 
         _settingsControllerUI.SaveAudioData(); // Save current audio settings
         _graphicManager.SaveGraphicsData(); // Save current graphic settings
-        PlayerLeaderboardScore.SaveLoadedData();
+        PlayerScoreService.SaveLoadedData();
         ProgressSaver.DeleteWorldData();//DeleteOnlyWorldData();
     }
 

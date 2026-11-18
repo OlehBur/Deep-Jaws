@@ -1,7 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using VContainer;
-
 
 
 public abstract class PoolServise {
@@ -9,7 +7,7 @@ public abstract class PoolServise {
     protected WorldData _savedWorldData;
     protected Transform _fishPoolParent;
 
-    protected /*readonly*/ FishPrefabsInfo _fishPrefabs;
+    protected readonly FishPrefabsInfo _fishPrefabs;
 
     public PoolServise(FishPrefabsInfo fishPrefabs, IObjectResolver resolver) {
         _fishPrefabs = fishPrefabs;

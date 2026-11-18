@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class StoreAnimator : MonoBehaviour {
+public class StoreAnimatorController : MonoBehaviour {
     [SerializeField] Transform[] transforms;
    
     private BlinkAnim[] blinkAnims;

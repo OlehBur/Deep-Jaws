@@ -18,7 +18,7 @@ public class HydraController : MonoBehaviour {
             return;
 
         Transform parentFish = other.attachedRigidbody.transform;
-        if (!other.isTrigger && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out Fish fish)
+        if (!other.isTrigger && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out FishController fish)
             && fish.IsVisible) {
 
             animator.Play(ANIMATION_NAME);

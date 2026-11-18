@@ -1,6 +1,5 @@
 using VContainer;
 using VContainer.Unity;
-//using VContainer.Unity;
 
 
 
@@ -23,7 +22,7 @@ public class SanctuaryLifetimeScope : LifetimeScopeBase {
     public override void InitMultipleScripts(IContainerBuilder builder) {
     }
     public override void InitSingleScripts(IContainerBuilder builder) {
-        SingleInject<BiomesVisualize>(builder);
+        SingleInject<BiomesVisualizeÑontroller>(builder);
         SingleInject<ResidentButtonsView>(builder);
         SingleInject<SanctuaryBiomeWnd>(builder);
         SingleInject<SanctuaryVisualizeWnd>(builder);

@@ -24,7 +24,7 @@ public class EffectManager : MonoBehaviour {
     [SerializeField] Rigidbody rb;
     [SerializeField] Renderer fishSkinnedRenderer;
     [SerializeField] Transform rotationTransform;
-    [SerializeField] Fish fish;
+    [SerializeField] FishController fish;
     [SerializeField] FishAnim fishAnim;
 
     public Dictionary<FishEffectType, Effect> ActiveEffects { get; private set; } = new();

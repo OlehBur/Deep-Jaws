@@ -11,22 +11,22 @@ public static class EnemyPoolExtensions {
         => pool[(int)level, index];
     public static GameObject Set(this GameObject[,] pool, FishLevel level, int index, GameObject value)
         => pool[(int)level, index] = value;
-    public static Fish Get(this Fish[,] pool, FishLevel level, int index)
+    public static FishController Get(this FishController[,] pool, FishLevel level, int index)
         => pool[(int)level, index];
-    public static Fish Set(this Fish[,] pool, FishLevel level, int index, Fish value)
+    public static FishController Set(this FishController[,] pool, FishLevel level, int index, FishController value)
         => pool[(int)level, index] = value;
 }
 
 
 public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
     private GameObject[,] _enemyPool;
-    private Fish[,] _enemyPoolComp;
+    private FishController[,] _enemyPoolComp;
     private Transform _weakFishSpawnPointsParent;
     private Transform _strongFishSpawnPointsParent;
     private Transform _sharkSpawnPointsParent;
     //private VFXpoolService _vfxPoolManager;
 
-    public event Action<Fish> OnFishDie;
+    public event Action<FishController> OnFishDie;
     public event Action OnPoolInitialSpawnCompleted;
     public bool IsInitialSpawnCompleted { get; private set; } = false;
 
@@ -51,21 +51,21 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         _playerPoolProvider.OnPlayerRespawn += PlayerRespawnHandler;
     }
 
-    public Fish GetAt(int index) {
+    public FishController GetAt(int index) {
         int level = index / _perLevel;
         int idx = index % _perLevel;
 
         return _enemyPoolComp[level, idx];
     }
 
-    public IEnumerator<Fish> GetEnumerator() {
+    public IEnumerator<FishController> GetEnumerator() {
         for (int l = 0; l < _levels; l++)
             for (int i = 0; i < _perLevel; i++)
                 yield return _enemyPoolComp[l, i];
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    void PlayerRespawnHandler(Fish playerFish, bool isDie) {
+    void PlayerRespawnHandler(FishController playerFish, bool isDie) {
         if (isDie)
             RespawnAllEnemies();
     }
@@ -74,15 +74,15 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         _fishPoolParent = fishPoolParent;
         _savedWorldData = ProgressSaver.LoadWorldData();
         _enemyPool = new GameObject[(int)GameStaticInfo.MAX_FISH_LEVEL, GameStaticInfo.ENEMY_POOL_SIZE];
-        _enemyPoolComp = new Fish[(int)GameStaticInfo.MAX_FISH_LEVEL, GameStaticInfo.ENEMY_POOL_SIZE];
+        _enemyPoolComp = new FishController[(int)GameStaticInfo.MAX_FISH_LEVEL, GameStaticInfo.ENEMY_POOL_SIZE];
         GameObject prefab;
-        Fish enemyFish;
+        FishController enemyFish;
 
         for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
             for (int j = 0; j < GameStaticInfo.ENEMY_POOL_SIZE; j++) {
                 prefab = _resolver.Instantiate(_fishPrefabs.GetFishPrefabByType(level), _fishPoolParent);
                 _enemyPool.Set(level, j, prefab);
-                enemyFish = prefab.GetComponent<Fish>();
+                enemyFish = prefab.GetComponent<FishController>();
                 _enemyPoolComp.Set(level, j, enemyFish);
                 enemyFish.OnFishDie += FishDieAct;
 
@@ -124,7 +124,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         //Debug.LogWarning("Disabled Reinit Entities map");
         for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
             for (int i = 0; i < GameStaticInfo.ENEMY_POOL_SIZE; i++) {
-                Fish enemyBuff = _enemyPoolComp.Get(level, i);
+                FishController enemyBuff = _enemyPoolComp.Get(level, i);
 
                 if (enemyBuff.IsVisible && enemyBuff.Level > playerFishLVL) {
                     enemyBuff.Die();
@@ -147,7 +147,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         enemyPrefab.transform.position = GetRandSpawnPosition(lvl, isRandomPos);
 
         FishControl enemyControl = enemyPrefab.GetComponent<FishControl>();
-        Fish enemyFish = _enemyPoolComp.Get(lvl, index);//enemyPrefab.GetComponent<Fish>();
+        FishController enemyFish = _enemyPoolComp.Get(lvl, index);//enemyPrefab.GetComponent<Fish>();
         enemyFish.IsPlayer = false;
         enemyFish.SetRandomProgress();
         enemyControl.Init();
@@ -230,7 +230,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         return null;
     }
 
-    public bool TryGetFish(GameObject fishObject, out Fish fish) {
+    public bool TryGetFish(GameObject fishObject, out FishController fish) {
         fish = null;
 
         for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
@@ -245,7 +245,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
 
     void FishDieAct(GameObject gameObject, FishLevel level) {
         int prefabIndex = GetObjIndexFromPool(level, gameObject);
-        Fish enemyFish = _enemyPoolComp.Get(level, prefabIndex);
+        FishController enemyFish = _enemyPoolComp.Get(level, prefabIndex);
 
         if (prefabIndex >= 0 && enemyFish.IsVisible)
             RespawnEnemy(enemyFish, prefabIndex);
@@ -262,7 +262,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         //Array.IndexOf(_enemyPool, obj);
     }
 
-    public void RespawnEnemy(Fish currentFish, int index) {//Attempted to realize spawn by weight respawn
+    public void RespawnEnemy(FishController currentFish, int index) {//Attempted to realize spawn by weight respawn
         //spawn die particles
         OnFishDie?.Invoke(currentFish);
         //if (currentFish.IsVisible) {
@@ -325,7 +325,7 @@ public class EnemyPoolService : PoolServise, IEnemyFishPoolService {
         _playerPoolProvider.OnPlayerRespawn -= PlayerRespawnHandler;
         for (FishLevel level = FishLevel.Crab; level < GameStaticInfo.MAX_FISH_LEVEL; level++)
             for (int i = 0; i < GameStaticInfo.ENEMY_POOL_SIZE; i++) {
-                Fish enemyFish = _enemyPoolComp.Get(level, i);
+                FishController enemyFish = _enemyPoolComp.Get(level, i);
                 if (enemyFish != null)
                     enemyFish.OnFishDie -= FishDieAct;
             }

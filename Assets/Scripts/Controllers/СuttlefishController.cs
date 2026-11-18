@@ -9,7 +9,7 @@ using VContainer;
 /// to change the color of the cuttlefish's camouflage depending on the environment and to release poisonous ink when in danger
 /// </summary>
 public class СuttlefishController : MonoBehaviour {
-    [SerializeField] Fish fish;
+    [SerializeField] FishController fish;
     [SerializeField] MeshRenderer mesh;
     [SerializeField] Transform rotationTransform;
 
@@ -106,7 +106,7 @@ public class СuttlefishController : MonoBehaviour {
 
         GameObject parentFishObj = other.attachedRigidbody.gameObject;
 
-        if (curentPoisonCooldown == 0 && fish.IsVisible && _spawnOrchestrator.TryGetFish(parentFishObj, out Fish enemyFish)
+        if (curentPoisonCooldown == 0 && fish.IsVisible && _spawnOrchestrator.TryGetFish(parentFishObj, out FishController enemyFish)
     && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) {
 
             _audioManager.PlayVFX(VFX_clip.Cuttlefish);

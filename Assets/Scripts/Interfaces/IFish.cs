@@ -18,9 +18,9 @@ public interface IFish {
     //float TimeToIdle { get; }
     EnemyState State { get; }
     //the fish relative to which the reaction occurs
-    Fish CurrentTarget { get; }
+    FishController CurrentTarget { get; }
 
-    void FishProximity(Fish otherFish);
+    void FishProximity(FishController otherFish);
     /// <summary>
     /// returns non normalize direction vector for movement
     /// </summary>

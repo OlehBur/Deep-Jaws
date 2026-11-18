@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 public enum FishEffectType {//pos or neg (+/-)
     None = -1,
@@ -23,14 +21,14 @@ public abstract class Effect {
     public FishEffectType Type { get; protected set; }
 
     public float LeftTime { get; private set; } // remaining time of the effect
-    protected Fish targetFish;
+    protected FishController targetFish;
     public event Action<FishEffectType> OnEffeñtExpire;
     protected const float NORMAL_SPEED_MULTIPLIER = 1f;
 
     public bool Enabled { get; set; } = true;
 
 
-    public void Init(Fish target, float duration) {
+    public void Init(FishController target, float duration) {
         targetFish = target;
         Duration = duration;
         LeftTime = duration;
@@ -61,24 +59,17 @@ public abstract class Effect {
         //    OnApply();
 
         Duration = duration;
-        LeftTime = /*Duration*/duration;
+        LeftTime = duration;
     }
 
     protected abstract void OnApply();
     protected abstract void OnExpire();
 
-    //private void OnDestroy() {
-    //    //Debug.LogWarning("Effect OnDestroy called");
-    //    if (!isStartDeactivate) // if the player death or etc. is close before effect duratuin time , then just call DeactivateEffect
-    //        DeactivateEffect();
-    //}
 
     /// <summary>
     /// dont use by user, only after onenable = false set
     /// </summary>
     public void DeactivateEffect() {
-        //const float DESTROY_DELAY_TIME = 0.05f; // delay to avoid issues with OnDestroy calling before OnExpire
-        //isStartDeactivate = true;
         OnExpire();
         OnEffeñtExpire?.Invoke(Type);
     }

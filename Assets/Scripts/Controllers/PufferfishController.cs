@@ -31,7 +31,7 @@ public class PufferfishController : MonoBehaviour {
         GameObject victimObj = other.attachedRigidbody.gameObject;
 
         //Debug.Log(spawnManager);
-        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
+        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out FishController fish)
             && fish.IsVisible && fish.Level != FishLevel.Pufferfish && !_startedAnimation /*&& !audioSource.isPlaying*/) {
 
             animator.Play(PUFFERFISH_BLOW_ANIMATION);
@@ -47,7 +47,7 @@ public class PufferfishController : MonoBehaviour {
 
         GameObject victimObj = other.attachedRigidbody.gameObject;
 
-        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
+        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out FishController fish)
             && fish.IsVisible && fish.Level != FishLevel.Pufferfish && _startedAnimation) {
             _startedAnimation = false;
             animator.Play(PUFFERFISH_REVERSE_BLOW_ANIMATION);
@@ -60,7 +60,7 @@ public class PufferfishController : MonoBehaviour {
 
         GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
         if (!collision.collider.CompareTag(GameStaticInfo.TAG_BUBBLESHIELD)
-            /*&& victimObj != null */&& _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
+            /*&& victimObj != null */&& _spawnOrchestrator.TryGetFish(victimObj, out FishController fish)
             && fish.Level != FishLevel.Pufferfish)
             fish.TakeDamage(DAMAGE_CNT);
     }
@@ -70,7 +70,7 @@ public class PufferfishController : MonoBehaviour {
             return;
 
         GameObject victimObj = collision.collider.attachedRigidbody.gameObject;
-        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out Fish fish)
+        if (/*victimObj != null &&*/ _spawnOrchestrator.TryGetFish(victimObj, out FishController fish)
             && fish.Level != FishLevel.Pufferfish) {
             _currentTimeCollision += DJTime.FixedDeltaTime;
 

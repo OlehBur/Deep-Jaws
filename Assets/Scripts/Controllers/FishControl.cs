@@ -3,16 +3,16 @@ using UnityEngine;
 using UnityEngine.AI;
 using VContainer;
 
-[RequireComponent(typeof(Fish))]
+[RequireComponent(typeof(FishController))]
 public class FishControl : MonoBehaviour, IFish {
     [SerializeField] FishAnim fishAnim;
     [SerializeField] Transform rotationTransform;
     [SerializeField] CapsuleCollider bodyCollider;
-    [SerializeField] Fish fish;
+    [SerializeField] FishController fish;
 
-    public Fish Fish => fish;
+    public FishController Fish => fish;
     public EnemyState State => _state;
-    public Fish CurrentTarget { get; private set; }
+    public FishController CurrentTarget { get; private set; }
 
 
     private EnemyState _state = EnemyState.Walking;
@@ -208,7 +208,7 @@ public class FishControl : MonoBehaviour, IFish {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void ReactionToOtherFish() {
         int count = Physics.OverlapSphereNonAlloc(_rb.position, fish./*ResponseRadius*/DefaultInfo.ResponseRadius, overlapResults, GameStaticInfo.GetEntityLayerMask());
-        Fish closestFish = null;
+        FishController closestFish = null;
         float dist = fish.DefaultInfo.ResponseRadius;
         for (int i = 0; i < count; i++) {
             if (overlapResults[i].attachedRigidbody == null || overlapResults[i].attachedRigidbody.gameObject == gameObject)
@@ -387,7 +387,7 @@ public class FishControl : MonoBehaviour, IFish {
             fishAnim.RotateAnimation(rotationTransform.forward, currentForward, DJTime.FixedDeltaTime);//zero rotation
     }
 
-    public void FishProximity(Fish otherFish) {
+    public void FishProximity(FishController otherFish) {
         if (fish.Level < otherFish.Level)
             _state = EnemyState.Escape;
         else if (fish.IsLegitimateTarget(otherFish, true) && fish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) //u not crab
@@ -405,7 +405,7 @@ public class FishControl : MonoBehaviour, IFish {
 
         //if other fish
         if (transform != victimObj//not self collision
-             && _spawnOrchestrator.TryGetFish(victimObj, out Fish other)     //if collision with another fish
+             && _spawnOrchestrator.TryGetFish(victimObj, out FishController other)     //if collision with another fish
         && (fish.IsPlayer || other == CurrentTarget) //collision obj is our victim
             && fish.IsLegitimateTarget(other)//victim is weaker
             ) {

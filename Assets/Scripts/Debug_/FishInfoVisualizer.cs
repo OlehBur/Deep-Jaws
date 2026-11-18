@@ -5,7 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(TextMeshPro))]
 public class FishInfoVisualizer : MonoBehaviour {
-    [SerializeField] Fish fish;
+    [SerializeField] FishController fish;
     [SerializeField] TextMeshPro textMesh;
     [SerializeField] EffectManager effectManager;
 

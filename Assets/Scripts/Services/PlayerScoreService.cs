@@ -4,10 +4,10 @@ using VContainer;
 using VContainer.Unity;
 
 
-public class PlayerLeaderboardScore : IStartable, IDisposable {
+public class PlayerScoreService : IStartable, IDisposable {
     [Inject] private readonly IPlayerFishPoolService _playerPoolService;
 
-    private Fish _player;
+    private FishController _player;
 
     public static long Score { get; private set; } = 0;
     private static int EasyDeaths { get; set; }
@@ -17,13 +17,12 @@ public class PlayerLeaderboardScore : IStartable, IDisposable {
 
 
     public void Start() {
-        //PlayerReconnect(_playerPoolService.PlayerCurrentFish, false);
         _playerPoolService.OnPlayerRespawn += PlayerReconnect;
         EasyDeaths = PlayerPrefs.GetInt(DEATHS_KEY, 0);
         //Debug.LogWarning("Deaths: " + EasyDeaths);
     }
 
-    void PlayerReconnect(Fish player, bool isDie) {
+    void PlayerReconnect(FishController player, bool isDie) {
         if (isDie) {
             if (_player != player) {//not same fish & not first init (is die never = true on first init)
                 _player.OnFishEat -= OnScoreAdd;
@@ -97,7 +96,6 @@ public class PlayerLeaderboardScore : IStartable, IDisposable {
             _playerPoolService.OnPlayerRespawn -= PlayerReconnect;
     }
 
-    /*LederboardKey*/
     string GetLederboardByGameMode() {
         return GameModeWnd.CurrentMode switch {
             GameMode.Easy => GPGSIds.leaderboard_harbor_breeze_appetite,

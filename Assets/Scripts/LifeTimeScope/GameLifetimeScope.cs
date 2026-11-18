@@ -27,7 +27,7 @@ public class GameLifetimeScope : LifetimeScopeBase {
 
     public override void InitServices(IContainerBuilder builder) {
         //special life cycle
-        builder.RegisterEntryPoint<PlayerLeaderboardScore>();
+        builder.RegisterEntryPoint<PlayerScoreService>();
         builder.RegisterEntryPoint<EffectsVisualizationService>()
             .As<IEffectsVisualizationService>();
 
@@ -59,7 +59,6 @@ public class GameLifetimeScope : LifetimeScopeBase {
     public override void InitSingleScripts(IContainerBuilder builder) {
         builder.RegisterComponentInHierarchy<PauseMenuNavigation>();
 
-        SingleInject<NoEscapeAchieveTrig>(builder);
         //SingleInject<PlayerLeaderboardScore>(builder);
         SingleInject<CameraFollower>(builder);
         SingleInject<SoundtrackController>(builder);
@@ -70,6 +69,8 @@ public class GameLifetimeScope : LifetimeScopeBase {
         SingleInject<EffectsBarView>(builder);
         SingleInject<GameResultWnd>(builder);
         SingleInject<RespawnWnd>(builder);
+        SingleInject<CantCatchAchieveController>(builder);
+        SingleInject<NoEscapeAchieveController>(builder);
     }
 
 

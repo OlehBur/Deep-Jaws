@@ -15,18 +15,6 @@ using UnityEngine.SocialPlatforms;//?!
 using System;
 
 
-public interface IGPGManager {
-#if UNITY_ANDROID
-    event Action<string> OnLoadKingOfDeeps;
-    event Action<bool> OnSignInStatusChanged;
-#endif
-
-    void OnShowAchievements();
-    void OnShowLeaderboard();
-    void CheckFounderStatus(Action<bool> onComplete);
-    void OnSign();
-}
-
 /// <summary>
 /// Google Play Games Manager
 /// </summary>
@@ -87,9 +75,6 @@ public class GPG_Manager : MonoBehaviour, IGPGManager {
     }
 
     public void OnSign() {
-        //if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(GameStaticInfo.GAME_SCENE_NAME))
-        //    ShowNoConnectionIfNeed();
-
 #if UNITY_ANDROID
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();

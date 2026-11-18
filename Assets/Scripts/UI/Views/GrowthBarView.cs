@@ -32,7 +32,7 @@ public class GrowthBarView : MonoBehaviour {
     private const float DEFAULT_TEXT_SIZE = 1f;
 
 
-    public void UpdateProgressInfo(int lvlProgress, Fish playerFish) {
+    public void UpdateProgressInfo(int lvlProgress, FishController playerFish) {
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
