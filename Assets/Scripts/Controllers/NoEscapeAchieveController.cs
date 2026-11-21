@@ -11,7 +11,7 @@ public class NoEscapeAchieveController : MonoBehaviour {
     private void OnCollisionEnter(Collision collision) {
         Rigidbody victimRb = collision.collider.attachedRigidbody;
 
-        if (victimRb.CompareTag("Player") && _spawnOrchestrator.TryGetFish(victimRb.gameObject, out FishController fish)//parent.TryGetComponent(out Fish fish)
+        if (_spawnOrchestrator.IsCollideWithFishMouth(collision.collider, out FishStatsController fish)
             && fish.Level == FishLevel.SeaBass) {
 #if UNITY_ANDROID && !UNITY_EDITOR
             _gpgManager.OnTriggerAchievement(GPGSIds.achievement_youre_not_escaping_this);

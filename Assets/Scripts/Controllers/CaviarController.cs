@@ -48,11 +48,8 @@ public class CaviarController : MonoBehaviour {
         if (other.attachedRigidbody == null)
             return;
 
-        Transform parentFish = other.attachedRigidbody.transform;
-
-        if (caviarModel.activeInHierarchy && other.isTrigger//only mouth (trigger collider)
-            && parentFish.CompareTag("Player")
-            && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out FishController fish)) {
+        if (caviarModel.activeInHierarchy 
+            && _spawnOrchestrator.IsCollideWithFishMouth(other, out FishStatsController fish)) {
             fish.FeedCaviar();
 
             ++PlayerEatedCaviarCnt;

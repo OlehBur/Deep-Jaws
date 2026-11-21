@@ -14,6 +14,6 @@ public class StunEffect : Effect {
     }
 
     protected override void OnExpire() {
-        _rb.constraints = GameStaticInfo.DEFAULT_FISH_CONSTRAINS_RIQIDBODY;
+        _rb.constraints = GameStaticInfo.DEFAULT_FISH_RIGIDBODY_CONSTRAINTS;
     }
 }

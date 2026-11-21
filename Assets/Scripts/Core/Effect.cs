@@ -21,14 +21,14 @@ public abstract class Effect {
     public FishEffectType Type { get; protected set; }
 
     public float LeftTime { get; private set; } // remaining time of the effect
-    protected FishController targetFish;
+    protected FishStatsController targetFish;
     public event Action<FishEffectType> OnEffeñtExpire;
     protected const float NORMAL_SPEED_MULTIPLIER = 1f;
 
     public bool Enabled { get; set; } = true;
 
 
-    public void Init(FishController target, float duration) {
+    public void Init(FishStatsController target, float duration) {
         targetFish = target;
         Duration = duration;
         LeftTime = duration;

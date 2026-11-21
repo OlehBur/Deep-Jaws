@@ -21,7 +21,7 @@ public class SoundtrackController : MonoBehaviour {
             ActivateNewTargerSong(_playerFishPoolService.PlayerCurrentFish, false);
     }
 
-    void ActivateNewTargerSong(FishController fish, bool isDeath) {
+    void ActivateNewTargerSong(FishStatsController fish, bool isDeath) {
         Music_clip targetClip;
 
         if (fish.Level >= DEEP_CORALS_TRIGGER)

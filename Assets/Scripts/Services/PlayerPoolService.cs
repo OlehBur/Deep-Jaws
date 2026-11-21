@@ -8,7 +8,7 @@ using VContainer.Unity;
 
 public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
     private GameObject[] _playerPool;
-    private FishController[] _playerPoolComp;
+    private FishStatsController[] _playerPoolComp;
     private Vector3 _playerPos;
     private Quaternion _playerRot;
     private float _playerProg;
@@ -18,13 +18,13 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
     private readonly FishSkinInfo _fishSkinManager;
     private readonly IAdsManager _adsManager;
 
-    public event Action<FishController, bool> OnPlayerRespawn;//bool - is respawn after death
-    public event Action<FishController> OnFishDie;
+    public event Action<FishStatsController, bool> OnPlayerRespawn;//bool - is respawn after death
+    public event Action<FishStatsController> OnFishDie;
     public event Action<FishLevel> OnPlayerLVLup;
     public event Action OnPoolInitialSpawnCompleted;
     public bool IsInitialSpawnCompleted { get; private set; } = false;
 
-    public FishController PlayerCurrentFish { get; private set; }
+    public FishStatsController PlayerCurrentFish { get; private set; }
 
     public int Count => _playerPoolComp == null ? 0 : _playerPoolComp.Length;
 
@@ -45,9 +45,9 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
 #endif
     }
 
-    public FishController GetAt(int index) => _playerPoolComp[index];
+    public FishStatsController GetAt(int index) => _playerPoolComp[index];
 
-    public IEnumerator<FishController> GetEnumerator() {
+    public IEnumerator<FishStatsController> GetEnumerator() {
         for (int i = 0; i < _playerPoolComp.Length; i++)
             yield return _playerPoolComp[i];
     }
@@ -56,14 +56,14 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
     public void Init(Transform fishPoolParent) {
         _fishPoolParent = fishPoolParent;
         _playerPool = new GameObject[GameStaticInfo.PLAYER_POOL_SIZE];
-        _playerPoolComp = new FishController[GameStaticInfo.PLAYER_POOL_SIZE];
+        _playerPoolComp = new FishStatsController[GameStaticInfo.PLAYER_POOL_SIZE];
         _enemyDetector = _resolver.Instantiate(_fishPrefabs.EnemyDetector, _fishPoolParent);
 
         FishLevel prefabInd = FishLevel.SeaBass;
         for (int playerInd = 0; playerInd < GameStaticInfo.PLAYER_POOL_SIZE; playerInd++, prefabInd++) {
             GameObject playerPrefab = _resolver.Instantiate(_fishPrefabs.GetFishPrefabByType(prefabInd), _fishPoolParent);
-            FishControl fishControl = playerPrefab.GetComponent<FishControl>();
-            FishController newPlayerFish = playerPrefab.GetComponent<FishController>();// fishControl.Fish;
+            FishController fishControl = playerPrefab.GetComponent<FishController>();
+            FishStatsController newPlayerFish = playerPrefab.GetComponent<FishStatsController>();// fishControl.Fish;
             newPlayerFish.IsPlayer = true;
             newPlayerFish.OnFishDie += FishDieAct;
             newPlayerFish.OnFishLvlUp += PlayerLvlUpAct;
@@ -90,7 +90,7 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
         RespawnPlayer(true, true);
 #endif
 
-    public bool TryGetFish(GameObject fishObject, out FishController fish) {
+    public bool TryGetFish(GameObject fishObject, out FishStatsController fish) {
         int index = Array.IndexOf(_playerPool, fishObject);
         if (index < 0) {
             fish = null;
@@ -120,7 +120,7 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
         }
     }
 
-    void InitPlayerSkin(FishController fish, FishAnim fishAnim, FishSkinInfo fishSkinManager) {
+    void InitPlayerSkin(FishStatsController fish, FishAnim fishAnim, FishSkinInfo fishSkinManager) {
         //load selected skin
         Skin selectedSkin;
         AccountData currentData = ProgressSaver.IsAccountDataExist ?
@@ -184,7 +184,7 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
         OnPoolInitialSpawnCompleted?.Invoke();
     }
 
-    FishController SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
+    FishStatsController SpawnPlayerFish(Vector3 coords, Quaternion rotation, bool isLoadFromSave, int playerLvl = (int)GameStaticInfo.PLAYER_INIT_LVL, float playerProgress = 0f, bool isDie = false) {
         //playerLvl = (int)FishLevel.Mackerel;
         //playerProgress = .94f;
         //Debug.LogWarning("Activeted Cheat spawn lvl: " + playerLvl);
@@ -194,9 +194,11 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
         coords.y = GameStaticInfo.FISH_SPAWN_HEINGT;
         playerPrefab.transform.position = coords;
         playerPrefab.transform.rotation = rotation;
+        playerPrefab.transform.SetParent(_fishPoolParent, true);
 
-        FishController playerFishBuffer = _playerPoolComp[playerIndex];
-        playerFishBuffer.CopyData(playerFishBuffer.DefaultInfo.MaxHealth/*MaxHealth*/, playerProgress);
+        FishStatsController playerFishBuffer = _playerPoolComp[playerIndex];
+        playerFishBuffer.CopyData(playerFishBuffer.DefaultInfo.MaxHealth, playerProgress);
+        playerFishBuffer.ActivateCinematic(false);
 
         if (_enemyDetector != null) {
             _enemyDetector.transform.SetParent(playerPrefab.transform);
@@ -226,7 +228,6 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
 
     public void RespawnPlayer(bool isDie, bool isRevive = false) {
         int playerLevel = (int)PlayerCurrentFish.Level;
-        int playerIndex = playerLevel - 1;
 
         if (!isRevive) {
             if (isDie) {//player and die
@@ -239,7 +240,6 @@ public class PlayerPoolService : PoolServise, IPlayerFishPoolService {
                 ++playerLevel;
 
             _playerProg = 0f;
-            _playerPool[playerIndex].SetActive(false);
         }
 
         PlayerCurrentFish = SpawnPlayerFish(_playerPos, _playerRot, false, playerLevel, _playerProg, isDie);

@@ -1,13 +1,20 @@
 ﻿using System;
 
-public class ProgressEventArgs : EventArgs {
-    public ProgressEventArgs() {
-        IsCaviarEaten = false;
-    }
-    public ProgressEventArgs(bool isCaviarEaten) {
-        IsCaviarEaten = isCaviarEaten;
-    }
 
-    public bool IsCaviarEaten { get; }
-    //public bool IsFishBited { get; }
+public enum FoodType {
+    Fish,
+    Caviar,
+    Groundbait,
+    Swimbait
+}
+
+public class ProgressEventArgs : EventArgs {
+    public FoodType FoodType {get; private set;}
+
+    public ProgressEventArgs() {
+        FoodType = FoodType.Fish;
+    }
+    public ProgressEventArgs(FoodType foodType) {
+        FoodType = foodType;
+    }
 }

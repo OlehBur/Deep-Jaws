@@ -13,7 +13,7 @@ public class DeadArea : MonoBehaviour {
         GameObject victimObj = other.attachedRigidbody.gameObject;
 
         if (victimObj.layer == LayerMask.NameToLayer("Entity")) {
-            FishController fish;
+            FishStatsController fish;
             _spawnOrchestrator.TryGetFish(victimObj, out fish);
 
             fish.Die();// fish die if it enters the dead area

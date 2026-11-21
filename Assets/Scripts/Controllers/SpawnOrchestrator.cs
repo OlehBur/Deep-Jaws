@@ -2,9 +2,7 @@
 using VContainer;
 
 
-public interface ISpawnOrchestrator {
-    bool TryGetFish(GameObject fishObject, out FishController fish);
-}
+
 
 public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
     [Inject] private readonly IVFXPoolService _vfxPoolManager;
@@ -45,14 +43,14 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
 #endif
     }
 
-    void SpawnPlayerSpawnParticles(FishController playerFish, bool isDie) {
+    void SpawnPlayerSpawnParticles(FishStatsController playerFish, bool isDie) {
         FishVFX bubbleType = isDie ? FishVFX.DeadBubblesParticle : FishVFX.BubblesLvlUp;
 
         _vfxPoolManager.ActivateObjectFromPool(bubbleType, fishPoolParent,
             playerFish.transform.localPosition, Vector3.one, Quaternion.identity);
     }
 
-    void EnemyFishSpawnDeadParticles(FishController currentFish) {
+    void EnemyFishSpawnDeadParticles(FishStatsController currentFish) {
         if (currentFish.IsVisible) {
             _vfxPoolManager.ActivateObjectFromPool(FishVFX.SkeletonParticle, fishPoolParent,
                 currentFish.transform.localPosition, Vector3.one, Quaternion.identity);
@@ -62,10 +60,26 @@ public class SpawnOrchestrator : MonoBehaviour, ISpawnOrchestrator {
     }
 
 
-    public bool TryGetFish(GameObject fishObject, out FishController fish) {
+    public bool TryGetFish(GameObject fishObject, out FishStatsController fish) {
         return _playerSpawnService.TryGetFish(fishObject, out fish) ||//players
             _enemyPoolService.TryGetFish(fishObject, out fish) ||//default enemies
             _permamentFishPoolService.TryGetFish(fishObject, out fish);//cucttlefishes | dartfhis | pufferfish
+    }
+
+    public bool IsCollideWithFishMouth(Collider possibleMouth, out FishStatsController fish) {
+        Transform parentFish = possibleMouth.attachedRigidbody.transform;
+        fish = null;
+
+        if (possibleMouth.isTrigger//only mouth (trigger collider)
+            && parentFish.CompareTag("Player")
+            && TryGetFish(parentFish.gameObject, out fish)) {
+
+            fish.FeedCaviar();
+
+            return true;
+        }
+
+        return false;
     }
 
     void CheckPlayerLvlAchievements(FishLevel playerLvl) {

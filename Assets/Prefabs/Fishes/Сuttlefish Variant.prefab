@@ -255,6 +255,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -1.457
       objectReference: {fileID: 0}
+    - target: {fileID: 6060681528692491292, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
+      propertyPath: fishAnim
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6139732591693606316, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -400,7 +404,7 @@ PrefabInstance:
       addedObject: {fileID: 4496747461222242014}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6523918303924561895, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 3291501936164326570}
   m_SourcePrefab: {fileID: 100100000, guid: f811417cbd286774d88293bb3cf12a6e, type: 3}
 --- !u!4 &799210778117755948 stripped
@@ -441,6 +445,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1912158170256893060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
+  m_Script: {fileID: 11500000, guid: eda2eca7e312e2c46b3395d79ac11515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

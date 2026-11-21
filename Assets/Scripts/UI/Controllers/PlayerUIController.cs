@@ -29,7 +29,7 @@ public class PlayerUIController : MonoBehaviour {
 
     private EffectManager _playerEffectManager;
     private float _currentSprintCooldownTime = 0;
-    private FishController _playerFish; // reference to the player fish component
+    private FishStatsController _playerFish; // reference to the player fish component
 
     [Inject] private readonly IGameTip _gameTips;
     [Inject] private readonly IGameHudController _gameHudController;
@@ -143,7 +143,7 @@ public class PlayerUIController : MonoBehaviour {
 
         growthBar.UpdateProgressInfo(lvlProgress, _playerFish);
 
-        if (args != null && args.IsCaviarEaten)
+        if (args != null && args.FoodType == FoodType.Caviar)
             _gameTips.OnEffectTip();
     }
 
@@ -203,7 +203,7 @@ public class PlayerUIController : MonoBehaviour {
     }
 
 
-    void PlayerReConnect(FishController fish, bool isDie) {
+    void PlayerReConnect(FishStatsController fish, bool isDie) {
         //Debug.LogWarning("PlayerRespawn");
         PlayerReconnectEventsHandler(fish);
 
@@ -228,7 +228,7 @@ public class PlayerUIController : MonoBehaviour {
         PlayerReconectTipsHandler(fish, isDie);
     }
 
-    void PlayerReconnectEventsHandler(FishController fish) {
+    void PlayerReconnectEventsHandler(FishStatsController fish) {
         if (_playerFish != null && _playerEffectManager != null) {
             _playerFish.OnProgressChanged -= UpdateProgressBar;
             _playerFish.OnHealthChanged -= UpdateHealthInfo;
@@ -256,7 +256,7 @@ public class PlayerUIController : MonoBehaviour {
             Debug.LogWarning("Player Effet Manager is Null.", this);
     }
 
-    void PlayerReconectTipsHandler(FishController fish, bool isDie) {
+    void PlayerReconectTipsHandler(FishStatsController fish, bool isDie) {
         if (!isDie) {//lvl upgr & unlock new biomes
             if (fish.Level == FishLevel.Mackerel)
                 _gameTips.OnStageTip();

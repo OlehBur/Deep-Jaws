@@ -314,9 +314,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4869679086843116804}
   - component: {fileID: 448909511287582052}
+  - component: {fileID: 8497921627181931671}
   - component: {fileID: 2657620157071051659}
   - component: {fileID: 1337541968216851565}
-  - component: {fileID: 8497921627181931671}
   - component: {fileID: 8500345913912895586}
   m_Layer: 6
   m_Name: Crab Variant
@@ -369,6 +369,21 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 116
   m_CollisionDetection: 1
+--- !u!114 &8497921627181931671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048190963959779323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eda2eca7e312e2c46b3395d79ac11515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishInfo: {fileID: 11400000, guid: e945b82f95b5e1f40bfe5e3e62bb84a1, type: 2}
+  visualSizeTransform: {fileID: 4084185988788917315}
+  rb: {fileID: 448909511287582052}
 --- !u!114 &2657620157071051659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,9 +396,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishInfo: {fileID: 11400000, guid: e945b82f95b5e1f40bfe5e3e62bb84a1, type: 2}
-  prefabVisualTransform: {fileID: 4084185988788917315}
-  rb: {fileID: 448909511287582052}
+  fishAnim: {fileID: 0}
+  rotationTransform: {fileID: 7214837483399567855}
+  bodyCollider: {fileID: 5694674408033938348}
+  fish: {fileID: 8497921627181931671}
 --- !u!114 &1337541968216851565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,26 +418,10 @@ MonoBehaviour:
   currentIcon: {fileID: 6496946840296155352}
   poisonIcon: {fileID: 6435554002642514127}
   rb: {fileID: 448909511287582052}
-  fishSkinnedRenderer: {fileID: 0}
-  rotationTransform: {fileID: 0}
-  fish: {fileID: 2657620157071051659}
-  fishAnim: {fileID: 0}
---- !u!114 &8497921627181931671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8048190963959779323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93749be508a6e0843a3bfb1402387336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishAnim: {fileID: 0}
+  fishSkinnedRenderer: {fileID: 4929558494996736285}
   rotationTransform: {fileID: 7214837483399567855}
-  bodyCollider: {fileID: 5694674408033938348}
-  fish: {fileID: 2657620157071051659}
+  fish: {fileID: 8497921627181931671}
+  fishAnim: {fileID: 0}
 --- !u!114 &8500345913912895586
 MonoBehaviour:
   m_ObjectHideFlags: 0

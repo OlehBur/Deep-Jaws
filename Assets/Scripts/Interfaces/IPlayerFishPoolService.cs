@@ -2,8 +2,8 @@
 
 
 public interface IPlayerFishPoolService : IFishPoolService {
-    FishController PlayerCurrentFish { get; }
-    event Action<FishController, bool> OnPlayerRespawn;
+    FishStatsController PlayerCurrentFish { get; }
+    event Action<FishStatsController, bool> OnPlayerRespawn;
     //event Action OnPlayerDied;
     event Action<FishLevel> OnPlayerLVLup;
 

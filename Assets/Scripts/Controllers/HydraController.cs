@@ -1,6 +1,6 @@
-using System.Collections;
 using UnityEngine;
 using VContainer;
+
 
 
 //only for scale animation during a poison attack
@@ -17,8 +17,7 @@ public class HydraController : MonoBehaviour {
         if (other.attachedRigidbody == null)
             return;
 
-        Transform parentFish = other.attachedRigidbody.transform;
-        if (!other.isTrigger && _spawnOrchestrator.TryGetFish(parentFish.gameObject, out FishController fish)
+        if (!other.isTrigger && _spawnOrchestrator.IsCollideWithFishMouth(other, out FishStatsController fish)
             && fish.IsVisible) {
 
             animator.Play(ANIMATION_NAME);

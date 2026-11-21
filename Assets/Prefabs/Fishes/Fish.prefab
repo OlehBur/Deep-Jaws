@@ -394,9 +394,9 @@ GameObject:
   - component: {fileID: 8551743603606410520}
   - component: {fileID: 8937414190267927894}
   - component: {fileID: -1864179227958482298}
+  - component: {fileID: 6060681528692491292}
   - component: {fileID: 2241224056577220843}
   - component: {fileID: 166069787427693303}
-  - component: {fileID: 3402444889329153434}
   - component: {fileID: 7784849236836182843}
   m_Layer: 6
   m_Name: Fish
@@ -458,12 +458,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 6523918303924561895}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
+  m_Script: {fileID: 11500000, guid: eda2eca7e312e2c46b3395d79ac11515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishInfo: {fileID: 11400000, guid: 242d52ce7a2e9f94da4f7b0a69dffc12, type: 2}
-  prefabVisualTransform: {fileID: 7123836628690870832}
+  fishInfo: {fileID: 0}
+  visualSizeTransform: {fileID: 7123836628690870832}
   rb: {fileID: 8937414190267927894}
+--- !u!114 &6060681528692491292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6523918303924561895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c73ec0a17d59772409bd061b7d68b47a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameAssembly::FishController
+  fishAnim: {fileID: 166069787427693303}
+  rotationTransform: {fileID: 5410962182413031247}
+  bodyCollider: {fileID: 9207479891914793701}
+  fish: {fileID: -1864179227958482298}
 --- !u!114 &2241224056577220843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,11 +492,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec82a3d3d1321f4f8d4a6464d60c383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IconsParentObj>k__BackingField: {fileID: 5288213220474724815}
   shieldIcon: {fileID: 4660685740244751835}
   stunIcon: {fileID: 5177881148920251676}
   currentIcon: {fileID: 8003103869434429636}
   poisonIcon: {fileID: 1015332370578616557}
-  <IconsParentObj>k__BackingField: {fileID: 5288213220474724815}
   rb: {fileID: 8937414190267927894}
   fishSkinnedRenderer: {fileID: 1835362657365722603}
   rotationTransform: {fileID: 5410962182413031247}
@@ -503,22 +519,6 @@ MonoBehaviour:
   fishSkinnedMesh: {fileID: 1835362657365722603}
   editableTransform: {fileID: 7123836628690870832}
   effectManager: {fileID: 2241224056577220843}
---- !u!114 &3402444889329153434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6523918303924561895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93749be508a6e0843a3bfb1402387336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishAnim: {fileID: 166069787427693303}
-  rotationTransform: {fileID: 5410962182413031247}
-  bodyCollider: {fileID: 9207479891914793701}
-  fish: {fileID: -1864179227958482298}
 --- !u!114 &7784849236836182843
 MonoBehaviour:
   m_ObjectHideFlags: 0

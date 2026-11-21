@@ -5,11 +5,10 @@ using VContainer;
 
 
 /// <summary>
-/// для зміни кольору маскування каракатиці в залежності від середовища та випускання отруйного чорнила під час небезпеки
 /// to change the color of the cuttlefish's camouflage depending on the environment and to release poisonous ink when in danger
 /// </summary>
 public class СuttlefishController : MonoBehaviour {
-    [SerializeField] FishController fish;
+    [SerializeField] FishStatsController fish;
     [SerializeField] MeshRenderer mesh;
     [SerializeField] Transform rotationTransform;
 
@@ -104,10 +103,9 @@ public class СuttlefishController : MonoBehaviour {
         if (other.attachedRigidbody == null)
             return;
 
-        GameObject parentFishObj = other.attachedRigidbody.gameObject;
-
-        if (curentPoisonCooldown == 0 && fish.IsVisible && _spawnOrchestrator.TryGetFish(parentFishObj, out FishController enemyFish)
-    && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) {
+        if (curentPoisonCooldown == 0 && fish.IsVisible
+           && _spawnOrchestrator.IsCollideWithFishMouth(other, out FishStatsController enemyFish)
+           && enemyFish.Level > GameStaticInfo.PEACEFUL_FISH_LVL) {
 
             _audioManager.PlayVFX(VFX_clip.Cuttlefish);
             curentPoisonCooldown = POISON_COOLDOWN;

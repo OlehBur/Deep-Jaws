@@ -2,9 +2,9 @@
 using VContainer;
 
 
-[RequireComponent(typeof(FishController))]
+[RequireComponent(typeof(FishStatsController))]
 public class FishAnim : MonoBehaviour {
-    [SerializeField] FishController fish;
+    [SerializeField] FishStatsController fish;
     //[SerializeField] float smoothRotateSpeed = 5f;
     //[SerializeField] float angleRotDetect = 12f;
     //[SerializeField] Rigidbody rb;

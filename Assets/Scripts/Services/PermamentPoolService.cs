@@ -10,16 +10,16 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
     private GameObject[] _pufferfishPool;
     private GameObject[] _cuttlefishPool;
     private GameObject[] _dartfishPool;
-    private FishController[] _pufferfishPoolComp;
-    private FishController[] _cuttlefishPoolComp;
-    private FishController[] _dartfishPoolComp;
+    private FishStatsController[] _pufferfishPoolComp;
+    private FishStatsController[] _cuttlefishPoolComp;
+    private FishStatsController[] _dartfishPoolComp;
     private Transform _weakFishSpawnPointsParent;
     private Transform _strongFishSpawnPointsParent;
     private Transform _sharkSpawnPointsParent;
     private Transform _pufferfishPointsParent;
     private Transform _cuttlefishPointsParent;
 
-    public event Action<FishController> OnFishDie;
+    public event Action<FishStatsController> OnFishDie;
     public event Action OnPoolInitialSpawnCompleted;
     public bool IsInitialSpawnCompleted { get; private set; } = false;
 
@@ -34,7 +34,7 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         _playerPoolProvider = playerPoolProvider;
     }
 
-    public FishController GetAt(int index) {
+    public FishStatsController GetAt(int index) {
         if (index < _pufferfishPoolComp.Length)
             return _pufferfishPoolComp[index];
 
@@ -48,14 +48,14 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         return _dartfishPoolComp[index];
     }
 
-    public IEnumerator<FishController> GetEnumerator() {
-        foreach (FishController f in _pufferfishPoolComp)
+    public IEnumerator<FishStatsController> GetEnumerator() {
+        foreach (FishStatsController f in _pufferfishPoolComp)
             yield return f;
 
-        foreach (FishController f in _cuttlefishPoolComp)
+        foreach (FishStatsController f in _cuttlefishPoolComp)
             yield return f;
 
-        foreach (FishController f in _dartfishPoolComp)
+        foreach (FishStatsController f in _dartfishPoolComp)
             yield return f;
     }
 
@@ -65,11 +65,11 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         _fishPoolParent = fishPoolParent;
 
         _pufferfishPool = new GameObject[GameStaticInfo.PUFFERFISH_SPAWN_COUNT];
-        _pufferfishPoolComp = new FishController[GameStaticInfo.PUFFERFISH_SPAWN_COUNT];
+        _pufferfishPoolComp = new FishStatsController[GameStaticInfo.PUFFERFISH_SPAWN_COUNT];
         _cuttlefishPool = new GameObject[GameStaticInfo.CUTTLEFISH_SPAWN_COUNT];
-        _cuttlefishPoolComp = new FishController[GameStaticInfo.CUTTLEFISH_SPAWN_COUNT];
+        _cuttlefishPoolComp = new FishStatsController[GameStaticInfo.CUTTLEFISH_SPAWN_COUNT];
         _dartfishPool = new GameObject[GameStaticInfo.DARTFISH_SPAWN_COUNT];
-        _dartfishPoolComp = new FishController[GameStaticInfo.DARTFISH_SPAWN_COUNT];
+        _dartfishPoolComp = new FishStatsController[GameStaticInfo.DARTFISH_SPAWN_COUNT];
     }
 
     public void InitialSpawnPrefabs() {
@@ -123,7 +123,7 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         return spawnPoints;
     }
 
-    public void InitialSpawnPermamentFish(GameObject prefab, Transform spPoints, GameObject[] pool, FishController[] fishCompPool, int maxCnt) {
+    public void InitialSpawnPermamentFish(GameObject prefab, Transform spPoints, GameObject[] pool, FishStatsController[] fishCompPool, int maxCnt) {
         int currentInd = 0;
         int pointsMaxInd = spPoints.childCount - 1;
         int spawnPointIndex = (int)(UnityEngine.Random.value * pointsMaxInd);
@@ -131,8 +131,8 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         while (currentInd < maxCnt) {
             if (Vector3.Distance(_playerPoolProvider.PlayerCurrentFish.transform.position, spPoints.GetChild(spawnPointIndex).position) > GameStaticInfo.PLAYER_MAX_DISTANCE_VIEW) {
                 GameObject prefabInst = pool[currentInd] = _resolver.Instantiate(prefab, spPoints.GetChild(spawnPointIndex).position /*+ RandomXZOffset()*/, Quaternion.identity, _fishPoolParent);
-                FishControl enemyPermControl = prefabInst.GetComponent<FishControl>();
-                FishController fishPermament = enemyPermControl.Fish;
+                FishController enemyPermControl = prefabInst.GetComponent<FishController>();
+                FishStatsController fishPermament = enemyPermControl.Fish;
 
                 //if (prefabInst.TryGetComponent(out PufferfishController pufferController))
                 //    pufferController.Init(audioManager);
@@ -165,14 +165,14 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         return true;
     }
 
-    void RespawnPermamentFish(int index, GameObject[] pool, FishController[] fishCompPool, Transform spPoints) {
+    void RespawnPermamentFish(int index, GameObject[] pool, FishStatsController[] fishCompPool, Transform spPoints) {
         if (!IsSpawnPointsValid())
             return;
 
         int pointsCnt = spPoints.childCount - 1;
         int spawnPointIndex = (int)(UnityEngine.Random.value * pointsCnt);
         GameObject prefabInst = pool[index];
-        FishController fish = fishCompPool[index];
+        FishStatsController fish = fishCompPool[index];
 
         OnFishDie?.Invoke(fish);
         //spawn dead particles
@@ -228,7 +228,7 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         }
     }
 
-    public bool TryGetFish(GameObject fishObject, out FishController fish) {
+    public bool TryGetFish(GameObject fishObject, out FishStatsController fish) {
         fish = null;
         if (TryGetPermamentFish(_pufferfishPool, _pufferfishPoolComp, fishObject, out fish)
             || TryGetPermamentFish(_dartfishPool, _dartfishPoolComp, fishObject, out fish)
@@ -238,7 +238,7 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
         return false;
     }
 
-    bool TryGetPermamentFish(GameObject[] arrayObj, FishController[] arrayComp, GameObject fishObject, out FishController fish) {
+    bool TryGetPermamentFish(GameObject[] arrayObj, FishStatsController[] arrayComp, GameObject fishObject, out FishStatsController fish) {
         int index = Array.IndexOf(arrayObj, fishObject);
         if (index < 0) {
             fish = null;
@@ -251,11 +251,11 @@ public class PermamentPoolService : PoolServise, IPermamentFishPoolService {
     }
 
     public void OnDestroy() {
-        foreach (FishController f in _pufferfishPoolComp)
+        foreach (FishStatsController f in _pufferfishPoolComp)
             f.OnFishDie -= DeactivateRespawnPrefab;
-        foreach (FishController f in _cuttlefishPoolComp)
+        foreach (FishStatsController f in _cuttlefishPoolComp)
             f.OnFishDie -= DeactivateRespawnPrefab;
-        foreach (FishController f in _dartfishPoolComp)
+        foreach (FishStatsController f in _dartfishPoolComp)
             f.OnFishDie -= DeactivateRespawnPrefab;
     }
 }

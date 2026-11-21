@@ -34,7 +34,7 @@ public class CameraFollower : MonoBehaviour {
     [Inject] private readonly IPlayerFishPoolService _playerPoolService;
 
     private Transform _target;
-    private FishController _playerFish;
+    private FishStatsController _playerFish;
     private Vector3 _initialPosition = new Vector3(0, 38.64f, -20.52f);
     private Vector3 _currentVelocity;
     private float _currentSmoothTime = INITIAL_FOLLOW_SMOOTH_TIME;
@@ -64,7 +64,7 @@ public class CameraFollower : MonoBehaviour {
             cameraObj.farClipPlane = CAM_INIT_FAR_CLIP;
     }
 
-    private void ResetPlayerTarget(FishController player, bool isDie) {
+    private void ResetPlayerTarget(FishStatsController player, bool isDie) {
         if (player == null)
             return;
 

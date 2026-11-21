@@ -48,7 +48,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
         });
     }
 
-    void PlayerRespawnHandler(FishController f, bool isDie) =>
+    void PlayerRespawnHandler(FishStatsController f, bool isDie) =>
         DeactivateRespawnWnd();
 
     public void OnOpenDemoFin() {
@@ -79,7 +79,7 @@ public class GameHudController : MonoBehaviour, IGameHudController {
     }
 
 
-    void ActivateRespawnWnd(FishController f) {
+    void ActivateRespawnWnd(FishStatsController f) {
 #if UNITY_ANDROID
         if (GameStaticInfo.Gamemode == GameMode.Hard) {//witout ui
             ResetAndReloadGame_Hard();

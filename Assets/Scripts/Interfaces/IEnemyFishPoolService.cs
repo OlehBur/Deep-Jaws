@@ -3,7 +3,7 @@
 
 public interface IEnemyFishPoolService : IFishPoolService {
     void RespawnAllEnemies();
-    void RespawnEnemy(FishController currentFish, int index);
+    void RespawnEnemy(FishStatsController currentFish, int index);
     //void SetPlayerProvider(IPlayerPoolService _playerSpawnService);
     void SetSpawnPoints(Transform weakFishSpawnPointsParent, Transform strongFishSpawnPointsParent, Transform sharkSpawnPointsParent);
     //bool IsPlayerPoolProviderValid();

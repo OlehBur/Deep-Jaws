@@ -23,13 +23,13 @@ public class EnemyDetector : MonoBehaviour {
 
     void Update() {
         if (_playerPoolService.PlayerCurrentFish!= null && _playerPoolService.PlayerCurrentFish.IsActive) {
-            FishController playerFish = _playerPoolService.PlayerCurrentFish;
+            FishStatsController playerFish = _playerPoolService.PlayerCurrentFish;
             float minDistance = GetDetectorRadius();
             int cnt = Physics.OverlapSphereNonAlloc(playerFish.transform.position, minDistance, _colliders, GameStaticInfo.GetEntityLayerMask());
             
             if (cnt > 0) {
                 Vector3 closestEnemyPos = Vector3.zero;
-                FishController enemyFish = null;
+                FishStatsController enemyFish = null;
 
                 for (int i = 0; i < cnt; i++) {
                     if (_colliders[i] == null)

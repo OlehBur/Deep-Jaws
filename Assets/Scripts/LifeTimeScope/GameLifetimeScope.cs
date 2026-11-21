@@ -71,6 +71,9 @@ public class GameLifetimeScope : LifetimeScopeBase {
         SingleInject<RespawnWnd>(builder);
         SingleInject<CantCatchAchieveController>(builder);
         SingleInject<NoEscapeAchieveController>(builder);
+
+        Debug.LogWarning("Debug Inject");
+        SingleInject<SwimbaitController>(builder);
     }
 
 

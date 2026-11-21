@@ -7,7 +7,7 @@ using VContainer.Unity;
 public class PlayerScoreService : IStartable, IDisposable {
     [Inject] private readonly IPlayerFishPoolService _playerPoolService;
 
-    private FishController _player;
+    private FishStatsController _player;
 
     public static long Score { get; private set; } = 0;
     private static int EasyDeaths { get; set; }
@@ -22,7 +22,7 @@ public class PlayerScoreService : IStartable, IDisposable {
         //Debug.LogWarning("Deaths: " + EasyDeaths);
     }
 
-    void PlayerReconnect(FishController player, bool isDie) {
+    void PlayerReconnect(FishStatsController player, bool isDie) {
         if (isDie) {
             if (_player != player) {//not same fish & not first init (is die never = true on first init)
                 _player.OnFishEat -= OnScoreAdd;

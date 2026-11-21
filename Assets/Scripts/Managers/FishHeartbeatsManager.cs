@@ -71,13 +71,13 @@ public class FishHeartbeatsManager : MonoBehaviour {
 
         int index = 0;
         //Debug.LogWarning("HeartBeatDisabled");
-        foreach (FishController fish in _playerFishPoolService)
+        foreach (FishStatsController fish in _playerFishPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
-        foreach (FishController fish in _enemyPoolService)
+        foreach (FishStatsController fish in _enemyPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
-        foreach (FishController fish in _permamentFishPoolService)
+        foreach (FishStatsController fish in _permamentFishPoolService)
             InitParticleByFish(fish, ref index, ref particleMainModule, playerLevel);
 
         //Debug.LogWarning(_playerFishPoolService.PlayerCurrentFish.Rb.position + "  " + _playerFishPoolService.PlayerCurrentFish.IsActive);
@@ -91,7 +91,7 @@ public class FishHeartbeatsManager : MonoBehaviour {
             }
     }
 
-    void InitParticleByFish(FishController fish, ref int index, ref ParticleSystem.MainModule particleMainModule, FishLevel playerLevel) {
+    void InitParticleByFish(FishStatsController fish, ref int index, ref ParticleSystem.MainModule particleMainModule, FishLevel playerLevel) {
         if (index >= _fishHeartbeatsParticlesPool.Length) {
             //    Debug.LogError($"Index {index} out of bounds! Array size is {_fishHeartbeatsParticlesPool.Length}. Total entities mismatch!");
             return;

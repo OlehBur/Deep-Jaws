@@ -132,6 +132,10 @@ public static class GameStaticInfo {
     //ui
     public const float MAX_EFFECTS_CNT = 5; // max effects count that can be displayed in the UI
 
+    //animators
+    public static readonly int GROUNDBAITE_ANIM_DISAPPEAR = Animator.StringToHash("Disappearance");
+    public static readonly int GROUNDBAITE_ANIM_APPEAR = Animator.StringToHash("Appearance");
+
     //pools
     public const float HORIZONTAL_SPAWN_MAX_OFFSET = 6f;
     public const float FISH_SPAWN_HEINGT = 1.78f;
@@ -163,6 +167,13 @@ public static class GameStaticInfo {
     public const FishLevel UNBEATABLE_FISH_LVL = FishLevel.Dartfish/*-1*/;//barrier level for unbeatable fish (Cuttlefish and below)
     public const FishLevel POISON_IMMUNE_FISH_TRIGGER = FishLevel.Cuttlefish;
     public static readonly FishLevel[] AllFishLevels = (FishLevel[])Enum.GetValues(typeof(FishLevel));
+    public const int PUFFERFISH_DAMAGE = 5;
+
+    //food
+    public const int CAVIAR_SCORE = 1;
+    public const int GROUNDBAIT_SCORE = 2;
+    public const int SWIMBAIT_SCORE = 30;
+    public const int SWIMBAIT_DAMAGE = 7;
 
     //world
     private const string LAYER_ENTITY = "Entity"; //layer for entities, where fish are located
@@ -186,10 +197,11 @@ public static class GameStaticInfo {
     /// <summary>
     /// RigidbodyConstraints for all fish ( rot: freze X and Z  pos: freeze Y )
     /// </summary>
-    public const RigidbodyConstraints DEFAULT_FISH_CONSTRAINS_RIQIDBODY = RigidbodyConstraints.FreezeRotationX
+    public const RigidbodyConstraints DEFAULT_FISH_RIGIDBODY_CONSTRAINTS = RigidbodyConstraints.FreezeRotationX
     | RigidbodyConstraints.FreezeRotationY
     | RigidbodyConstraints.FreezeRotationZ
     | RigidbodyConstraints.FreezePositionY;
+    public const RigidbodyConstraints CINEMATIC_FISH_RIGIDBODY_CONSTRAINTS = RigidbodyConstraints.None;
 
     public const float PLAYER_MAX_DISTANCE_VIEW = 25f; //to avoid spawn too close to player OR unseen animations etc. 
     public const float PLAYER_MAX_DISTANCE_ACTIVITY = 100f; //only fishes in that radius - active
